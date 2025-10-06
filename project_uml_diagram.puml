@@ -1,0 +1,96 @@
+@startuml
+skinparam monochrome true
+skinparam classAttributeIconSize 0
+
+package "com.example.androidapp" {
+
+  package "data" {
+    class AppDatabase
+    interface UserDao
+    interface InvoiceDao
+    interface JournalEntryDao
+    interface PaymentDao
+    interface ReceiptDao
+    interface InventoryDao
+    interface PostDao
+    class DateConverter
+    class User
+    class Invoice
+    class JournalEntry
+    class Payment
+    class Receipt
+    class Inventory
+    class Post
+
+    AppDatabase --> UserDao
+    AppDatabase --> InvoiceDao
+    AppDatabase --> JournalEntryDao
+    AppDatabase --> PaymentDao
+    AppDatabase --> ReceiptDao
+    AppDatabase --> InventoryDao
+    AppDatabase --> PostDao
+    AppDatabase ..> DateConverter
+  }
+
+  package "ui" {
+    class MainActivity
+    class InvoiceDetailActivity
+    class AccountStatementListActivity
+    class PaymentListActivity
+    class ReceiptListActivity
+    class PostListActivity
+    class RoleListActivity
+    class BarcodeScannerActivity
+
+    MainActivity --> InvoiceDetailActivity
+    MainActivity --> AccountStatementListActivity
+    MainActivity --> PaymentListActivity
+    MainActivity --> ReceiptListActivity
+    MainActivity --> PostListActivity
+    MainActivity --> RoleListActivity
+    InvoiceDetailActivity --> BarcodeScannerActivity
+  }
+
+  package "logic" {
+    class PointsAndRewardsManager
+    class AccountingManager
+  }
+
+  package "services" {
+    class MyFirebaseMessagingService
+  }
+
+  package "sync" {
+    class SyncService
+  }
+
+  package "utils" {
+    class ExcelUtil
+    class BarcodeGenerator
+    class NotificationHelper
+    class PermissionManager
+    class ContactSyncManager
+    class BackupManager
+    class AIAnalyzer
+  }
+
+  ui ..> data
+  ui ..> logic
+  ui ..> services
+  ui ..> sync
+  ui ..> utils
+
+  logic ..> data
+  services ..> data
+  sync ..> data
+  utils ..> data
+
+  MyFirebaseMessagingService ..> NotificationHelper
+  SyncService ..> data
+  InvoiceDetailActivity ..> ExcelUtil
+  InvoiceDetailActivity ..> BarcodeGenerator
+  AccountStatementListActivity ..> ExcelUtil
+  AccountingManager ..> AIAnalyzer
+}
+
+@enduml

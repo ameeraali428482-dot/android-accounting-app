@@ -1,0 +1,32 @@
+# Gradle files
+.gradle/
+build/
+*/build/
+*/captures/
+
+# Local configuration
+local.properties
+*.iml
+.idea/
+
+# Android Studio
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+*.so
+*.log
+*.hprof
+*.keystore
+
+# Generated files
+gen/
+out/
+
+# MacOS / Windows files
+.DS_Store
+Thumbs.db
+
+# Misc
+*.orig
