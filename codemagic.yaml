@@ -6,23 +6,17 @@ workflows:
     environment:
       vars:
         TELEGRAM_BOT_TOKEN:
-          value: "ضع_هنا_توكن_البوت"
+          value: $TELEGRAM_BOT_TOKEN
           is_secret: true
         TELEGRAM_CHAT_ID:
-          value: "ضع_هنا_رقم_الشات"
+          value: $TELEGRAM_CHAT_ID
           is_secret: true
 
     scripts:
       - name: Build Android app
         script: |
           echo "🔹 بدء بناء التطبيق..."
-          ./gradlew assembleDebug
-
-      - name: Save full log
-        script: |
-          LOG_FILE="$CM_BUILD_DIR/build_full_log.txt"
-          echo "🔹 حفظ اللوج الكامل في $LOG_FILE"
-          ./gradlew assembleDebug --console=plain | tee "$LOG_FILE"
+          ./gradlew assembleDebug --console=plain | tee "$CM_BUILD_DIR/build_full_log.txt"
 
       - name: Send build errors to Telegram
         script: |
@@ -40,7 +34,6 @@ workflows:
             ERRORS="... (تم اقتطاع الأجزاء السابقة) ...\n${ERRORS: -$MAX_LEN}"
           fi
 
-          echo "🔹 إرسال الأخطاء إلى Telegram..."
           curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
             -d chat_id="${CHAT_ID}" \
             -d text="⚠️ Codemagic Build Errors:\n\n$ERRORS" \
