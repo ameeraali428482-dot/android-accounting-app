@@ -12,7 +12,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_print_selected"
-        android:icon="@android:drawable/ic_menu_print"
+        android:icon="@drawable/ic_print"
         android:title="طباعة"
         app:showAsAction="ifRoom" />
 </menu>
