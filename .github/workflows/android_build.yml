@@ -1,4 +1,4 @@
-name: 🛠️ Android Build (Safe Mode for manusali5555)
+name: 🛠️ Android Build (Safe Mode) + Telegram
 
 on:
   push:
@@ -10,30 +10,48 @@ permissions:
 
 jobs:
   build:
-    name: Build Android App Safely
+    name: Build Debug APK
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧩 Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: ☕ Set up JDK 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: 🔑 Make gradlew executable
+      - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: ⚙️ Build Debug APK
-        run: ./gradlew assembleDebug --no-daemon
+      - name: Set Gradle properties for CI
+        run: |
+          echo "org.gradle.jvmargs=-Xmx1024m -Dfile.encoding=UTF-8" >> gradle.properties
+          echo "org.gradle.daemon=false" >> gradle.properties
+          echo "org.gradle.parallel=true" >> gradle.properties
+          echo "org.gradle.configureondemand=true" >> gradle.properties
 
-      - name: 📦 Upload APK as artifact
+      - name: Clean & Build Debug APK
+        run: ./gradlew clean assembleDebug --no-daemon
+
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: debug-apk
           path: app/build/outputs/apk/debug/*.apk
 
-      - name: ✅ Build completed
-        run: echo "✅ Build finished successfully for manusali5555!"
+      - name: Notify Telegram on Success
+        if: success()
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+          -d chat_id="$TELEGRAM_CHAT_ID" \
+          -d text="✅ Build successful: $GITHUB_REPOSITORY @ $GITHUB_SHA"
+
+      - name: Notify Telegram on Failure
+        if: failure()
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+          -d chat_id="$TELEGRAM_CHAT_ID" \
+          -d text="❌ Build FAILED: $GITHUB_REPOSITORY @ $GITHUB_SHA"
