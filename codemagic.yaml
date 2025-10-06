@@ -1,0 +1,16 @@
+workflows:
+  android-workflow:
+    name: Android Build
+    max_build_duration: 60
+    environment:
+      vars:
+        ANDROID_HOME: /data/data/com.termux/files/usr/lib/android-sdk
+    scripts:
+      - name: Install dependencies
+        script: |
+          sdkmanager "platforms;android-33" "build-tools;33.0.2"
+      - name: Build APK
+        script: |
+          ./gradlew assembleDebug
+    artifacts:
+      - build/app/outputs/**/*.apk
