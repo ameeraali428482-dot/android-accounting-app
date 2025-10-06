@@ -2,40 +2,49 @@ workflows:
   build_and_send_errors:
     name: Build & Send Errors
     max_build_duration: 60
+
     environment:
       vars:
         TELEGRAM_BOT_TOKEN:
-          value: $TELEGRAM_BOT_TOKEN
+          value: "ضع_هنا_توكن_البوت"
           is_secret: true
         TELEGRAM_CHAT_ID:
-          value: $TELEGRAM_CHAT_ID
+          value: "ضع_هنا_رقم_الشات"
           is_secret: true
+
     scripts:
       - name: Build Android app
         script: |
-          # أي أوامر بناء خاصة بتطبيقك
+          echo "🔹 بدء بناء التطبيق..."
           ./gradlew assembleDebug
+
+      - name: Save full log
+        script: |
+          LOG_FILE="$CM_BUILD_DIR/build_full_log.txt"
+          echo "🔹 حفظ اللوج الكامل في $LOG_FILE"
+          ./gradlew assembleDebug --console=plain | tee "$LOG_FILE"
 
       - name: Send build errors to Telegram
         script: |
           #!/usr/bin/env bash
           set -euo pipefail
-          
+
           LOG_FILE="$CM_BUILD_DIR/build_full_log.txt"
           BOT_TOKEN="$TELEGRAM_BOT_TOKEN"
           CHAT_ID="$TELEGRAM_CHAT_ID"
 
-          # استخراج الأخطاء فقط
           ERRORS=$(grep -iE "FAILURE|FATAL|Exception|error" "$LOG_FILE" || echo "(لا توجد أخطاء)")
 
-          # اقتطاع إذا كانت الرسالة طويلة جداً
           MAX_LEN=3800
           if [ ${#ERRORS} -gt $MAX_LEN ]; then
             ERRORS="... (تم اقتطاع الأجزاء السابقة) ...\n${ERRORS: -$MAX_LEN}"
           fi
 
-          # إرسال الرسالة للبوت
+          echo "🔹 إرسال الأخطاء إلى Telegram..."
           curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
             -d chat_id="${CHAT_ID}" \
             -d text="⚠️ Codemagic Build Errors:\n\n$ERRORS" \
             -d parse_mode="Markdown"
+
+    artifacts:
+      - $CM_BUILD_DIR/build_full_log.txt
