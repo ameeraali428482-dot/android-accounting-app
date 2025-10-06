@@ -6,11 +6,11 @@ workflows:
     environment:
       vars:
         TELEGRAM_BOT_TOKEN:
-          value: ""  # ضع توكن البوت هنا
-          is_secret: true
+          value: "8310914786:AAH8NPaIoGKbXtFS_-vpcZ_hzkVH847JDEI"
+          is_secret: false
         TELEGRAM_CHAT_ID:
-          value: ""  # ضع رقم الشات هنا
-          is_secret: true
+          value: "1254508624"
+          is_secret: false
 
     scripts:
       - name: Verify Telegram variables
@@ -18,7 +18,7 @@ workflows:
           #!/usr/bin/env bash
           set -euo pipefail
           if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
-            echo "❌ خطأ: يجب تحديد TELEGRAM_BOT_TOKEN و TELEGRAM_CHAT_ID في Environment variables"
+            echo "❌ خطأ: TELEGRAM_BOT_TOKEN أو TELEGRAM_CHAT_ID غير محددين."
             exit 1
           fi
           echo "✅ متغيرات Telegram موجودة."
@@ -46,7 +46,7 @@ workflows:
           curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
             -d chat_id="${CHAT_ID}" \
             -d text="⚠️ Codemagic Build Errors:\n\n$ERRORS" \
-            -d parse_mode="Markdown"
+            -d parse_mode="Markdown" || echo "⚠️ تحذير: فشل إرسال رسالة Telegram."
 
     artifacts:
       - build_full_log.txt
