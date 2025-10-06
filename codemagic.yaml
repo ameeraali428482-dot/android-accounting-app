@@ -6,13 +6,23 @@ workflows:
     environment:
       vars:
         TELEGRAM_BOT_TOKEN:
-          value: $TELEGRAM_BOT_TOKEN
+          value: ""  # ضع توكن البوت هنا
           is_secret: true
         TELEGRAM_CHAT_ID:
-          value: $TELEGRAM_CHAT_ID
+          value: ""  # ضع رقم الشات هنا
           is_secret: true
 
     scripts:
+      - name: Verify Telegram variables
+        script: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "❌ خطأ: يجب تحديد TELEGRAM_BOT_TOKEN و TELEGRAM_CHAT_ID في Environment variables"
+            exit 1
+          fi
+          echo "✅ متغيرات Telegram موجودة."
+
       - name: Build Android app
         script: |
           echo "🔹 بدء بناء التطبيق..."
@@ -22,7 +32,6 @@ workflows:
         script: |
           #!/usr/bin/env bash
           set -euo pipefail
-
           LOG_FILE="$CM_BUILD_DIR/build_full_log.txt"
           BOT_TOKEN="$TELEGRAM_BOT_TOKEN"
           CHAT_ID="$TELEGRAM_CHAT_ID"
@@ -40,4 +49,4 @@ workflows:
             -d parse_mode="Markdown"
 
     artifacts:
-      - $CM_BUILD_DIR/build_full_log.txt
+      - build_full_log.txt
