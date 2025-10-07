@@ -11,7 +11,7 @@ import java.util.List;
 public interface BaseDao<T> {
 
     @Insert
-    void insert(T obj);
+    long insert(T obj);
 
     @Update
     void update(T obj);
