@@ -53,6 +53,7 @@ android {
 }
 
 dependencies {
+    annotationProcessor "androidx.room:room-compiler:2.6.1"
 
     // Room Database Dependencies (Phoenix AI)
     implementation 'androidx.room:room-runtime:2.6.1'
