@@ -1,6 +1,8 @@
 package com.example.androidapp.data.entities;
-import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Embedded;
 import androidx.room.PrimaryKey;
+import androidx.room.Entity;
 
 @Entity(tableName = "invoice_items")
 public class InvoiceItem {

@@ -1,4 +1,5 @@
 package com.example.androidapp.ui.item;
+import com.example.androidapp.data.entities.Item;
 
 import android.content.Intent;
 import android.os.Bundle;

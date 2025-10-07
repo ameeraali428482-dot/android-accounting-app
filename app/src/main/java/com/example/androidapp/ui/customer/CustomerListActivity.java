@@ -1,4 +1,5 @@
 package com.example.androidapp.ui.customer;
+import com.example.androidapp.data.entities.Customer;
 
 import android.content.Intent;
 import android.os.Bundle;

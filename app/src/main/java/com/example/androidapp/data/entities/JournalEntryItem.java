@@ -1,9 +1,9 @@
 package com.example.androidapp.data.entities;
-import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Embedded;
 import androidx.room.PrimaryKey;
+import androidx.room.Entity;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 @Entity(tableName = "journal_entry_items")
 public class JournalEntryItem {
