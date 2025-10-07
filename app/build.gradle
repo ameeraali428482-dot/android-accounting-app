@@ -16,7 +16,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
     signingConfigs {
         release {
             storeFile file("my-release-key.jks")
