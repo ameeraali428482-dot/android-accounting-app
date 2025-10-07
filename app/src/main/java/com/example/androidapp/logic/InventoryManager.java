@@ -88,4 +88,3 @@ public class InventoryManager {
         void onFailure(String message);
     }
 }    
-}
