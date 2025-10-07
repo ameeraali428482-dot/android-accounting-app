@@ -3,6 +3,8 @@ import androidx.room.Ignore;
 import androidx.room.Embedded;
 import androidx.room.PrimaryKey;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
 
 public class CompanySettings {
     private String id;
