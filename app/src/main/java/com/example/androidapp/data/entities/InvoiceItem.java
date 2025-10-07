@@ -1,4 +1,4 @@
-package com.example.androidapp.models;
+package com.example.androidapp.data.entities;
 
 @Entity(tableName = "invoice_items")
 public class InvoiceItem {

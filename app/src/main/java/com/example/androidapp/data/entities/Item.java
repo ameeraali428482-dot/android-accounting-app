@@ -1,7 +1,8 @@
-package com.example.androidapp.models;
+package com.example.androidapp.data.entities;
 
 @Entity(tableName = "items")
 public class Item {
+    @PrimaryKey
     private String id;
     private String name;
     private String scientificName;

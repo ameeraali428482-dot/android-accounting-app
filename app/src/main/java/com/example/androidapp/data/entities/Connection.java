@@ -1,4 +1,4 @@
-package com.example.androidapp.models;
+package com.example.androidapp.data.entities;
 
 public class Connection {
     private String id;

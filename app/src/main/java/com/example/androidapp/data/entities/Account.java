@@ -1,7 +1,8 @@
-package com.example.androidapp.models;
+package com.example.androidapp.data.entities;
 
 @Entity(tableName = "accounts")
 public class Account {
+    @PrimaryKey
     private String id;
     private String name;
     private String code;

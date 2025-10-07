@@ -1,4 +1,4 @@
-package com.example.androidapp.models;
+package com.example.androidapp.data.entities;
 
 @Entity(tableName = "companies")
 public class Company {
