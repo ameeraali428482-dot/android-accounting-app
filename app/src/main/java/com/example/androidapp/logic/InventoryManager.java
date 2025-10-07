@@ -1,4 +1,4 @@
-_#_OVERWRITE_#_package com.example.androidapp.logic;
+package com.example.androidapp.logic;
 
 import android.content.Context;
 import android.util.Log;
