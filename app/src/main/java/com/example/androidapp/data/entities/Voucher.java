@@ -1,4 +1,5 @@
 package com.example.androidapp.data.entities;
+import androidx.room.Entity;
 
 import com.example.androidapp.data.DatabaseContract.VoucherType;
 

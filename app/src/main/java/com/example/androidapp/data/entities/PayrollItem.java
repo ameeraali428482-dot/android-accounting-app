@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 public class PayrollItem {
     private String id;

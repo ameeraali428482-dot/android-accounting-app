@@ -1,4 +1,5 @@
 package com.example.androidapp.data.entities;
+import androidx.room.Entity;
 
 @Entity(tableName = "doctors")
 public class Doctor {
