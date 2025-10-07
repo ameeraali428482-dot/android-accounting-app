@@ -13,6 +13,7 @@ import java.util.Date;
                             childColumns = "accountId",
                             onDelete = ForeignKey.CASCADE)
         })
+@Entity(tableName = "account_statements")
 public class AccountStatement {
     @PrimaryKey(autoGenerate = true)
     public int id;

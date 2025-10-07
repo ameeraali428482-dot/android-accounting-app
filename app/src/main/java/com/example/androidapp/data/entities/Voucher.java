@@ -2,6 +2,7 @@ package com.example.androidapp.models;
 
 import com.example.androidapp.data.DatabaseContract.VoucherType;
 
+@Entity(tableName = "vouchers")
 public class Voucher {
     private String id;
     private String companyId;

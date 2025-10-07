@@ -1,5 +1,6 @@
 package com.example.androidapp.models;
 
+@Entity(tableName = "customers")
 public class Customer {
     private String id;
     private String name;

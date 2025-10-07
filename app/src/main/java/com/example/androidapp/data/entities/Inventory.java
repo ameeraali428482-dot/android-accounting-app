@@ -4,6 +4,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "inventory")
+@Entity(tableName = "inventory")
 public class Inventory {
     @PrimaryKey(autoGenerate = true)
     public int id;
