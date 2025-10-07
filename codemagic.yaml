@@ -1,52 +1,18 @@
 workflows:
-  build_and_send_errors:
-    name: Build & Send Errors
+  build_only:
+    name: Build Android App Only
     max_build_duration: 60
 
     environment:
       vars:
-        TELEGRAM_BOT_TOKEN:
-          value: "8310914786:AAH8NPaIoGKbXtFS_-vpcZ_hzkVH847JDEI"
-          is_secret: false
-        TELEGRAM_CHAT_ID:
-          value: "1254508624"
-          is_secret: false
+        JAVA_VERSION: 17
+        GRADLE_OPTS: "-Xmx2048m"
 
     scripts:
-      - name: Verify Telegram variables
-        script: |
-          #!/usr/bin/env bash
-          set -euo pipefail
-          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
-            echo "❌ خطأ: TELEGRAM_BOT_TOKEN أو TELEGRAM_CHAT_ID غير محددين."
-            exit 1
-          fi
-          echo "✅ متغيرات Telegram موجودة."
-
       - name: Build Android app
         script: |
-          echo "🔹 بدء بناء التطبيق..."
-          ./gradlew assembleDebug --console=plain | tee "$CM_BUILD_DIR/build_full_log.txt"
-
-      - name: Send build errors to Telegram
-        script: |
-          #!/usr/bin/env bash
-          set -euo pipefail
-          LOG_FILE="$CM_BUILD_DIR/build_full_log.txt"
-          BOT_TOKEN="$TELEGRAM_BOT_TOKEN"
-          CHAT_ID="$TELEGRAM_CHAT_ID"
-
-          ERRORS=$(grep -iE "FAILURE|FATAL|Exception|error" "$LOG_FILE" || echo "(لا توجد أخطاء)")
-
-          MAX_LEN=3800
-          if [ ${#ERRORS} -gt $MAX_LEN ]; then
-            ERRORS="... (تم اقتطاع الأجزاء السابقة) ...\n${ERRORS: -$MAX_LEN}"
-          fi
-
-          curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
-            -d chat_id="${CHAT_ID}" \
-            -d text="⚠️ Codemagic Build Errors:\n\n$ERRORS" \
-            -d parse_mode="Markdown" || echo "⚠️ تحذير: فشل إرسال رسالة Telegram."
+          echo "🔹 بدء عملية البناء..."
+          ./gradlew clean assembleDebug --console=plain
 
     artifacts:
-      - build_full_log.txt
+      - app/build/outputs/**/*.apk
