@@ -10,39 +10,50 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GenericAdapter<T> extends RecyclerView.Adapter<GenericAdapter.GenericViewHolder> {
+public class GenericAdapter<T> extends RecyclerView.Adapter<GenericAdapter.GenericViewHolder> {
 
     private List<T> dataList;
-    private OnItemClickListener<T> listener;
+    private int layoutResId;
+    private OnItemBindListener<T> bindListener;
+    private OnItemClickListener<T> clickListener;
 
-    public GenericAdapter(List<T> dataList) {
-        this.dataList = dataList != null ? dataList : new ArrayList<>();
+    public interface OnItemBindListener<T> {
+        void onBind(View view, T item);
     }
 
-    public void setData(List<T> newData) {
+    public interface OnItemClickListener<T> {
+        void onItemClick(T item);
+    }
+
+    public GenericAdapter(List<T> dataList, int layoutResId, OnItemBindListener<T> bindListener, OnItemClickListener<T> clickListener) {
+        this.dataList = dataList != null ? dataList : new ArrayList<>();
+        this.layoutResId = layoutResId;
+        this.bindListener = bindListener;
+        this.clickListener = clickListener;
+    }
+
+    public void updateData(List<T> newData) {
         this.dataList.clear();
         this.dataList.addAll(newData);
         notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(OnItemClickListener<T> listener) {
-        this.listener = listener;
-    }
-
     @NonNull
     @Override
     public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(getLayoutResId(), parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false);
         return new GenericViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull GenericViewHolder holder, int position) {
         T item = dataList.get(position);
-        bindView(holder.itemView, item);
+        if (bindListener != null) {
+            bindListener.onBind(holder.itemView, item);
+        }
         holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onItemClick(item);
+            if (clickListener != null) {
+                clickListener.onItemClick(item);
             }
         });
     }
@@ -52,17 +63,9 @@ public abstract class GenericAdapter<T> extends RecyclerView.Adapter<GenericAdap
         return dataList.size();
     }
 
-    protected abstract int getLayoutResId();
-    protected abstract void bindView(View itemView, T item);
-
     public static class GenericViewHolder extends RecyclerView.ViewHolder {
         public GenericViewHolder(@NonNull View itemView) {
             super(itemView);
         }
     }
-
-    public interface OnItemClickListener<T> {
-        void onItemClick(T item);
-    }
 }
-

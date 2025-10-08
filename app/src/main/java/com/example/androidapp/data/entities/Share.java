@@ -1,37 +1,47 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-
-@Entity(tableName = "shares")
+@Entity(tableName = "shares",
+        foreignKeys = {
+                @ForeignKey(entity = Post.class,
+                           parentColumns = "id",
+                           childColumns = "postId",
+                           onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = User.class,
+                           parentColumns = "id",
+                           childColumns = "userId",
+                           onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Company.class,
+                           parentColumns = "id",
+                           childColumns = "companyId",
+                           onDelete = ForeignKey.CASCADE)
+        },
+        indices = {@Index(value = "postId"), @Index(value = "userId"), @Index(value = "companyId")})
 public class Share {
-    @PrimaryKey(autoGenerate = true)
-    public int id;
+    @PrimaryKey
+    public String id;
     public String postId;
     public String userId;
     public String companyId;
     public String timestamp;
 
-    public Share(String postId, String userId, String companyId, String timestamp) {
+    public Share(String id, String postId, String userId, String companyId, String timestamp) {
+        this.id = id;
         this.postId = postId;
         this.userId = userId;
         this.companyId = companyId;
         this.timestamp = timestamp;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.data.entities.Repair;
+import com.example.androidapp.models.Repair;
 import com.example.androidapp.utils.SessionManager;
 
 import java.text.SimpleDateFormat;

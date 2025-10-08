@@ -1,17 +1,22 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-
-@Entity(tableName = "invoices")
+@Entity(tableName = "invoices",
+        foreignKeys = {
+                @ForeignKey(entity = Company.class,
+                           parentColumns = "id",
+                           childColumns = "companyId",
+                           onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Customer.class,
+                           parentColumns = "id",
+                           childColumns = "customerId",
+                           onDelete = ForeignKey.SET_NULL)
+        },
+        indices = {@Index(value = "companyId"), @Index(value = "customerId")})
 public class Invoice {
     @PrimaryKey
     public String id;
@@ -118,3 +123,4 @@ public class Invoice {
         this.cashAmount = cashAmount;
     }
 }
+

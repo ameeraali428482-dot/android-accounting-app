@@ -1,15 +1,9 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
-
+import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
@@ -19,21 +13,22 @@ import java.util.Date;
                             parentColumns = "id",
                             childColumns = "accountId",
                             onDelete = ForeignKey.CASCADE)
-        })
-@Entity(tableName = "account_statements")
+        },
+        indices = {@Index(value = "accountId")})
 public class AccountStatement {
-    @PrimaryKey(autoGenerate = true)
-    public int id;
-    public int accountId;
-    public Date date;
-    public String description;
-    public double debit;
-    public double credit;
-    public double balance;
-    public boolean reconciliationStatus; // For matching with other statements
-    public String reconciliationNotes;
+    @PrimaryKey
+    private String id;
+    private String accountId;
+    private Date date;
+    private String description;
+    private double debit;
+    private double credit;
+    private double balance;
+    private boolean reconciliationStatus;
+    private String reconciliationNotes;
 
-    public AccountStatement(int accountId, Date date, String description, double debit, double credit, double balance, boolean reconciliationStatus, String reconciliationNotes) {
+    public AccountStatement(String id, String accountId, Date date, String description, double debit, double credit, double balance, boolean reconciliationStatus, String reconciliationNotes) {
+        this.id = id;
         this.accountId = accountId;
         this.date = date;
         this.description = description;
@@ -45,19 +40,19 @@ public class AccountStatement {
     }
 
     // Getters and Setters
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public int getAccountId() {
+    public String getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(int accountId) {
+    public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
 
@@ -117,3 +112,4 @@ public class AccountStatement {
         this.reconciliationNotes = reconciliationNotes;
     }
 }
+

@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.data.entities.PointTransaction;
+import com.example.androidapp.models.PointTransaction;
 
 import java.util.List;
 

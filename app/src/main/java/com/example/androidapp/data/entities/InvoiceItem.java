@@ -1,17 +1,24 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-@Entity(tableName = "invoice_items")
+@Entity(tableName = "invoice_items",
+        foreignKeys = {
+                @ForeignKey(entity = Invoice.class,
+                           parentColumns = "id",
+                           childColumns = "invoiceId",
+                           onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Item.class,
+                           parentColumns = "id",
+                           childColumns = "itemId",
+                           onDelete = ForeignKey.SET_NULL)
+        },
+        indices = {@Index(value = "invoiceId"), @Index(value = "itemId")})
 public class InvoiceItem {
+    @PrimaryKey
     private String id;
     private String invoiceId;
     private String itemId;

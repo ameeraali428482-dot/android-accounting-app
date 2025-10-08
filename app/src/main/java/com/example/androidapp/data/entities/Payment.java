@@ -1,18 +1,22 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-
-@Entity(tableName = "payments")
-@Entity(tableName = "payments")
+@Entity(tableName = "payments",
+        foreignKeys = {
+                @ForeignKey(entity = Company.class,
+                           parentColumns = "id",
+                           childColumns = "companyId",
+                           onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = JournalEntry.class,
+                           parentColumns = "id",
+                           childColumns = "journalEntryId",
+                           onDelete = ForeignKey.SET_NULL)
+        },
+        indices = {@Index(value = "companyId"), @Index(value = "journalEntryId")})
 public class Payment {
     @PrimaryKey
     public String id;
@@ -24,8 +28,9 @@ public class Payment {
     public String paymentMethod;
     public String referenceNumber; // e.g., check number, transaction ID
     public String notes;
+    public String journalEntryId;
 
-    public Payment(String id, String companyId, String paymentDate, String payerId, String payerType, float amount, String paymentMethod, String referenceNumber, String notes) {
+    public Payment(String id, String companyId, String paymentDate, String payerId, String payerType, float amount, String paymentMethod, String referenceNumber, String notes, String journalEntryId) {
         this.id = id;
         this.companyId = companyId;
         this.paymentDate = paymentDate;
@@ -35,6 +40,7 @@ public class Payment {
         this.paymentMethod = paymentMethod;
         this.referenceNumber = referenceNumber;
         this.notes = notes;
+        this.journalEntryId = journalEntryId;
     }
 
     public String getId() {
@@ -107,6 +113,14 @@ public class Payment {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getJournalEntryId() {
+        return journalEntryId;
+    }
+
+    public void setJournalEntryId(String journalEntryId) {
+        this.journalEntryId = journalEntryId;
     }
 }
 

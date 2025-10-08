@@ -1,18 +1,14 @@
 package com.example.androidapp.data;
 
-
 import android.content.Context;
-
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import com.example.androidapp.data.dao.*;
 import com.example.androidapp.data.entities.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Database(entities = {
         User.class, Company.class, Role.class, Permission.class, Membership.class,
@@ -23,82 +19,64 @@ import com.example.androidapp.data.entities.*;
         PointTransaction.class, Reward.class, UserReward.class, Employee.class,
         Payroll.class, PayrollItem.class, Service.class, Doctor.class, Voucher.class,
         FinancialTransfer.class, CurrencyExchange.class, JoinRequest.class, Chat.class, Repair.class, Order.class, Trophy.class, UserPermission.class, UserRole.class, AccountStatement.class, UserTrophy.class,
-        Warehouse.class, Inventory.class, Post.class, Comment.class, Like.class, Share.class
+        Warehouse.class, Inventory.class, Post.class, Comment.class, Like.class, Share.class, ContactSync.class, Friend.class, AuditLog.class
 },
-        version = 2, exportSchema = false) // Increment version to 2 due to schema changes
+        version = 2, exportSchema = false)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
-    public abstract UserDao userDao();
-    public abstract CompanyDao companyDao();
-    public abstract RoleDao roleDao();
-    public abstract PermissionDao permissionDao();
-    public abstract MembershipDao membershipDao();
     public abstract AccountDao accountDao();
-    public abstract ItemDao itemDao();
-    public abstract ItemUnitDao itemUnitDao();
+    public abstract AccountStatementDao accountStatementDao();
+    public abstract AuditLogDao auditLogDao();
+    public abstract CampaignDao campaignDao();
+    public abstract ChatDao chatDao();
+    public abstract CommentDao commentDao();
+    public abstract CompanyDao companyDao();
+    public abstract CompanySettingsDao companySettingsDao();
+    public abstract ConnectionDao connectionDao();
+    public abstract ContactSyncDao contactSyncDao();
+    public abstract CurrencyExchangeDao currencyExchangeDao();
     public abstract CustomerDao customerDao();
-    public abstract SupplierDao supplierDao();
+    public abstract DeliveryReceiptDao deliveryReceiptDao();
+    public abstract DoctorDao doctorDao();
+    public abstract EmployeeDao employeeDao();
+    public abstract FinancialTransferDao financialTransferDao();
+    public abstract FriendDao friendDao();
+    public abstract InventoryDao inventoryDao();
     public abstract InvoiceDao invoiceDao();
     public abstract InvoiceItemDao invoiceItemDao();
+    public abstract ItemDao itemDao();
+    public abstract ItemUnitDao itemUnitDao();
+    public abstract JoinRequestDao joinRequestDao();
     public abstract JournalEntryDao journalEntryDao();
     public abstract JournalEntryItemDao journalEntryItemDao();
-    public abstract PaymentDao paymentDao();
-    public abstract ReceiptDao receiptDao();
-    public abstract ReminderDao reminderDao();
+    public abstract LikeDao likeDao();
+    public abstract MembershipDao membershipDao();
     public abstract NotificationDao notificationDao();
-    public abstract CampaignDao campaignDao();
-    public abstract DeliveryReceiptDao deliveryReceiptDao();
-    public abstract ConnectionDao connectionDao();
-    public abstract SharedLinkDao sharedLinkDao();
-    public abstract CompanySettingsDao companySettingsDao();
-    public abstract PointTransactionDao pointTransactionDao();
-    public abstract RewardDao rewardDao();
-    public abstract UserRewardDao userRewardDao();
-    public abstract EmployeeDao employeeDao();
+    public abstract OrderDao orderDao();
+    public abstract PaymentDao paymentDao();
     public abstract PayrollDao payrollDao();
     public abstract PayrollItemDao payrollItemDao();
-    public abstract ServiceDao serviceDao();
-    public abstract DoctorDao doctorDao();
-    public abstract VoucherDao voucherDao();
-    public abstract FinancialTransferDao financialTransferDao();
-    public abstract CurrencyExchangeDao currencyExchangeDao();
-    public abstract JoinRequestDao joinRequestDao();
-    public abstract ChatDao chatDao();
-    public abstract RepairDao repairDao();
-    public abstract OrderDao orderDao();
-    public abstract TrophyDao trophyDao();
-    public abstract UserPermissionDao userPermissionDao();
-    public abstract UserRoleDao userRoleDao();
-    public abstract AccountStatementDao accountStatementDao();
-    public abstract UserTrophyDao userTrophyDao();
-    public abstract WarehouseDao warehouseDao();
-    public abstract InventoryDao inventoryDao();
+    public abstract PermissionDao permissionDao();
+    public abstract PointTransactionDao pointTransactionDao();
     public abstract PostDao postDao();
-    public abstract CommentDao commentDao();
-    public abstract LikeDao likeDao();
+    public abstract ReceiptDao receiptDao();
+    public abstract ReminderDao reminderDao();
+    public abstract RepairDao repairDao();
+    public abstract RewardDao rewardDao();
+    public abstract RoleDao roleDao();
+    public abstract ServiceDao serviceDao();
     public abstract ShareDao shareDao();
-    public abstract AccountStatementDao accountstatementDao();
-    public abstract AuditLogDao auditlogDao();
-    public abstract BaseDao baseDao();
-    public abstract CompanySettingsDao companysettingsDao();
-    public abstract ContactSyncDao contactsyncDao();
-    public abstract CurrencyExchangeDao currencyexchangeDao();
-    public abstract DeliveryReceiptDao deliveryreceiptDao();
-    public abstract FinancialTransferDao financialtransferDao();
-    public abstract FriendDao friendDao();
-    public abstract InvoiceItemDao invoiceitemDao();
-    public abstract ItemUnitDao itemunitDao();
-    public abstract JoinRequestDao joinrequestDao();
-    public abstract JournalEntryDao journalentryDao();
-    public abstract JournalEntryItemDao journalentryitemDao();
-    public abstract PayrollItemDao payrollitemDao();
-    public abstract PointTransactionDao pointtransactionDao();
-    public abstract SharedLinkDao sharedlinkDao();
-    public abstract UserPermissionDao userpermissionDao();
-    public abstract UserRewardDao userrewardDao();
-    public abstract UserRoleDao userroleDao();
-    public abstract UserTrophyDao usertrophyDao();
+    public abstract SharedLinkDao sharedLinkDao();
+    public abstract SupplierDao supplierDao();
+    public abstract TrophyDao trophyDao();
+    public abstract UserDao userDao();
+    public abstract UserPermissionDao userPermissionDao();
+    public abstract UserRewardDao userRewardDao();
+    public abstract UserRoleDao userRoleDao();
+    public abstract UserTrophyDao userTrophyDao();
+    public abstract VoucherDao voucherDao();
+    public abstract WarehouseDao warehouseDao();
 
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;

@@ -12,8 +12,8 @@ import com.example.androidapp.App;
 import com.example.androidapp.R;
 import com.example.androidapp.data.dao.InvoiceDao;
 import com.example.androidapp.data.dao.SupplierDao;
-import com.example.androidapp.data.entities.Invoice;
-import com.example.androidapp.data.entities.Supplier;
+import com.example.androidapp.models.Invoice;
+import com.example.androidapp.models.Supplier;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 

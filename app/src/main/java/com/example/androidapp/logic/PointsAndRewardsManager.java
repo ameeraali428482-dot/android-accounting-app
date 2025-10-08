@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.data.entities.PointTransaction;
-import com.example.androidapp.data.entities.Reward;
-import com.example.androidapp.data.entities.UserReward;
+import com.example.androidapp.models.PointTransaction;
+import com.example.androidapp.models.Reward;
+import com.example.androidapp.models.UserReward;
 
 import java.util.Date;
 import java.util.concurrent.ExecutorService;

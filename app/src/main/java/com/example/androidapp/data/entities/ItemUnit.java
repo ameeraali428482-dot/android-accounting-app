@@ -1,16 +1,24 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "item_units",
+        foreignKeys = {
+                @ForeignKey(entity = Item.class,
+                           parentColumns = "id",
+                           childColumns = "itemId",
+                           onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Company.class,
+                           parentColumns = "id",
+                           childColumns = "companyId",
+                           onDelete = ForeignKey.CASCADE)
+        },
+        indices = {@Index(value = "itemId"), @Index(value = "companyId")})
 public class ItemUnit {
+    @PrimaryKey
     private String id;
     private String itemId;
     private String name;
@@ -18,8 +26,9 @@ public class ItemUnit {
     private float price;
     private float cost;
     private boolean isBaseUnit;
+    private String companyId;
 
-    public ItemUnit(String id, String itemId, String name, float conversionFactor, float price, float cost, boolean isBaseUnit) {
+    public ItemUnit(String id, String itemId, String name, float conversionFactor, float price, float cost, boolean isBaseUnit, String companyId) {
         this.id = id;
         this.itemId = itemId;
         this.name = name;
@@ -27,6 +36,7 @@ public class ItemUnit {
         this.price = price;
         this.cost = cost;
         this.isBaseUnit = isBaseUnit;
+        this.companyId = companyId;
     }
 
     // Getters
@@ -58,6 +68,10 @@ public class ItemUnit {
         return isBaseUnit;
     }
 
+    public String getCompanyId() {
+        return companyId;
+    }
+
     // Setters
     public void setId(String id) {
         this.id = id;
@@ -85,6 +99,10 @@ public class ItemUnit {
 
     public void setBaseUnit(boolean baseUnit) {
         isBaseUnit = baseUnit;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 }
 

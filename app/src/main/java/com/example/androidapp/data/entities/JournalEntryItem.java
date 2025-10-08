@@ -1,27 +1,33 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-
-@Entity(tableName = "journal_entry_items")
+@Entity(tableName = "journal_entry_items",
+        foreignKeys = {
+                @ForeignKey(entity = JournalEntry.class,
+                           parentColumns = "id",
+                           childColumns = "journalEntryId",
+                           onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Account.class,
+                           parentColumns = "id",
+                           childColumns = "accountId",
+                           onDelete = ForeignKey.CASCADE)
+        },
+        indices = {@Index(value = "journalEntryId"), @Index(value = "accountId")})
 public class JournalEntryItem {
-    @PrimaryKey(autoGenerate = true)
-    public int id;
+    @PrimaryKey
+    public String id;
     public String journalEntryId;
     public String accountId;
     public float debit;
     public float credit;
     public String description;
 
-    public JournalEntryItem(String journalEntryId, String accountId, float debit, float credit, String description) {
+    public JournalEntryItem(String id, String journalEntryId, String accountId, float debit, float credit, String description) {
+        this.id = id;
         this.journalEntryId = journalEntryId;
         this.accountId = accountId;
         this.debit = debit;
@@ -29,11 +35,11 @@ public class JournalEntryItem {
         this.description = description;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

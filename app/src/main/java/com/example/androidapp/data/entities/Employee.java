@@ -1,17 +1,18 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-@Entity(tableName = "employees")
+@Entity(tableName = "employees",
+        foreignKeys = @ForeignKey(entity = Company.class,
+                                  parentColumns = "id",
+                                  childColumns = "companyId",
+                                  onDelete = ForeignKey.CASCADE),
+        indices = {@Index(value = "companyId")})
 public class Employee {
+    @PrimaryKey
     private String id;
     private String companyId;
     private String name;

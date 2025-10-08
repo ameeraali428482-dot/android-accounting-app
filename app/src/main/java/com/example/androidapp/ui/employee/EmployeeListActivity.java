@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidapp.App;
 import com.example.androidapp.R;
 import com.example.androidapp.data.dao.EmployeeDao;
-import com.example.androidapp.data.entities.Employee;
+import com.example.androidapp.models.Employee;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 

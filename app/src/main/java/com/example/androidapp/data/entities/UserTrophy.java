@@ -1,20 +1,13 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
-
 import java.util.Date;
 
 @Entity(tableName = "user_trophies",
-        primaryKeys = {"userId", "trophyId"},
+        primaryKeys = {"userId", "trophyId", "companyId"},
         foreignKeys = {
                 @ForeignKey(entity = User.class,
                             parentColumns = "id",
@@ -23,29 +16,58 @@ import java.util.Date;
                 @ForeignKey(entity = Trophy.class,
                             parentColumns = "id",
                             childColumns = "trophyId",
+                            onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Company.class,
+                            parentColumns = "id",
+                            childColumns = "companyId",
                             onDelete = ForeignKey.CASCADE)
-        })
+        },
+        indices = {@Index(value = "userId"), @Index(value = "trophyId"), @Index(value = "companyId")})
 public class UserTrophy {
-    public int userId;
-    public int trophyId;
+    public String userId;
+    public String trophyId;
+    public String companyId;
     public Date achievedDate;
 
-    public UserTrophy(int userId, int trophyId, Date achievedDate) {
+    public UserTrophy(String userId, String trophyId, String companyId, Date achievedDate) {
         this.userId = userId;
         this.trophyId = trophyId;
+        this.companyId = companyId;
         this.achievedDate = achievedDate;
     }
 
     // Getters
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public int getTrophyId() {
+    public String getTrophyId() {
         return trophyId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
     }
 
     public Date getAchievedDate() {
         return achievedDate;
     }
+
+    // Setters
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setTrophyId(String trophyId) {
+        this.trophyId = trophyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public void setAchievedDate(Date achievedDate) {
+        this.achievedDate = achievedDate;
+    }
 }
+

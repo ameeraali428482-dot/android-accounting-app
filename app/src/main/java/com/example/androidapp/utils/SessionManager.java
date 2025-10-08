@@ -81,7 +81,7 @@ public class SessionManager {
         editor.commit();
     }
 
-    public String getCompanyId() {
+    public String getCurrentCompanyId() {
         return pref.getString(KEY_CURRENT_ORG_ID, null);
     }
 

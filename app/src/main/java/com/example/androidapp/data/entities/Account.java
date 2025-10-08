@@ -1,16 +1,16 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-@Entity(tableName = "accounts")
+@Entity(tableName = "accounts",
+        foreignKeys = @ForeignKey(entity = Company.class,
+                                  parentColumns = "id",
+                                  childColumns = "companyId",
+                                  onDelete = ForeignKey.CASCADE),
+        indices = {@Index(value = "companyId")})
 public class Account {
     @PrimaryKey
     private String id;
@@ -37,82 +37,82 @@ public class Account {
         this.updatedAt = updatedAt;
     }
 
-    // Getters
+    // Getters and Setters
+
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public boolean isDebit() {
-        return isDebit;
-    }
-
-    public String getParentCode() {
-        return parentCode;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCode() {
+        return code;
     }
 
     public void setCode(String code) {
         this.code = code;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isDebit() {
+        return isDebit;
     }
 
     public void setDebit(boolean debit) {
         isDebit = debit;
     }
 
+    public String getParentCode() {
+        return parentCode;
+    }
+
     public void setParentCode(String parentCode) {
         this.parentCode = parentCode;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public String getCompanyId() {
+        return companyId;
+    }
+
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
     }
 
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
     }
 
     public void setUpdatedAt(String updatedAt) {

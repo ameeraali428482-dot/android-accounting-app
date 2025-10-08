@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidapp.R;
-import com.example.androidapp.data.entities.InvoiceItem;
+import com.example.androidapp.models.InvoiceItem;
 
 import java.util.List;
 

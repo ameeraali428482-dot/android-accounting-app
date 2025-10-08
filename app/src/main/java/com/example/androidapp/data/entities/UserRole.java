@@ -1,18 +1,11 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
-
 @Entity(tableName = "user_roles",
-        primaryKeys = {"userId", "roleId"},
+        primaryKeys = {"userId", "roleId", "companyId"},
         foreignKeys = {
                 @ForeignKey(entity = User.class,
                             parentColumns = "id",
@@ -21,23 +14,48 @@ import androidx.room.Index;
                 @ForeignKey(entity = Role.class,
                             parentColumns = "id",
                             childColumns = "roleId",
+                            onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Company.class,
+                            parentColumns = "id",
+                            childColumns = "companyId",
                             onDelete = ForeignKey.CASCADE)
-        })
+        },
+        indices = {@Index(value = "userId"), @Index(value = "roleId"), @Index(value = "companyId")})
 public class UserRole {
-    public int userId;
-    public int roleId;
+    public String userId;
+    public String roleId;
+    public String companyId;
 
-    public UserRole(int userId, int roleId) {
+    public UserRole(String userId, String roleId, String companyId) {
         this.userId = userId;
         this.roleId = roleId;
+        this.companyId = companyId;
     }
 
     // Getters
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public int getRoleId() {
+    public String getRoleId() {
         return roleId;
     }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    // Setters
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 }
+

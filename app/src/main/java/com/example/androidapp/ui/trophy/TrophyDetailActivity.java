@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.data.entities.Trophy;
+import com.example.androidapp.models.Trophy;
 import com.example.androidapp.utils.SessionManager;
 
 public class TrophyDetailActivity extends AppCompatActivity {

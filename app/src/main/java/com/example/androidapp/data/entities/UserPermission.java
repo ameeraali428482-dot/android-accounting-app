@@ -1,18 +1,11 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
-
 @Entity(tableName = "user_permissions",
-        primaryKeys = {"userId", "permissionId"},
+        primaryKeys = {"userId", "permissionId", "companyId"},
         foreignKeys = {
                 @ForeignKey(entity = User.class,
                             parentColumns = "id",
@@ -21,23 +14,48 @@ import androidx.room.Index;
                 @ForeignKey(entity = Permission.class,
                             parentColumns = "id",
                             childColumns = "permissionId",
+                            onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Company.class,
+                            parentColumns = "id",
+                            childColumns = "companyId",
                             onDelete = ForeignKey.CASCADE)
-        })
+        },
+        indices = {@Index(value = "userId"), @Index(value = "permissionId"), @Index(value = "companyId")})
 public class UserPermission {
-    public int userId;
-    public int permissionId;
+    public String userId;
+    public String permissionId;
+    public String companyId;
 
-    public UserPermission(int userId, int permissionId) {
+    public UserPermission(String userId, String permissionId, String companyId) {
         this.userId = userId;
         this.permissionId = permissionId;
+        this.companyId = companyId;
     }
 
     // Getters
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public int getPermissionId() {
+    public String getPermissionId() {
         return permissionId;
     }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    // Setters
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setPermissionId(String permissionId) {
+        this.permissionId = permissionId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 }
+

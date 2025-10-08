@@ -11,8 +11,8 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.data.entities.ContactSync;
-import com.example.androidapp.data.entities.User;
+import com.example.androidapp.models.ContactSync;
+import com.example.androidapp.models.User;
 
 import java.util.ArrayList;
 import java.util.Date;

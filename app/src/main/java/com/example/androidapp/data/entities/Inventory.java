@@ -1,29 +1,38 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-
-@Entity(tableName = "inventory")
-@Entity(tableName = "inventory")
+@Entity(tableName = "inventory",
+        foreignKeys = {
+                @ForeignKey(entity = Company.class,
+                           parentColumns = "id",
+                           childColumns = "companyId",
+                           onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Item.class,
+                           parentColumns = "id",
+                           childColumns = "itemId",
+                           onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Warehouse.class,
+                           parentColumns = "id",
+                           childColumns = "warehouseId",
+                           onDelete = ForeignKey.CASCADE)
+        },
+        indices = {@Index(value = "companyId"), @Index(value = "itemId"), @Index(value = "warehouseId")})
 public class Inventory {
-    @PrimaryKey(autoGenerate = true)
-    public int id;
-    public String companyId;
-    public String itemId;
-    public String warehouseId;
-    public float quantity;
-    public float costPrice; // Cost price at the time of inventory entry
-    public String lastUpdated;
+    @PrimaryKey
+    private String id;
+    private String companyId;
+    private String itemId;
+    private String warehouseId;
+    private float quantity;
+    private float costPrice; // Cost price at the time of inventory entry
+    private String lastUpdated;
 
-    public Inventory(String companyId, String itemId, String warehouseId, float quantity, float costPrice, String lastUpdated) {
+    public Inventory(String id, String companyId, String itemId, String warehouseId, float quantity, float costPrice, String lastUpdated) {
+        this.id = id;
         this.companyId = companyId;
         this.itemId = itemId;
         this.warehouseId = warehouseId;
@@ -32,11 +41,11 @@ public class Inventory {
         this.lastUpdated = lastUpdated;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

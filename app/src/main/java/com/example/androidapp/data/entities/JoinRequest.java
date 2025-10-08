@@ -1,16 +1,24 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "join_requests",
+        foreignKeys = {
+                @ForeignKey(entity = User.class,
+                           parentColumns = "id",
+                           childColumns = "userId",
+                           onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Company.class,
+                           parentColumns = "id",
+                           childColumns = "companyId",
+                           onDelete = ForeignKey.CASCADE)
+        },
+        indices = {@Index(value = "userId"), @Index(value = "companyId")})
 public class JoinRequest {
+    @PrimaryKey
     private String id;
     private String userId;
     private String companyId;

@@ -1,40 +1,40 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
-
+import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
 @Entity(tableName = "friends",
         foreignKeys = {
                 @ForeignKey(entity = User.class,
-                        parentColumns = "id",
-                        childColumns = "userId",
-                        onDelete = ForeignKey.CASCADE),
+                           parentColumns = "id",
+                           childColumns = "userId",
+                           onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = User.class,
-                        parentColumns = "id",
-                        childColumns = "friendId",
-                        onDelete = ForeignKey.CASCADE)
+                           parentColumns = "id",
+                           childColumns = "friendId",
+                           onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Company.class,
+                           parentColumns = "id",
+                           childColumns = "companyId",
+                           onDelete = ForeignKey.CASCADE)
         },
         indices = {
                 @Index(value = {"userId", "friendId"}, unique = true),
                 @Index(value = "userId"),
-                @Index(value = "friendId")
+                @Index(value = "friendId"),
+                @Index(value = "companyId")
         })
 public class Friend {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey
+    private String id;
     
-    private int userId;
-    private int friendId;
+    private String userId;
+    private String friendId;
+    private String companyId;
     private String status; // PENDING, ACCEPTED, BLOCKED
     private Date requestDate;
     private Date acceptedDate;
@@ -47,42 +47,54 @@ public class Friend {
     private boolean allowViewActivity;
     
     // Constructors
-    public Friend() {}
-    
-    public Friend(int userId, int friendId, String status) {
+    public Friend(String id, String userId, String friendId, String companyId, String status, Date requestDate, Date acceptedDate, String notes, boolean isFavorite, String nickname, boolean allowNotifications, boolean allowChatMessages, boolean allowViewProfile, boolean allowViewActivity) {
+        this.id = id;
         this.userId = userId;
         this.friendId = friendId;
+        this.companyId = companyId;
         this.status = status;
-        this.requestDate = new Date();
-        this.allowNotifications = true;
-        this.allowChatMessages = true;
-        this.allowViewProfile = true;
-        this.allowViewActivity = false;
+        this.requestDate = requestDate;
+        this.acceptedDate = acceptedDate;
+        this.notes = notes;
+        this.isFavorite = isFavorite;
+        this.nickname = nickname;
+        this.allowNotifications = allowNotifications;
+        this.allowChatMessages = allowChatMessages;
+        this.allowViewProfile = allowViewProfile;
+        this.allowViewActivity = allowViewActivity;
     }
     
     // Getters and Setters
-    public int getId() {
+    public String getId() {
         return id;
     }
     
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
     
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
     
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
     
-    public int getFriendId() {
+    public String getFriendId() {
         return friendId;
     }
     
-    public void setFriendId(int friendId) {
+    public void setFriendId(String friendId) {
         this.friendId = friendId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
     
     public String getStatus() {
@@ -171,3 +183,4 @@ public class Friend {
     public static final String STATUS_BLOCKED = "BLOCKED";
     public static final String STATUS_REJECTED = "REJECTED";
 }
+

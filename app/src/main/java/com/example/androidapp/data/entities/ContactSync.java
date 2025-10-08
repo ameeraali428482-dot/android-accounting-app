@@ -1,36 +1,36 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
-
+import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
 @Entity(tableName = "contact_sync",
         foreignKeys = {
                 @ForeignKey(entity = User.class,
-                        parentColumns = "id",
-                        childColumns = "userId",
-                        onDelete = ForeignKey.CASCADE)
+                            parentColumns = "id",
+                            childColumns = "userId",
+                            onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Company.class,
+                            parentColumns = "id",
+                            childColumns = "companyId",
+                            onDelete = ForeignKey.CASCADE)
         },
         indices = {
                 @Index(value = {"userId", "contactIdentifier"}, unique = true),
                 @Index(value = "userId"),
+                @Index(value = "companyId"),
                 @Index(value = "email"),
                 @Index(value = "phoneNumber")
         })
 public class ContactSync {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey
+    private String id;
     
-    private int userId;
+    private String userId;
+    private String companyId;
     private String contactIdentifier; // Unique identifier from device contacts
     private String displayName;
     private String email;
@@ -38,7 +38,7 @@ public class ContactSync {
     private String photoUri;
     private Date lastSyncDate;
     private boolean isRegisteredUser;
-    private int registeredUserId; // If contact is a registered user
+    private String registeredUserId; // If contact is a registered user
     private String syncStatus; // SYNCED, PENDING, FAILED
     private boolean allowSync;
     private String notes;
@@ -46,35 +46,48 @@ public class ContactSync {
     private Date updatedDate;
     
     // Constructors
-    public ContactSync() {
-        this.createdDate = new Date();
-        this.updatedDate = new Date();
-        this.allowSync = true;
-        this.syncStatus = STATUS_PENDING;
-    }
-    
-    public ContactSync(int userId, String contactIdentifier, String displayName) {
-        this();
+    public ContactSync(String id, String userId, String companyId, String contactIdentifier, String displayName, String email, String phoneNumber, String photoUri, Date lastSyncDate, boolean isRegisteredUser, String registeredUserId, String syncStatus, boolean allowSync, String notes, Date createdDate, Date updatedDate) {
+        this.id = id;
         this.userId = userId;
+        this.companyId = companyId;
         this.contactIdentifier = contactIdentifier;
         this.displayName = displayName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.photoUri = photoUri;
+        this.lastSyncDate = lastSyncDate;
+        this.isRegisteredUser = isRegisteredUser;
+        this.registeredUserId = registeredUserId;
+        this.syncStatus = syncStatus;
+        this.allowSync = allowSync;
+        this.notes = notes;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
     }
-    
+
     // Getters and Setters
-    public int getId() {
+    public String getId() {
         return id;
     }
     
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
     
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
     
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
     
     public String getContactIdentifier() {
@@ -133,11 +146,11 @@ public class ContactSync {
         isRegisteredUser = registeredUser;
     }
     
-    public int getRegisteredUserId() {
+    public String getRegisteredUserId() {
         return registeredUserId;
     }
     
-    public void setRegisteredUserId(int registeredUserId) {
+    public void setRegisteredUserId(String registeredUserId) {
         this.registeredUserId = registeredUserId;
     }
     
@@ -186,3 +199,4 @@ public class ContactSync {
     public static final String STATUS_PENDING = "PENDING";
     public static final String STATUS_FAILED = "FAILED";
 }
+

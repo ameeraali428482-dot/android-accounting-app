@@ -1,19 +1,26 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 import com.example.androidapp.data.DatabaseContract.VoucherType;
 
-@Entity(tableName = "vouchers")
+@Entity(tableName = "vouchers",
+        foreignKeys = {
+                @ForeignKey(entity = Company.class,
+                           parentColumns = "id",
+                           childColumns = "companyId",
+                           onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = JournalEntry.class,
+                           parentColumns = "id",
+                           childColumns = "journalEntryId",
+                           onDelete = ForeignKey.SET_NULL)
+        },
+        indices = {@Index(value = "companyId"), @Index(value = "journalEntryId")})
 public class Voucher {
+    @PrimaryKey
     private String id;
     private String companyId;
     private VoucherType type;

@@ -1,17 +1,37 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.TypeConverters;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.Ignore;
-import androidx.room.Embedded;
-import androidx.room.PrimaryKey;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-@Entity(tableName = "companies")
+@Entity(tableName = "companies",
+        foreignKeys = {
+                @ForeignKey(entity = Account.class,
+                           parentColumns = "id",
+                           childColumns = "defaultCashAccountId",
+                           onDelete = ForeignKey.SET_NULL),
+                @ForeignKey(entity = Account.class,
+                           parentColumns = "id",
+                           childColumns = "defaultExchangeDiffAccountId",
+                           onDelete = ForeignKey.SET_NULL),
+                @ForeignKey(entity = Account.class,
+                           parentColumns = "id",
+                           childColumns = "defaultPayrollExpenseAccountId",
+                           onDelete = ForeignKey.SET_NULL),
+                @ForeignKey(entity = Account.class,
+                           parentColumns = "id",
+                           childColumns = "defaultSalariesPayableAccountId",
+                           onDelete = ForeignKey.SET_NULL)
+        },
+        indices = {
+                @Index(value = "defaultCashAccountId"),
+                @Index(value = "defaultExchangeDiffAccountId"),
+                @Index(value = "defaultPayrollExpenseAccountId"),
+                @Index(value = "defaultSalariesPayableAccountId")
+        })
 public class Company {
+    @PrimaryKey
     private String id;
     private String name;
     private String address;
