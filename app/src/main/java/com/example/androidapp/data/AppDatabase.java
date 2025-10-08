@@ -1,7 +1,6 @@
 package com.example.androidapp.data;
 import com.example.androidapp.data.dao.AccountDao;
 import com.example.androidapp.data.dao.AccountStatementDao;
-import com.example.androidapp.data.dao.AuditLogDao;
 import com.example.androidapp.data.dao.CampaignDao;
 import com.example.androidapp.data.dao.ChatDao;
 import com.example.androidapp.data.dao.CommentDao;
@@ -70,7 +69,7 @@ import com.example.androidapp.data.entities.*;
         User.class, Company.class, Role.class, Permission.class, Membership.class,
         Account.class, Item.class, ItemUnit.class, Customer.class, Supplier.class,
         Invoice.class, InvoiceItem.class, JournalEntry.class, JournalEntryItem.class,
-        Payment.class, Receipt.class, Reminder.class, Notification.class, AuditLog.class, Campaign.class,
+        Payment.class, Receipt.class, Reminder.class, Notification.class, Campaign.class,
         DeliveryReceipt.class, Connection.class, SharedLink.class, CompanySettings.class,
         PointTransaction.class, Reward.class, UserReward.class, Employee.class,
         Payroll.class, PayrollItem.class, Service.class, Doctor.class, Voucher.class,
@@ -99,7 +98,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ReceiptDao receiptDao();
     public abstract ReminderDao reminderDao();
     public abstract NotificationDao notificationDao();
-    public abstract AuditLogDao auditLogDao();
     public abstract CampaignDao campaignDao();
     public abstract DeliveryReceiptDao deliveryReceiptDao();
     public abstract ConnectionDao connectionDao();
