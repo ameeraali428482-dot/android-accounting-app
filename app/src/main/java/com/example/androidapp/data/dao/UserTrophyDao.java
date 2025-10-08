@@ -1,5 +1,4 @@
 package com.example.androidapp.data.dao;
-import com.example.androidapp.data.entities.Product;
 import com.example.androidapp.data.entities.Account;
 import com.example.androidapp.data.entities.Item;
 import com.example.androidapp.data.entities.InvoiceItem;
@@ -24,8 +23,8 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.androidapp.models.UserTrophy;
-import com.example.androidapp.models.Trophy;
+import com.example.androidapp.data.entities.UserTrophy;
+import com.example.androidapp.data.entities.Trophy;
 
 import java.util.List;
 

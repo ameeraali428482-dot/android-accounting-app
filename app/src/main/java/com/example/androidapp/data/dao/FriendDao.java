@@ -1,5 +1,4 @@
 package com.example.androidapp.data.dao;
-import com.example.androidapp.data.entities.Product;
 import com.example.androidapp.data.entities.Account;
 import com.example.androidapp.data.entities.Item;
 import com.example.androidapp.data.entities.InvoiceItem;
@@ -26,7 +25,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.androidapp.models.Friend;
+import com.example.androidapp.data.entities.Friend;
 
 import java.util.List;
 

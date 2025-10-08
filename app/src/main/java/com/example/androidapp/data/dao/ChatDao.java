@@ -1,5 +1,4 @@
 package com.example.androidapp.data.dao;
-import com.example.androidapp.data.entities.Product;
 import com.example.androidapp.data.entities.Account;
 import com.example.androidapp.data.entities.Item;
 import com.example.androidapp.data.entities.InvoiceItem;
@@ -26,7 +25,7 @@ import androidx.room.Delete;
 import androidx.room.Query;
 import androidx.lifecycle.LiveData;
 
-import com.example.androidapp.models.Chat;
+import com.example.androidapp.data.entities.Chat;
 
 import java.util.List;
 

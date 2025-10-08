@@ -1,5 +1,4 @@
 package com.example.androidapp.data.dao;
-import com.example.androidapp.data.entities.Product;
 import com.example.androidapp.data.entities.Account;
 import com.example.androidapp.data.entities.Item;
 import com.example.androidapp.data.entities.InvoiceItem;

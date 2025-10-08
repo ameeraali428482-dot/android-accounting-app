@@ -3,11 +3,11 @@ package com.example.androidapp.utils;
 import android.content.Context;
 
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.models.Permission;
-import com.example.androidapp.models.Role;
-import com.example.androidapp.models.User;
-import com.example.androidapp.models.UserPermission;
-import com.example.androidapp.models.UserRole;
+import com.example.androidapp.data.entities.Permission;
+import com.example.androidapp.data.entities.Role;
+import com.example.androidapp.data.entities.User;
+import com.example.androidapp.data.entities.UserPermission;
+import com.example.androidapp.data.entities.UserRole;
 
 import java.util.ArrayList;
 import java.util.HashMap;
