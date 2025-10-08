@@ -19,13 +19,15 @@ import java.util.concurrent.Executors;
         PointTransaction.class, Reward.class, UserReward.class, Employee.class,
         Payroll.class, PayrollItem.class, Service.class, Doctor.class, Voucher.class,
         FinancialTransfer.class, CurrencyExchange.class, JoinRequest.class, Chat.class, Repair.class, Order.class, Trophy.class, UserPermission.class, UserRole.class, AccountStatement.class, UserTrophy.class,
-        Warehouse.class, Inventory.class, Post.class, Comment.class, Like.class, Share.class, ContactSync.class, Friend.class, AuditLog.class
+        Warehouse.class, Inventory.class, Post.class, Comment.class, Like.class, Share.class, ContactSync.class, Friend.class, AuditLog.class,
+        Purchase.class, AccountStatement.class
 },
-        version = 2, exportSchema = false)
+        version = 3, exportSchema = false)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract AccountDao accountDao();
+    public abstract PurchaseDao purchaseDao();
     public abstract AccountStatementDao accountStatementDao();
     public abstract AuditLogDao auditLogDao();
     public abstract CampaignDao campaignDao();
@@ -89,7 +91,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "business_database")
-                            .fallbackToDestructiveMigration()
+                            // .fallbackToDestructiveMigration() // يجب تنفيذ استراتيجية ترحيل مناسبة هنا
                             .build();
                 }
             }
@@ -97,4 +99,3 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 }
-
