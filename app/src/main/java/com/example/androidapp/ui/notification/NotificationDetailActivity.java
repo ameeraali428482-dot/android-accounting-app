@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.models.Notification;
+import com.example.androidapp.data.entities.Notification;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

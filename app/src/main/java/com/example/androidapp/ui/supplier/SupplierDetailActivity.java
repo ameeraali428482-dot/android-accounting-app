@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.androidapp.App;
 import com.example.androidapp.R;
 import com.example.androidapp.data.dao.SupplierDao;
-import com.example.androidapp.models.Supplier;
+import com.example.androidapp.data.entities.Supplier;
 import com.example.androidapp.utils.SessionManager;
 
 import java.util.UUID;
