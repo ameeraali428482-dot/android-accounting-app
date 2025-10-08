@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
     id 'org.jetbrains.kotlin.android'
-    // id 'org.jetbrains.kotlin.kapt' <-- تم حذفه لأنه يتعارض مع كود Java لقاعدة البيانات
+    // تم حذف بلجن kapt لتصحيح خطأ توليد كود Room/Java
 }
 
 android {
@@ -58,7 +58,7 @@ android {
 }
 
 dependencies {
-    // تم تغييرها من kapt إلى annotationProcessor لتناسب كود Java
+    // تم تحويلها من kapt إلى annotationProcessor لتشغيل Room Compiler بشكل صحيح
     annotationProcessor "androidx.room:room-compiler:2.6.1"
 
     // Room Database Dependencies (Phoenix AI)
@@ -85,10 +85,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
     implementation 'com.google.apis:google-api-services-drive:v3-rev20230822-2.0.0'
     implementation 'com.google.firebase:firebase-functions:20.3.0'
-    // تم تغييرها من kapt إلى annotationProcessor
-    annotationProcessor "androidx.room:room-compiler:2.6.1"
+    
+    // تم تحويلها من kapt إلى annotationProcessor لتشغيل Room Compiler بشكل صحيح
+    annotationProcessor "androidx.room:room-compiler:2.6.1" 
+    
     implementation 'com.github.bumptech.glide:glide:4.16.0'
-    // تم تغييرها من kapt إلى annotationProcessor
+    // تم تحويلها من kapt إلى annotationProcessor لتشغيل Glide Compiler بشكل صحيح
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 }
-
