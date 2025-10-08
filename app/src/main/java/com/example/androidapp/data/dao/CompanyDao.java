@@ -21,7 +21,7 @@ public interface CompanyDao {
     void delete(Company company);
 
     @Query("SELECT * FROM companies")
-    List<Company> getAllCompanys();
+        List<Company> getAllCompanies();
 
     @Query("SELECT * FROM companies WHERE id = :id LIMIT 1")
     Company getCompanyById(String id);

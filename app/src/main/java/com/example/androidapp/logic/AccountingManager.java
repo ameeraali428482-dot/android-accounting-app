@@ -361,10 +361,52 @@ public class AccountingManager {
      * @param type The type of document (e.g., "PAYMENT", "RECEIPT", "JOURNAL").
      * @return True if unique, false otherwise.
      */
-    public void calculateAndSaveAccountStatement(AccountStatement newStatement) {
+    public boolean isReferenceNumberUnique(String referenceNumber, String companyId, String type) {
+        try {
+            switch (type) {
+                case "PAYMENT":
+                    return database.paymentDao().countPaymentByReferenceNumber(referenceNumber, companyId) == 0;
+                case "RECEIPT":
+                    return database.receiptDao().countReceiptByReferenceNumber(referenceNumber, companyId) == 0;
+                case "JOURNAL":
+                    return database.journalEntryDao().countJournalEntryByReferenceNumber(referenceNumber, companyId) == 0;
+                default:
+                    return true;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error checking reference number uniqueness: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Calculates and saves an account statement.
+     *
+     * @param companyId The ID of the company.
+     * @param accountId The ID of the account.
+     */
+    public void calculateAndSaveAccountStatement(String companyId, String accountId) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             try {
-                // Get all existing statements for the account, ordered by date
+                List<JournalEntryItem> items = database.journalEntryItemDao().getJournalEntryItemsForAccount(accountId);
+                float runningBalance = 0;
+
+                for (JournalEntryItem item : items) {
+                    runningBalance += item.getDebit() - item.getCredit();
+                }
+
+                String statementId = UUID.randomUUID().toString();
+                String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+                AccountStatement newStatement = new AccountStatement(statementId, accountId, companyId, currentDate, runningBalance);
+                database.accountStatementDao().insert(newStatement);
+
+                Log.d(TAG, "Account statement calculated and saved for account: " + accountId);
+            } catch (Exception e) {
+                Log.e(TAG, "Error calculating account statement: " + e.getMessage());
+            }
+        });
+    }e
                 List<AccountStatement> existingStatements = database.accountStatementDao().getAccountStatementsForBalanceCalculation(
                         newStatement.getCompanyId(), newStatement.getAccountId());
 
