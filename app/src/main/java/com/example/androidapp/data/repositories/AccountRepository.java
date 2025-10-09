@@ -1,6 +1,7 @@
 package com.example.androidapp.data.repositories;
 
 import android.app.Application;
+import androidx.lifecycle.LiveData;
 
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.AccountDao;
@@ -13,27 +14,40 @@ public class AccountRepository {
     private AccountDao accountDao;
 
     public AccountRepository(Application application) {
-        AppDatabase database = AppDatabase.getDatabase(application);
-        accountDao = database.accountDao();
+        AppDatabase db = AppDatabase.getDatabase(application);
+        accountDao = db.accountDao();
     }
 
-    public Future<?> insert(Account account) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> accountDao.insert(account));
+    public Future<Void> insert(Account account) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> {
+            accountDao.insert(account);
+            return null;
+        });
     }
 
-    public Future<?> update(Account account) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> accountDao.update(account));
+    public Future<Void> update(Account account) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> {
+            accountDao.update(account);
+            return null;
+        });
     }
 
-    public Future<?> delete(Account account) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> accountDao.delete(account));
+    public Future<Void> delete(Account account) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> {
+            accountDao.delete(account);
+            return null;
+        });
     }
 
-    public Future<Account> getAccountByNameAndCompanyId(String name, String companyId) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> accountDao.getAccountByNameAndCompanyId(name, companyId));
+    public LiveData<List<Account>> getAllAccounts(String companyId) {
+        return accountDao.getAllAccounts(companyId);
     }
 
-    public Future<List<Account>> getAllAccounts(String companyId) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> accountDao.getAllAccounts(companyId));
+    public Future<Account> getAccountById(String accountId, String companyId) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> accountDao.getAccountById(accountId, companyId));
+    }
+
+    public Future<Account> getAccountByNameAndCompanyId(String accountName, String companyId) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> accountDao.getAccountByNameAndCompanyId(accountName, companyId));
     }
 }

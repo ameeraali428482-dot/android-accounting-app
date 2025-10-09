@@ -1,20 +1,14 @@
 package com.example.androidapp.logic;
 
+import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.data.dao.AccountDao;
-import com.example.androidapp.data.dao.InventoryDao;
-import com.example.androidapp.data.dao.InvoiceDao;
-import com.example.androidapp.data.dao.ItemDao;
-import com.example.androidapp.data.dao.JournalEntryDao;
-import com.example.androidapp.data.dao.JournalEntryItemDao;
-import com.example.androidapp.data.dao.PaymentDao;
-import com.example.androidapp.data.dao.ReceiptDao;
-import com.example.androidapp.data.dao.PurchaseDao;
+import com.example.androidapp.data.dao.AccountStatementDao;
 import com.example.androidapp.data.entities.Account;
-import com.example.androidapp.data.entities.Company;
+import com.example.androidapp.data.entities.AccountStatement;
+import com.example.androidapp.data.entities.BalanceSheet;
 import com.example.androidapp.data.entities.Inventory;
 import com.example.androidapp.data.entities.Invoice;
 import com.example.androidapp.data.entities.InvoiceItem;
@@ -24,14 +18,22 @@ import com.example.androidapp.data.entities.JournalEntryItem;
 import com.example.androidapp.data.entities.Payment;
 import com.example.androidapp.data.entities.ProfitLossStatement;
 import com.example.androidapp.data.entities.Receipt;
-import com.example.androidapp.data.entities.Purchase;
+import com.example.androidapp.data.repositories.AccountRepository;
+import com.example.androidapp.data.repositories.InventoryRepository;
+import com.example.androidapp.data.repositories.InvoiceRepository;
+import com.example.androidapp.data.repositories.ItemRepository;
+import com.example.androidapp.data.repositories.JournalEntryItemRepository;
+import com.example.androidapp.data.repositories.JournalEntryRepository;
+import com.example.androidapp.data.repositories.PaymentRepository;
+import com.example.androidapp.data.repositories.PurchaseRepository;
+import com.example.androidapp.data.repositories.ReceiptRepository;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class AccountingManager {
     private static final String TAG = "AccountingManager";
@@ -44,17 +46,20 @@ public class AccountingManager {
     private final PaymentRepository paymentRepository;
     private final ReceiptRepository receiptRepository;
     private final PurchaseRepository purchaseRepository;
+    private final AppDatabase database;
 
     public AccountingManager(Context context) {
-        this.accountRepository = new AccountRepository((Application) context.getApplicationContext());
-        this.inventoryRepository = new InventoryRepository((Application) context.getApplicationContext());
-        this.invoiceRepository = new InvoiceRepository((Application) context.getApplicationContext());
-        this.itemRepository = new ItemRepository((Application) context.getApplicationContext());
-        this.journalEntryRepository = new JournalEntryRepository((Application) context.getApplicationContext());
-        this.journalEntryItemRepository = new JournalEntryItemRepository((Application) context.getApplicationContext());
-        this.paymentRepository = new PaymentRepository((Application) context.getApplicationContext());
-        this.receiptRepository = new ReceiptRepository((Application) context.getApplicationContext());
-        this.purchaseRepository = new PurchaseRepository((Application) context.getApplicationContext());
+        Application application = (Application) context.getApplicationContext();
+        this.database = AppDatabase.getDatabase(application);
+        this.accountRepository = new AccountRepository(application);
+        this.inventoryRepository = new InventoryRepository(application);
+        this.invoiceRepository = new InvoiceRepository(application);
+        this.itemRepository = new ItemRepository(application);
+        this.journalEntryRepository = new JournalEntryRepository(application);
+        this.journalEntryItemRepository = new JournalEntryItemRepository(application);
+        this.paymentRepository = new PaymentRepository(application);
+        this.receiptRepository = new ReceiptRepository(application);
+        this.purchaseRepository = new PurchaseRepository(application);
     }
 
     /**
@@ -336,35 +341,30 @@ public class AccountingManager {
                 return "Cash";
             case "Bank Transfer":
             case "تحويل بنكي":
-                return "Bank";
             case "Credit Card":
             case "بطاقة ائتمان":
-                return "Credit Card Payable"; // Or a specific bank account for credit card settlements
-            case "Check":
-            case "شيك":
                 return "Bank";
             default:
-                return "Cash"; // Default to Cash if method is unknown
+                return "Cash"; // Default to Cash
         }
     }
 
     /**
-     * Validates if a journal entry is balanced (total debits equal total credits).
+     * Validates if the total debits equal total credits for a given journal entry.
      *
      * @param journalEntryId The ID of the journal entry to validate.
      * @return True if balanced, false otherwise.
      */
     public boolean validateJournalEntryBalance(String journalEntryId) {
         try {
-            List<JournalEntryItem> items = journalEntryItemRepository.getJournalEntryItemsForJournalEntry(journalEntryId).get();
+            List<JournalEntryItem> items = journalEntryItemRepository.getJournalEntryItems(journalEntryId).get();
             float totalDebit = 0;
             float totalCredit = 0;
-
             for (JournalEntryItem item : items) {
                 totalDebit += item.getDebit();
                 totalCredit += item.getCredit();
             }
-            return Math.abs(totalDebit - totalCredit) < 0.01; // Allow for small rounding differences
+            return Math.abs(totalDebit - totalCredit) < 0.001; // Using a tolerance for float comparison
         } catch (Exception e) {
             Log.e(TAG, "Error validating journal entry balance: " + e.getMessage());
             return false;
@@ -372,7 +372,7 @@ public class AccountingManager {
     }
 
     /**
-     * Checks for duplicate invoice numbers within a company.
+     * Checks if an invoice number is unique for a given company.
      *
      * @param invoiceNumber The invoice number to check.
      * @param companyId The ID of the company.
@@ -380,7 +380,7 @@ public class AccountingManager {
      */
     public boolean isInvoiceNumberUnique(String invoiceNumber, String companyId) {
         try {
-            return invoiceRepository.countInvoiceByNumber(invoiceNumber, companyId).get() == 0;
+            return invoiceRepository.countInvoicesByNumber(invoiceNumber, companyId).get() == 0;
         } catch (Exception e) {
             Log.e(TAG, "Error checking invoice number uniqueness: " + e.getMessage());
             return false;
@@ -388,11 +388,11 @@ public class AccountingManager {
     }
 
     /**
-     * Checks for duplicate reference numbers for payments, receipts, or journal entries within a company.
+     * Checks if a reference number is unique for a given company and type.
      *
      * @param referenceNumber The reference number to check.
      * @param companyId The ID of the company.
-     * @param type The type of document (e.g., "PAYMENT", "RECEIPT", "JOURNAL").
+     * @param type The type of reference (e.g., "PAYMENT", "RECEIPT", "JOURNAL").
      * @return True if unique, false otherwise.
      */
     public boolean isReferenceNumberUnique(String referenceNumber, String companyId, String type) {
@@ -456,15 +456,19 @@ public class AccountingManager {
      * @return A map or a custom object representing the P&L statement.
      */
     public ProfitLossStatement generateProfitAndLoss(String companyId, String startDate, String endDate) {
-        float totalRevenue = getTotalSales(companyId, startDate, endDate);
-        float totalCostOfGoodsSold = database.journalEntryItemDao().getTotalAmountForAccountTypeAndDateRange("Cost of Goods Sold", companyId, startDate, endDate);
-        float grossProfit = totalRevenue - totalCostOfGoodsSold;
+        try {
+            float totalRevenue = getTotalSales(companyId, startDate, endDate);
+            float totalCostOfGoodsSold = journalEntryItemRepository.getTotalAmountForAccountTypeAndDateRange("Cost of Goods Sold", companyId, startDate, endDate).get();
+            float grossProfit = totalRevenue - totalCostOfGoodsSold;
 
-        // Example for operating expenses - needs more detailed implementation
-        float operatingExpenses = database.journalEntryItemDao().getTotalAmountForAccountTypeAndDateRange("Operating Expenses", companyId, startDate, endDate);
-        float netProfit = grossProfit - operatingExpenses;
+            float operatingExpenses = journalEntryItemRepository.getTotalAmountForAccountTypeAndDateRange("Operating Expenses", companyId, startDate, endDate).get();
+            float netProfit = grossProfit - operatingExpenses;
 
-        return new ProfitLossStatement(totalRevenue, totalCostOfGoodsSold, grossProfit, operatingExpenses, netProfit);
+            return new ProfitLossStatement(totalRevenue, totalCostOfGoodsSold, grossProfit, operatingExpenses, netProfit);
+        } catch (Exception e) {
+            Log.e(TAG, "Error generating P&L: " + e.getMessage());
+            return new ProfitLossStatement(0, 0, 0, 0, 0);
+        }
     }
 
     /**
@@ -491,17 +495,83 @@ public class AccountingManager {
      * In a real scenario, you'd look at purchase invoices or bills.
      *
      * @param itemId The ID of the item.
+     * @param supplierId The ID of the supplier.
      * @param companyId The ID of the company.
      * @return The last purchase price.
      */
-    public float getLastPurchasePrice(String itemId, String companyId) {
+    public float getLastPurchasePrice(String itemId, String supplierId, String companyId) {
         // Placeholder: Returning the cost price from the Item table for now.
         try {
-            Item item = database.itemDao().getItemById(itemId, companyId);
+            Item item = itemRepository.getItemById(itemId, companyId).get();
             return item != null ? item.getCostPrice() : 0;
         } catch (Exception e) {
             Log.e(TAG, "Error getting last purchase price: " + e.getMessage());
             return 0;
         }
+    }
+
+    /**
+     * Adds or updates an account statement and recalculates running balances.
+     *
+     * @param newStatement The AccountStatement object to add or update.
+     */
+    public void addOrUpdateAccountStatement(AccountStatement newStatement) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            try {
+                AccountStatementDao dao = database.accountStatementDao();
+                List<AccountStatement> existingStatements = dao.getAccountStatementsForBalanceCalculation(
+                    newStatement.getCompanyId(),
+                    newStatement.getAccountId(),
+                    newStatement.getTransactionDate()
+                );
+
+                float currentRunningBalance = 0.0f;
+                if (!existingStatements.isEmpty()) {
+                    // Assuming the list is ordered by date descending, the first one is the latest before or on transactionDate
+                    currentRunningBalance = existingStatements.get(0).getRunningBalance();
+                }
+
+                newStatement.setRunningBalance(currentRunningBalance + newStatement.getDebit() - newStatement.getCredit());
+                dao.insert(newStatement);
+
+                recalculateRunningBalances(newStatement.getCompanyId(), newStatement.getAccountId(), newStatement.getTransactionDate());
+
+                Log.d(TAG, "Account statement added/updated and balances recalculated for account: " + newStatement.getAccountId());
+            } catch (Exception e) {
+                Log.e(TAG, "Error adding or updating account statement: " + e.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Recalculates running balances for account statements from a given start date.
+     *
+     * @param companyId The ID of the company.
+     * @param accountId The ID of the account.
+     * @param startDate The date from which to start recalculation.
+     */
+    public void recalculateRunningBalances(String companyId, String accountId, String startDate) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            try {
+                AccountStatementDao dao = database.accountStatementDao();
+                List<AccountStatement> statementsToRecalculate = dao.getStatementsForRecalculation(companyId, accountId, startDate);
+
+                float runningBalance = 0.0f;
+                AccountStatement lastStatementBeforeStartDate = dao.getLastStatementBeforeDate(companyId, accountId, startDate);
+                if (lastStatementBeforeStartDate != null) {
+                    runningBalance = lastStatementBeforeStartDate.getRunningBalance();
+                }
+
+                for (AccountStatement statement : statementsToRecalculate) {
+                    runningBalance += statement.getDebit() - statement.getCredit();
+                    if (statement.getRunningBalance() != runningBalance) { // Only update if changed
+                        statement.setRunningBalance(runningBalance);
+                        dao.update(statement);
+                    }
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error recalculating running balances: " + e.getMessage());
+            }
+        });
     }
 }

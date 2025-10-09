@@ -1,6 +1,7 @@
 package com.example.androidapp.data.repositories;
 
 import android.app.Application;
+import androidx.lifecycle.LiveData;
 
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.JournalEntryItemDao;
@@ -13,35 +14,36 @@ public class JournalEntryItemRepository {
     private JournalEntryItemDao journalEntryItemDao;
 
     public JournalEntryItemRepository(Application application) {
-        AppDatabase database = AppDatabase.getDatabase(application);
-        journalEntryItemDao = database.journalEntryItemDao();
+        AppDatabase db = AppDatabase.getDatabase(application);
+        journalEntryItemDao = db.journalEntryItemDao();
     }
 
-    public Future<?> insert(JournalEntryItem journalEntryItem) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryItemDao.insert(journalEntryItem));
+    public Future<Void> insert(JournalEntryItem journalEntryItem) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> {
+            journalEntryItemDao.insert(journalEntryItem);
+            return null;
+        });
     }
 
-    public Future<?> update(JournalEntryItem journalEntryItem) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryItemDao.update(journalEntryItem));
+    public Future<Void> update(JournalEntryItem journalEntryItem) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> {
+            journalEntryItemDao.update(journalEntryItem);
+            return null;
+        });
     }
 
-    public Future<?> delete(JournalEntryItem journalEntryItem) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryItemDao.delete(journalEntryItem));
+    public Future<Void> delete(JournalEntryItem journalEntryItem) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> {
+            journalEntryItemDao.delete(journalEntryItem);
+            return null;
+        });
     }
 
-    public Future<List<JournalEntryItem>> getJournalEntryItemsForJournalEntry(String journalEntryId) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryItemDao.getJournalEntryItemsForJournalEntry(journalEntryId));
+    public LiveData<List<JournalEntryItem>> getJournalEntryItems(String journalEntryId) {
+        return journalEntryItemDao.getJournalEntryItems(journalEntryId);
     }
 
-    public Future<JournalEntryItem> getJournalEntryItemById(int id) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryItemDao.getJournalEntryItemById(id));
-    }
-
-    public Future<Integer> countJournalEntryItemsForJournalEntry(String journalEntryId) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryItemDao.countJournalEntryItemsForJournalEntry(journalEntryId));
-    }
-
-    public Future<Float> getTotalAmountForAccountTypeAndDateRange(String accountName, String companyId, String startDate, String endDate) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryItemDao.getTotalAmountForAccountTypeAndDateRange(accountName, companyId, startDate, endDate));
+    public Future<Float> getTotalAmountForAccountTypeAndDateRange(String accountType, String companyId, String startDate, String endDate) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryItemDao.getTotalAmountForAccountTypeAndDateRange(accountType, companyId, startDate, endDate));
     }
 }

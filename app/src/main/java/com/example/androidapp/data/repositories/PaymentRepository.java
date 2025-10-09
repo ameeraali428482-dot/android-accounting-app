@@ -1,6 +1,7 @@
 package com.example.androidapp.data.repositories;
 
 import android.app.Application;
+import androidx.lifecycle.LiveData;
 
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.PaymentDao;
@@ -13,28 +14,33 @@ public class PaymentRepository {
     private PaymentDao paymentDao;
 
     public PaymentRepository(Application application) {
-        AppDatabase database = AppDatabase.getDatabase(application);
-        paymentDao = database.paymentDao();
+        AppDatabase db = AppDatabase.getDatabase(application);
+        paymentDao = db.paymentDao();
     }
 
-    public Future<?> insert(Payment payment) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> paymentDao.insert(payment));
+    public Future<Void> insert(Payment payment) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> {
+            paymentDao.insert(payment);
+            return null;
+        });
     }
 
-    public Future<?> update(Payment payment) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> paymentDao.update(payment));
+    public Future<Void> update(Payment payment) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> {
+            paymentDao.update(payment);
+            return null;
+        });
     }
 
-    public Future<?> delete(Payment payment) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> paymentDao.delete(payment));
+    public Future<Void> delete(Payment payment) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> {
+            paymentDao.delete(payment);
+            return null;
+        });
     }
 
-    public Future<Payment> getPaymentById(String id, String companyId) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> paymentDao.getPaymentById(id, companyId));
-    }
-
-    public Future<List<Payment>> getAllPayments(String companyId) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> paymentDao.getAllPayments(companyId));
+    public LiveData<List<Payment>> getAllPayments(String companyId) {
+        return paymentDao.getAllPayments(companyId);
     }
 
     public Future<Integer> countPaymentByReferenceNumber(String referenceNumber, String companyId) {

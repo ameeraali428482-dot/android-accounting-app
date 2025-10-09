@@ -2,117 +2,82 @@ package com.example.androidapp.data.entities;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
 
-@Entity(tableName = "purchases",
-        foreignKeys = {
-                @ForeignKey(entity = Company.class,
-                           parentColumns = "id",
-                           childColumns = "companyId",
-                           onDelete = ForeignKey.CASCADE),
-                @ForeignKey(entity = Supplier.class,
-                           parentColumns = "id",
-                           childColumns = "supplierId",
-                           onDelete = ForeignKey.SET_NULL)
-        },
-        indices = {@Index(value = "companyId"), @Index(value = "supplierId")})
+import java.util.Date;
+
+@Entity(tableName = "purchases")
 public class Purchase {
-    @PrimaryKey
-    private String id;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private String companyId;
     private String supplierId;
-    private String purchaseNumber;
-    private String purchaseDate;
+    private String referenceNumber;
+    private Date purchaseDate;
     private float totalAmount;
-    private String status;
-    private String createdAt;
-    private String updatedAt;
+    private String description;
 
-    public Purchase(String id, String companyId, String supplierId, String purchaseNumber, String purchaseDate, float totalAmount, String status, String createdAt, String updatedAt) {
-        this.id = id;
+    public Purchase(String companyId, String supplierId, String referenceNumber, Date purchaseDate, float totalAmount, String description) {
         this.companyId = companyId;
         this.supplierId = supplierId;
-        this.purchaseNumber = purchaseNumber;
+        this.referenceNumber = referenceNumber;
         this.purchaseDate = purchaseDate;
         this.totalAmount = totalAmount;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.description = description;
     }
 
-    // Getters
-    public String getId() {
+    public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCompanyId() {
         return companyId;
     }
 
-    public String getSupplierId() {
-        return supplierId;
-    }
-
-    public String getPurchaseNumber() {
-        return purchaseNumber;
-    }
-
-    public String getPurchaseDate() {
-        return purchaseDate;
-    }
-
-    public float getTotalAmount() {
-        return totalAmount;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
+    }
+
+    public String getSupplierId() {
+        return supplierId;
     }
 
     public void setSupplierId(String supplierId) {
         this.supplierId = supplierId;
     }
 
-    public void setPurchaseNumber(String purchaseNumber) {
-        this.purchaseNumber = purchaseNumber;
+    public String getReferenceNumber() {
+        return referenceNumber;
     }
 
-    public void setPurchaseDate(String purchaseDate) {
+    public void setReferenceNumber(String referenceNumber) {
+        this.referenceNumber = referenceNumber;
+    }
+
+    public Date getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(Date purchaseDate) {
         this.purchaseDate = purchaseDate;
+    }
+
+    public float getTotalAmount() {
+        return totalAmount;
     }
 
     public void setTotalAmount(float totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
-

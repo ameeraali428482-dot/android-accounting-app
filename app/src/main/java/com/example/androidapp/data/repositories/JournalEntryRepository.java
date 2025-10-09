@@ -1,6 +1,7 @@
 package com.example.androidapp.data.repositories;
 
 import android.app.Application;
+import androidx.lifecycle.LiveData;
 
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.JournalEntryDao;
@@ -13,28 +14,33 @@ public class JournalEntryRepository {
     private JournalEntryDao journalEntryDao;
 
     public JournalEntryRepository(Application application) {
-        AppDatabase database = AppDatabase.getDatabase(application);
-        journalEntryDao = database.journalEntryDao();
+        AppDatabase db = AppDatabase.getDatabase(application);
+        journalEntryDao = db.journalEntryDao();
     }
 
-    public Future<?> insert(JournalEntry journalEntry) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryDao.insert(journalEntry));
+    public Future<Void> insert(JournalEntry journalEntry) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> {
+            journalEntryDao.insert(journalEntry);
+            return null;
+        });
     }
 
-    public Future<?> update(JournalEntry journalEntry) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryDao.update(journalEntry));
+    public Future<Void> update(JournalEntry journalEntry) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> {
+            journalEntryDao.update(journalEntry);
+            return null;
+        });
     }
 
-    public Future<?> delete(JournalEntry journalEntry) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryDao.delete(journalEntry));
+    public Future<Void> delete(JournalEntry journalEntry) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> {
+            journalEntryDao.delete(journalEntry);
+            return null;
+        });
     }
 
-    public Future<JournalEntry> getJournalEntryById(String id, String companyId) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryDao.getJournalEntryById(id, companyId));
-    }
-
-    public Future<List<JournalEntry>> getAllJournalEntries(String companyId) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> journalEntryDao.getAllJournalEntries(companyId));
+    public LiveData<List<JournalEntry>> getAllJournalEntries(String companyId) {
+        return journalEntryDao.getAllJournalEntries(companyId);
     }
 
     public Future<Integer> countJournalEntryByReferenceNumber(String referenceNumber, String companyId) {
