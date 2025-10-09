@@ -1,0 +1,66 @@
+التقرير التفصيلي للمقارنة - Thu Oct  9 21:56:38 +03 2025
+==============================================
+📍 المجلد الحالي: /data/data/com.termux/files/home/android-accounting-app/app
+📊 مقارنة: src/main vs src/src/main
+----------------------------------------
+📈 1. المقارنة الأساسية:
+   src/main:
+     الحجم: 2.1M
+     إجمالي الملفات: 367
+     ملفات Java: 219
+     ملفات XML: 119
+   src/src/main:
+     الحجم: 2.1M
+     إجمالي الملفات: 370
+     ملفات Java: 220
+     ملفات XML: 119
+
+🕒 2. مقارنة التواريخ:
+   src/main - أحدث الملفات:
+     -rw-------. 1 u0_a1705 u0_a1705  5009 Oct  9 19:50 src/main/java/com/example/androidapp/data/AppDatabase.java
+     -rw-------. 1 u0_a1705 u0_a1705  1008 Oct  9 19:50 src/main/java/com/example/androidapp/data/dao/PurchaseDao.java
+     -rw-------. 1 u0_a1705 u0_a1705   729 Oct  9 19:50 src/main/java/com/example/androidapp/data/entities/BalanceSheet.java
+     -rw-------. 1 u0_a1705 u0_a1705  1564 Oct  9 19:50 src/main/java/com/example/androidapp/data/entities/ProfitLossStatement.java
+     -rw-------. 1 u0_a1705 u0_a1705  1983 Oct  9 19:50 src/main/java/com/example/androidapp/data/entities/Purchase.java
+   src/src/main - أحدث الملفات:
+     -rw-------. 1 u0_a1705 u0_a1705 23591 Oct  9 16:41 src/src/main/java/com/example/androidapp/logic/AccountingManager.java
+     -rw-------. 1 u0_a1705 u0_a1705  2135 Oct  9 15:44 src/src/main/AndroidManifest.xml
+     -rw-------. 1 u0_a1705 u0_a1705   540 Oct  9 15:44 src/src/main/java/com/example/androidapp/App.java
+     -rw-------. 1 u0_a1705 u0_a1705  4924 Oct  9 15:44 src/src/main/java/com/example/androidapp/data/AppDatabase.java
+     -rw-------. 1 u0_a1705 u0_a1705   392 Oct  9 15:44 src/src/main/java/com/example/androidapp/data/DateConverter.java
+
+🏗️ 3. مقارنة الهيكل:
+   📁 src/main:
+     ✅ java: 232 ملف
+     ✅ res: 134 ملف
+     ✅ AndroidManifest.xml: ملف
+   📁 src/src/main:
+     ✅ java: 235 ملف
+     ✅ res: 134 ملف
+     ✅ AndroidManifest.xml: ملف
+
+🔍 4. اكتشاف الملفات المفقودة:
+   الملفات في src/main فقط:
+   الملفات في src/src/main فقط:
+     ✅ java/com/example/androidapp/data/dao/CompanyDao.java.original
+     ✅ java/com/example/androidapp/data/IRepository.java
+     ✅ java/com/example/androidapp/logic/AccountingManager.java.original
+
+🔑 5. الملفات الرئيسية:
+     ✅ AndroidManifest.xml: متطابق (N/A بايت)
+     ❌ java/com/example/androidapp/MainActivity.java: مفقود في كليهما
+     ✅ java/com/example/androidapp/App.java: متطابق (N/A بايت)
+     ✅ java/com/example/androidapp/data/AppDatabase.java: متطابق (N/A بايت)
+     ✅ java/com/example/androidapp/data/dao/AccountDao.java: متطابق (N/A بايت)
+     ✅ res/layout/activity_main.xml: متطابق (N/A بايت)
+
+🎯 6. التوصية النهائية:
+----------------------------------------
+✅ src/src/main أفضل (ملفات أكثر: 370 vs 367)
+
+==============================================
+🚀 الإجراء الموصى به:
+✅ الاحتفاظ بـ: src/src/main
+🗑️  حذف: src/main
+💡 الأمر: mv src/main src/main_backup && mv src/src/main src/main
+

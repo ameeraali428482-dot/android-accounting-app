@@ -1,0 +1,36 @@
+التقرير النهائي للمقارنة - Thu Oct  9 21:45:28 +03 2025
+==============================================
+📊 مقارنة: src/ vs src/src/
+----------------------------------------
+📈 1. المقارنة الكمية:
+   في src/:
+   Java: 455 ملف
+   XML: 238 ملف
+   في src/src/:
+   Java: 228 ملف
+   XML: 119 ملف
+📦 2. مقارنة الأحجام:
+   src/: 4.4M
+   src/src/: 2.2M
+🕒 3. أحدث الملفات:
+   src/:
+     -rw-------. 1 u0_a1705 u0_a1705  5009 Oct  9 19:50 src/main/java/com/example/androidapp/data/AppDatabase.java
+     -rw-------. 1 u0_a1705 u0_a1705  1008 Oct  9 19:50 src/main/java/com/example/androidapp/data/dao/PurchaseDao.java
+     -rw-------. 1 u0_a1705 u0_a1705   729 Oct  9 19:50 src/main/java/com/example/androidapp/data/entities/BalanceSheet.java
+   src/src/:
+     -rw-------. 1 u0_a1705 u0_a1705 23591 Oct  9 16:41 src/src/main/java/com/example/androidapp/logic/AccountingManager.java
+     -rw-------. 1 u0_a1705 u0_a1705  2885 Oct  9 15:44 src/src/androidTest/java/com/example/androidapp/MainActivityTest.java
+     -rw-------. 1 u0_a1705 u0_a1705  5815 Oct  9 15:44 src/src/androidTest/java/com/example/androidapp/data/AppDatabaseTest.java
+🔑 4. الملفات الرئيسية:
+   في src/:
+     ✅ main/AndroidManifest.xml
+     ❌ main/java/com/example/androidapp/MainActivity.java
+     ✅ main/java/com/example/androidapp/App.java
+     ✅ main/java/com/example/androidapp/data/AppDatabase.java
+   في src/src/:
+     ✅ main/AndroidManifest.xml
+     ❌ main/java/com/example/androidapp/MainActivity.java
+     ✅ main/java/com/example/androidapp/App.java
+     ✅ main/java/com/example/androidapp/data/AppDatabase.java
+💡 5. التوصية:
+
