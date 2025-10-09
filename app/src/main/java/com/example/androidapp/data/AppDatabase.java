@@ -4,10 +4,10 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import com.example.androidapp.data.entities.Purchase;
 import com.example.androidapp.data.entities.AccountStatement;
 import com.example.androidapp.data.dao.PurchaseDao;
-import androidx.room.TypeConverters;
 import com.example.androidapp.data.dao.*;
 import com.example.androidapp.data.entities.*;
 import java.util.concurrent.ExecutorService;
@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
         Payroll.class, PayrollItem.class, Service.class, Doctor.class, Voucher.class,
         FinancialTransfer.class, CurrencyExchange.class, JoinRequest.class, Chat.class, Repair.class, Order.class, Trophy.class, UserPermission.class, UserRole.class, AccountStatement.class, UserTrophy.class,
         Warehouse.class, Inventory.class, Post.class, Comment.class, Like.class, Share.class, ContactSync.class, Friend.class, AuditLog.class,
-        Purchase.class, AccountStatement.class
+        Purchase.class // ✅ تم تصحيح الخطأ: تم إزالة التكرار لـ Purchase.class و AccountStatement.class من هنا
 },
         version = 3, exportSchema = false)
 @TypeConverters({DateConverter.class})
