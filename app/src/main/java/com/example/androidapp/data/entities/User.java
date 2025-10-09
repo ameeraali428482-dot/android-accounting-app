@@ -1,6 +1,5 @@
 package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -25,8 +24,9 @@ public class User {
     private String createdAt;
     private String updatedAt;
     private String personalCompanyId;
+    private boolean isOnline;
 
-    public User(String id, String email, String password, String name, String phone, String phoneHash, int points, String createdAt, String updatedAt, String personalCompanyId) {
+    public User(@NonNull String id, String email, String password, String name, String phone, String phoneHash, int points, String createdAt, String updatedAt, String personalCompanyId, boolean isOnline) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -37,88 +37,31 @@ public class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.personalCompanyId = personalCompanyId;
+        this.isOnline = isOnline;
     }
 
-    // Getters
-    public String getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getPhoneHash() {
-        return phoneHash;
-    }
-
-    public int getPoints() {
-        return points;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public String getPersonalCompanyId() {
-        return personalCompanyId;
-    }
-
-    // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setPhoneHash(String phoneHash) {
-        this.phoneHash = phoneHash;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public void setPersonalCompanyId(String personalCompanyId) {
-        this.personalCompanyId = personalCompanyId;
-    }
+    // Getters and Setters
+    @NonNull
+    public String getId() { return id; }
+    public void setId(@NonNull String id) { this.id = id; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public String getPhoneHash() { return phoneHash; }
+    public void setPhoneHash(String phoneHash) { this.phoneHash = phoneHash; }
+    public int getPoints() { return points; }
+    public void setPoints(int points) { this.points = points; }
+    public String getCreatedAt() { return createdAt; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public String getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
+    public String getPersonalCompanyId() { return personalCompanyId; }
+    public void setPersonalCompanyId(String personalCompanyId) { this.personalCompanyId = personalCompanyId; }
+    public boolean isOnline() { return isOnline; }
+    public void setOnline(boolean online) { isOnline = online; }
 }
-

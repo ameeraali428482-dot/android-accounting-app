@@ -20,9 +20,9 @@ public interface CurrencyExchangeDao {
     @Delete
     void delete(CurrencyExchange currencyexchange);
 
-    @Query("SELECT * FROM currencyexchanges")
+    @Query("SELECT * FROM currency_exchanges")
     List<CurrencyExchange> getAllCurrencyExchanges();
 
-    @Query("SELECT * FROM currencyexchanges WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM currency_exchanges WHERE id = :id LIMIT 1")
     CurrencyExchange getCurrencyExchangeById(String id);
 }

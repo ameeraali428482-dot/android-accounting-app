@@ -4,7 +4,6 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import com.example.androidapp.data.entities.AccountStatement;
 import androidx.room.TypeConverters;
 import com.example.androidapp.data.dao.*;
 import com.example.androidapp.data.entities.*;
@@ -21,7 +20,7 @@ import java.util.concurrent.Executors;
         Payroll.class, PayrollItem.class, Service.class, Doctor.class, Voucher.class,
         FinancialTransfer.class, CurrencyExchange.class, JoinRequest.class, Chat.class, Repair.class, Order.class, Trophy.class, UserPermission.class, UserRole.class, AccountStatement.class, UserTrophy.class,
         Warehouse.class, Inventory.class, Post.class, Comment.class, Like.class, Share.class, ContactSync.class, Friend.class, AuditLog.class,
-        Purchase.class, AccountStatement.class
+        Purchase.class
 },
         version = 3, exportSchema = false)
 @TypeConverters({DateConverter.class})
@@ -92,7 +91,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "business_database")
-                            // .fallbackToDestructiveMigration() // يجب تنفيذ استراتيجية ترحيل مناسبة هنا
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

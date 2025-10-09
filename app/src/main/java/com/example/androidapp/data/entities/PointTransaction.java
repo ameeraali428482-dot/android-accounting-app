@@ -1,11 +1,12 @@
 package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+
+import java.util.Date;
 
 @Entity(tableName = "point_transactions",
         foreignKeys = {
@@ -25,44 +26,33 @@ public class PointTransaction {
     public @NonNull String userId;
     public @NonNull String companyId;
     public int points;
+    public @NonNull Date createdAt;
+    public String orgId;
 
-    public PointTransaction(String id, String userId, String companyId, int points) {
+    public PointTransaction(@NonNull String id, @NonNull String userId, @NonNull String companyId, int points, @NonNull Date createdAt, String orgId) {
         this.id = id;
         this.userId = userId;
         this.companyId = companyId;
         this.points = points;
+        this.createdAt = createdAt;
+        this.orgId = orgId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public int getPoints() {
-        return points;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
+    // Getters and Setters
+    @NonNull
+    public String getId() { return id; }
+    public void setId(@NonNull String id) { this.id = id; }
+    @NonNull
+    public String getUserId() { return userId; }
+    public void setUserId(@NonNull String userId) { this.userId = userId; }
+    @NonNull
+    public String getCompanyId() { return companyId; }
+    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
+    public int getPoints() { return points; }
+    public void setPoints(int points) { this.points = points; }
+    @NonNull
+    public Date getCreatedAt() { return createdAt; }
+    public void setCreatedAt(@NonNull Date createdAt) { this.createdAt = createdAt; }
+    public String getOrgId() { return orgId; }
+    public void setOrgId(String orgId) { this.orgId = orgId; }
 }
-

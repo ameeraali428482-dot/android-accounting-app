@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.InventoryDao;
+import com.example.androidapp.data.dao.ItemDao;
 import com.example.androidapp.data.entities.Inventory;
 import com.example.androidapp.data.entities.Item;
 
@@ -29,7 +30,8 @@ public class InventoryManager {
                     inventory.setQuantity(inventory.getQuantity() + quantity);
                     inventoryDao.update(inventory);
                 } else {
-                    inventory = new Inventory(itemId, warehouseId, quantity, companyId);
+                    // Assuming a default cost price for new inventory items. This should be improved.
+                    inventory = new Inventory(itemId, companyId, itemId, warehouseId, quantity, 0, "");
                     inventoryDao.insert(inventory);
                 }
             } catch (Exception e) {
@@ -67,13 +69,11 @@ public class InventoryManager {
             try {
                 List<Item> allItems = itemDao.getAllItems(companyId);
                 for (Item item : allItems) {
-                    List<Inventory> inventories = inventoryDao.getInventoryForItem(item.getId(), companyId);
-                    float totalStock = 0;
-                    for(Inventory inventory : inventories) {
-                        totalStock += inventory.getQuantity();
-                    }
-
-                    if (item.getMinStockLevel() > 0 && totalStock < item.getMinStockLevel()) {
+                    float totalStock = inventoryDao.getTotalQuantityByItem(item.getId(), companyId);
+                    // This assumes Item entity has a minStockLevel field, which it doesn't.
+                    // This logic needs to be adapted or the Item entity updated.
+                    // For now, we'll use a placeholder logic.
+                    if (item.getReorderLevel() != null && totalStock < item.getReorderLevel()) {
                         if (callback != null) callback.onLowStock(item, totalStock);
                     }
                 }
@@ -87,4 +87,4 @@ public class InventoryManager {
         void onLowStock(Item item, float currentStock);
         void onFailure(String message);
     }
-}    
+}

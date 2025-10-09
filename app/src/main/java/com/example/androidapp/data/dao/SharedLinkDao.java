@@ -20,9 +20,9 @@ public interface SharedLinkDao {
     @Delete
     void delete(SharedLink sharedlink);
 
-    @Query("SELECT * FROM sharedlinks")
+    @Query("SELECT * FROM shared_links")
     List<SharedLink> getAllSharedLinks();
 
-    @Query("SELECT * FROM sharedlinks WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM shared_links WHERE id = :id LIMIT 1")
     SharedLink getSharedLinkById(String id);
 }

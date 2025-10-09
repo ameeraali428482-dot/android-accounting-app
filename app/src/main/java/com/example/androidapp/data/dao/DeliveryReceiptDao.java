@@ -20,9 +20,9 @@ public interface DeliveryReceiptDao {
     @Delete
     void delete(DeliveryReceipt deliveryreceipt);
 
-    @Query("SELECT * FROM deliveryreceipts")
+    @Query("SELECT * FROM delivery_receipts")
     List<DeliveryReceipt> getAllDeliveryReceipts();
 
-    @Query("SELECT * FROM deliveryreceipts WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM delivery_receipts WHERE id = :id LIMIT 1")
     DeliveryReceipt getDeliveryReceiptById(String id);
 }

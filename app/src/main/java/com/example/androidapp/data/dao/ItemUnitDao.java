@@ -20,9 +20,9 @@ public interface ItemUnitDao {
     @Delete
     void delete(ItemUnit itemunit);
 
-    @Query("SELECT * FROM itemunits")
+    @Query("SELECT * FROM item_units")
     List<ItemUnit> getAllItemUnits();
 
-    @Query("SELECT * FROM itemunits WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM item_units WHERE id = :id LIMIT 1")
     ItemUnit getItemUnitById(String id);
 }

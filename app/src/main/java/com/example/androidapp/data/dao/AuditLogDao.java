@@ -20,9 +20,9 @@ public interface AuditLogDao {
     @Delete
     void delete(AuditLog auditlog);
 
-    @Query("SELECT * FROM auditlogs")
+    @Query("SELECT * FROM audit_logs")
     List<AuditLog> getAllAuditLogs();
 
-    @Query("SELECT * FROM auditlogs WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM audit_logs WHERE id = :id LIMIT 1")
     AuditLog getAuditLogById(String id);
 }

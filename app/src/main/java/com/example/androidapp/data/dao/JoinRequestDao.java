@@ -20,9 +20,9 @@ public interface JoinRequestDao {
     @Delete
     void delete(JoinRequest joinrequest);
 
-    @Query("SELECT * FROM joinrequests")
+    @Query("SELECT * FROM join_requests")
     List<JoinRequest> getAllJoinRequests();
 
-    @Query("SELECT * FROM joinrequests WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM join_requests WHERE id = :id LIMIT 1")
     JoinRequest getJoinRequestById(String id);
 }

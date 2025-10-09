@@ -1,6 +1,5 @@
 package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -18,47 +17,28 @@ public class Trophy {
     public @NonNull String id;
     public String name;
     public String description;
-    private String companyId;
+    private @NonNull String companyId;
+    private int pointsRequired;
 
-    public Trophy(String id, String name, String description, String companyId) {
+    public Trophy(@NonNull String id, String name, String description, @NonNull String companyId, int pointsRequired) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.companyId = companyId;
+        this.pointsRequired = pointsRequired;
     }
 
-    // Getters
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
+    // Getters and Setters
+    @NonNull
+    public String getId() { return id; }
+    public void setId(@NonNull String id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    @NonNull
+    public String getCompanyId() { return companyId; }
+    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
+    public int getPointsRequired() { return pointsRequired; }
+    public void setPointsRequired(int pointsRequired) { this.pointsRequired = pointsRequired; }
 }
-

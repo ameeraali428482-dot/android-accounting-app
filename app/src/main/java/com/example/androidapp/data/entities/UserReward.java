@@ -1,6 +1,5 @@
 package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -29,44 +28,28 @@ public class UserReward {
     public @NonNull String userId;
     public String rewardId;
     public @NonNull String companyId;
+    public String orgId;
 
-    public UserReward(String id, String userId, String rewardId, String companyId) {
+    public UserReward(@NonNull String id, @NonNull String userId, String rewardId, @NonNull String companyId, String orgId) {
         this.id = id;
         this.userId = userId;
         this.rewardId = rewardId;
         this.companyId = companyId;
+        this.orgId = orgId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getRewardId() {
-        return rewardId;
-    }
-
-    public void setRewardId(String rewardId) {
-        this.rewardId = rewardId;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
+    // Getters and Setters
+    @NonNull
+    public String getId() { return id; }
+    public void setId(@NonNull String id) { this.id = id; }
+    @NonNull
+    public String getUserId() { return userId; }
+    public void setUserId(@NonNull String userId) { this.userId = userId; }
+    public String getRewardId() { return rewardId; }
+    public void setRewardId(String rewardId) { this.rewardId = rewardId; }
+    @NonNull
+    public String getCompanyId() { return companyId; }
+    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
+    public String getOrgId() { return orgId; }
+    public void setOrgId(String orgId) { this.orgId = orgId; }
 }
-

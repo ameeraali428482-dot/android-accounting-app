@@ -20,9 +20,9 @@ public interface PayrollDao {
     @Delete
     void delete(Payroll payroll);
 
-    @Query("SELECT * FROM payroll")
+    @Query("SELECT * FROM payrolls")
     List<Payroll> getAllPayrolls();
 
-    @Query("SELECT * FROM payroll WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM payrolls WHERE id = :id LIMIT 1")
     Payroll getPayrollById(String id);
 }

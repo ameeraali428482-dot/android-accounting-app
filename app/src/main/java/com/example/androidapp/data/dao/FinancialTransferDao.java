@@ -20,9 +20,9 @@ public interface FinancialTransferDao {
     @Delete
     void delete(FinancialTransfer financialtransfer);
 
-    @Query("SELECT * FROM financialtransfers")
+    @Query("SELECT * FROM financial_transfers")
     List<FinancialTransfer> getAllFinancialTransfers();
 
-    @Query("SELECT * FROM financialtransfers WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM financial_transfers WHERE id = :id LIMIT 1")
     FinancialTransfer getFinancialTransferById(String id);
 }

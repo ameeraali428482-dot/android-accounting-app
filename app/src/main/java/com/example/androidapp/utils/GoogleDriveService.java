@@ -8,14 +8,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.services.drive.DriveScopes;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.List;
 
 public class GoogleDriveService {
 
@@ -37,13 +38,14 @@ public class GoogleDriveService {
         return googleSignInClient.getSignInIntent();
     }
 
-    public void initializeDriveClient(String accountName) {
+    public void initializeDriveClient(String accountName
+) {
         GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
                 context,
                 Collections.singleton(DriveScopes.DRIVE_FILE));
         credential.setSelectedAccountName(accountName);
         driveService = new Drive.Builder(
-                AndroidHttp.newCompatibleTransport(),
+                new NetHttpTransport(),
                 new GsonFactory(),
                 credential)
                 .setApplicationName("Android Accounting App")
@@ -88,7 +90,7 @@ public class GoogleDriveService {
     private String getOrCreateFolderId(String folderName) throws Exception {
         // Search for the folder
         Drive.Files.List request = driveService.files().list()
-                .setQ("mimeType=\'application/vnd.google-apps.folder\' and name=\'" + folderName + "\'")
+                .setQ("mimeType='application/vnd.google-apps.folder' and name='" + folderName + "' and trashed = false")
                 .setSpaces("drive");
         List<com.google.api.services.drive.model.File> files = request.execute().getFiles();
 
@@ -127,4 +129,3 @@ public class GoogleDriveService {
                 });
     }
 }
-

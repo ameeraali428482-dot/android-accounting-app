@@ -1,6 +1,5 @@
 package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -18,47 +17,28 @@ public class Reward {
     public @NonNull String id;
     public String name;
     public int pointsRequired;
-    private String companyId;
+    private @NonNull String companyId;
+    private String orgId;
 
-    public Reward(String id, String name, int pointsRequired, String companyId) {
+    public Reward(@NonNull String id, String name, int pointsRequired, @NonNull String companyId, String orgId) {
         this.id = id;
         this.name = name;
         this.pointsRequired = pointsRequired;
         this.companyId = companyId;
+        this.orgId = orgId;
     }
 
-    // Getters
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPointsRequired() {
-        return pointsRequired;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPointsRequired(int pointsRequired) {
-        this.pointsRequired = pointsRequired;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
+    // Getters and Setters
+    @NonNull
+    public String getId() { return id; }
+    public void setId(@NonNull String id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public int getPointsRequired() { return pointsRequired; }
+    public void setPointsRequired(int pointsRequired) { this.pointsRequired = pointsRequired; }
+    @NonNull
+    public String getCompanyId() { return companyId; }
+    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
+    public String getOrgId() { return orgId; }
+    public void setOrgId(String orgId) { this.orgId = orgId; }
 }
-

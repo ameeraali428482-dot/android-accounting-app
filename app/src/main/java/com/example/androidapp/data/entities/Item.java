@@ -1,6 +1,5 @@
 package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -18,47 +17,36 @@ public class Item {
     private @NonNull String id;
     private String name;
     private double price;
-    private String companyId;
+    private @NonNull String companyId;
+    private String description;
+    private float costPrice;
+    private Integer reorderLevel;
 
-    public Item(String id, String name, double price, String companyId) {
+    public Item(@NonNull String id, String name, double price, @NonNull String companyId, String description, float costPrice, Integer reorderLevel) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.companyId = companyId;
+        this.description = description;
+        this.costPrice = costPrice;
+        this.reorderLevel = reorderLevel;
     }
 
-    // Getters
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
+    // Getters and Setters
+    @NonNull
+    public String getId() { return id; }
+    public void setId(@NonNull String id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
+    @NonNull
+    public String getCompanyId() { return companyId; }
+    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public float getCostPrice() { return costPrice; }
+    public void setCostPrice(float costPrice) { this.costPrice = costPrice; }
+    public Integer getReorderLevel() { return reorderLevel; }
+    public void setReorderLevel(Integer reorderLevel) { this.reorderLevel = reorderLevel; }
 }
-
