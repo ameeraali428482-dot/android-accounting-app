@@ -14,7 +14,6 @@ import com.example.androidapp.data.dao.PaymentDao;
 import com.example.androidapp.data.dao.ReceiptDao;
 import com.example.androidapp.data.dao.PurchaseDao;
 import com.example.androidapp.data.entities.Account;
-import com.example.androidapp.data.entities.BalanceSheet;
 import com.example.androidapp.data.entities.Company;
 import com.example.androidapp.data.entities.Inventory;
 import com.example.androidapp.data.entities.Invoice;
