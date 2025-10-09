@@ -5,8 +5,6 @@ import android.util.Log;
 
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.InventoryDao;
-// ✅ تصحيح: إضافة الاستيراد المفقود الذي سبب الخطأ
-import com.example.androidapp.data.dao.ItemDao; 
 import com.example.androidapp.data.entities.Inventory;
 import com.example.androidapp.data.entities.Item;
 
@@ -89,4 +87,4 @@ public class InventoryManager {
         void onLowStock(Item item, float currentStock);
         void onFailure(String message);
     }
-}
+}    

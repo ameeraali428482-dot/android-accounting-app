@@ -10,10 +10,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
-// ✅ تصحيح: إضافة الاستيرادات المفقودة التي سببت الخطأ
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport; // تم الإبقاء على هذا على الرغم من أنه لم يكن في كودك الأصلي لأنه ضروري في بعض البنى
 import com.google.api.services.drive.DriveScopes;
 
 import java.io.File;
@@ -129,3 +127,4 @@ public class GoogleDriveService {
                 });
     }
 }
+

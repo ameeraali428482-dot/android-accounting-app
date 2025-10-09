@@ -1,35 +1,80 @@
-package com.example.androidapp.logic;                                                                                                                                                           import android.app.Application;                                                                 import android.content.Context;                                                                 import android.util.Log;                                                                                                                                                                        import com.example.androidapp.data.AppDatabase;                                                 import com.example.androidapp.data.dao.AccountStatementDao;                                     import com.example.androidapp.data.entities.Account;                                            import com.example.androidapp.data.entities.AccountStatement;                                   import com.example.androidapp.data.entities.Inventory;                                          import com.example.androidapp.data.entities.Invoice;                                            import com.example.androidapp.data.entities.InvoiceItem;                                        import com.example.androidapp.data.entities.Item;                                               import com.example.androidapp.data.entities.JournalEntry;                                       import com.example.androidapp.data.entities.JournalEntryItem;                                   import com.example.androidapp.data.entities.Payment;                                            import com.example.androidapp.data.entities.Receipt;
-// ✅ تصحيح: إضافة الاستيرادات المفقودة (الـ Repositories و الـ Reports)
-import com.example.androidapp.data.entities.ProfitLossStatement;
-import com.example.androidapp.data.entities.BalanceSheet;
-import com.example.androidapp.data.repositories.AccountRepository;
-import com.example.androidapp.data.repositories.InventoryRepository;
-import com.example.androidapp.data.repositories.InvoiceRepository;
-import com.example.androidapp.data.repositories.ItemRepository;
-import com.example.androidapp.data.repositories.JournalEntryRepository;
-import com.example.androidapp.data.repositories.JournalEntryItemRepository;
-import com.example.androidapp.data.repositories.PaymentRepository;
-import com.example.androidapp.data.repositories.ReceiptRepository;
-import com.example.androidapp.data.repositories.PurchaseRepository;
+package com.example.androidapp.logic;
 
+import android.app.Application;
+import android.content.Context;
+import android.util.Log;
+
+import com.example.androidapp.data.AppDatabase;
+import com.example.androidapp.data.dao.AccountStatementDao;
+import com.example.androidapp.data.entities.Account;
+import com.example.androidapp.data.entities.AccountStatement;
+import com.example.androidapp.data.entities.Inventory;
+import com.example.androidapp.data.entities.Invoice;
+import com.example.androidapp.data.entities.InvoiceItem;
+import com.example.androidapp.data.entities.Item;
+import com.example.androidapp.data.entities.JournalEntry;
+import com.example.androidapp.data.entities.JournalEntryItem;
+import com.example.androidapp.data.entities.Payment;
+import com.example.androidapp.data.entities.Receipt;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;                                                                          import java.util.List;
-import java.util.Locale;                                                                        import java.util.UUID;
-import java.util.concurrent.ExecutionException;                                                 
-public class AccountingManager {                                                                    private static final String TAG = "AccountingManager";
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+
+public class AccountingManager {
+    private static final String TAG = "AccountingManager";
     private final AccountRepository accountRepository;
     private final InventoryRepository inventoryRepository;
-    private final InvoiceRepository invoiceRepository;                                              private final ItemRepository itemRepository;                                                    private final JournalEntryRepository journalEntryRepository;                                    private final JournalEntryItemRepository journalEntryItemRepository;                            private final PaymentRepository paymentRepository;                                              private final ReceiptRepository receiptRepository;                                              private final PurchaseRepository purchaseRepository;                                            private final AppDatabase database;                                                                                                                                                             public AccountingManager(Context context) {                                                         Application application = (Application) context.getApplicationContext();                        this.database = AppDatabase.getDatabase(application);                                           this.accountRepository = new AccountRepository(application);                                    this.inventoryRepository = new InventoryRepository(application);                                this.invoiceRepository = new InvoiceRepository(application);                                    this.itemRepository = new ItemRepository(application);                                          this.journalEntryRepository = new JournalEntryRepository(application);
-        this.journalEntryItemRepository = new JournalEntryItemRepository(application);                  this.paymentRepository = new PaymentRepository(application);
-        this.receiptRepository = new ReceiptRepository(application);                                    this.purchaseRepository = new PurchaseRepository(application);
-    }                                                                                           
+    private final InvoiceRepository invoiceRepository;
+    private final ItemRepository itemRepository;
+    private final JournalEntryRepository journalEntryRepository;
+    private final JournalEntryItemRepository journalEntryItemRepository;
+    private final PaymentRepository paymentRepository;
+    private final ReceiptRepository receiptRepository;
+    private final PurchaseRepository purchaseRepository;
+    private final AppDatabase database;
+
+    public AccountingManager(Context context) {
+        Application application = (Application) context.getApplicationContext();
+        this.database = AppDatabase.getDatabase(application);
+        this.accountRepository = new AccountRepository(application);
+        this.inventoryRepository = new InventoryRepository(application);
+        this.invoiceRepository = new InvoiceRepository(application);
+        this.itemRepository = new ItemRepository(application);
+        this.journalEntryRepository = new JournalEntryRepository(application);
+        this.journalEntryItemRepository = new JournalEntryItemRepository(application);
+        this.paymentRepository = new PaymentRepository(application);
+        this.receiptRepository = new ReceiptRepository(application);
+        this.purchaseRepository = new PurchaseRepository(application);
+    }
+
     /**
-     * Creates automatic journal entries for an invoice.                                             * This method assumes a double-entry accounting system.
-     * For a sales invoice, typically: Accounts Receivable (Debit), Sales Revenue (Credit), Sales Tax Payable (Credit)                                                                               * For a purchase invoice, typically: Purchases/Expenses (Debit), Accounts Payable (Credit), Input Tax Credit (Debit)                                                                            *
+     * Creates automatic journal entries for an invoice.
+     * This method assumes a double-entry accounting system.
+     * For a sales invoice, typically: Accounts Receivable (Debit), Sales Revenue (Credit), Sales Tax Payable (Credit)
+     * For a purchase invoice, typically: Purchases/Expenses (Debit), Accounts Payable (Credit), Input Tax Credit (Debit)
+     *
      * @param invoice The invoice for which to create the journal entry.
      * @param invoiceItems The list of items in the invoice.
-     */                                                                                             public void createJournalEntriesForInvoice(Invoice invoice, List<InvoiceItem> invoiceItems) {                                                                                                       AppDatabase.databaseWriteExecutor.execute(() -> {                                                   try {                                                                                               String journalEntryId = UUID.randomUUID().toString();                                           String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());                                                                                                                                                                                                float totalAmount = 0;                                                                          for (InvoiceItem item : invoiceItems) {                                                             totalAmount += item.getQuantity() * item.getUnitPrice();                                    }                                                                                                                                                                                               // Create main journal entry with initial total debit/credit as totalAmount                     JournalEntry journalEntry = new JournalEntry(                                                       journalEntryId,                                                                                 invoice.getCompanyId(),
+     */
+    public void createJournalEntriesForInvoice(Invoice invoice, List<InvoiceItem> invoiceItems) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            try {
+                String journalEntryId = UUID.randomUUID().toString();
+                String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+                float totalAmount = 0;
+                for (InvoiceItem item : invoiceItems) {
+                    totalAmount += item.getQuantity() * item.getUnitPrice();
+                }
+
+                // Create main journal entry with initial total debit/credit as totalAmount
+                JournalEntry journalEntry = new JournalEntry(
+                    journalEntryId,
+                    invoice.getCompanyId(),
                     currentDate,
                     "Invoice No: " + invoice.getInvoiceNumber(),
                     invoice.getId(), // referenceNumber
@@ -45,15 +90,42 @@ public class AccountingManager {                                                
                     debitAccount = accountRepository.getAccountByNameAndCompanyId("Cash", invoice.getCompanyId()).get();
                 } else { // CREDIT or CASH_CREDIT
                     debitAccount = accountRepository.getAccountByNameAndCompanyId("Accounts Receivable", invoice.getCompanyId()).get();
-                }                                                                                               if (debitAccount != null) {                                                                         journalEntryItemRepository.insert(new JournalEntryItem(                                             journalEntryId,                                                                                 debitAccount.getId(),                                                                           totalAmount,                                                                                    0.0f,                                                                                           "Accounts Receivable/Cash for Invoice " + invoice.getInvoiceNumber()                        )).get();
+                }
+                if (debitAccount != null) {
+                    journalEntryItemRepository.insert(new JournalEntryItem(
+                        journalEntryId, 
+                        debitAccount.getId(), 
+                        totalAmount, 
+                        0.0f, 
+                        "Accounts Receivable/Cash for Invoice " + invoice.getInvoiceNumber()
+                    )).get();
                 }
 
-                // Credit Sales Revenue                                                                         Account salesRevenueAccount = accountRepository.getAccountByNameAndCompanyId("Sales Revenue", invoice.getCompanyId()).get();                                                                    if (salesRevenueAccount != null) {                                                                  journalEntryItemRepository.insert(new JournalEntryItem(                                             journalEntryId,                                                                                 salesRevenueAccount.getId(),                                                                    0.0f,                                                                                           totalAmount,                                                                                    "Sales Revenue for Invoice " + invoice.getInvoiceNumber()                                   )).get();                                                                                   }                                                                                                                                                                                               // Create Cost of Goods Sold entries and update inventory                                       createCostOfGoodsSoldEntries(journalEntryId, invoiceItems, invoice.getInvoiceNumber(), invoice.getCompanyId());
+                // Credit Sales Revenue
+                Account salesRevenueAccount = accountRepository.getAccountByNameAndCompanyId("Sales Revenue", invoice.getCompanyId()).get();
+                if (salesRevenueAccount != null) {
+                    journalEntryItemRepository.insert(new JournalEntryItem(
+                        journalEntryId, 
+                        salesRevenueAccount.getId(), 
+                        0.0f, 
+                        totalAmount, 
+                        "Sales Revenue for Invoice " + invoice.getInvoiceNumber()
+                    )).get();
+                }
 
-                // Update the main JournalEntry with final calculated totals (if necessary, though for simple sales, totalAmount should balance)                                                                // For more complex scenarios (e.g., taxes, discounts), these totals would need recalculation                                                                                                   journalEntry.setTotalDebit(totalAmount);
+                // Create Cost of Goods Sold entries and update inventory
+                createCostOfGoodsSoldEntries(journalEntryId, invoiceItems, invoice.getInvoiceNumber(), invoice.getCompanyId());
+
+                // Update the main JournalEntry with final calculated totals (if necessary, though for simple sales, totalAmount should balance)
+                // For more complex scenarios (e.g., taxes, discounts), these totals would need recalculation
+                journalEntry.setTotalDebit(totalAmount);
                 journalEntry.setTotalCredit(totalAmount);
                 journalEntryRepository.update(journalEntry).get();
-                                                                                                                Log.d(TAG, "Journal entries created for invoice: " + invoice.getInvoiceNumber());                                                                                                           } catch (Exception e) {                                                                             Log.e(TAG, "Error creating journal entries for invoice: " + e.getMessage());                }
+
+                Log.d(TAG, "Journal entries created for invoice: " + invoice.getInvoiceNumber());
+            } catch (Exception e) {
+                Log.e(TAG, "Error creating journal entries for invoice: " + e.getMessage());
+            }
         });
     }
 
@@ -74,15 +146,29 @@ public class AccountingManager {                                                
                     float itemCost = item.getCostPrice() * invoiceItem.getQuantity();
                     totalCost += itemCost;
                     updateInventoryForSale(invoiceItem, companyId);
-                }                                                                                           }                                                                                                                                                                                               if (totalCost > 0) {                                                                                // Debit Cost of Goods Sold                                                                     Account cogsAccount = accountRepository.getAccountByNameAndCompanyId("Cost of Goods Sold", companyId).get();                                                                                    if (cogsAccount != null) {
-                    journalEntryItemRepository.insert(new JournalEntryItem(                                             journalEntryId,
-                        cogsAccount.getId(),
-                        totalCost,
-                        0.0f,                                                                                           "COGS for Invoice " + invoiceNumber                                                         )).get();                                                                                   }                                                                                                                                                                                               // Credit Inventory                                                                             Account inventoryAccount = accountRepository.getAccountByNameAndCompanyId("Inventory", companyId).get();
-                if (inventoryAccount != null) {                                                                     journalEntryItemRepository.insert(new JournalEntryItem(journalEntryId,
-                        inventoryAccount.getId(),
-                        0.0f,
-                        totalCost,
+                }
+            }
+
+            if (totalCost > 0) {
+                // Debit Cost of Goods Sold
+                Account cogsAccount = accountRepository.getAccountByNameAndCompanyId("Cost of Goods Sold", companyId).get();
+                if (cogsAccount != null) {
+                    journalEntryItemRepository.insert(new JournalEntryItem(
+                        journalEntryId, 
+                        cogsAccount.getId(), 
+                        totalCost, 
+                        0.0f, 
+                        "COGS for Invoice " + invoiceNumber
+                    )).get();
+                }
+
+                // Credit Inventory
+                Account inventoryAccount = accountRepository.getAccountByNameAndCompanyId("Inventory", companyId).get();
+                if (inventoryAccount != null) {
+                    journalEntryItemRepository.insert(new JournalEntryItem(journalEntryId, 
+                        inventoryAccount.getId(), 
+                        0.0f, 
+                        totalCost, 
                         "Inventory for Invoice " + invoiceNumber
                     )).get();
                 }
@@ -134,7 +220,8 @@ public class AccountingManager {                                                
                 // Create main journal entry
                 JournalEntry journalEntry = new JournalEntry(
                     journalEntryId,
-                    payment.getCompanyId(),                                                                         currentDate,
+                    payment.getCompanyId(),
+                    currentDate,
                     "Payment Ref: " + payment.getReferenceNumber(),
                     payment.getId(), // referenceNumber
                     "AUTO_PAYMENT", // entryType
@@ -145,20 +232,24 @@ public class AccountingManager {                                                
 
                 // Debit Cash/Bank account
                 Account cashAccount = accountRepository.getAccountByNameAndCompanyId(getAccountNameForPaymentMethod(payment.getPaymentMethod()), payment.getCompanyId()).get();
-                if (cashAccount != null) {                                                                          journalEntryItemRepository.insert(new JournalEntryItem(
-                        journalEntryId,
-                        cashAccount.getId(),
-                        payment.getAmount(),
-                        0.0f,
+                if (cashAccount != null) {
+                    journalEntryItemRepository.insert(new JournalEntryItem(
+                        journalEntryId, 
+                        cashAccount.getId(), 
+                        payment.getAmount(), 
+                        0.0f, 
                         "Cash/Bank received for payment " + payment.getReferenceNumber()
                     )).get();
                 }
-                                                                                                                // Credit Accounts Receivable (assuming payment is against an invoice)
+
+                // Credit Accounts Receivable (assuming payment is against an invoice)
                 Account accountsReceivableAccount = accountRepository.getAccountByNameAndCompanyId("Accounts Receivable", payment.getCompanyId()).get();
-                if (accountsReceivableAccount != null) {                                                            journalEntryItemRepository.insert(new JournalEntryItem(
-                        journalEntryId,                                                                                 accountsReceivableAccount.getId(),
-                        0.0f,
-                        payment.getAmount(),
+                if (accountsReceivableAccount != null) {
+                    journalEntryItemRepository.insert(new JournalEntryItem(
+                        journalEntryId, 
+                        accountsReceivableAccount.getId(), 
+                        0.0f, 
+                        payment.getAmount(), 
                         "Payment received against Accounts Receivable for " + payment.getReferenceNumber()
                     )).get();
                 }
@@ -173,10 +264,14 @@ public class AccountingManager {                                                
     /**
      * Creates journal entries for receipts.
      * Typically: Cash/Bank (Debit), Specific Revenue Account (Credit)
-     * * @param receipt The receipt object.
-     */                                                                                             public void createJournalEntriesForReceipt(Receipt receipt) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {                                                   try {
-                String journalEntryId = UUID.randomUUID().toString();                                           String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+     *
+     * @param receipt The receipt object.
+     */
+    public void createJournalEntriesForReceipt(Receipt receipt) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            try {
+                String journalEntryId = UUID.randomUUID().toString();
+                String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
                 // Create main journal entry
                 JournalEntry journalEntry = new JournalEntry(
@@ -195,10 +290,10 @@ public class AccountingManager {                                                
                 Account cashAccount = accountRepository.getAccountByNameAndCompanyId(getAccountNameForPaymentMethod(receipt.getPaymentMethod()), receipt.getCompanyId()).get();
                 if (cashAccount != null) {
                     journalEntryItemRepository.insert(new JournalEntryItem(
-                        journalEntryId,
-                        cashAccount.getId(),
-                        receipt.getAmount(),
-                        0.0f,
+                        journalEntryId, 
+                        cashAccount.getId(), 
+                        receipt.getAmount(), 
+                        0.0f, 
                         "Cash/Bank received for receipt " + receipt.getReferenceNumber()
                     )).get();
                 }
@@ -207,10 +302,10 @@ public class AccountingManager {                                                
                 Account revenueAccount = accountRepository.getAccountByNameAndCompanyId("Other Income", receipt.getCompanyId()).get(); // Example
                 if (revenueAccount != null) {
                     journalEntryItemRepository.insert(new JournalEntryItem(
-                        journalEntryId,
-                        revenueAccount.getId(),
-                        0.0f,
-                        receipt.getAmount(),
+                        journalEntryId, 
+                        revenueAccount.getId(), 
+                        0.0f, 
+                        receipt.getAmount(), 
                         "Revenue from receipt " + receipt.getReferenceNumber()
                     )).get();
                 }
@@ -352,31 +447,120 @@ public class AccountingManager {                                                
     public ProfitLossStatement generateProfitAndLoss(String companyId, String startDate, String endDate) {
         try {
             float totalRevenue = getTotalSales(companyId, startDate, endDate);
-            // ✅ تم تصحيح الخطأ: إكمال السطر المقطوع
             float totalCostOfGoodsSold = journalEntryItemRepository.getTotalAmountForAccountTypeAndDateRange("Cost of Goods Sold", companyId, startDate, endDate).get();
-            
-            // ... منطق الدالة الأصلي هنا ...
-            
-            // افتراض بنية البيانات التي يجب إرجاعها
-            return new ProfitLossStatement(); 
-            
+            float grossProfit = totalRevenue - totalCostOfGoodsSold;
+
+            float operatingExpenses = journalEntryItemRepository.getTotalAmountForAccountTypeAndDateRange("Operating Expenses", companyId, startDate, endDate).get();
+            float netProfit = grossProfit - operatingExpenses;
+
+            return new ProfitLossStatement(totalRevenue, totalCostOfGoodsSold, grossProfit, operatingExpenses, netProfit);
         } catch (Exception e) {
             Log.e(TAG, "Error generating P&L: " + e.getMessage());
-            return new ProfitLossStatement(); 
+            return new ProfitLossStatement(0, 0, 0, 0, 0);
         }
     }
-    
+
     /**
-     * Generates a Balance Sheet.
+     * Generates a balance sheet.
      *
      * @param companyId The ID of the company.
-     * @param asOfDate The date for which the balance sheet is generated.
-     * @return A map or a custom object representing the Balance Sheet.
+     * @param asOfDate The date for which to generate the balance sheet.
+     * @return A map or a custom object representing the balance sheet.
      */
     public BalanceSheet generateBalanceSheet(String companyId, String asOfDate) {
-        // ... منطق الدالة الأصلي هنا ...
-        
-        // افتراض بنية البيانات التي يجب إرجاعها
+        // This is a highly complex function requiring aggregation of all asset, liability, and equity accounts.
+        // A full implementation would involve:
+        // 1. Getting all asset accounts and summing their balances up to asOfDate.
+        // 2. Getting all liability accounts and summing their balances up to asOfDate.
+        // 3. Calculating equity (Owner's Equity + Retained Earnings + Net Profit/Loss).
+        // This placeholder returns an empty BalanceSheet object.
+        Log.w(TAG, "generateBalanceSheet: Full implementation requires extensive querying of account balances.");
         return new BalanceSheet();
+    }
+
+    /**
+     * Gets the last purchase price for a given item.
+     * This is a placeholder as we don't have purchase records.
+     * In a real scenario, you'd look at purchase invoices or bills.
+     *
+     * @param itemId The ID of the item.
+     * @param supplierId The ID of the supplier.
+     * @param companyId The ID of the company.
+     * @return The last purchase price.
+     */
+    public float getLastPurchasePrice(String itemId, String supplierId, String companyId) {
+        // Placeholder: Returning the cost price from the Item table for now.
+        try {
+            Item item = itemRepository.getItemById(itemId, companyId).get();
+            return item != null ? item.getCostPrice() : 0;
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting last purchase price: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Adds or updates an account statement and recalculates running balances.
+     *
+     * @param newStatement The AccountStatement object to add or update.
+     */
+    public void addOrUpdateAccountStatement(AccountStatement newStatement) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            try {
+                AccountStatementDao dao = database.accountStatementDao();
+                List<AccountStatement> existingStatements = dao.getAccountStatementsForBalanceCalculation(
+                    newStatement.getCompanyId(),
+                    newStatement.getAccountId(),
+                    newStatement.getTransactionDate()
+                );
+
+                float currentRunningBalance = 0.0f;
+                if (!existingStatements.isEmpty()) {
+                    // Assuming the list is ordered by date descending, the first one is the latest before or on transactionDate
+                    currentRunningBalance = existingStatements.get(0).getRunningBalance();
+                }
+
+                newStatement.setRunningBalance(currentRunningBalance + newStatement.getDebit() - newStatement.getCredit());
+                dao.insert(newStatement);
+
+                recalculateRunningBalances(newStatement.getCompanyId(), newStatement.getAccountId(), newStatement.getTransactionDate());
+
+                Log.d(TAG, "Account statement added/updated and balances recalculated for account: " + newStatement.getAccountId());
+            } catch (Exception e) {
+                Log.e(TAG, "Error adding or updating account statement: " + e.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Recalculates running balances for account statements from a given start date.
+     *
+     * @param companyId The ID of the company.
+     * @param accountId The ID of the account.
+     * @param startDate The date from which to start recalculation.
+     */
+    public void recalculateRunningBalances(String companyId, String accountId, String startDate) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            try {
+                AccountStatementDao dao = database.accountStatementDao();
+                List<AccountStatement> statementsToRecalculate = dao.getStatementsForRecalculation(companyId, accountId, startDate);
+
+                float runningBalance = 0.0f;
+                AccountStatement lastStatementBeforeStartDate = dao.getLastStatementBeforeDate(companyId, accountId, startDate);
+                if (lastStatementBeforeStartDate != null) {
+                    runningBalance = lastStatementBeforeStartDate.getRunningBalance();
+                }
+
+                for (AccountStatement statement : statementsToRecalculate) {
+                    runningBalance += statement.getDebit() - statement.getCredit();
+                    if (statement.getRunningBalance() != runningBalance) { // Only update if changed
+                        statement.setRunningBalance(runningBalance);
+                        dao.update(statement);
+                    }
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error recalculating running balances: " + e.getMessage());
+            }
+        });
     }
 }
