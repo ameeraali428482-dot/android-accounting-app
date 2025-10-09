@@ -1,10 +1,25 @@
-package com.example.androidapp.data.entities;
-import androidx.annotation.NonNull;
+#!/bin/bash
 
+echo "Creating missing entity file: Order.java"
+
+# Define the file path
+ENTITY_FILE="app/src/main/java/com/example/androidapp/data/entities/Order.java"
+
+# Create the directory if it doesn't exist
+mkdir -p "$(dirname "$ENTITY_FILE")"
+
+# Create the Order.java file with the correct content
+cat > "$ENTITY_FILE" << 'EOP'
+package com.example.androidapp.data.entities;
+
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.example.androidapp.data.DateConverter;
 
 import java.util.Date;
 
@@ -20,22 +35,37 @@ import java.util.Date;
                            onDelete = ForeignKey.CASCADE)
         },
         indices = {@Index(value = "customerId"), @Index(value = "companyId")})
+@TypeConverters(DateConverter.class)
 public class Order {
     @PrimaryKey
-    public @NonNull String id;
-    public String customerId;
-    public @NonNull String companyId;
-    public double totalAmount;
-    public @NonNull Date createdAt;
-    public @NonNull Date orderDate;
+    @NonNull
+    private String id;
 
-    public Order(@NonNull String id, String customerId, @NonNull String companyId, double totalAmount, @NonNull Date createdAt, @NonNull Date orderDate) {
+    private String customerId;
+
+    @NonNull
+    private String companyId;
+
+    private double totalAmount;
+
+    @NonNull
+    private Date createdAt;
+
+    @NonNull
+    private Date orderDate;
+
+    private String status;
+    private String notes;
+
+    public Order(@NonNull String id, String customerId, @NonNull String companyId, double totalAmount, @NonNull Date createdAt, @NonNull Date orderDate, String status, String notes) {
         this.id = id;
         this.customerId = customerId;
         this.companyId = companyId;
         this.totalAmount = totalAmount;
         this.createdAt = createdAt;
         this.orderDate = orderDate;
+        this.status = status;
+        this.notes = notes;
     }
 
     // Getters and Setters
@@ -55,4 +85,11 @@ public class Order {
     @NonNull
     public Date getOrderDate() { return orderDate; }
     public void setOrderDate(@NonNull Date orderDate) { this.orderDate = orderDate; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
 }
+EOP
+
+echo "File Order.java created successfully."
