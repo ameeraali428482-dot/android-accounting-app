@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

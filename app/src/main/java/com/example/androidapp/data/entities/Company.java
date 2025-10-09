@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -32,7 +34,7 @@ import androidx.room.PrimaryKey;
         })
 public class Company {
     @PrimaryKey
-    private String id;
+    private @NonNull String id;
     private String name;
     private String address;
     private String phone;

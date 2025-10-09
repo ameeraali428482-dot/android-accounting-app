@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -19,7 +21,7 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "itemId"), @Index(value = "companyId")})
 public class ItemUnit {
     @PrimaryKey
-    private String id;
+    private @NonNull String id;
     private String itemId;
     private String name;
     private float conversionFactor;

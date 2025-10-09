@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -13,7 +15,7 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "userId")})
 public class Notification {
     @PrimaryKey
-    private String id;
+    private @NonNull String id;
     private String userId;
     private String type;
     private String message;

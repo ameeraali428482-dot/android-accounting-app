@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -19,7 +21,7 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "userId"), @Index(value = "companyId")})
 public class AuditLog {
     @PrimaryKey
-    private String id;
+    private @NonNull String id;
     private String timestamp;
     private String userId;
     private String companyId;

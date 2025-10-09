@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -23,10 +25,10 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "postId"), @Index(value = "userId"), @Index(value = "companyId")})
 public class Share {
     @PrimaryKey
-    public String id;
+    public @NonNull String id;
     public String postId;
-    public String userId;
-    public String companyId;
+    public @NonNull String userId;
+    public @NonNull String companyId;
     public String timestamp;
 
     public Share(String id, String postId, String userId, String companyId, String timestamp) {

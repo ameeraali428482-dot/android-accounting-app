@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -19,9 +21,9 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "userId"), @Index(value = "companyId")})
 public class PointTransaction {
     @PrimaryKey
-    public String id;
-    public String userId;
-    public String companyId;
+    public @NonNull String id;
+    public @NonNull String userId;
+    public @NonNull String companyId;
     public int points;
 
     public PointTransaction(String id, String userId, String companyId, int points) {

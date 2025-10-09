@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -22,9 +24,9 @@ import androidx.room.Index;
         },
         indices = {@Index(value = "userId"), @Index(value = "permissionId"), @Index(value = "companyId")})
 public class UserPermission {
-    public String userId;
-    public String permissionId;
-    public String companyId;
+    public @NonNull String userId;
+    public @NonNull String permissionId;
+    public @NonNull String companyId;
 
     public UserPermission(String userId, String permissionId, String companyId) {
         this.userId = userId;

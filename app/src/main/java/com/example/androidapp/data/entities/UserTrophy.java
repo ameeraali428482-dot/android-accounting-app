@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -24,9 +26,9 @@ import java.util.Date;
         },
         indices = {@Index(value = "userId"), @Index(value = "trophyId"), @Index(value = "companyId")})
 public class UserTrophy {
-    public String userId;
-    public String trophyId;
-    public String companyId;
+    public @NonNull String userId;
+    public @NonNull String trophyId;
+    public @NonNull String companyId;
     public Date achievedDate;
 
     public UserTrophy(String userId, String trophyId, String companyId, Date achievedDate) {

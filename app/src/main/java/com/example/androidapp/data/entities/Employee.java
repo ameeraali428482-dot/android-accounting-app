@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -13,7 +15,7 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "companyId")})
 public class Employee {
     @PrimaryKey
-    private String id;
+    private @NonNull String id;
     private String companyId;
     private String name;
     private String position;

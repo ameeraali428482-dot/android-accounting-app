@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -27,7 +29,7 @@ import java.util.Date;
         })
 public class ContactSync {
     @PrimaryKey
-    private String id;
+    private @NonNull String id;
     
     private String userId;
     private String companyId;

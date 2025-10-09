@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -23,7 +25,7 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "fromId"), @Index(value = "toId"), @Index(value = "companyId")})
 public class Connection {
     @PrimaryKey
-    private String id;
+    private @NonNull String id;
     private String fromId;
     private String toId;
     private String status;

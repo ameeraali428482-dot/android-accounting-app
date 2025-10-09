@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -6,7 +8,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "permissions")
 public class Permission {
     @PrimaryKey
-    private String id;
+    private @NonNull String id;
     private String action;
     private String description;
     private String group;

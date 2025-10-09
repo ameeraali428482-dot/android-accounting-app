@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -19,9 +21,9 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "customerId"), @Index(value = "companyId")})
 public class Order {
     @PrimaryKey
-    public String id;
+    public @NonNull String id;
     public String customerId;
-    public String companyId;
+    public @NonNull String companyId;
     public double totalAmount;
 
     public Order(String id, String customerId, String companyId, double totalAmount) {

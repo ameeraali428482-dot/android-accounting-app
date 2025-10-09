@@ -1,4 +1,6 @@
 package com.example.androidapp.data.entities;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -13,8 +15,8 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "companyId")})
 public class JournalEntry {
     @PrimaryKey
-    public String id;
-    public String companyId;
+    public @NonNull String id;
+    public @NonNull String companyId;
     public String entryDate;
     public String description;
     public String referenceNumber; // For linking to invoices, receipts, payments
