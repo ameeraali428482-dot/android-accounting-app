@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidapp.App;
 import com.example.androidapp.R;
 import com.example.androidapp.data.dao.ConnectionDao;
-import com.example.androidapp.models.Connection;
+import com.example.androidapp.data.entities.Connection;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 

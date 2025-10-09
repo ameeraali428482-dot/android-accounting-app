@@ -16,9 +16,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.models.Reward;
-import com.example.androidapp.models.User;
-import com.example.androidapp.models.UserReward;
+import com.example.androidapp.data.entities.Reward;
+import com.example.androidapp.data.entities.User;
+import com.example.androidapp.data.entities.UserReward;
 import com.example.androidapp.utils.SessionManager;
 
 import java.text.SimpleDateFormat;

@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.androidapp.App;
 import com.example.androidapp.R;
 import com.example.androidapp.data.dao.PointTransactionDao;
-import com.example.androidapp.models.PointTransaction;
+import com.example.androidapp.data.entities.PointTransaction;
 import com.example.androidapp.utils.SessionManager;
 
 import java.util.Arrays;

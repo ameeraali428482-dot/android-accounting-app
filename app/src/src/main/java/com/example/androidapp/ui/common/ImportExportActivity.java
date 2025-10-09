@@ -15,8 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.models.Account;
-import com.example.androidapp.models.Item;
+import com.example.androidapp.data.entities.Account;
+import com.example.androidapp.data.entities.Item;
 import com.example.androidapp.utils.ExcelUtil;
 import com.example.androidapp.utils.SessionManager;
 

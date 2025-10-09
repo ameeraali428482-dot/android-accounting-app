@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.models.UserReward;
+import com.example.androidapp.data.entities.UserReward;
 
 import java.util.List;
 

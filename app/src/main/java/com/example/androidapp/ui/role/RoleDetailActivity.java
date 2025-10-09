@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.models.Permission;
-import com.example.androidapp.models.Role;
+import com.example.androidapp.data.entities.Permission;
+import com.example.androidapp.data.entities.Role;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 
