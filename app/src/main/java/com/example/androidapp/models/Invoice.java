@@ -1,4 +1,4 @@
-package com.example.androidapp.data.entities;
+package com.example.androidapp.models;
 
 public class Invoice {
     private String id;

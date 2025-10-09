@@ -1,20 +1,37 @@
 package com.example.androidapp.data.entities;
 
+import java.util.Map;
+
 public class BalanceSheet {
-    // Placeholder for a complex BalanceSheet object
-    // In a real application, this would contain aggregated data for assets, liabilities, and equity.
-    // For now, it's an empty class to resolve compilation errors.
+    private Map<String, Float> assets;
+    private Map<String, Float> liabilities;
+    private Map<String, Float> equity;
 
     public BalanceSheet() {
-        // Default constructor
+        // Placeholder for a more complex constructor that would populate these maps
     }
 
-    // You would add properties and methods here to represent the balance sheet data
-    // For example:
-    // private float totalAssets;
-    // private float totalLiabilities;
-    // private float totalEquity;
+    public Map<String, Float> getAssets() {
+        return assets;
+    }
 
-    // public float getTotalAssets() { return totalAssets; }
-    // public void setTotalAssets(float totalAssets) { this.totalAssets = totalAssets; }
+    public void setAssets(Map<String, Float> assets) {
+        this.assets = assets;
+    }
+
+    public Map<String, Float> getLiabilities() {
+        return liabilities;
+    }
+
+    public void setLiabilities(Map<String, Float> liabilities) {
+        this.liabilities = liabilities;
+    }
+
+    public Map<String, Float> getEquity() {
+        return equity;
+    }
+
+    public void setEquity(Map<String, Float> equity) {
+        this.equity = equity;
+    }
 }

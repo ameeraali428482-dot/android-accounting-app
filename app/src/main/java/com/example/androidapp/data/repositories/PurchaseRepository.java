@@ -1,7 +1,6 @@
 package com.example.androidapp.data.repositories;
 
 import android.app.Application;
-import androidx.lifecycle.LiveData;
 
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.PurchaseDao;
@@ -14,40 +13,31 @@ public class PurchaseRepository {
     private PurchaseDao purchaseDao;
 
     public PurchaseRepository(Application application) {
-        AppDatabase db = AppDatabase.getDatabase(application);
-        purchaseDao = db.purchaseDao();
+        AppDatabase database = AppDatabase.getDatabase(application);
+        purchaseDao = database.purchaseDao();
     }
 
-    public Future<Void> insert(Purchase purchase) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> {
-            purchaseDao.insert(purchase);
-            return null;
-        });
+    public Future<?> insert(Purchase purchase) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> purchaseDao.insert(purchase));
     }
 
-    public Future<Void> update(Purchase purchase) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> {
-            purchaseDao.update(purchase);
-            return null;
-        });
+    public Future<?> update(Purchase purchase) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> purchaseDao.update(purchase));
     }
 
-    public Future<Void> delete(Purchase purchase) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> {
-            purchaseDao.delete(purchase);
-            return null;
-        });
+    public Future<?> delete(Purchase purchase) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> purchaseDao.delete(purchase));
     }
 
-    public LiveData<List<Purchase>> getAllPurchases(String companyId) {
-        return purchaseDao.getAllPurchases(companyId);
+    public Future<Purchase> getPurchaseById(String id, String companyId) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> purchaseDao.getPurchaseById(id, companyId));
+    }
+
+    public Future<List<Purchase>> getAllPurchases(String companyId) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> purchaseDao.getAllPurchases(companyId));
     }
 
     public Future<Float> getTotalPurchasesByDateRange(String companyId, String startDate, String endDate) {
         return AppDatabase.databaseWriteExecutor.submit(() -> purchaseDao.getTotalPurchasesByDateRange(companyId, startDate, endDate));
-    }
-
-    public Future<Integer> countPurchaseByReferenceNumber(String referenceNumber, String companyId) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> purchaseDao.countPurchaseByReferenceNumber(referenceNumber, companyId));
     }
 }

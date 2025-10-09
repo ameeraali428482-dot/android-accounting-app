@@ -1,7 +1,6 @@
 package com.example.androidapp.data.repositories;
 
 import android.app.Application;
-import androidx.lifecycle.LiveData;
 
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.ReceiptDao;
@@ -14,33 +13,28 @@ public class ReceiptRepository {
     private ReceiptDao receiptDao;
 
     public ReceiptRepository(Application application) {
-        AppDatabase db = AppDatabase.getDatabase(application);
-        receiptDao = db.receiptDao();
+        AppDatabase database = AppDatabase.getDatabase(application);
+        receiptDao = database.receiptDao();
     }
 
-    public Future<Void> insert(Receipt receipt) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> {
-            receiptDao.insert(receipt);
-            return null;
-        });
+    public Future<?> insert(Receipt receipt) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> receiptDao.insert(receipt));
     }
 
-    public Future<Void> update(Receipt receipt) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> {
-            receiptDao.update(receipt);
-            return null;
-        });
+    public Future<?> update(Receipt receipt) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> receiptDao.update(receipt));
     }
 
-    public Future<Void> delete(Receipt receipt) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> {
-            receiptDao.delete(receipt);
-            return null;
-        });
+    public Future<?> delete(Receipt receipt) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> receiptDao.delete(receipt));
     }
 
-    public LiveData<List<Receipt>> getAllReceipts(String companyId) {
-        return receiptDao.getAllReceipts(companyId);
+    public Future<Receipt> getReceiptById(String id, String companyId) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> receiptDao.getReceiptById(id, companyId));
+    }
+
+    public Future<List<Receipt>> getAllReceipts(String companyId) {
+        return AppDatabase.databaseWriteExecutor.submit(() -> receiptDao.getAllReceipts(companyId));
     }
 
     public Future<Integer> countReceiptByReferenceNumber(String referenceNumber, String companyId) {
