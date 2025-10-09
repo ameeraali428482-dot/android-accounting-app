@@ -25,9 +25,10 @@ import java.util.concurrent.Executors;
         version = 3, exportSchema = false)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
+    public abstract public abstract PurchaseDao purchaseDao();
 
     public abstract AccountDao accountDao();
-    public abstract PurchaseDao purchaseDao();
+    public abstract public abstract PurchaseDao purchaseDao();
     public abstract AccountStatementDao accountStatementDao();
     public abstract AuditLogDao auditLogDao();
     public abstract CampaignDao campaignDao();
