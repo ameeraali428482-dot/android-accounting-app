@@ -1,15 +1,12 @@
 package com.example.androidapp.ui.journalentry.viewmodel;
 
 import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.JournalEntryDao;
 import com.example.androidapp.data.entities.JournalEntry;
-
 import java.util.List;
 
 public class JournalEntryViewModel extends AndroidViewModel {
@@ -29,20 +26,14 @@ public class JournalEntryViewModel extends AndroidViewModel {
     }
 
     public void insert(JournalEntry journalEntry) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            journalEntryDao.insert(journalEntry);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> journalEntryDao.insert(journalEntry));
     }
 
     public void update(JournalEntry journalEntry) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            journalEntryDao.update(journalEntry);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> journalEntryDao.update(journalEntry));
     }
 
     public void delete(JournalEntry journalEntry) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            journalEntryDao.delete(journalEntry);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> journalEntryDao.delete(journalEntry));
     }
 }

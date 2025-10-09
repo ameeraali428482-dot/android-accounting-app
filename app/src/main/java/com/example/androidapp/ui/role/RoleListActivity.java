@@ -4,19 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Role;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
 public class RoleListActivity extends AppCompatActivity {
@@ -57,7 +55,7 @@ public class RoleListActivity extends AppCompatActivity {
         adapter = new GenericAdapter<>(
                 new ArrayList<>(),
                 R.layout.role_list_row,
-                (role, view) -> {
+                (view, role) -> {
                     TextView tvRoleName = view.findViewById(R.id.tv_role_name);
                     TextView tvRoleDescription = view.findViewById(R.id.tv_role_description);
 
@@ -75,12 +73,11 @@ public class RoleListActivity extends AppCompatActivity {
     }
 
     private void loadRoles() {
-        database.roleDao().getAllRoles(sessionManager.getCurrentCompanyId())
-                .observe(this, roles -> {
-                    if (roles != null) {
-                        adapter.updateData(roles);
-                    }
-                });
+        database.roleDao().getAllRoles(sessionManager.getCurrentCompanyId()).observe(this, roles -> {
+            if (roles != null) {
+                adapter.updateData(roles);
+            }
+        });
     }
 
     @Override
@@ -91,16 +88,14 @@ public class RoleListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_refresh:
-                loadRoles();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else if (item.getItemId() == R.id.action_refresh) {
+            loadRoles();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

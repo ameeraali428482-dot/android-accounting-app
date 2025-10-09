@@ -3,23 +3,22 @@ package com.example.androidapp.ui.role;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Permission;
 import com.example.androidapp.data.entities.Role;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class RoleDetailActivity extends AppCompatActivity {
     private EditText etRoleName, etRoleDescription;
@@ -27,10 +26,10 @@ public class RoleDetailActivity extends AppCompatActivity {
     private GenericAdapter<Permission> permissionsAdapter;
     private AppDatabase database;
     private SessionManager sessionManager;
-    private int roleId = -1;
+    private String roleId = null;
     private Role currentRole;
-    private List<Permission> allPermissions;
-    private List<Permission> selectedPermissions;
+    private List<Permission> allPermissions = new ArrayList<>();
+    private List<Permission> selectedPermissions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +43,12 @@ public class RoleDetailActivity extends AppCompatActivity {
         setupPermissionsRecyclerView();
         loadAllPermissions();
 
-        roleId = getIntent().getIntExtra("role_id", -1);
-        if (roleId != -1) {
+        roleId = getIntent().getStringExtra("role_id");
+        if (roleId != null) {
             setTitle("تعديل الدور");
             loadRole();
         } else {
             setTitle("إضافة دور جديد");
-            selectedPermissions = new ArrayList<>();
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -67,20 +65,18 @@ public class RoleDetailActivity extends AppCompatActivity {
         permissionsAdapter = new GenericAdapter<>(
                 new ArrayList<>(),
                 R.layout.permission_list_row,
-                (permission, view) -> {
+                (view, permission) -> {
                     TextView tvPermissionName = view.findViewById(R.id.tv_permission_name);
-                    tvPermissionName.setText(permission.getName());
-                    // Check if this permission is selected for the current role
-                    if (selectedPermissions != null && selectedPermissions.contains(permission)) {
-                        view.setBackgroundColor(getResources().getColor(R.color.light_blue)); // Highlight selected
+                    tvPermissionName.setText(permission.getAction());
+                    if (selectedPermissions.stream().anyMatch(p -> p.getId().equals(permission.getId()))) {
+                        view.setBackgroundColor(getResources().getColor(R.color.light_blue));
                     } else {
                         view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                     }
                 },
                 permission -> {
-                    // Toggle selection
-                    if (selectedPermissions.contains(permission)) {
-                        selectedPermissions.remove(permission);
+                    if (selectedPermissions.stream().anyMatch(p -> p.getId().equals(permission.getId()))) {
+                        selectedPermissions.removeIf(p -> p.getId().equals(permission.getId()));
                     } else {
                         selectedPermissions.add(permission);
                     }
@@ -91,41 +87,29 @@ public class RoleDetailActivity extends AppCompatActivity {
     }
 
     private void loadAllPermissions() {
-        database.permissionDao().getAllPermissions()
-                .observe(this, permissions -> {
-                    if (permissions != null) {
-                        allPermissions = permissions;
-                        permissionsAdapter.updateData(allPermissions);
-                        if (roleId != -1 && currentRole != null) {
-                            // After loading all permissions, update selection based on current role
-                            updateSelectedPermissions();
-                        }
-                    }
-                });
+        database.permissionDao().getAllPermissions().observe(this, permissions -> {
+            if (permissions != null) {
+                allPermissions = permissions;
+                permissionsAdapter.updateData(allPermissions);
+                if (roleId != null) {
+                    loadRole();
+                }
+            }
+        });
     }
 
     private void loadRole() {
-        database.roleDao().getRoleById(roleId, sessionManager.getCurrentCompanyId())
-                .observe(this, role -> {
-                    if (role != null) {
-                        currentRole = role;
-                        etRoleName.setText(currentRole.getName());
-                        etRoleDescription.setText(currentRole.getDescription());
-                        // Load associated permissions
-                        database.permissionDao().getPermissionsForRole(roleId)
-                                .observe(this, permissions -> {
-                                    selectedPermissions = new ArrayList<>(permissions);
-                                    updateSelectedPermissions();
-                                });
-                    }
+        database.roleDao().getRoleById(roleId).observe(this, role -> {
+            if (role != null) {
+                currentRole = role;
+                etRoleName.setText(currentRole.getName());
+                etRoleDescription.setText(currentRole.getDescription());
+                database.permissionDao().getPermissionsForRole(roleId).observe(this, permissions -> {
+                    selectedPermissions = new ArrayList<>(permissions);
+                    permissionsAdapter.notifyDataSetChanged();
                 });
-    }
-
-    private void updateSelectedPermissions() {
-        if (allPermissions != null && selectedPermissions != null) {
-            permissionsAdapter.updateData(allPermissions);
-            permissionsAdapter.notifyDataSetChanged(); // Refresh UI to show selections
-        }
+            }
+        });
     }
 
     private void saveRole() {
@@ -138,25 +122,18 @@ public class RoleDetailActivity extends AppCompatActivity {
         }
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            if (roleId == -1) {
-                // Create new role
-                Role newRole = new Role(
-                        sessionManager.getCurrentCompanyId(),
-                        name,
-                        description
-                );
-                long newRoleId = database.roleDao().insert(newRole);
-                // Insert role-permission associations
+            if (roleId == null) {
+                String newRoleId = UUID.randomUUID().toString();
+                Role newRole = new Role(newRoleId, name, description, sessionManager.getCurrentCompanyId(), false);
+                database.roleDao().insert(newRole);
                 for (Permission p : selectedPermissions) {
                     database.roleDao().insertRolePermission(newRoleId, p.getId());
                 }
             } else {
-                // Update existing role
                 currentRole.setName(name);
                 currentRole.setDescription(description);
                 database.roleDao().update(currentRole);
-                // Update role-permission associations
-                database.roleDao().deleteRolePermissions(roleId); // Clear existing
+                database.roleDao().deleteRolePermissions(roleId);
                 for (Permission p : selectedPermissions) {
                     database.roleDao().insertRolePermission(roleId, p.getId());
                 }
@@ -177,15 +154,14 @@ public class RoleDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_save:
-                saveRole();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            finish();
+            return true;
+        } else if (itemId == R.id.action_save) {
+            saveRole();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

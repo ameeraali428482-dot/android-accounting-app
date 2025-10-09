@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,6 +64,14 @@ public class SessionManager {
         return user;
     }
 
+    public String getCurrentUserId() {
+        return pref.getString(KEY_USER_ID, null);
+    }
+    
+    public String getCurrentCompanyId() {
+        return pref.getString(KEY_CURRENT_ORG_ID, null);
+    }
+
     public Map<String, UserOrgAssociation> getAssociatedOrgs() {
         Gson gson = new Gson();
         String json = pref.getString(KEY_ASSOCIATED_ORGS, null);
@@ -79,10 +86,6 @@ public class SessionManager {
         editor.putString(KEY_CURRENT_ORG_ID, orgId);
         editor.putString(KEY_CURRENT_BRANCH_ID, branchId);
         editor.commit();
-    }
-
-    public String getCurrentCompanyId() {
-        return pref.getString(KEY_CURRENT_ORG_ID, null);
     }
 
     public static class UserOrgAssociation {
@@ -103,4 +106,3 @@ public class SessionManager {
         }
     }
 }
-

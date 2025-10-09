@@ -4,20 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Order;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,7 +60,7 @@ public class OrderListActivity extends AppCompatActivity {
         adapter = new GenericAdapter<>(
                 new ArrayList<>(),
                 R.layout.order_list_row,
-                (order, view) -> {
+                (view, order) -> {
                     TextView tvOrderId = view.findViewById(R.id.tv_order_id);
                     TextView tvOrderDate = view.findViewById(R.id.tv_order_date);
                     TextView tvTotalAmount = view.findViewById(R.id.tv_order_total_amount);
@@ -81,7 +78,6 @@ public class OrderListActivity extends AppCompatActivity {
                         tvNotes.setText("لا توجد ملاحظات");
                     }
 
-                    // Set status background based on status
                     int statusBackground;
                     switch (order.getStatus()) {
                         case "Completed":
@@ -93,7 +89,7 @@ public class OrderListActivity extends AppCompatActivity {
                         case "Cancelled":
                             statusBackground = R.drawable.status_inactive_background;
                             break;
-                        default: // Pending
+                        default:
                             statusBackground = R.drawable.status_pending_background;
                             break;
                     }
@@ -110,12 +106,11 @@ public class OrderListActivity extends AppCompatActivity {
     }
 
     private void loadOrders() {
-        database.orderDao().getAllOrders(sessionManager.getCurrentCompanyId())
-                .observe(this, orders -> {
-                    if (orders != null) {
-                        adapter.updateData(orders);
-                    }
-                });
+        database.orderDao().getAllOrders(sessionManager.getCurrentCompanyId()).observe(this, orders -> {
+            if (orders != null) {
+                adapter.updateData(orders);
+            }
+        });
     }
 
     @Override
@@ -126,16 +121,14 @@ public class OrderListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_refresh:
-                loadOrders();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else if (item.getItemId() == R.id.action_refresh) {
+            loadOrders();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
