@@ -44,9 +44,9 @@ public interface AccountDao {
     @Query("SELECT * FROM accounts WHERE id = :id AND companyId = :companyId LIMIT 1")
     Account getAccountById(String id, String companyId);
 
-    @Query("SELECT * FROM accounts WHERE accountName = :accountName AND companyId = :companyId LIMIT 1")
+    @Query("SELECT * FROM accounts WHERE name = :accountName AND companyId = :companyId LIMIT 1")
     Account getAccountByNameAndCompanyId(String accountName, String companyId);
 
-    @Query("SELECT COUNT(*) FROM accounts WHERE accountName = :accountName AND companyId = :companyId")
+    @Query("SELECT COUNT(*) FROM accounts WHERE name = :accountName AND companyId = :companyId")
     int countAccountByNameAndCompanyId(String accountName, String companyId);
 }
