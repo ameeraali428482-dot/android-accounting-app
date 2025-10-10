@@ -1,3 +1,15 @@
+#!/bin/bash
+
+echo "Creating missing file: FriendDao.java"
+
+# Define the file path
+DAO_FILE="app/src/main/java/com/example/androidapp/data/dao/FriendDao.java"
+
+# Create the directory if it doesn't exist
+mkdir -p "$(dirname "$DAO_FILE")"
+
+# Create the FriendDao.java file with the correct content
+cat > "$DAO_FILE" << 'EOP'
 package com.example.androidapp.data.dao;
 
 import androidx.lifecycle.LiveData;
@@ -36,3 +48,6 @@ public interface FriendDao {
     @Query("SELECT u.* FROM Users u INNER JOIN friends f ON u.id = f.friendId WHERE f.userId = :userId AND f.status = 'ACCEPTED' AND u.isOnline = 1")
     LiveData<List<User>> getOnlineFriends(String userId);
 }
+EOP
+
+echo "File FriendDao.java created successfully."
