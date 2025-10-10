@@ -79,21 +79,23 @@ public class OrderListActivity extends AppCompatActivity {
                     }
 
                     int statusBackground;
-                    switch (order.getStatus()) {
-                        case "Completed":
-                            statusBackground = R.drawable.status_active_background;
-                            break;
-                        case "Processing":
-                            statusBackground = R.drawable.status_draft_background;
-                            break;
-                        case "Cancelled":
-                            statusBackground = R.drawable.status_inactive_background;
-                            break;
-                        default:
-                            statusBackground = R.drawable.status_pending_background;
-                            break;
+                    if (order.getStatus() != null) {
+                        switch (order.getStatus()) {
+                            case "Completed":
+                                statusBackground = R.drawable.status_active_background;
+                                break;
+                            case "Processing":
+                                statusBackground = R.drawable.status_draft_background;
+                                break;
+                            case "Cancelled":
+                                statusBackground = R.drawable.status_inactive_background;
+                                break;
+                            default:
+                                statusBackground = R.drawable.status_pending_background;
+                                break;
+                        }
+                        tvStatus.setBackgroundResource(statusBackground);
                     }
-                    tvStatus.setBackgroundResource(statusBackground);
                 },
                 order -> {
                     Intent intent = new Intent(this, OrderDetailActivity.class);
@@ -121,10 +123,11 @@ public class OrderListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
             finish();
             return true;
-        } else if (item.getItemId() == R.id.action_refresh) {
+        } else if (itemId == R.id.action_refresh) {
             loadOrders();
             return true;
         }

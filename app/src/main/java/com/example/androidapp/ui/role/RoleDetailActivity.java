@@ -14,6 +14,7 @@ import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Permission;
 import com.example.androidapp.data.entities.Role;
+import com.example.androidapp.data.entities.RolePermission;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import java.util.ArrayList;
@@ -46,7 +47,6 @@ public class RoleDetailActivity extends AppCompatActivity {
         roleId = getIntent().getStringExtra("role_id");
         if (roleId != null) {
             setTitle("تعديل الدور");
-            loadRole();
         } else {
             setTitle("إضافة دور جديد");
         }
@@ -69,7 +69,7 @@ public class RoleDetailActivity extends AppCompatActivity {
                     TextView tvPermissionName = view.findViewById(R.id.tv_permission_name);
                     tvPermissionName.setText(permission.getAction());
                     if (selectedPermissions.stream().anyMatch(p -> p.getId().equals(permission.getId()))) {
-                        view.setBackgroundColor(getResources().getColor(R.color.light_blue));
+                        view.setBackgroundColor(getResources().getColor(R.color.light_gray));
                     } else {
                         view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                     }
@@ -104,7 +104,7 @@ public class RoleDetailActivity extends AppCompatActivity {
                 currentRole = role;
                 etRoleName.setText(currentRole.getName());
                 etRoleDescription.setText(currentRole.getDescription());
-                database.permissionDao().getPermissionsForRole(roleId).observe(this, permissions -> {
+                database.roleDao().getPermissionsForRole(roleId).observe(this, permissions -> {
                     selectedPermissions = new ArrayList<>(permissions);
                     permissionsAdapter.notifyDataSetChanged();
                 });
@@ -127,7 +127,7 @@ public class RoleDetailActivity extends AppCompatActivity {
                 Role newRole = new Role(newRoleId, name, description, sessionManager.getCurrentCompanyId(), false);
                 database.roleDao().insert(newRole);
                 for (Permission p : selectedPermissions) {
-                    database.roleDao().insertRolePermission(newRoleId, p.getId());
+                    database.roleDao().insertRolePermission(new RolePermission(newRoleId, p.getId()));
                 }
             } else {
                 currentRole.setName(name);
@@ -135,7 +135,7 @@ public class RoleDetailActivity extends AppCompatActivity {
                 database.roleDao().update(currentRole);
                 database.roleDao().deleteRolePermissions(roleId);
                 for (Permission p : selectedPermissions) {
-                    database.roleDao().insertRolePermission(roleId, p.getId());
+                    database.roleDao().insertRolePermission(new RolePermission(roleId, p.getId()));
                 }
             }
 

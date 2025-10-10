@@ -1,7 +1,5 @@
 package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
-
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
@@ -15,13 +13,14 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "companyId")})
 public class Role {
     @PrimaryKey
-    private @NonNull String id;
+    @NonNull
+    private String id;
     private String name;
     private String description;
     private String companyId;
     private boolean isDefault;
 
-    public Role(String id, String name, String description, String companyId, boolean isDefault) {
+    public Role(@NonNull String id, String name, String description, String companyId, boolean isDefault) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -29,46 +28,15 @@ public class Role {
         this.isDefault = isDefault;
     }
 
-    // Getters
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public boolean isDefault() {
-        return isDefault;
-    }
-
-    // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public void setDefault(boolean aDefault) {
-        isDefault = aDefault;
-    }
+    @NonNull
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public String getCompanyId() { return companyId; }
+    public boolean isDefault() { return isDefault; }
+    public void setId(@NonNull String id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setDescription(String description) { this.description = description; }
+    public void setCompanyId(String companyId) { this.companyId = companyId; }
+    public void setDefault(boolean aDefault) { isDefault = aDefault; }
 }
-

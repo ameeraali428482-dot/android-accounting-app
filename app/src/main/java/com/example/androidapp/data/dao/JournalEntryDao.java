@@ -26,6 +26,9 @@ public interface JournalEntryDao {
     @Query("SELECT * FROM journal_entries WHERE id = :id AND companyId = :companyId LIMIT 1")
     LiveData<JournalEntry> getJournalEntryById(String id, String companyId);
 
+    @Query("SELECT * FROM journal_entries WHERE companyId = :companyId AND entryType = :type")
+    List<JournalEntry> getJournalEntriesByCompanyIdAndType(String companyId, String type);
+
     @Query("SELECT COUNT(*) FROM journal_entries WHERE referenceNumber = :referenceNumber AND companyId = :companyId")
     int countJournalEntriesByReferenceNumber(String referenceNumber, String companyId);
 }
