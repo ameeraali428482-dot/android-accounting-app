@@ -27,6 +27,6 @@ public interface ChatDao extends BaseDao<Chat> {
     @Query("SELECT COUNT(*) FROM chats WHERE receiverId = :userId AND isRead = 0 AND companyId = :companyId")
     LiveData<Integer> getUnreadChatCount(String userId, String companyId);
 
-    @Query("UPDATE chats SET isRead = 1 WHERE receiverId = :userId AND userId = :senderId AND companyId = :companyId")
+    @Query("UPDATE chats SET isRead = 1 WHERE receiverId = :userId AND senderId = :senderId AND companyId = :companyId")
     void markChatsAsRead(String userId, String senderId, String companyId);
 }
