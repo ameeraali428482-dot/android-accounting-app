@@ -9,11 +9,6 @@ import com.example.androidapp.data.dao.PaymentDao;
 import com.example.androidapp.data.entities.Payment;
 import java.util.List;
 
-
-
-
-
-
 public class PaymentViewModel extends AndroidViewModel {
     private PaymentDao paymentDao;
 
@@ -23,11 +18,11 @@ public class PaymentViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Payment>> getAllPayments(String companyId) {
-        return LiveData.of(paymentDao.getAllPayments(companyId));
+        return paymentDao.getAllPayments(companyId);
     }
 
     public LiveData<Payment> getPaymentById(String paymentId, String companyId) {
-        return LiveData.of(paymentDao.getPaymentById(paymentId, companyId));
+        return paymentDao.getPaymentById(paymentId, companyId);
     }
 
     public void insert(Payment payment) {

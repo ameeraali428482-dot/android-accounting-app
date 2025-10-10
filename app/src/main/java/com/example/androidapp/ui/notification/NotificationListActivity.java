@@ -1,10 +1,10 @@
 package com.example.androidapp.ui.notification;
 
-import java.util.Date;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,12 +16,8 @@ import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-
-
-
-
-
 
 public class NotificationListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -45,64 +41,47 @@ public class NotificationListActivity extends AppCompatActivity {
 
     private void initViews() {
         recyclerView = findViewById(R.id.recycler_view);
-
         setTitle("الإشعارات");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<>(
-                new ArrayList<>(),
-                R.layout.notification_list_row,
-                (notification, view) -> {
-                    TextView tvTitle = notification.findViewById(R.id.tv_notification_title);
-                    TextView tvMessage = notification.findViewById(R.id.tv_notification_message);
-                    TextView tvTimestamp = notification.findViewById(R.id.tv_notification_timestamp);
-                    TextView tvType = notification.findViewById(R.id.tv_notification_type);
+        adapter = new GenericAdapter<Notification>(
+            new ArrayList<>(),
+            notification -> {
+                Intent intent = new Intent(NotificationListActivity.this, NotificationDetailActivity.class);
+                intent.putExtra("notification_id", notification.getId());
+                startActivity(intent);
+            }
+        ) {
+            @Override
+            protected int getLayoutResId() {
+                return R.layout.notification_list_row;
+            }
 
-                    tvTitle.setText(view.getTitle());
-                    tvMessage.setText(view.getMessage());
-                    tvTimestamp.setText(dateFormat.format(view.getCreatedAt()));
-                    tvType.setText(view.getType());
+            @Override
+            protected void bindView(View itemView, Notification notification) {
+                TextView tvTitle = itemView.findViewById(R.id.tv_notification_title);
+                TextView tvMessage = itemView.findViewById(R.id.tv_notification_message);
+                TextView tvTimestamp = itemView.findViewById(R.id.tv_notification_timestamp);
+                TextView tvType = itemView.findViewById(R.id.tv_notification_type);
 
-                    // Set background based on read status
-                    if (view.isRead()) {
-                        notification.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    } else {
-                        notification.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                    }
+                if (tvTitle != null) tvTitle.setText(notification.getTitle());
+                if (tvMessage != null) tvMessage.setText(notification.getMessage());
+                if (tvTimestamp != null) tvTimestamp.setText(dateFormat.format(notification.getCreatedAt()));
+                if (tvType != null) tvType.setText(notification.getType());
 
-                    // Set type background
-                    int typeBackground;
-                    switch (view.getType()) {
-                        case "Info":
-                            typeBackground = R.drawable.status_active_background;
-                            break;
-                        case "Warning":
-                            typeBackground = R.drawable.status_draft_background;
-                            break;
-                        case "Error":
-                            typeBackground = R.drawable.status_inactive_background;
-                            break;
-                        default:
-                            typeBackground = R.drawable.status_pending_background;
-                            break;
-                    }
-                    tvType.setBackgroundResource(typeBackground);
-                },
-                notification -> {
-                    // Mark as read when clicked
-                    if (!((Notification)itemView.getTag()).isRead()) {
-                        notification.setRead(true);
-                        AppDatabase.databaseWriteExecutor.execute(() -> {
-                            database.notificationDao().update(notification);
-                        });
-                        adapter.notifyDataSetChanged();
-                    }
+                if (!notification.isRead()) {
+                    itemView.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
+                } else {
+                    itemView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                 }
-        );
+            }
+        };
         
         recyclerView.setAdapter(adapter);
     }
@@ -111,7 +90,7 @@ public class NotificationListActivity extends AppCompatActivity {
         database.notificationDao().getAllNotifications()
                 .observe(this, notifications -> {
                     if (notifications != null) {
-                        adapter.updateData(notifications);
+                        adapter.setData(notifications);
                     }
                 });
     }
@@ -124,16 +103,11 @@ public class NotificationListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case android.R.id.home: // Fixed constant expression
-                loadNotifications();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
