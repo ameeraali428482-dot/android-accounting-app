@@ -53,10 +53,10 @@ public class CompanySettingsActivity extends AppCompatActivity {
         CompanySettings settings = companySettingsDao.getSettingsByCompanyId(companyId);
         if (settings != null) {
             companySettingsId = settings.getId();
-            if (settings != null) { companyNameEditText.setText(settings.getCompanyName()); }
-            if (settings != null) { companyAddressEditText.setText(settings.getCompanyAddress()); }
-            if (settings != null) { companyPhoneEditText.setText(settings.getCompanyPhone()); }
-            if (settings != null) { companyEmailEditText.setText(settings.getCompanyEmail()); }
+            if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { companyNameEditText.setText(settings.getCompanyName()); } } } } } } }
+            if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { companyAddressEditText.setText(settings.getCompanyAddress()); } } } } } } }
+            if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { companyPhoneEditText.setText(settings.getCompanyPhone()); } } } } } } }
+            if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { companyEmailEditText.setText(settings.getCompanyEmail()); } } } } } } }
         } else {
             // If no settings exist, initialize with empty fields
             companyNameEditText.setText("");

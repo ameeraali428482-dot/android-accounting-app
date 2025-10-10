@@ -22,8 +22,7 @@ import java.util.Locale;
 
 public class OrderListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private GenericAdapter<Order> adapter;
-    private AppDatabase database;
+    private GenericAdapter<Order> adapter;                                                          private AppDatabase database;
     private SessionManager sessionManager;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     private NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("ar", "SA"));
@@ -33,9 +32,7 @@ public class OrderListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_list);
 
-        database = AppDatabase.getDatabase(this);
-        sessionManager = new SessionManager(this);
-
+        database = AppDatabase.getDatabase(this);                                                       sessionManager = new SessionManager(this);                                              
         initViews();
         setupRecyclerView();
         loadOrders();
@@ -56,14 +53,13 @@ public class OrderListActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        
+
         adapter = new GenericAdapter<>(
                 new ArrayList<>(),
                 R.layout.order_list_row,
                 (order, itemView) -> {
                     TextView tvOrderId = itemView.findViewById(R.id.tv_order_id);
-                    TextView tvOrderDate = itemView.findViewById(R.id.tv_order_date);
-                    TextView tvTotalAmount = itemView.findViewById(R.id.tv_order_total_amount);
+                    TextView tvOrderDate = itemView.findViewById(R.id.tv_order_date);                               TextView tvTotalAmount = itemView.findViewById(R.id.tv_order_total_amount);
                     TextView tvStatus = itemView.findViewById(R.id.tv_order_status);
                     TextView tvNotes = itemView.findViewById(R.id.tv_order_notes);
 
@@ -71,7 +67,7 @@ public class OrderListActivity extends AppCompatActivity {
                     tvOrderDate.setText("التاريخ: " + dateFormat.format(order.getOrderDate()));
                     tvTotalAmount.setText("المبلغ: " + currencyFormat.format(order.getTotalAmount()));
                     tvStatus.setText(order.getStatus());
-                    
+
                     if (order.getNotes() != null && !order.getNotes().isEmpty()) {
                         tvNotes.setText(order.getNotes());
                     } else {
@@ -102,8 +98,7 @@ public class OrderListActivity extends AppCompatActivity {
                     intent.putExtra("order_id", order.getId());
                     startActivity(intent);
                 }
-        );
-        
+        );                                                                                      
         recyclerView.setAdapter(adapter);
     }
 
@@ -116,8 +111,7 @@ public class OrderListActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_list, menu);
+    public boolean onCreateOptionsMenu(Menu menu) {                                                     getMenuInflater().inflate(R.menu.menu_list, menu);
         return true;
     }
 

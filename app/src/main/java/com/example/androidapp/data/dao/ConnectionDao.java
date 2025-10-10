@@ -1,5 +1,17 @@
 package com.example.androidapp.data.dao;
 
+import androidx.lifecycle.LiveData;
+
+import androidx.lifecycle.LiveData;
+
+import androidx.lifecycle.LiveData;
+
+import androidx.lifecycle.LiveData;
+
+import androidx.lifecycle.LiveData;
+
+import androidx.lifecycle.LiveData;
+
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -25,6 +37,16 @@ public interface ConnectionDao {
 
     @Query("SELECT * FROM connections WHERE id = :id LIMIT 1")
     Connection getConnectionById(String id);
+    @Query("SELECT * FROM connections WHERE companyId = :companyId")
+    LiveData<List<Connection>> getConnectionsByCompanyId(String companyId);
+    @Query("SELECT * FROM connections WHERE companyId = :companyId")
+    LiveData<List<Connection>> getConnectionsByCompanyId(String companyId);
+    @Query("SELECT * FROM connections WHERE companyId = :companyId")
+    LiveData<List<Connection>> getConnectionsByCompanyId(String companyId);
+    @Query("SELECT * FROM connections WHERE companyId = :companyId")
+    LiveData<List<Connection>> getConnectionsByCompanyId(String companyId);
+    @Query("SELECT * FROM connections WHERE companyId = :companyId")
+    LiveData<List<Connection>> getConnectionsByCompanyId(String companyId);
     @Query("SELECT * FROM connections WHERE companyId = :companyId")
     LiveData<List<Connection>> getConnectionsByCompanyId(String companyId);
 }

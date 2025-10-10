@@ -3,10 +3,8 @@ package com.example.androidapp.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.util.HashMap;
-
-public class SessionManager {
-    private static final String PREF_NAME = "AndroidAppPref";
+import java.util.HashMap;                                                                       
+public class SessionManager {                                                                       private static final String PREF_NAME = "AndroidAppPref";
     private static final String IS_LOGIN = "IsLoggedIn";
     public static final String KEY_USER_ID = "userId";
     public static final String KEY_CURRENT_ORG_ID = "currentOrgId";
@@ -48,8 +46,7 @@ public class SessionManager {
         return getCurrentCompanyId(); // Alias for getCurrentCompanyId()
     }
 
-    public boolean isLoggedIn() {
-        return pref.getBoolean(IS_LOGIN, false);
+    public boolean isLoggedIn() {                                                                       return pref.getBoolean(IS_LOGIN, false);
     }
 
     public void logoutUser() {

@@ -6,49 +6,26 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.TextView;
-import android.widget.LinearLayout;
-
+import android.widget.LinearLayout;                                                             
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.recyclerview.widget.RecyclerView;                                               
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.data.entities.Chat;
-import com.example.androidapp.ui.common.GenericAdapter;
-import com.example.androidapp.utils.SessionManager;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-import java.util.UUID;
-
-public class ChatDetailActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private EditText etMessage;
-    private ImageButton btnSend;
-    private GenericAdapter<Chat> adapter;
-    private AppDatabase database;
-    private SessionManager sessionManager;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-    private String otherUserId;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_detail);
-
-        database = AppDatabase.getDatabase(this);
+import com.example.androidapp.data.entities.Chat;                                               import com.example.androidapp.ui.common.GenericAdapter;                                         import com.example.androidapp.utils.SessionManager;
+                                                                                                import java.text.SimpleDateFormat;                                                              import java.util.ArrayList;
+import java.util.Date;                                                                          import java.util.Locale;                                                                        import java.util.UUID;
+                                                                                                public class ChatDetailActivity extends AppCompatActivity {                                         private RecyclerView recyclerView;
+    private EditText etMessage;                                                                     private ImageButton btnSend;                                                                    private GenericAdapter<Chat> adapter;
+    private AppDatabase database;                                                                   private SessionManager sessionManager;                                                          private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private String otherUserId;                                                                                                                                                                     @Override                                                                                       protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);                                                             setContentView(R.layout.activity_chat_detail);                                                                                                                                                  database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
         otherUserId = getIntent().getStringExtra("other_user_id");
-
-        if (otherUserId == null || otherUserId.isEmpty()) {
-            Toast.makeText(this, "خطأ في تحديد المستخدم", Toast.LENGTH_SHORT).show();
+                                                                                                        if (otherUserId == null || otherUserId.isEmpty()) {                                                 Toast.makeText(this, "خطأ في تحديد المستخدم", Toast.LENGTH_SHORT).show();
             finish();
             return;
-        }
-
+        }                                                                                       
         initViews();
         setupRecyclerView();
         loadMessages();
@@ -72,13 +49,12 @@ public class ChatDetailActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true); // Start from bottom
         recyclerView.setLayoutManager(layoutManager);
-        
+
         adapter = new GenericAdapter<>(
                 new ArrayList<>(),
                 R.layout.chat_message_row,
                 (chat, itemView) -> {
-                    TextView tvMessage = itemView.findViewById(R.id.tv_message);
-                    TextView tvTimestamp = itemView.findViewById(R.id.tv_timestamp);
+                    TextView tvMessage = itemView.findViewById(R.id.tv_message);                                    TextView tvTimestamp = itemView.findViewById(R.id.tv_timestamp);
                     LinearLayout messageContainer = itemView.findViewById(R.id.message_container);
 
                     tvMessage.setText(chat.getMessage());
@@ -103,14 +79,14 @@ public class ChatDetailActivity extends AppCompatActivity {
                     // No click action for individual messages
                 }
         );
-        
+
         recyclerView.setAdapter(adapter);
     }
 
     private void loadMessages() {
         database.chatDao().getChatsBetweenUsers(
-                sessionManager.getCurrentUserId(), 
-                otherUserId, 
+                sessionManager.getCurrentUserId(),
+                otherUserId,
                 sessionManager.getCurrentCompanyId()
         ).observe(this, chats -> {
             if (chats != null) {
@@ -122,8 +98,7 @@ public class ChatDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void markMessagesAsRead() {
-        new Thread(() -> {
+    private void markMessagesAsRead() {                                                                 new Thread(() -> {
             database.chatDao().markChatsAsRead(
                     sessionManager.getCurrentUserId(),
                     otherUserId,
@@ -163,6 +138,5 @@ public class ChatDetailActivity extends AppCompatActivity {
             finish();
             return true;
         }
-        return super.onOptionsItemSelected(item);
-    }
+        return super.onOptionsItemSelected(item);                                                   }
 }

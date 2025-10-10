@@ -32,8 +32,7 @@ public class Chat {
     private @NonNull String senderId;
     private @NonNull String receiverId;
     private @NonNull Date createdAt;
-    private boolean isRead;
-    private String messageType;
+    private boolean isRead;                                                                         private String messageType;
 
     public Chat(@NonNull String id, String message, @NonNull String companyId, @NonNull String senderId, @NonNull String receiverId, @NonNull Date createdAt, boolean isRead, String messageType) {
         this.id = id;
@@ -57,8 +56,7 @@ public class Chat {
     public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
     @NonNull
     public String getSenderId() { return senderId; }
-    public void setSenderId(@NonNull String senderId) { this.senderId = senderId; }
-    @NonNull
+    public void setSenderId(@NonNull String senderId) { this.senderId = senderId; }                 @NonNull
     public String getReceiverId() { return receiverId; }
     public void setReceiverId(@NonNull String receiverId) { this.receiverId = receiverId; }
     @NonNull
