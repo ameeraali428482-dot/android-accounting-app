@@ -6,9 +6,9 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 import androidx.room.Delete;
-import java.util.List;
 import com.example.androidapp.data.entities.Role;
 import com.example.androidapp.data.entities.Permission;
+import java.util.List;
 
 @Dao
 public interface RoleDao {
