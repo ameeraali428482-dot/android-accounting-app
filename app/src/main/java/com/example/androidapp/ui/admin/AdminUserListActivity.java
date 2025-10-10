@@ -40,7 +40,7 @@ public class AdminUserListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = // TODO: Fix findViewById;
 
         setTitle("إدارة المستخدمين (المسؤولين)");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -49,12 +49,12 @@ public class AdminUserListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<>(
+        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {(
                 new ArrayList<>(),
                 R.layout.admin_user_list_row,
                 (user, view) -> {
-                    TextView tvUserName = view.findViewById(R.id.tv_user_name);
-                    TextView tvUserEmail = view.findViewById(R.id.tv_user_email);
+                    TextView tvUserName = view.// TODO: Fix findViewById;
+                    TextView tvUserEmail = view.// TODO: Fix findViewById;
 
                     tvUserName.setText(user.getUsername());
                     tvUserEmail.setText(user.getEmail());

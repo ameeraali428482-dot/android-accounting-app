@@ -104,13 +104,13 @@ public class AccountStatementAdapter extends RecyclerView.Adapter<AccountStateme
 
         public AccountStatementViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvSerial = itemView.findViewById(R.id.tv_serial);
-            tvDate = itemView.findViewById(R.id.tv_date);
-            tvDescription = itemView.findViewById(R.id.tv_description);
-            tvDebit = itemView.findViewById(R.id.tv_debit);
-            tvCredit = itemView.findViewById(R.id.tv_credit);
-            tvBalance = itemView.findViewById(R.id.tv_balance);
-            cbSelect = itemView.findViewById(R.id.cb_select);
+            tvSerial = itemView.// TODO: Fix findViewById;
+            tvDate = itemView.// TODO: Fix findViewById;
+            tvDescription = itemView.// TODO: Fix findViewById;
+            tvDebit = itemView.// TODO: Fix findViewById;
+            tvCredit = itemView.// TODO: Fix findViewById;
+            tvBalance = itemView.// TODO: Fix findViewById;
+            cbSelect = itemView.// TODO: Fix findViewById;
         }
 
         public void bind(final AccountStatement statement, final OnItemClickListener clickListener, final OnItemLongClickListener longClickListener, boolean isSelected, boolean isSelectionMode, int position) {

@@ -73,14 +73,14 @@ public class JournalEntryDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        etDate = findViewById(R.id.et_journal_entry_date);
-        etDescription = findViewById(R.id.et_journal_entry_description);
-        etReferenceNumber = findViewById(R.id.et_journal_entry_reference_number);
-        etEntryType = findViewById(R.id.et_journal_entry_entry_type);
-        etTotalDebit = findViewById(R.id.et_journal_entry_total_debit);
-        etTotalCredit = findViewById(R.id.et_journal_entry_total_credit);
-        btnSave = findViewById(R.id.btn_save_journal_entry);
-        btnDelete = findViewById(R.id.btn_delete_journal_entry);
+        etDate = // TODO: Fix findViewById;
+        etDescription = // TODO: Fix findViewById;
+        etReferenceNumber = // TODO: Fix findViewById;
+        etEntryType = // TODO: Fix findViewById;
+        etTotalDebit = // TODO: Fix findViewById;
+        etTotalCredit = // TODO: Fix findViewById;
+        btnSave = // TODO: Fix findViewById;
+        btnDelete = // TODO: Fix findViewById;
     }
 
     private void setupListeners() {

@@ -61,11 +61,11 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.PaymentV
 
         public PaymentViewHolder(@NonNull View itemView) {
             super(itemView);
-            textPaymentDate = itemView.findViewById(R.id.textPaymentDate);
-            textPayerName = itemView.findViewById(R.id.textPayerName);
-            textAmount = itemView.findViewById(R.id.textAmount);
-            textPaymentMethod = itemView.findViewById(R.id.textPaymentMethod);
-            textReferenceNumber = itemView.findViewById(R.id.textReferenceNumber);
+            textPaymentDate = itemView.// TODO: Fix findViewById;
+            textPayerName = itemView.// TODO: Fix findViewById;
+            textAmount = itemView.// TODO: Fix findViewById;
+            textPaymentMethod = itemView.// TODO: Fix findViewById;
+            textReferenceNumber = itemView.// TODO: Fix findViewById;
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {

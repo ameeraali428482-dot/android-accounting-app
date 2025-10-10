@@ -32,13 +32,13 @@ public class EmployeeListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee_list);
 
-        employeeRecyclerView = findViewById(R.id.employee_recycler_view);
+        employeeRecyclerView = // TODO: Fix findViewById;
         employeeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         employeeDao = new EmployeeDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        findViewById(R.id.add_employee_button).setOnClickListener(v -> {
+        // TODO: Fix findViewById.setOnClickListener(v -> {
             Intent intent = new Intent(EmployeeListActivity.this, EmployeeDetailActivity.class);
             startActivity(intent);
         });
@@ -67,9 +67,9 @@ public class EmployeeListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Employee employee) {
-                TextView employeeName = itemView.findViewById(R.id.employee_name);
-                TextView employeePosition = itemView.findViewById(R.id.employee_position);
-                TextView employeePhone = itemView.findViewById(R.id.employee_phone);
+                TextView employeeName = itemView.// TODO: Fix findViewById;
+                TextView employeePosition = itemView.// TODO: Fix findViewById;
+                TextView employeePhone = itemView.// TODO: Fix findViewById;
 
                 employeeName.setText(employee.getName());
                 employeePosition.setText(employee.getPosition());

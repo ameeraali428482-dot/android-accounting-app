@@ -23,10 +23,10 @@ public class ReportsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reports);
 
-        salesReportButton = findViewById(R.id.sales_report_button);
-        profitLossReportButton = findViewById(R.id.profit_loss_report_button);
-        customerReportButton = findViewById(R.id.customer_report_button);
-        supplierReportButton = findViewById(R.id.supplier_report_button);
+        salesReportButton = // TODO: Fix findViewById;
+        profitLossReportButton = // TODO: Fix findViewById;
+        customerReportButton = // TODO: Fix findViewById;
+        supplierReportButton = // TODO: Fix findViewById;
 
         salesReportButton.setOnClickListener(new View.OnClickListener() {
             @Override

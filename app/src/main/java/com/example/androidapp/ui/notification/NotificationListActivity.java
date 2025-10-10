@@ -40,7 +40,7 @@ public class NotificationListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = // TODO: Fix findViewById;
         setTitle("الإشعارات");
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -65,10 +65,10 @@ public class NotificationListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Notification notification) {
-                TextView tvTitle = itemView.findViewById(R.id.tv_notification_title);
-                TextView tvMessage = itemView.findViewById(R.id.tv_notification_message);
-                TextView tvTimestamp = itemView.findViewById(R.id.tv_notification_timestamp);
-                TextView tvType = itemView.findViewById(R.id.tv_notification_type);
+                TextView tvTitle = itemView.// TODO: Fix findViewById;
+                TextView tvMessage = itemView.// TODO: Fix findViewById;
+                TextView tvTimestamp = itemView.// TODO: Fix findViewById;
+                TextView tvType = itemView.// TODO: Fix findViewById;
 
                 if (tvTitle != null) tvTitle.setText(notification.getTitle());
                 if (tvMessage != null) tvMessage.setText(notification.getMessage());

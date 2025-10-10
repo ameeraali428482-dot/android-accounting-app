@@ -76,18 +76,18 @@ public class InvoiceDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        etInvoiceNumber = findViewById(R.id.et_invoice_number);
-        etInvoiceDate = findViewById(R.id.et_invoice_date);
-        etCustomerName = findViewById(R.id.et_customer_name);
-        etInvoiceType = findViewById(R.id.et_invoice_type);
-        etSubTotal = findViewById(R.id.et_sub_total);
-        etTax = findViewById(R.id.et_tax);
-        etDiscount = findViewById(R.id.et_discount);
-        etGrandTotal = findViewById(R.id.et_grand_total);
-        invoiceItemsContainer = findViewById(R.id.invoice_items_container);
-        btnAddItem = findViewById(R.id.btn_add_item);
-        btnSave = findViewById(R.id.btn_save_invoice);
-        btnDelete = findViewById(R.id.btn_delete_invoice);
+        etInvoiceNumber = // TODO: Fix findViewById;
+        etInvoiceDate = // TODO: Fix findViewById;
+        etCustomerName = // TODO: Fix findViewById;
+        etInvoiceType = // TODO: Fix findViewById;
+        etSubTotal = // TODO: Fix findViewById;
+        etTax = // TODO: Fix findViewById;
+        etDiscount = // TODO: Fix findViewById;
+        etGrandTotal = // TODO: Fix findViewById;
+        invoiceItemsContainer = // TODO: Fix findViewById;
+        btnAddItem = // TODO: Fix findViewById;
+        btnSave = // TODO: Fix findViewById;
+        btnDelete = // TODO: Fix findViewById;
 
         etSubTotal.setEnabled(false);
         etGrandTotal.setEnabled(false);
@@ -120,11 +120,11 @@ public class InvoiceDetailActivity extends AppCompatActivity {
 
     private void addItemView(InvoiceItem item) {
         View itemView = getLayoutInflater().inflate(R.layout.invoice_item_row, invoiceItemsContainer, false);
-        EditText etItemName = itemView.findViewById(R.id.et_item_name);
-        EditText etQuantity = itemView.findViewById(R.id.et_item_quantity);
-        EditText etUnitPrice = itemView.findViewById(R.id.et_item_unit_price);
-        EditText etItemTotal = itemView.findViewById(R.id.et_item_total);
-        Button btnRemove = itemView.findViewById(R.id.btn_remove_item);
+        EditText etItemName = itemView.// TODO: Fix findViewById;
+        EditText etQuantity = itemView.// TODO: Fix findViewById;
+        EditText etUnitPrice = itemView.// TODO: Fix findViewById;
+        EditText etItemTotal = itemView.// TODO: Fix findViewById;
+        Button btnRemove = itemView.// TODO: Fix findViewById;
 
         etItemTotal.setEnabled(false);
 
@@ -153,9 +153,9 @@ public class InvoiceDetailActivity extends AppCompatActivity {
     }
 
     private void calculateItemTotal(View itemView) {
-        EditText etQuantity = itemView.findViewById(R.id.et_item_quantity);
-        EditText etUnitPrice = itemView.findViewById(R.id.et_item_unit_price);
-        EditText etItemTotal = itemView.findViewById(R.id.et_item_total);
+        EditText etQuantity = itemView.// TODO: Fix findViewById;
+        EditText etUnitPrice = itemView.// TODO: Fix findViewById;
+        EditText etItemTotal = itemView.// TODO: Fix findViewById;
 
         float quantity = Float.parseFloat(etQuantity.getText().toString().trim().isEmpty() ? "0" : etQuantity.getText().toString().trim());
         float unitPrice = Float.parseFloat(etUnitPrice.getText().toString().trim().isEmpty() ? "0" : etUnitPrice.getText().toString().trim());
@@ -168,7 +168,7 @@ public class InvoiceDetailActivity extends AppCompatActivity {
         float subTotal = 0.0f;
         for (int i = 0; i < invoiceItemsContainer.getChildCount(); i++) {
             View itemView = invoiceItemsContainer.getChildAt(i);
-            EditText etItemTotal = itemView.findViewById(R.id.et_item_total);
+            EditText etItemTotal = itemView.// TODO: Fix findViewById;
             subTotal += Float.parseFloat(etItemTotal.getText().toString().trim().isEmpty() ? "0" : etItemTotal.getText().toString().trim());
         }
         etSubTotal.setText(String.valueOf(subTotal));

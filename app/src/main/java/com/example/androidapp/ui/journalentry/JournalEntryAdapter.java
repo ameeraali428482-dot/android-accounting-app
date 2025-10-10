@@ -58,10 +58,10 @@ public class JournalEntryAdapter extends RecyclerView.Adapter<JournalEntryAdapte
 
         public JournalEntryViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvDate = itemView.findViewById(R.id.journal_entry_date);
-            tvDescription = itemView.findViewById(R.id.journal_entry_description);
-            tvTotalDebit = itemView.findViewById(R.id.journal_entry_total_debit);
-            tvTotalCredit = itemView.findViewById(R.id.journal_entry_total_credit);
+            tvDate = itemView.// TODO: Fix findViewById;
+            tvDescription = itemView.// TODO: Fix findViewById;
+            tvTotalDebit = itemView.// TODO: Fix findViewById;
+            tvTotalCredit = itemView.// TODO: Fix findViewById;
         }
 
         public void bind(final JournalEntry journalEntry, final OnJournalEntryClickListener listener) {

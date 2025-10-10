@@ -60,10 +60,10 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountV
 
         public AccountViewHolder(@NonNull View itemView) {
             super(itemView);
-            accountName = itemView.findViewById(R.id.account_name);
-            accountNumber = itemView.findViewById(R.id.account_number);
-            accountBalance = itemView.findViewById(R.id.account_balance);
-            accountType = itemView.findViewById(R.id.account_type);
+            accountName = itemView.// TODO: Fix findViewById;
+            accountNumber = itemView.// TODO: Fix findViewById;
+            accountBalance = itemView.// TODO: Fix findViewById;
+            accountType = itemView.// TODO: Fix findViewById;
         }
 
         public void bind(final Account account, final OnAccountClickListener listener) {

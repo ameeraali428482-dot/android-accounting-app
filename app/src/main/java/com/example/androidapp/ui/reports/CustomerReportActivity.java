@@ -34,7 +34,7 @@ public class CustomerReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_report);
 
-        customerReportRecyclerView = findViewById(R.id.customer_report_recycler_view);
+        customerReportRecyclerView = // TODO: Fix findViewById;
 
         customerDao = new CustomerDao(App.getDatabaseHelper());
         invoiceDao = new InvoiceDao(App.getDatabaseHelper());
@@ -72,10 +72,10 @@ public class CustomerReportActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, CustomerReportItem item) {
-                TextView customerName = itemView.findViewById(R.id.report_customer_name);
-                TextView customerEmail = itemView.findViewById(R.id.report_customer_email);
-                TextView customerPhone = itemView.findViewById(R.id.report_customer_phone);
-                TextView customerTotalSales = itemView.findViewById(R.id.report_customer_total_sales);
+                TextView customerName = itemView.// TODO: Fix findViewById;
+                TextView customerEmail = itemView.// TODO: Fix findViewById;
+                TextView customerPhone = itemView.// TODO: Fix findViewById;
+                TextView customerTotalSales = itemView.// TODO: Fix findViewById;
 
                 customerName.setText(item.getName());
                 customerEmail.setText("البريد الإلكتروني: " + item.getEmail());

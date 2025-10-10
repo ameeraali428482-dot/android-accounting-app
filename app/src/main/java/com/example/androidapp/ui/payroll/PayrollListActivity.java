@@ -33,13 +33,13 @@ public class PayrollListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payroll_list);
 
-        payrollRecyclerView = findViewById(R.id.payroll_recycler_view);
+        payrollRecyclerView = // TODO: Fix findViewById;
         payrollRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         payrollDao = new PayrollDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        findViewById(R.id.add_payroll_button).setOnClickListener(v -> {
+        // TODO: Fix findViewById.setOnClickListener(v -> {
             Intent intent = new Intent(PayrollListActivity.this, PayrollDetailActivity.class);
             startActivity(intent);
         });
@@ -68,10 +68,10 @@ public class PayrollListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Payroll payroll) {
-                TextView payrollId = itemView.findViewById(R.id.payroll_id);
-                TextView payrollEmployeeId = itemView.findViewById(R.id.payroll_employee_id);
-                TextView payrollDate = itemView.findViewById(R.id.payroll_date);
-                TextView payrollAmount = itemView.findViewById(R.id.payroll_amount);
+                TextView payrollId = itemView.// TODO: Fix findViewById;
+                TextView payrollEmployeeId = itemView.// TODO: Fix findViewById;
+                TextView payrollDate = itemView.// TODO: Fix findViewById;
+                TextView payrollAmount = itemView.// TODO: Fix findViewById;
 
                 payrollId.setText("ID: " + payroll.getId());
                 payrollEmployeeId.setText("معرف الموظف: " + payroll.getEmployeeId());

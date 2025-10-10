@@ -33,7 +33,7 @@ public class SupplierListActivity extends BaseListActivity<Supplier> {
         supplierDao = new SupplierDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        FloatingActionButton fabAddSupplier = findViewById(R.id.fab_add_supplier);
+        FloatingActionButton fabAddSupplier = // TODO: Fix findViewById;
         fabAddSupplier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,9 +43,9 @@ public class SupplierListActivity extends BaseListActivity<Supplier> {
         });
 
         // Initialize RecyclerView and other common elements from BaseListActivity
-        recyclerView = findViewById(R.id.recyclerView);
-        loadingProgressBar = findViewById(R.id.loadingProgressBar);
-        emptyStateTextView = findViewById(R.id.emptyStateTextView);
+        recyclerView = // TODO: Fix findViewById;
+        loadingProgressBar = // TODO: Fix findViewById;
+        emptyStateTextView = // TODO: Fix findViewById;
 
         recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
         adapter = createAdapter();
@@ -79,9 +79,9 @@ public class SupplierListActivity extends BaseListActivity<Supplier> {
 
             @Override
             protected void bindView(View itemView, Supplier supplier) {
-                TextView supplierName = itemView.findViewById(R.id.supplier_name);
-                TextView supplierEmail = itemView.findViewById(R.id.supplier_email);
-                TextView supplierPhone = itemView.findViewById(R.id.supplier_phone);
+                TextView supplierName = itemView.// TODO: Fix findViewById;
+                TextView supplierEmail = itemView.// TODO: Fix findViewById;
+                TextView supplierPhone = itemView.// TODO: Fix findViewById;
 
                 supplierName.setText(supplier.getName());
                 supplierEmail.setText(supplier.getEmail());

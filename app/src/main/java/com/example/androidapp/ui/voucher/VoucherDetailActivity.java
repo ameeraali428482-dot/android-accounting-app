@@ -36,12 +36,12 @@ public class VoucherDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voucher_detail);
 
-        dateEditText = findViewById(R.id.voucher_date_edit_text);
-        amountEditText = findViewById(R.id.voucher_amount_edit_text);
-        descriptionEditText = findViewById(R.id.voucher_description_edit_text);
-        typeSpinner = findViewById(R.id.voucher_type_spinner);
-        saveButton = findViewById(R.id.save_voucher_button);
-        deleteButton = findViewById(R.id.delete_voucher_button);
+        dateEditText = // TODO: Fix findViewById;
+        amountEditText = // TODO: Fix findViewById;
+        descriptionEditText = // TODO: Fix findViewById;
+        typeSpinner = // TODO: Fix findViewById;
+        saveButton = // TODO: Fix findViewById;
+        deleteButton = // TODO: Fix findViewById;
 
         voucherDao = new VoucherDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);

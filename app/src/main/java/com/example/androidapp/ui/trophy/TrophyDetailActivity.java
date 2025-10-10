@@ -47,11 +47,11 @@ public class TrophyDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        etName = findViewById(R.id.et_trophy_name);
-        etDescription = findViewById(R.id.et_trophy_description);
-        etImageUrl = findViewById(R.id.et_trophy_image_url);
-        etPointsRequired = findViewById(R.id.et_trophy_points_required);
-        ivTrophyPreview = findViewById(R.id.iv_trophy_preview);
+        etName = // TODO: Fix findViewById;
+        etDescription = // TODO: Fix findViewById;
+        etImageUrl = // TODO: Fix findViewById;
+        etPointsRequired = // TODO: Fix findViewById;
+        ivTrophyPreview = // TODO: Fix findViewById;
 
         etImageUrl.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {

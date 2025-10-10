@@ -34,12 +34,12 @@ public class SupplierDetailActivity extends AppCompatActivity {
         supplierDao = new SupplierDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        supplierNameEditText = findViewById(R.id.supplier_name_edit_text);
-        supplierEmailEditText = findViewById(R.id.supplier_email_edit_text);
-        supplierPhoneEditText = findViewById(R.id.supplier_phone_edit_text);
-        supplierAddressEditText = findViewById(R.id.supplier_address_edit_text);
-        saveSupplierButton = findViewById(R.id.save_supplier_button);
-        deleteSupplierButton = findViewById(R.id.delete_supplier_button);
+        supplierNameEditText = // TODO: Fix findViewById;
+        supplierEmailEditText = // TODO: Fix findViewById;
+        supplierPhoneEditText = // TODO: Fix findViewById;
+        supplierAddressEditText = // TODO: Fix findViewById;
+        saveSupplierButton = // TODO: Fix findViewById;
+        deleteSupplierButton = // TODO: Fix findViewById;
 
         // Check if we are editing an existing supplier
         if (getIntent().hasExtra("supplierId")) {

@@ -31,11 +31,11 @@ public class SharedLinkDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shared_link_detail);
 
-        nameEditText = findViewById(R.id.shared_link_name_edit_text);
-        urlEditText = findViewById(R.id.shared_link_url_edit_text);
-        expiresAtEditText = findViewById(R.id.shared_link_expires_at_edit_text);
-        saveButton = findViewById(R.id.save_shared_link_button);
-        deleteButton = findViewById(R.id.delete_shared_link_button);
+        nameEditText = // TODO: Fix findViewById;
+        urlEditText = // TODO: Fix findViewById;
+        expiresAtEditText = // TODO: Fix findViewById;
+        saveButton = // TODO: Fix findViewById;
+        deleteButton = // TODO: Fix findViewById;
 
         sharedLinkDao = new SharedLinkDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);

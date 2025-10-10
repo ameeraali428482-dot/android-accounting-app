@@ -49,12 +49,12 @@ public class RewardDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        etName = findViewById(R.id.et_name);
-        etDescription = findViewById(R.id.et_description);
-        etPointsRequired = findViewById(R.id.et_points_required);
-        etValidUntil = findViewById(R.id.et_valid_until);
-        cbIsActive = findViewById(R.id.cb_is_active);
-        btnSave = findViewById(R.id.btn_save);
+        etName = // TODO: Fix findViewById;
+        etDescription = // TODO: Fix findViewById;
+        etPointsRequired = // TODO: Fix findViewById;
+        etValidUntil = // TODO: Fix findViewById;
+        cbIsActive = // TODO: Fix findViewById;
+        btnSave = // TODO: Fix findViewById;
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

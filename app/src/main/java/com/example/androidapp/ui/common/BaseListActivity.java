@@ -27,9 +27,9 @@ public abstract class BaseListActivity<T> extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_list);
 
-        recyclerView = findViewById(R.id.recyclerView);
-        loadingProgressBar = findViewById(R.id.loadingProgressBar);
-        emptyStateTextView = findViewById(R.id.emptyStateTextView);
+        recyclerView = // TODO: Fix findViewById;
+        loadingProgressBar = // TODO: Fix findViewById;
+        emptyStateTextView = // TODO: Fix findViewById;
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = createAdapter();

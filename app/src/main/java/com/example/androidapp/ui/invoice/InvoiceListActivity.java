@@ -56,8 +56,8 @@ public class InvoiceListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = findViewById(R.id.recycler_view_invoices);
-        FloatingActionButton fab = findViewById(R.id.fab_add_invoice);
+        recyclerView = // TODO: Fix findViewById;
+        FloatingActionButton fab = // TODO: Fix findViewById;
 
         setTitle("الفواتير");
 

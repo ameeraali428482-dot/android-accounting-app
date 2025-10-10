@@ -56,8 +56,8 @@ public class JournalEntryListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = findViewById(R.id.recycler_view_journal_entries);
-        FloatingActionButton fab = findViewById(R.id.fab_add_journal_entry);
+        recyclerView = // TODO: Fix findViewById;
+        FloatingActionButton fab = // TODO: Fix findViewById;
 
         setTitle("القيود اليومية");
 

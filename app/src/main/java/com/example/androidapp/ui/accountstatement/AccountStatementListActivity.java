@@ -67,8 +67,8 @@ public class AccountStatementListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = findViewById(R.id.recycler_view);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        recyclerView = // TODO: Fix findViewById;
+        FloatingActionButton fab = // TODO: Fix findViewById;
 
         setTitle("كشف الحساب");
         if (getSupportActionBar() != null) {
@@ -85,11 +85,11 @@ public class AccountStatementListActivity extends AppCompatActivity {
     }
 
     private void setupColumnHeaders() {
-        TextView headerDate = findViewById(R.id.header_date);
-        TextView headerDescription = findViewById(R.id.header_description);
-        TextView headerDebit = findViewById(R.id.header_debit);
-        TextView headerCredit = findViewById(R.id.header_credit);
-        TextView headerBalance = findViewById(R.id.header_balance);
+        TextView headerDate = // TODO: Fix findViewById;
+        TextView headerDescription = // TODO: Fix findViewById;
+        TextView headerDebit = // TODO: Fix findViewById;
+        TextView headerCredit = // TODO: Fix findViewById;
+        TextView headerBalance = // TODO: Fix findViewById;
 
         headerDate.setOnClickListener(v -> sortByColumn("transactionDate"));
         headerDescription.setOnClickListener(v -> sortByColumn("description"));

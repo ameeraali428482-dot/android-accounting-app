@@ -42,8 +42,8 @@ public class OrderListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = findViewById(R.id.recycler_view);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        recyclerView = // TODO: Fix findViewById;
+        FloatingActionButton fab = // TODO: Fix findViewById;
 
         setTitle("إدارة الطلبيات");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -57,14 +57,14 @@ public class OrderListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new GenericAdapter<>(
+        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {(
                 new ArrayList<>(),
                 R.layout.order_list_row,
                 (order, itemView) -> {
-                    TextView tvOrderId = order.findViewById(R.id.tv_order_id);
-                    TextView tvOrderDate = order.findViewById(R.id.tv_order_date);                               TextView tvTotalAmount = order.findViewById(R.id.tv_order_total_amount);
-                    TextView tvStatus = order.findViewById(R.id.tv_order_status);
-                    TextView tvNotes = order.findViewById(R.id.tv_order_notes);
+                    TextView tvOrderId = order.// TODO: Fix findViewById;
+                    TextView tvOrderDate = order.// TODO: Fix findViewById;                               TextView tvTotalAmount = order.// TODO: Fix findViewById;
+                    TextView tvStatus = order.// TODO: Fix findViewById;
+                    TextView tvNotes = order.// TODO: Fix findViewById;
 
                     tvOrderId.setText("طلبية #" + itemView.getId());
                     tvOrderDate.setText("التاريخ: " + dateFormat.format(itemView.getOrderDate()));

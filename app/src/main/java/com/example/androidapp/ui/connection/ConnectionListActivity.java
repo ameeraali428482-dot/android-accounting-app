@@ -30,7 +30,7 @@ public class ConnectionListActivity extends AppCompatActivity {
         database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
 
-        connectionRecyclerView = findViewById(R.id.connection_recycler_view);
+        connectionRecyclerView = // TODO: Fix findViewById;
         connectionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new GenericAdapter<Connection>(
@@ -48,9 +48,9 @@ public class ConnectionListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Connection connection) {
-                TextView connectionName = itemView.findViewById(R.id.connection_name);
-                TextView connectionType = itemView.findViewById(R.id.connection_type);
-                TextView connectionStatus = itemView.findViewById(R.id.connection_status);
+                TextView connectionName = itemView.// TODO: Fix findViewById;
+                TextView connectionType = itemView.// TODO: Fix findViewById;
+                TextView connectionStatus = itemView.// TODO: Fix findViewById;
 
                 if (connectionName != null) connectionName.setText(connection.getName());
                 if (connectionType != null) connectionType.setText("النوع: " + connection.getType());
@@ -60,7 +60,7 @@ public class ConnectionListActivity extends AppCompatActivity {
         
         connectionRecyclerView.setAdapter(adapter);
 
-        View addButton = findViewById(R.id.add_connection_button);
+        View addButton = // TODO: Fix findViewById;
         if (addButton != null) {
             addButton.setOnClickListener(v -> {
                 Intent intent = new Intent(ConnectionListActivity.this, ConnectionDetailActivity.class);

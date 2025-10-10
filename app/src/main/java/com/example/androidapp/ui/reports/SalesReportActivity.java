@@ -36,9 +36,9 @@ public class SalesReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_report);
 
-        totalSalesTextView = findViewById(R.id.total_sales_text_view);
-        totalInvoicesTextView = findViewById(R.id.total_invoices_text_view);
-        salesDetailRecyclerView = findViewById(R.id.sales_detail_recycler_view);
+        totalSalesTextView = // TODO: Fix findViewById;
+        totalInvoicesTextView = // TODO: Fix findViewById;
+        salesDetailRecyclerView = // TODO: Fix findViewById;
 
         invoiceDao = new InvoiceDao(App.getDatabaseHelper());
         invoiceItemDao = new InvoiceItemDao(App.getDatabaseHelper());
@@ -82,12 +82,12 @@ public class SalesReportActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, SalesReportItem item) {
-                TextView date = itemView.findViewById(R.id.report_item_date);
-                TextView invoiceType = itemView.findViewById(R.id.report_item_invoice_type);
-                TextView itemName = itemView.findViewById(R.id.report_item_name);
-                TextView quantity = itemView.findViewById(R.id.report_item_quantity);
-                TextView price = itemView.findViewById(R.id.report_item_price);
-                TextView total = itemView.findViewById(R.id.report_item_total);
+                TextView date = itemView.// TODO: Fix findViewById;
+                TextView invoiceType = itemView.// TODO: Fix findViewById;
+                TextView itemName = itemView.// TODO: Fix findViewById;
+                TextView quantity = itemView.// TODO: Fix findViewById;
+                TextView price = itemView.// TODO: Fix findViewById;
+                TextView total = itemView.// TODO: Fix findViewById;
 
                 date.setText(item.getDate());
                 invoiceType.setText(item.getInvoiceType());

@@ -33,7 +33,7 @@ public class CustomerListActivity extends BaseListActivity<Customer> {
         customerDao = new CustomerDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        FloatingActionButton fabAddCustomer = findViewById(R.id.fab_add_customer);
+        FloatingActionButton fabAddCustomer = // TODO: Fix findViewById;
         fabAddCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,9 +43,9 @@ public class CustomerListActivity extends BaseListActivity<Customer> {
         });
 
         // Initialize RecyclerView and other common elements from BaseListActivity
-        recyclerView = findViewById(R.id.recyclerView);
-        loadingProgressBar = findViewById(R.id.loadingProgressBar);
-        emptyStateTextView = findViewById(R.id.emptyStateTextView);
+        recyclerView = // TODO: Fix findViewById;
+        loadingProgressBar = // TODO: Fix findViewById;
+        emptyStateTextView = // TODO: Fix findViewById;
 
         recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
         adapter = createAdapter();
@@ -79,9 +79,9 @@ public class CustomerListActivity extends BaseListActivity<Customer> {
 
             @Override
             protected void bindView(View itemView, Customer customer) {
-                TextView customerName = itemView.findViewById(R.id.customer_name);
-                TextView customerEmail = itemView.findViewById(R.id.customer_email);
-                TextView customerPhone = itemView.findViewById(R.id.customer_phone);
+                TextView customerName = itemView.// TODO: Fix findViewById;
+                TextView customerEmail = itemView.// TODO: Fix findViewById;
+                TextView customerPhone = itemView.// TODO: Fix findViewById;
 
                 customerName.setText(customer.getName());
                 customerEmail.setText(customer.getEmail());

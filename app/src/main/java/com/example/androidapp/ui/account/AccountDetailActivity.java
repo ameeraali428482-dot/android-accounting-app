@@ -62,12 +62,12 @@ public class AccountDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        nameEditText = findViewById(R.id.account_name_edit_text);
-        accountNumberEditText = findViewById(R.id.account_number_edit_text);
-        balanceEditText = findViewById(R.id.account_balance_edit_text);
-        accountTypeEditText = findViewById(R.id.account_type_edit_text);
-        saveButton = findViewById(R.id.save_account_button);
-        deleteButton = findViewById(R.id.delete_account_button);
+        nameEditText = // TODO: Fix findViewById;
+        accountNumberEditText = // TODO: Fix findViewById;
+        balanceEditText = // TODO: Fix findViewById;
+        accountTypeEditText = // TODO: Fix findViewById;
+        saveButton = // TODO: Fix findViewById;
+        deleteButton = // TODO: Fix findViewById;
     }
 
     private void setupListeners() {

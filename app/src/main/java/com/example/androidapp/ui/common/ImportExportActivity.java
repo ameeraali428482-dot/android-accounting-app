@@ -73,8 +73,8 @@ public class ImportExportActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        Button btnImport = findViewById(R.id.btn_import_excel);
-        Button btnExport = findViewById(R.id.btn_export_excel);
+        Button btnImport = // TODO: Fix findViewById;
+        Button btnExport = // TODO: Fix findViewById;
 
         btnImport.setOnClickListener(v -> openFilePickerForImport());
         btnExport.setOnClickListener(v -> createExcelFileForExport());

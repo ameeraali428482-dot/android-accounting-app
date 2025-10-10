@@ -33,7 +33,7 @@ public class ItemListActivity extends BaseListActivity<Item> {
         itemDao = new ItemDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        FloatingActionButton fabAddItem = findViewById(R.id.fab_add_item);
+        FloatingActionButton fabAddItem = // TODO: Fix findViewById;
         fabAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,9 +43,9 @@ public class ItemListActivity extends BaseListActivity<Item> {
         });
 
         // Initialize RecyclerView and other common elements from BaseListActivity
-        recyclerView = findViewById(R.id.recyclerView);
-        loadingProgressBar = findViewById(R.id.loadingProgressBar);
-        emptyStateTextView = findViewById(R.id.emptyStateTextView);
+        recyclerView = // TODO: Fix findViewById;
+        loadingProgressBar = // TODO: Fix findViewById;
+        emptyStateTextView = // TODO: Fix findViewById;
 
         recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
         adapter = createAdapter();
@@ -79,9 +79,9 @@ public class ItemListActivity extends BaseListActivity<Item> {
 
             @Override
             protected void bindView(View itemView, Item item) {
-                TextView itemName = itemView.findViewById(R.id.item_name);
-                TextView itemPrice = itemView.findViewById(R.id.item_price);
-                TextView itemCategory = itemView.findViewById(R.id.item_category);
+                TextView itemName = itemView.// TODO: Fix findViewById;
+                TextView itemPrice = itemView.// TODO: Fix findViewById;
+                TextView itemCategory = itemView.// TODO: Fix findViewById;
 
                 itemName.setText(item.getName());
                 itemPrice.setText(String.format("السعر: %.2f", item.getPrice()));

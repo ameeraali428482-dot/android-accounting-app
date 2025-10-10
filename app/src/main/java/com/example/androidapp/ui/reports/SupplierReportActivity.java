@@ -34,7 +34,7 @@ public class SupplierReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supplier_report);
 
-        supplierReportRecyclerView = findViewById(R.id.supplier_report_recycler_view);
+        supplierReportRecyclerView = // TODO: Fix findViewById;
 
         supplierDao = new SupplierDao(App.getDatabaseHelper());
         invoiceDao = new InvoiceDao(App.getDatabaseHelper());
@@ -72,10 +72,10 @@ public class SupplierReportActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, SupplierReportItem item) {
-                TextView supplierName = itemView.findViewById(R.id.report_supplier_name);
-                TextView supplierEmail = itemView.findViewById(R.id.report_supplier_email);
-                TextView supplierPhone = itemView.findViewById(R.id.report_supplier_phone);
-                TextView supplierTotalPurchases = itemView.findViewById(R.id.report_supplier_total_purchases);
+                TextView supplierName = itemView.// TODO: Fix findViewById;
+                TextView supplierEmail = itemView.// TODO: Fix findViewById;
+                TextView supplierPhone = itemView.// TODO: Fix findViewById;
+                TextView supplierTotalPurchases = itemView.// TODO: Fix findViewById;
 
                 supplierName.setText(item.getName());
                 supplierEmail.setText("البريد الإلكتروني: " + item.getEmail());

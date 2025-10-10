@@ -38,11 +38,11 @@ public class CompanySettingsActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        companyNameEditText = findViewById(R.id.company_name_edit_text);
-        companyAddressEditText = findViewById(R.id.company_address_edit_text);
-        companyPhoneEditText = findViewById(R.id.company_phone_edit_text);
-        companyEmailEditText = findViewById(R.id.company_email_edit_text);
-        saveButton = findViewById(R.id.save_company_settings_button);
+        companyNameEditText = // TODO: Fix findViewById;
+        companyAddressEditText = // TODO: Fix findViewById;
+        companyPhoneEditText = // TODO: Fix findViewById;
+        companyEmailEditText = // TODO: Fix findViewById;
+        saveButton = // TODO: Fix findViewById;
 
         saveButton.setOnClickListener(v -> saveCompanySettings());
     }

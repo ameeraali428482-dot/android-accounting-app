@@ -30,8 +30,8 @@ public class PaymentListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_list);
 
-        recyclerView = findViewById(R.id.recyclerViewPayments);
-        FloatingActionButton fabAddPayment = findViewById(R.id.fabAddPayment);
+        recyclerView = // TODO: Fix findViewById;
+        FloatingActionButton fabAddPayment = // TODO: Fix findViewById;
 
         AppDatabase db = AppDatabase.getDatabase(this);
         paymentDao = db.paymentDao();

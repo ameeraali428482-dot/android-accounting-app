@@ -32,13 +32,13 @@ public class CampaignListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_campaign_list);
 
-        campaignRecyclerView = findViewById(R.id.campaign_recycler_view);
+        campaignRecyclerView = // TODO: Fix findViewById;
         campaignRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         campaignDao = new CampaignDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        findViewById(R.id.add_campaign_button).setOnClickListener(v -> {
+        // TODO: Fix findViewById.setOnClickListener(v -> {
             Intent intent = new Intent(CampaignListActivity.this, CampaignDetailActivity.class);
             startActivity(intent);
         });
@@ -67,9 +67,9 @@ public class CampaignListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Campaign campaign) {
-                TextView campaignName = itemView.findViewById(R.id.campaign_name);
-                TextView campaignType = itemView.findViewById(R.id.campaign_type);
-                TextView campaignStatus = itemView.findViewById(R.id.campaign_status);
+                TextView campaignName = itemView.// TODO: Fix findViewById;
+                TextView campaignType = itemView.// TODO: Fix findViewById;
+                TextView campaignStatus = itemView.// TODO: Fix findViewById;
 
                 campaignName.setText(campaign.getName());
                 campaignType.setText("النوع: " + campaign.getType());

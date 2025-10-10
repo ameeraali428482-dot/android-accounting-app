@@ -57,8 +57,8 @@ public class AccountListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = findViewById(R.id.recycler_view_accounts);
-        FloatingActionButton fab = findViewById(R.id.fab_add_account);
+        recyclerView = // TODO: Fix findViewById;
+        FloatingActionButton fab = // TODO: Fix findViewById;
 
         setTitle("الحسابات");
 

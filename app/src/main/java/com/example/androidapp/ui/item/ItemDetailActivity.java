@@ -34,14 +34,14 @@ public class ItemDetailActivity extends AppCompatActivity {
         itemDao = new ItemDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        itemNameEditText = findViewById(R.id.item_name_edit_text);
-        itemDescriptionEditText = findViewById(R.id.item_description_edit_text);
-        itemPriceEditText = findViewById(R.id.item_price_edit_text);
-        itemCostEditText = findViewById(R.id.item_cost_edit_text);
-        itemCategoryEditText = findViewById(R.id.item_category_edit_text);
-        itemBarcodeEditText = findViewById(R.id.item_barcode_edit_text);
-        saveItemButton = findViewById(R.id.save_item_button);
-        deleteItemButton = findViewById(R.id.delete_item_button);
+        itemNameEditText = // TODO: Fix findViewById;
+        itemDescriptionEditText = // TODO: Fix findViewById;
+        itemPriceEditText = // TODO: Fix findViewById;
+        itemCostEditText = // TODO: Fix findViewById;
+        itemCategoryEditText = // TODO: Fix findViewById;
+        itemBarcodeEditText = // TODO: Fix findViewById;
+        saveItemButton = // TODO: Fix findViewById;
+        deleteItemButton = // TODO: Fix findViewById;
 
         // Check if we are editing an existing item
         if (getIntent().hasExtra("itemId")) {

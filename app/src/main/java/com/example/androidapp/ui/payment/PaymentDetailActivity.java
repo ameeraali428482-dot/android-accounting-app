@@ -62,15 +62,15 @@ public class PaymentDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        editPaymentDate = findViewById(R.id.editPaymentDate);
-        editPayerId = findViewById(R.id.editPayerId);
-        spinnerPayerType = findViewById(R.id.spinnerPayerType);
-        editAmount = findViewById(R.id.editAmount);
-        spinnerPaymentMethod = findViewById(R.id.spinnerPaymentMethod);
-        editReferenceNumber = findViewById(R.id.editReferenceNumber);
-        editNotes = findViewById(R.id.editNotes);
-        buttonSave = findViewById(R.id.buttonSave);
-        buttonCancel = findViewById(R.id.buttonCancel);
+        editPaymentDate = // TODO: Fix findViewById;
+        editPayerId = // TODO: Fix findViewById;
+        spinnerPayerType = // TODO: Fix findViewById;
+        editAmount = // TODO: Fix findViewById;
+        spinnerPaymentMethod = // TODO: Fix findViewById;
+        editReferenceNumber = // TODO: Fix findViewById;
+        editNotes = // TODO: Fix findViewById;
+        buttonSave = // TODO: Fix findViewById;
+        buttonCancel = // TODO: Fix findViewById;
     }
 
     private void setupSpinners() {

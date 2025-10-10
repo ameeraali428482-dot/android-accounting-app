@@ -89,15 +89,15 @@ public class MainActivity extends AppCompatActivity {
         googleDriveService = new GoogleDriveService(this);
         aiManager = new AIManager();
 
-        welcomeTextView = findViewById(R.id.welcome_text);
-        logoutButton = findViewById(R.id.logout_button);
-        itemsButton = findViewById(R.id.items_button);
-        customersButton = findViewById(R.id.customers_button);
-        suppliersButton = findViewById(R.id.suppliers_button);
-        invoicesButton = findViewById(R.id.invoices_button);
-        reportsButton = findViewById(R.id.reports_button);
-        googleDriveButton = findViewById(R.id.google_drive_button);
-        aiAnalysisButton = findViewById(R.id.ai_analysis_button);
+        welcomeTextView = // TODO: Fix findViewById;
+        logoutButton = // TODO: Fix findViewById;
+        itemsButton = // TODO: Fix findViewById;
+        customersButton = // TODO: Fix findViewById;
+        suppliersButton = // TODO: Fix findViewById;
+        invoicesButton = // TODO: Fix findViewById;
+        reportsButton = // TODO: Fix findViewById;
+        googleDriveButton = // TODO: Fix findViewById;
+        aiAnalysisButton = // TODO: Fix findViewById;
 
         if (!sessionManager.isLoggedIn()) {
             logoutUser();
@@ -119,43 +119,43 @@ public class MainActivity extends AppCompatActivity {
 
         reportsButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ReportsActivity.class)));
 
-        findViewById(R.id.employees_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, EmployeeListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, EmployeeListActivity.class)));
 
-        findViewById(R.id.payrolls_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, PayrollListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, PayrollListActivity.class)));
 
-        findViewById(R.id.notifications_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, NotificationListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, NotificationListActivity.class)));
 
-        findViewById(R.id.reminders_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ReminderListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ReminderListActivity.class)));
 
-        findViewById(R.id.campaigns_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CampaignListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CampaignListActivity.class)));
 
-        findViewById(R.id.accounts_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, AccountListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, AccountListActivity.class)));
 
-        findViewById(R.id.journal_entries_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, JournalEntryListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, JournalEntryListActivity.class)));
 
-        findViewById(R.id.vouchers_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, VoucherListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, VoucherListActivity.class)));
 
-        findViewById(R.id.connections_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ConnectionListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ConnectionListActivity.class)));
 
-        findViewById(R.id.shared_links_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SharedLinkListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SharedLinkListActivity.class)));
 
-        findViewById(R.id.company_settings_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CompanySettingsActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CompanySettingsActivity.class)));
 
-        findViewById(R.id.point_transactions_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, PointTransactionListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, PointTransactionListActivity.class)));
 
-        findViewById(R.id.rewards_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RewardListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RewardListActivity.class)));
 
-        findViewById(R.id.user_rewards_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, UserRewardListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, UserRewardListActivity.class)));
 
-        findViewById(R.id.repairs_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RepairListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RepairListActivity.class)));
 
-        findViewById(R.id.orders_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, OrderListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, OrderListActivity.class)));
 
-        findViewById(R.id.chats_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChatListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChatListActivity.class)));
 
-        findViewById(R.id.roles_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RoleListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RoleListActivity.class)));
 
-        findViewById(R.id.trophies_button).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, TrophyListActivity.class)));
+        // TODO: Fix findViewById.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, TrophyListActivity.class)));
 
         googleDriveButton.setOnClickListener(v -> signInToGoogleDrive());
         aiAnalysisButton.setOnClickListener(v -> showAIAnalysisDialog());
@@ -185,9 +185,9 @@ public class MainActivity extends AppCompatActivity {
         View dialogView = inflater.inflate(R.layout.dialog_ai_analysis, null);
         builder.setView(dialogView);
 
-        Spinner analysisTypeSpinner = dialogView.findViewById(R.id.spinner_analysis_type);
-        EditText financialDataEditText = dialogView.findViewById(R.id.edit_text_financial_data);
-        Button analyzeButton = dialogView.findViewById(R.id.button_analyze);
+        Spinner analysisTypeSpinner = dialogView.// TODO: Fix findViewById;
+        EditText financialDataEditText = dialogView.// TODO: Fix findViewById;
+        Button analyzeButton = dialogView.// TODO: Fix findViewById;
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.ai_analysis_types, android.R.layout.simple_spinner_item);
@@ -296,9 +296,9 @@ public class MainActivity extends AppCompatActivity {
         View dialogView = inflater.inflate(R.layout.dialog_ai_analysis_result, null);
         builder.setView(dialogView);
 
-        TextView titleTextView = dialogView.findViewById(R.id.text_view_analysis_result_title);
-        TextView resultTextView = dialogView.findViewById(R.id.text_view_analysis_result);
-        Button closeButton = dialogView.findViewById(R.id.button_close);
+        TextView titleTextView = dialogView.// TODO: Fix findViewById;
+        TextView resultTextView = dialogView.// TODO: Fix findViewById;
+        Button closeButton = dialogView.// TODO: Fix findViewById;
 
         String analysisType = (String) result.get("analysisType");
         String analysisResult = (String) result.get("result");

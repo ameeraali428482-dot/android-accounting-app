@@ -46,8 +46,8 @@ public class RepairListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = findViewById(R.id.recycler_view);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        recyclerView = // TODO: Fix findViewById;
+        FloatingActionButton fab = // TODO: Fix findViewById;
 
         setTitle("إدارة الإصلاحات");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -61,15 +61,15 @@ public class RepairListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<>(
+        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {(
                 new ArrayList<>(),
                 R.layout.repair_list_row,
                 (repair, view) -> {
-                    TextView tvTitle = view.findViewById(R.id.tv_repair_title);
-                    TextView tvDescription = view.findViewById(R.id.tv_repair_description);
-                    TextView tvRequestDate = view.findViewById(R.id.tv_repair_request_date);
-                    TextView tvStatus = view.findViewById(R.id.tv_repair_status);
-                    TextView tvAssignedTo = view.findViewById(R.id.tv_repair_assigned_to);
+                    TextView tvTitle = view.// TODO: Fix findViewById;
+                    TextView tvDescription = view.// TODO: Fix findViewById;
+                    TextView tvRequestDate = view.// TODO: Fix findViewById;
+                    TextView tvStatus = view.// TODO: Fix findViewById;
+                    TextView tvAssignedTo = view.// TODO: Fix findViewById;
 
                     tvTitle.setText(repair.getTitle());
                     tvDescription.setText(repair.getDescription());

@@ -33,13 +33,13 @@ public class ReminderListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_list);
 
-        reminderRecyclerView = findViewById(R.id.reminder_recycler_view);
+        reminderRecyclerView = // TODO: Fix findViewById;
         reminderRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         reminderDao = new ReminderDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        findViewById(R.id.add_reminder_button).setOnClickListener(v -> {
+        // TODO: Fix findViewById.setOnClickListener(v -> {
             Intent intent = new Intent(ReminderListActivity.this, ReminderDetailActivity.class);
             startActivity(intent);
         });
@@ -68,9 +68,9 @@ public class ReminderListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Reminder reminder) {
-                TextView reminderTitle = itemView.findViewById(R.id.reminder_title);
-                TextView reminderDate = itemView.findViewById(R.id.reminder_date);
-                TextView reminderTime = itemView.findViewById(R.id.reminder_time);
+                TextView reminderTitle = itemView.// TODO: Fix findViewById;
+                TextView reminderDate = itemView.// TODO: Fix findViewById;
+                TextView reminderTime = itemView.// TODO: Fix findViewById;
 
                 reminderTitle.setText(reminder.getTitle());
                 reminderDate.setText(reminder.getDate());

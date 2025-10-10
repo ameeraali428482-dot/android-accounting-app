@@ -58,10 +58,10 @@ public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceV
 
         public InvoiceViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvInvoiceNumber = itemView.findViewById(R.id.invoice_number);
-            tvInvoiceDate = itemView.findViewById(R.id.invoice_date);
-            tvCustomerName = itemView.findViewById(R.id.customer_name);
-            tvGrandTotal = itemView.findViewById(R.id.grand_total);
+            tvInvoiceNumber = itemView.// TODO: Fix findViewById;
+            tvInvoiceDate = itemView.// TODO: Fix findViewById;
+            tvCustomerName = itemView.// TODO: Fix findViewById;
+            tvGrandTotal = itemView.// TODO: Fix findViewById;
         }
 
         public void bind(final Invoice invoice, final OnInvoiceClickListener listener) {

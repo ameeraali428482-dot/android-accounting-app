@@ -51,7 +51,7 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<InvoiceItemAdapter.
             }
         });
 
-        holder.itemView.findViewById(R.id.delete_invoice_item_button).setOnClickListener(v -> {
+        holder.itemView.// TODO: Fix findViewById.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onDeleteItem(item);
             }
@@ -68,10 +68,10 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<InvoiceItemAdapter.
 
         public InvoiceItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.invoice_item_name);
-            quantity = itemView.findViewById(R.id.invoice_item_quantity);
-            price = itemView.findViewById(R.id.invoice_item_price);
-            total = itemView.findViewById(R.id.invoice_item_total);
+            itemName = itemView.// TODO: Fix findViewById;
+            quantity = itemView.// TODO: Fix findViewById;
+            price = itemView.// TODO: Fix findViewById;
+            total = itemView.// TODO: Fix findViewById;
         }
     }
 

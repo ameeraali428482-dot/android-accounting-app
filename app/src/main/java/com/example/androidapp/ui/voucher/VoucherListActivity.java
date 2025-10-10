@@ -33,13 +33,13 @@ public class VoucherListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voucher_list);
 
-        voucherRecyclerView = findViewById(R.id.voucher_recycler_view);
+        voucherRecyclerView = // TODO: Fix findViewById;
         voucherRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         voucherDao = new VoucherDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        findViewById(R.id.add_voucher_button).setOnClickListener(v -> {
+        // TODO: Fix findViewById.setOnClickListener(v -> {
             Intent intent = new Intent(VoucherListActivity.this, VoucherDetailActivity.class);
             startActivity(intent);
         });
@@ -68,9 +68,9 @@ public class VoucherListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Voucher voucher) {
-                TextView voucherType = itemView.findViewById(R.id.voucher_type);
-                TextView voucherAmount = itemView.findViewById(R.id.voucher_amount);
-                TextView voucherDate = itemView.findViewById(R.id.voucher_date);
+                TextView voucherType = itemView.// TODO: Fix findViewById;
+                TextView voucherAmount = itemView.// TODO: Fix findViewById;
+                TextView voucherDate = itemView.// TODO: Fix findViewById;
 
                 voucherType.setText("النوع: " + voucher.getType());
                 voucherAmount.setText(String.format("المبلغ: %.2f", voucher.getAmount()));
