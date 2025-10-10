@@ -20,9 +20,9 @@ import java.util.concurrent.Executors;
         Payroll.class, PayrollItem.class, Service.class, Doctor.class, Voucher.class,
         FinancialTransfer.class, CurrencyExchange.class, JoinRequest.class, Chat.class, Repair.class, Order.class, Trophy.class, UserPermission.class, UserRole.class, AccountStatement.class, UserTrophy.class,
         Warehouse.class, Inventory.class, Post.class, Comment.class, Like.class, Share.class, ContactSync.class, Friend.class, AuditLog.class,
-        Purchase.class
+        Purchase.class, RolePermission.class
 },
-        version = 3, exportSchema = false)
+        version = 4, exportSchema = false)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract PurchaseDao purchaseDao();
