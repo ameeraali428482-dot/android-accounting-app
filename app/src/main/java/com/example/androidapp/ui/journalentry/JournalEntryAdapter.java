@@ -62,7 +62,7 @@ public class JournalEntryAdapter extends RecyclerView.Adapter<JournalEntryAdapte
         }
 
         public void bind(final JournalEntry journalEntry, final OnJournalEntryClickListener listener) {
-            tvDate.setText(journalEntry.getDate());
+            tvDate.setText(journalEntry.getEntryDate());
             tvDescription.setText(journalEntry.getDescription());
             tvTotalDebit.setText(String.format("مدين: %.2f", journalEntry.getTotalDebit()));
             tvTotalCredit.setText(String.format("دائن: %.2f", journalEntry.getTotalCredit()));

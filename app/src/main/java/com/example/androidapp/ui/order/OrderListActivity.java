@@ -60,12 +60,12 @@ public class OrderListActivity extends AppCompatActivity {
         adapter = new GenericAdapter<>(
                 new ArrayList<>(),
                 R.layout.order_list_row,
-                (view, order) -> {
-                    TextView tvOrderId = view.findViewById(R.id.tv_order_id);
-                    TextView tvOrderDate = view.findViewById(R.id.tv_order_date);
-                    TextView tvTotalAmount = view.findViewById(R.id.tv_order_total_amount);
-                    TextView tvStatus = view.findViewById(R.id.tv_order_status);
-                    TextView tvNotes = view.findViewById(R.id.tv_order_notes);
+                (order, itemView) -> {
+                    TextView tvOrderId = itemView.findViewById(R.id.tv_order_id);
+                    TextView tvOrderDate = itemView.findViewById(R.id.tv_order_date);
+                    TextView tvTotalAmount = itemView.findViewById(R.id.tv_order_total_amount);
+                    TextView tvStatus = itemView.findViewById(R.id.tv_order_status);
+                    TextView tvNotes = itemView.findViewById(R.id.tv_order_notes);
 
                     tvOrderId.setText("طلبية #" + order.getId());
                     tvOrderDate.setText("التاريخ: " + dateFormat.format(order.getOrderDate()));

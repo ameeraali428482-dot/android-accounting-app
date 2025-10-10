@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
         UserPermission.class, UserRole.class, AccountStatement.class, UserTrophy.class,
         Warehouse.class, Inventory.class, Post.class, Comment.class, Like.class, Share.class, ContactSync.class, Friend.class, AuditLog.class,
         Purchase.class, RolePermission.class
-}, version = 4, exportSchema = false)
+}, version = 5, exportSchema = false)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract PurchaseDao purchaseDao();
@@ -84,7 +84,7 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "business_database")
-                            .fallbackToDestructiveMigration().build();
+                            .build();
                 }
             }
         }

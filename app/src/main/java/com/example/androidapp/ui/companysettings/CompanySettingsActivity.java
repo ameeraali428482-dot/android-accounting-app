@@ -35,7 +35,7 @@ public class CompanySettingsActivity extends AppCompatActivity {
         companyEmailEditText = findViewById(R.id.company_email_edit_text);
         saveButton = findViewById(R.id.save_company_settings_button);
 
-        companySettingsDao = new CompanySettingsDao(App.getDatabaseHelper());
+        companySettingsDao = App.getDatabaseHelper().companySettingsDao();
         sessionManager = new SessionManager(this);
 
         loadCompanySettings();
@@ -44,7 +44,7 @@ public class CompanySettingsActivity extends AppCompatActivity {
     }
 
     private void loadCompanySettings() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCompanyId();
         if (companyId == null) {
             Toast.makeText(this, "خطأ: لم يتم العثور على معرف الشركة.", Toast.LENGTH_SHORT).show();
             return;
@@ -53,10 +53,10 @@ public class CompanySettingsActivity extends AppCompatActivity {
         CompanySettings settings = companySettingsDao.getSettingsByCompanyId(companyId);
         if (settings != null) {
             companySettingsId = settings.getId();
-            companyNameEditText.setText(settings.getCompanyName());
-            companyAddressEditText.setText(settings.getCompanyAddress());
-            companyPhoneEditText.setText(settings.getCompanyPhone());
-            companyEmailEditText.setText(settings.getCompanyEmail());
+            if (settings != null) { companyNameEditText.setText(settings.getCompanyName()); }
+            if (settings != null) { companyAddressEditText.setText(settings.getCompanyAddress()); }
+            if (settings != null) { companyPhoneEditText.setText(settings.getCompanyPhone()); }
+            if (settings != null) { companyEmailEditText.setText(settings.getCompanyEmail()); }
         } else {
             // If no settings exist, initialize with empty fields
             companyNameEditText.setText("");
@@ -71,7 +71,7 @@ public class CompanySettingsActivity extends AppCompatActivity {
         String companyAddress = companyAddressEditText.getText().toString().trim();
         String companyPhone = companyPhoneEditText.getText().toString().trim();
         String companyEmail = companyEmailEditText.getText().toString().trim();
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCompanyId();
 
         if (companyId == null) {
             Toast.makeText(this, "خطأ: لم يتم العثور على معرف الشركة.", Toast.LENGTH_SHORT).show();

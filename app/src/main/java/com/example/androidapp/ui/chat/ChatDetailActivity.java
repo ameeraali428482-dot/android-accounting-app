@@ -5,6 +5,8 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 public class ChatDetailActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -29,7 +32,7 @@ public class ChatDetailActivity extends AppCompatActivity {
     private AppDatabase database;
     private SessionManager sessionManager;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-    private int otherUserId;
+    private String otherUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +41,9 @@ public class ChatDetailActivity extends AppCompatActivity {
 
         database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
-        otherUserId = getIntent().getIntExtra("other_user_id", -1);
+        otherUserId = getIntent().getStringExtra("other_user_id");
 
-        if (otherUserId == -1) {
+        if (otherUserId == null || otherUserId.isEmpty()) {
             Toast.makeText(this, "خطأ في تحديد المستخدم", Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -58,7 +61,9 @@ public class ChatDetailActivity extends AppCompatActivity {
         btnSend = findViewById(R.id.btn_send);
 
         setTitle("محادثة مع المستخدم " + otherUserId);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         btnSend.setOnClickListener(v -> sendMessage());
     }
@@ -71,16 +76,16 @@ public class ChatDetailActivity extends AppCompatActivity {
         adapter = new GenericAdapter<>(
                 new ArrayList<>(),
                 R.layout.chat_message_row,
-                (chat, view) -> {
-                    TextView tvMessage = view.findViewById(R.id.tv_message);
-                    TextView tvTimestamp = view.findViewById(R.id.tv_timestamp);
-                    LinearLayout messageContainer = view.findViewById(R.id.message_container);
+                (chat, itemView) -> {
+                    TextView tvMessage = itemView.findViewById(R.id.tv_message);
+                    TextView tvTimestamp = itemView.findViewById(R.id.tv_timestamp);
+                    LinearLayout messageContainer = itemView.findViewById(R.id.message_container);
 
                     tvMessage.setText(chat.getMessage());
-                    tvTimestamp.setText(dateFormat.format(chat.getTimestamp()));
+                    tvTimestamp.setText(dateFormat.format(chat.getCreatedAt()));
 
                     // Align messages based on sender
-                    if (chat.getSenderId() == sessionManager.getCurrentUserId()) {
+                    if (chat.getSenderId().equals(sessionManager.getCurrentUserId())) {
                         // Sent message - align right
                         messageContainer.setBackgroundResource(R.drawable.sent_message_background);
                         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) messageContainer.getLayoutParams();
@@ -134,10 +139,11 @@ public class ChatDetailActivity extends AppCompatActivity {
         }
 
         Chat newChat = new Chat(
+                UUID.randomUUID().toString(),
+                messageText,
+                sessionManager.getCurrentCompanyId(),
                 sessionManager.getCurrentUserId(),
                 otherUserId,
-                sessionManager.getCurrentCompanyId(),
-                messageText,
                 new Date(),
                 false,
                 "TEXT"

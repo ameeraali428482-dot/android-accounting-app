@@ -33,7 +33,7 @@ public class ConnectionListActivity extends AppCompatActivity {
         connectionRecyclerView = findViewById(R.id.connection_recycler_view);
         connectionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        connectionDao = new ConnectionDao(App.getDatabaseHelper());
+        connectionDao = App.getDatabaseHelper().connectionDao();
         sessionManager = new SessionManager(this);
 
         findViewById(R.id.add_connection_button).setOnClickListener(v -> {
@@ -49,15 +49,19 @@ public class ConnectionListActivity extends AppCompatActivity {
     }
 
     private void loadConnections() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCompanyId();
         if (companyId == null) {
             // Handle error: no company ID found
             return;
         }
 
-        List<Connection> connections = connectionDao.getConnectionsByCompanyId(companyId);
+        connectionDao.getConnectionsByCompanyId(companyId).observe(this, connections -> {
+            if (connections != null) {
+                adapter.updateData(connections);
+            }
+        });
 
-        adapter = new GenericAdapter<Connection>(connections) {
+        adapter = new GenericAdapter<Connection>(new ArrayList<>()) {
             @Override
             protected int getLayoutResId() {
                 return R.layout.connection_list_row;

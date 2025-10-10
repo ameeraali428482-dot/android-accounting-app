@@ -1,6 +1,6 @@
 package com.example.androidapp.data.entities;
-import androidx.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
@@ -16,38 +16,34 @@ import java.util.Date;
                            onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = User.class,
                            parentColumns = "id",
-                           childColumns = "userId",
+                           childColumns = "senderId",
                            onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = User.class,
                            parentColumns = "id",
-                           childColumns = "toUserId",
+                           childColumns = "receiverId",
                            onDelete = ForeignKey.CASCADE)
         },
-        indices = {@Index(value = "companyId"), @Index(value = "userId"), @Index(value = "toUserId")})
+        indices = {@Index(value = "companyId"), @Index(value = "senderId"), @Index(value = "receiverId")})
 public class Chat {
     @PrimaryKey
     private @NonNull String id;
     private String message;
     private @NonNull String companyId;
-    private @NonNull String userId;
-    private @NonNull String toUserId;
+    private @NonNull String senderId;
+    private @NonNull String receiverId;
     private @NonNull Date createdAt;
     private boolean isRead;
-    private String senderId;
-    private String receiverId;
-    private String orgId;
+    private String messageType;
 
-    public Chat(@NonNull String id, String message, @NonNull String companyId, @NonNull String userId, @NonNull String toUserId, @NonNull Date createdAt, boolean isRead, String senderId, String receiverId, String orgId) {
+    public Chat(@NonNull String id, String message, @NonNull String companyId, @NonNull String senderId, @NonNull String receiverId, @NonNull Date createdAt, boolean isRead, String messageType) {
         this.id = id;
         this.message = message;
         this.companyId = companyId;
-        this.userId = userId;
-        this.toUserId = toUserId;
-        this.createdAt = createdAt;
-        this.isRead = isRead;
         this.senderId = senderId;
         this.receiverId = receiverId;
-        this.orgId = orgId;
+        this.createdAt = createdAt;
+        this.isRead = isRead;
+        this.messageType = messageType;
     }
 
     // Getters and Setters
@@ -60,20 +56,16 @@ public class Chat {
     public String getCompanyId() { return companyId; }
     public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
     @NonNull
-    public String getUserId() { return userId; }
-    public void setUserId(@NonNull String userId) { this.userId = userId; }
+    public String getSenderId() { return senderId; }
+    public void setSenderId(@NonNull String senderId) { this.senderId = senderId; }
     @NonNull
-    public String getToUserId() { return toUserId; }
-    public void setToUserId(@NonNull String toUserId) { this.toUserId = toUserId; }
+    public String getReceiverId() { return receiverId; }
+    public void setReceiverId(@NonNull String receiverId) { this.receiverId = receiverId; }
     @NonNull
     public Date getCreatedAt() { return createdAt; }
     public void setCreatedAt(@NonNull Date createdAt) { this.createdAt = createdAt; }
     public boolean isRead() { return isRead; }
     public void setRead(boolean read) { isRead = read; }
-    public String getSenderId() { return senderId; }
-    public void setSenderId(String senderId) { this.senderId = senderId; }
-    public String getReceiverId() { return receiverId; }
-    public void setReceiverId(String receiverId) { this.receiverId = receiverId; }
-    public String getOrgId() { return orgId; }
-    public void setOrgId(String orgId) { this.orgId = orgId; }
+    public String getMessageType() { return messageType; }
+    public void setMessageType(String messageType) { this.messageType = messageType; }
 }

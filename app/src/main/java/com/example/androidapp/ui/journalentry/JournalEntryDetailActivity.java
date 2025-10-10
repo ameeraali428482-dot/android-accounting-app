@@ -89,7 +89,7 @@ public class JournalEntryDetailActivity extends AppCompatActivity {
     private void loadJournalEntryDetails(String id) {
         viewModel.getJournalEntryById(id, companyId).observe(this, journalEntry -> {
             if (journalEntry != null) {
-                etDate.setText(journalEntry.getDate());
+                etDate.setText(journalEntry.getEntryDate());
                 etDescription.setText(journalEntry.getDescription());
                 etReferenceNumber.setText(journalEntry.getReferenceNumber());
                 etEntryType.setText(journalEntry.getEntryType());

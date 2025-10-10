@@ -17,7 +17,7 @@ public class App extends Application {
         startService(new Intent(this, SyncService.class));
     }
 
-    public static AppDatabase getDatabase() {
+    public static AppDatabase getDatabaseHelper() {
         return database;
     }
 }

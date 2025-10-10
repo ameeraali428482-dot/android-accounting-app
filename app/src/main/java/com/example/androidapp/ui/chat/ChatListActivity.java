@@ -64,16 +64,16 @@ public class ChatListActivity extends AppCompatActivity {
         adapter = new GenericAdapter<>(
                 new ArrayList<>(),
                 R.layout.chat_list_row,
-                (chat, view) -> {
-                    TextView tvSenderName = view.findViewById(R.id.tv_sender_name);
-                    TextView tvLastMessage = view.findViewById(R.id.tv_last_message);
-                    TextView tvTimestamp = view.findViewById(R.id.tv_timestamp);
-                    TextView tvUnreadCount = view.findViewById(R.id.tv_unread_count);
+                (chat, itemView) -> {
+                    TextView tvSenderName = itemView.findViewById(R.id.tv_sender_name);
+                    TextView tvLastMessage = itemView.findViewById(R.id.tv_last_message);
+                    TextView tvTimestamp = itemView.findViewById(R.id.tv_timestamp);
+                    TextView tvUnreadCount = itemView.findViewById(R.id.tv_unread_count);
 
                     // Get sender name (this would need to be joined with User table in a real implementation)
                     tvSenderName.setText("المستخدم " + chat.getSenderId());
                     tvLastMessage.setText(chat.getMessage());
-                    tvTimestamp.setText(dateFormat.format(chat.getTimestamp()));
+                    tvTimestamp.setText(dateFormat.format(chat.getCreatedAt()));
                     
                     if (!chat.isRead()) {
                         tvUnreadCount.setVisibility(android.view.View.VISIBLE);
@@ -84,7 +84,7 @@ public class ChatListActivity extends AppCompatActivity {
                 },
                 chat -> {
                     Intent intent = new Intent(this, ChatDetailActivity.class);
-                    intent.putExtra("other_user_id", chat.getSenderId() == sessionManager.getCurrentUserId() ? 
+                    intent.putExtra("other_user_id", chat.getSenderId().equals(sessionManager.getCurrentUserId()) ? 
                             chat.getReceiverId() : chat.getSenderId());
                     startActivity(intent);
                 }
@@ -99,18 +99,18 @@ public class ChatListActivity extends AppCompatActivity {
                     if (chats != null) {
                         // Group chats by conversation (sender-receiver pair)
                         Map<String, Chat> latestChats = new HashMap<>();
-                        int currentUserId = sessionManager.getCurrentUserId();
+                        String currentUserId = sessionManager.getCurrentUserId();
                         
                         for (Chat chat : chats) {
                             String conversationKey;
-                            if (chat.getSenderId() == currentUserId) {
+                            if (chat.getSenderId().equals(currentUserId)) {
                                 conversationKey = currentUserId + "_" + chat.getReceiverId();
                             } else {
                                 conversationKey = chat.getSenderId() + "_" + currentUserId;
                             }
                             
                             if (!latestChats.containsKey(conversationKey) || 
-                                chat.getTimestamp().after(latestChats.get(conversationKey).getTimestamp())) {
+                                chat.getCreatedAt().after(latestChats.get(conversationKey).getCreatedAt())) {
                                 latestChats.put(conversationKey, chat);
                             }
                         }
@@ -128,16 +128,15 @@ public class ChatListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_refresh:
-                loadChats();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            finish();
+            return true;
+        } else if (itemId == R.id.action_refresh) {
+            loadChats();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

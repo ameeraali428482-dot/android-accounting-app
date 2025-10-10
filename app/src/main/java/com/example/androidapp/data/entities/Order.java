@@ -1,6 +1,6 @@
 package com.example.androidapp.data.entities;
-import androidx.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
@@ -10,49 +10,54 @@ import java.util.Date;
 
 @Entity(tableName = "orders",
         foreignKeys = {
-                @ForeignKey(entity = Customer.class,
-                           parentColumns = "id",
-                           childColumns = "customerId",
-                           onDelete = ForeignKey.SET_NULL),
                 @ForeignKey(entity = Company.class,
-                           parentColumns = "id",
-                           childColumns = "companyId",
-                           onDelete = ForeignKey.CASCADE)
+                        parentColumns = "id",
+                        childColumns = "companyId",
+                        onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Customer.class,
+                        parentColumns = "id",
+                        childColumns = "customerId",
+                        onDelete = ForeignKey.SET_NULL)
         },
-        indices = {@Index(value = "customerId"), @Index(value = "companyId")})
+        indices = {@Index(value = "companyId"), @Index(value = "customerId")})
 public class Order {
     @PrimaryKey
-    public @NonNull String id;
-    public String customerId;
-    public @NonNull String companyId;
-    public double totalAmount;
-    public @NonNull Date createdAt;
-    public @NonNull Date orderDate;
+    private @NonNull String id;
+    private @NonNull String companyId;
+    private String customerId;
+    private @NonNull Date orderDate;
+    private double totalAmount;
+    private String status; // e.g., "Processing", "Completed", "Cancelled"
+    private String notes;
 
-    public Order(@NonNull String id, String customerId, @NonNull String companyId, double totalAmount, @NonNull Date createdAt, @NonNull Date orderDate) {
+    public Order(@NonNull String id, @NonNull String companyId, String customerId, @NonNull Date orderDate, double totalAmount, String status, String notes) {
         this.id = id;
-        this.customerId = customerId;
         this.companyId = companyId;
-        this.totalAmount = totalAmount;
-        this.createdAt = createdAt;
+        this.customerId = customerId;
         this.orderDate = orderDate;
+        this.totalAmount = totalAmount;
+        this.status = status;
+        this.notes = notes;
     }
 
-    // Getters and Setters
+    // Getters
     @NonNull
     public String getId() { return id; }
-    public void setId(@NonNull String id) { this.id = id; }
-    public String getCustomerId() { return customerId; }
-    public void setCustomerId(String customerId) { this.customerId = customerId; }
     @NonNull
     public String getCompanyId() { return companyId; }
-    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
-    public double getTotalAmount() { return totalAmount; }
-    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
-    @NonNull
-    public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(@NonNull Date createdAt) { this.createdAt = createdAt; }
+    public String getCustomerId() { return customerId; }
     @NonNull
     public Date getOrderDate() { return orderDate; }
+    public double getTotalAmount() { return totalAmount; }
+    public String getStatus() { return status; }
+    public String getNotes() { return notes; }
+
+    // Setters
+    public void setId(@NonNull String id) { this.id = id; }
+    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
+    public void setCustomerId(String customerId) { this.customerId = customerId; }
     public void setOrderDate(@NonNull Date orderDate) { this.orderDate = orderDate; }
+    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
+    public void setStatus(String status) { this.status = status; }
+    public void setNotes(String notes) { this.notes = notes; }
 }
