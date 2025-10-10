@@ -1,5 +1,4 @@
 package com.example.androidapp.data;
-
 import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
@@ -9,7 +8,6 @@ import com.example.androidapp.data.dao.*;
 import com.example.androidapp.data.entities.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 @Database(entities = {
         User.class, Company.class, Role.class, Permission.class, Membership.class,
         Account.class, Item.class, ItemUnit.class, Customer.class, Supplier.class,
@@ -18,15 +16,14 @@ import java.util.concurrent.Executors;
         DeliveryReceipt.class, Connection.class, SharedLink.class, CompanySettings.class,
         PointTransaction.class, Reward.class, UserReward.class, Employee.class,
         Payroll.class, PayrollItem.class, Service.class, Doctor.class, Voucher.class,
-        FinancialTransfer.class, CurrencyExchange.class, JoinRequest.class, Chat.class, Repair.class, Order.class, Trophy.class, UserPermission.class, UserRole.class, AccountStatement.class, UserTrophy.class,
+        FinancialTransfer.class, CurrencyExchange.class, JoinRequest.class, Chat.class, Repair.class, Order.class, Trophy.class,
+        UserPermission.class, UserRole.class, AccountStatement.class, UserTrophy.class,
         Warehouse.class, Inventory.class, Post.class, Comment.class, Like.class, Share.class, ContactSync.class, Friend.class, AuditLog.class,
         Purchase.class, RolePermission.class
-},
-        version = 4, exportSchema = false)
+}, version = 4, exportSchema = false)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract PurchaseDao purchaseDao();
-
     public abstract AccountDao accountDao();
     public abstract AccountStatementDao accountStatementDao();
     public abstract AuditLogDao auditLogDao();
@@ -79,20 +76,15 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract UserTrophyDao userTrophyDao();
     public abstract VoucherDao voucherDao();
     public abstract WarehouseDao warehouseDao();
-
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
-    public static final ExecutorService databaseWriteExecutor =
-            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
-
+    public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    AppDatabase.class, "business_database")
-                            .fallbackToDestructiveMigration()
-                            .build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "business_database")
+                            .fallbackToDestructiveMigration().build();
                 }
             }
         }
