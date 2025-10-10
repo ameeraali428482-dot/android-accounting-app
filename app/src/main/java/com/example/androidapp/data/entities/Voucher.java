@@ -1,3 +1,4 @@
+import java.util.Date;
 package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
 import androidx.annotation.NonNull;

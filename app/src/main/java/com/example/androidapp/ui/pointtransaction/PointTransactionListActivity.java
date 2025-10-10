@@ -1,3 +1,4 @@
+import java.util.Date;
 package com.example.androidapp.ui.pointtransaction;
 
 import android.content.Intent;
@@ -64,15 +65,15 @@ public class PointTransactionListActivity extends AppCompatActivity {
                 R.layout.point_transaction_list_row,
                 (pointTransaction, view) -> {
                     // Bind data to views
-                    TextView tvDescription = view.findViewById(R.id.tv_description);
-                    TextView tvPoints = view.findViewById(R.id.tv_points);
-                    TextView tvDate = view.findViewById(R.id.tv_date);
+                    TextView tvDescription = pointTransaction.findViewById(R.id.tv_description);
+                    TextView tvPoints = pointTransaction.findViewById(R.id.tv_points);
+                    TextView tvDate = pointTransaction.findViewById(R.id.tv_date);
 
-                    tvDescription.setText(pointTransaction.getDescription());
-                    tvPoints.setText(String.format(Locale.getDefault(), "%+d نقطة", pointTransaction.getPoints()));
-                    tvDate.setText(dateFormat.format(pointTransaction.getTransactionDate()));
+                    tvDescription.setText(view.getDescription());
+                    tvPoints.setText(String.format(Locale.getDefault(), "%+d نقطة", view.getPoints()));
+                    tvDate.setText(dateFormat.format(view.getTransactionDate()));
 
-                    if (pointTransaction.getType().equals("EARN")) {
+                    if (view.getType().equals("EARN")) {
                         tvPoints.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
                     } else {
                         tvPoints.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
@@ -109,7 +110,7 @@ public class PointTransactionListActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.action_refresh:
+            case android.R.id.home: // Fixed constant expression
                 loadPointTransactions();
                 return true;
             default:

@@ -1,3 +1,4 @@
+import java.util.Date;
 package com.example.androidapp.ui.notification;
 
 import android.content.Intent;
@@ -54,26 +55,26 @@ public class NotificationListActivity extends AppCompatActivity {
                 new ArrayList<>(),
                 R.layout.notification_list_row,
                 (notification, view) -> {
-                    TextView tvTitle = view.findViewById(R.id.tv_notification_title);
-                    TextView tvMessage = view.findViewById(R.id.tv_notification_message);
-                    TextView tvTimestamp = view.findViewById(R.id.tv_notification_timestamp);
-                    TextView tvType = view.findViewById(R.id.tv_notification_type);
+                    TextView tvTitle = notification.findViewById(R.id.tv_notification_title);
+                    TextView tvMessage = notification.findViewById(R.id.tv_notification_message);
+                    TextView tvTimestamp = notification.findViewById(R.id.tv_notification_timestamp);
+                    TextView tvType = notification.findViewById(R.id.tv_notification_type);
 
-                    tvTitle.setText(notification.getTitle());
-                    tvMessage.setText(notification.getMessage());
-                    tvTimestamp.setText(dateFormat.format(notification.getCreatedAt()));
-                    tvType.setText(notification.getType());
+                    tvTitle.setText(view.getTitle());
+                    tvMessage.setText(view.getMessage());
+                    tvTimestamp.setText(dateFormat.format(view.getCreatedAt()));
+                    tvType.setText(view.getType());
 
                     // Set background based on read status
-                    if (notification.isRead()) {
-                        view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    if (view.isRead()) {
+                        notification.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                     } else {
-                        view.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                        notification.setBackgroundColor(getResources().getColor(R.color.light_gray));
                     }
 
                     // Set type background
                     int typeBackground;
-                    switch (notification.getType()) {
+                    switch (view.getType()) {
                         case "Info":
                             typeBackground = R.drawable.status_active_background;
                             break;
@@ -91,7 +92,7 @@ public class NotificationListActivity extends AppCompatActivity {
                 },
                 notification -> {
                     // Mark as read when clicked
-                    if (!notification.isRead()) {
+                    if (!((Notification)itemView.getTag()).isRead()) {
                         notification.setRead(true);
                         AppDatabase.databaseWriteExecutor.execute(() -> {
                             database.notificationDao().update(notification);
@@ -105,7 +106,7 @@ public class NotificationListActivity extends AppCompatActivity {
     }
 
     private void loadNotifications() {
-        database.notificationDao().getAllNotifications(sessionManager.getCurrentCompanyId())
+        database.notificationDao().getAllNotifications()
                 .observe(this, notifications -> {
                     if (notifications != null) {
                         adapter.updateData(notifications);
@@ -125,7 +126,7 @@ public class NotificationListActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.action_refresh:
+            case android.R.id.home: // Fixed constant expression
                 loadNotifications();
                 return true;
             default:

@@ -1,3 +1,4 @@
+import java.util.Date;
 package com.example.androidapp.ui.order;
 
 import android.content.Intent;
@@ -58,25 +59,25 @@ public class OrderListActivity extends AppCompatActivity {
                 new ArrayList<>(),
                 R.layout.order_list_row,
                 (order, itemView) -> {
-                    TextView tvOrderId = itemView.findViewById(R.id.tv_order_id);
-                    TextView tvOrderDate = itemView.findViewById(R.id.tv_order_date);                               TextView tvTotalAmount = itemView.findViewById(R.id.tv_order_total_amount);
-                    TextView tvStatus = itemView.findViewById(R.id.tv_order_status);
-                    TextView tvNotes = itemView.findViewById(R.id.tv_order_notes);
+                    TextView tvOrderId = order.findViewById(R.id.tv_order_id);
+                    TextView tvOrderDate = order.findViewById(R.id.tv_order_date);                               TextView tvTotalAmount = order.findViewById(R.id.tv_order_total_amount);
+                    TextView tvStatus = order.findViewById(R.id.tv_order_status);
+                    TextView tvNotes = order.findViewById(R.id.tv_order_notes);
 
-                    tvOrderId.setText("طلبية #" + order.getId());
-                    tvOrderDate.setText("التاريخ: " + dateFormat.format(order.getOrderDate()));
-                    tvTotalAmount.setText("المبلغ: " + currencyFormat.format(order.getTotalAmount()));
-                    tvStatus.setText(order.getStatus());
+                    tvOrderId.setText("طلبية #" + itemView.getId());
+                    tvOrderDate.setText("التاريخ: " + dateFormat.format(itemView.getOrderDate()));
+                    tvTotalAmount.setText("المبلغ: " + currencyFormat.format(itemView.getTotalAmount()));
+                    tvStatus.setText(itemView.getStatus());
 
-                    if (order.getNotes() != null && !order.getNotes().isEmpty()) {
-                        tvNotes.setText(order.getNotes());
+                    if (itemView.getNotes() != null && !itemView.getNotes().isEmpty()) {
+                        tvNotes.setText(itemView.getNotes());
                     } else {
                         tvNotes.setText("لا توجد ملاحظات");
                     }
 
                     int statusBackground;
-                    if (order.getStatus() != null) {
-                        switch (order.getStatus()) {
+                    if (itemView.getStatus() != null) {
+                        switch (itemView.getStatus()) {
                             case "Completed":
                                 statusBackground = R.drawable.status_active_background;
                                 break;

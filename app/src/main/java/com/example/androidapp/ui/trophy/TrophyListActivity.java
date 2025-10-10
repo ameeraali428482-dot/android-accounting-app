@@ -60,18 +60,18 @@ public class TrophyListActivity extends AppCompatActivity {
                 new ArrayList<>(),
                 R.layout.trophy_list_row,
                 (trophy, view) -> {
-                    TextView tvName = view.findViewById(R.id.tv_trophy_name);
-                    TextView tvDescription = view.findViewById(R.id.tv_trophy_description);
-                    TextView tvPointsRequired = view.findViewById(R.id.tv_trophy_points_required);
-                    ImageView ivTrophyImage = view.findViewById(R.id.iv_trophy_image);
+                    TextView tvName = trophy.findViewById(R.id.tv_trophy_name);
+                    TextView tvDescription = trophy.findViewById(R.id.tv_trophy_description);
+                    TextView tvPointsRequired = trophy.findViewById(R.id.tv_trophy_points_required);
+                    ImageView ivTrophyImage = trophy.findViewById(R.id.iv_trophy_image);
 
-                    tvName.setText(trophy.getName());
-                    tvDescription.setText(trophy.getDescription());
-                    tvPointsRequired.setText("النقاط المطلوبة: " + trophy.getPointsRequired());
+                    tvName.setText(view.getName());
+                    tvDescription.setText(view.getDescription());
+                    tvPointsRequired.setText("النقاط المطلوبة: " + view.getPointsRequired());
 
-                    if (trophy.getImageUrl() != null && !trophy.getImageUrl().isEmpty()) {
-                        Glide.with(view.getContext())
-                                .load(trophy.getImageUrl())
+                    if (view.getImageUrl() != null && !view.getImageUrl().isEmpty()) {
+                        Glide.with(trophy.getContext())
+                                .load(view.getImageUrl())
                                 .placeholder(R.drawable.ic_trophy_placeholder)
                                 .error(R.drawable.ic_trophy_placeholder)
                                 .into(ivTrophyImage);
@@ -110,7 +110,7 @@ public class TrophyListActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.action_refresh:
+            case android.R.id.home: // Fixed constant expression
                 loadTrophies();
                 return true;
             default:

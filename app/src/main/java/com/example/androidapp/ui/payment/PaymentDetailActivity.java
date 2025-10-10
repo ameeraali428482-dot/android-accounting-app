@@ -1,3 +1,4 @@
+import java.util.Date;
 package com.example.androidapp.ui.payment;
 
 import android.app.DatePickerDialog;
@@ -156,7 +157,7 @@ public class PaymentDetailActivity extends AppCompatActivity {
             if (currentPayment == null) {
                 // Create new payment
                 String newPaymentId = UUID.randomUUID().toString();
-                Payment newPayment = new Payment(newPaymentId, companyId, paymentDate, payerId, payerType, amount, paymentMethod, referenceNumber, notes);
+                Payment newPayment = new Payment(newPaymentId, companyId, paymentDate, payerId, payerType, amount, paymentMethod, referenceNumber, notes, "COMPLETED");
                 paymentDao.insert(newPayment);
             } else {
                 // Update existing payment

@@ -18,19 +18,19 @@ public class PointTransactionViewModel extends AndroidViewModel {
         super(application);
         database = AppDatabase.getDatabase(application);
         // This will need to be updated to filter by orgId and potentially userId
-        allPointTransactions = database.pointTransactionDao().getAllPointTransactions(0); // Placeholder orgId
+        allPointTransactions = database.pointTransactionDao().getAllPointTransactions("0"); // Placeholder orgId
     }
 
     public LiveData<List<PointTransaction>> getAllPointTransactions(int orgId) {
-        return database.pointTransactionDao().getAllPointTransactions(orgId);
+        return database.pointTransactionDao().getAllPointTransactions(String.valueOf(orgId));
     }
 
     public LiveData<PointTransaction> getPointTransactionById(int id, int orgId) {
-        return database.pointTransactionDao().getPointTransactionById(id, orgId);
+        return database.pointTransactionDao().getPointTransactionById(id, String.valueOf(orgId));
     }
 
     public LiveData<Integer> getTotalPointsForUser(int userId, int orgId) {
-        return database.pointTransactionDao().getTotalPointsForUser(userId, orgId);
+        return database.pointTransactionDao().getTotalPointsForUser(userId, String.valueOf(orgId));
     }
 
     public void insert(PointTransaction pointTransaction) {

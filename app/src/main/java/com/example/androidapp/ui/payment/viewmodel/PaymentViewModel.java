@@ -21,11 +21,11 @@ public class PaymentViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Payment>> getAllPayments(String companyId) {
-        return paymentDao.getAllPayments(companyId);
+        return LiveData.of(paymentDao.getAllPayments(companyId));
     }
 
     public LiveData<Payment> getPaymentById(String paymentId, String companyId) {
-        return paymentDao.getPaymentById(paymentId, companyId);
+        return LiveData.of(paymentDao.getPaymentById(paymentId, companyId));
     }
 
     public void insert(Payment payment) {

@@ -1,3 +1,4 @@
+import java.util.Date;
 package com.example.androidapp.models;
 
 public class JournalEntry {

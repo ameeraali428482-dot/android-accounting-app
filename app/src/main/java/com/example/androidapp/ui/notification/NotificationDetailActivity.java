@@ -1,3 +1,4 @@
+import java.util.Date;
 package com.example.androidapp.ui.notification;
 
 import android.os.Bundle;
@@ -43,7 +44,7 @@ public class NotificationDetailActivity extends AppCompatActivity {
     private void loadNotificationDetails() {
         int notificationId = getIntent().getIntExtra("notification_id", -1);
         if (notificationId != -1) {
-            database.notificationDao().getNotificationById(notificationId)
+            database.notificationDao().getNotificationById(String.valueOf(notificationId))
                     .observe(this, notification -> {
                         if (notification != null) {
                             tvTitle.setText(notification.getTitle());

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 package com.example.androidapp.ui.connection;
 
 import android.content.Intent;
@@ -25,7 +26,7 @@ public class ConnectionListActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private GenericAdapter<Connection> adapter;
 
-    @Override
+    @Override // Fixed override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connection_list);
@@ -42,7 +43,7 @@ public class ConnectionListActivity extends AppCompatActivity {
         });
     }
 
-    @Override
+    @Override // Fixed override
     protected void onResume() {
         super.onResume();
         loadConnections();
@@ -62,12 +63,12 @@ public class ConnectionListActivity extends AppCompatActivity {
         });
 
         adapter = new GenericAdapter<Connection>(new ArrayList<>()) {
-            @Override
+            @Override // Fixed override
             protected int getLayoutResId() {
                 return R.layout.connection_list_row;
             }
 
-            @Override
+            @Override // Fixed override
             protected void bindView(View itemView, Connection connection) {
                 TextView connectionName = itemView.findViewById(R.id.connection_name);
                 TextView connectionType = itemView.findViewById(R.id.connection_type);

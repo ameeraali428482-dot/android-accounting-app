@@ -1,3 +1,4 @@
+import java.util.Date;
 package com.example.androidapp.ui.pointtransaction;
 
 import android.os.Bundle;
@@ -39,7 +40,7 @@ public class PointTransactionDetailActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.save_point_transaction_button);
         deleteButton = findViewById(R.id.delete_point_transaction_button);
 
-        pointTransactionDao = new PointTransactionDao(App.getDatabaseHelper());
+        pointTransactionDao = AppDatabase.getInstance(this).pointTransactionDao();
         sessionManager = new SessionManager(this);
 
         setupTypeSpinner();
@@ -98,7 +99,7 @@ public class PointTransactionDetailActivity extends AppCompatActivity {
         PointTransaction pointTransaction;
         if (pointTransactionId == null) {
             // New point transaction
-            pointTransaction = new PointTransaction(UUID.randomUUID().toString(), companyId, type, points, date);
+            pointTransaction = new PointTransaction(UUID.randomUUID().toString(), companyId, type, points, new Date(), "DEFAULT_USER");
             pointTransactionDao.insert(pointTransaction);
             Toast.makeText(this, "تم إضافة معاملة النقاط بنجاح.", Toast.LENGTH_SHORT).show();
         } else {

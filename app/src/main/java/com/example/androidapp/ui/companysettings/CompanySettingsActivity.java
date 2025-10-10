@@ -50,7 +50,12 @@ public class CompanySettingsActivity extends AppCompatActivity {
             return;
         }
 
-        CompanySettings settings = companySettingsDao.getSettingsByCompanyId(companyId);
+        companySettingsDao.getSettingsByCompanyId(companyId).observe(this, settings -> {
+            if (settings != null) {
+                // Use settings object here
+                populateSettingsFields(settings);
+            }
+        });
         if (settings != null) {
             companySettingsId = settings.getId();
             if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { if (settings != null) { companyNameEditText.setText(settings.getCompanyName()); } } } } } } }

@@ -1,3 +1,4 @@
+import java.util.Date;
 package com.example.androidapp.ui.chat;                                                         
 import android.content.Intent;
 import android.os.Bundle;
@@ -54,14 +55,14 @@ public class ChatListActivity extends AppCompatActivity {
     }                                                                                                                                                                                               private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));                                                                                                                                   adapter = new GenericAdapter<>(
                 new ArrayList<>(),                                                                              R.layout.chat_list_row,                                                                         (chat, itemView) -> {
-                    TextView tvSenderName = itemView.findViewById(R.id.tv_sender_name);                             TextView tvLastMessage = itemView.findViewById(R.id.tv_last_message);                           TextView tvTimestamp = itemView.findViewById(R.id.tv_timestamp);
-                    TextView tvUnreadCount = itemView.findViewById(R.id.tv_unread_count);                                                                                                                           // Get sender name (this would need to be joined with User table in a real implementation)                                                                                                      tvSenderName.setText("المستخدم " + chat.getSenderId());                                         tvLastMessage.setText(chat.getMessage());
-                    tvTimestamp.setText(dateFormat.format(chat.getCreatedAt()));                                                                                                                                    if (!chat.isRead()) {                                                                               tvUnreadCount.setVisibility(android.view.View.VISIBLE);
+                    TextView tvSenderName = chat.findViewById(R.id.tv_sender_name);                             TextView tvLastMessage = chat.findViewById(R.id.tv_last_message);                           TextView tvTimestamp = chat.findViewById(R.id.tv_timestamp);
+                    TextView tvUnreadCount = chat.findViewById(R.id.tv_unread_count);                                                                                                                           // Get sender name (this would need to be joined with User table in a real implementation)                                                                                                      tvSenderName.setText("المستخدم " + itemView.getSenderId());                                         tvLastMessage.setText(itemView.getMessage());
+                    tvTimestamp.setText(dateFormat.format(itemView.getCreatedAt()));                                                                                                                                    if (!itemView.isRead()) {                                                                               tvUnreadCount.setVisibility(android.view.View.VISIBLE);
                         tvUnreadCount.setText("1");                                                                 } else {                                                                                            tvUnreadCount.setVisibility(android.view.View.GONE);                                        }
                 },
                 chat -> {
-                    Intent intent = new Intent(this, ChatDetailActivity.class);                                     intent.putExtra("other_user_id", chat.getSenderId().equals(sessionManager.getCurrentUserId()) ?
-                            chat.getReceiverId() : chat.getSenderId());
+                    Intent intent = new Intent(this, ChatDetailActivity.class);                                     intent.putExtra("other_user_id", itemView.getSenderId().equals(sessionManager.getCurrentUserId()) ?
+                            itemView.getReceiverId() : itemView.getSenderId());
                     startActivity(intent);
                 }                                                                                       );
 
@@ -85,7 +86,7 @@ public class ChatListActivity extends AppCompatActivity {
                             }
 
                             if (!latestChats.containsKey(conversationKey) ||
-                                chat.getCreatedAt().after(latestChats.get(conversationKey).getCreatedAt())) {
+                                ((Chat)holder.itemView.getTag()).getCreatedAt().after(latestChats.get(conversationKey).getCreatedAt())) {
                                 latestChats.put(conversationKey, chat);
                             }
                         }

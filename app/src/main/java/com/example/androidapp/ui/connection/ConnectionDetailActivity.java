@@ -1,3 +1,4 @@
+import com.example.androidapp.data.AppDatabase;
 package com.example.androidapp.ui.connection;
 
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public class ConnectionDetailActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.save_connection_button);
         deleteButton = findViewById(R.id.delete_connection_button);
 
-        connectionDao = new ConnectionDao(App.getDatabaseHelper());
+        connectionDao = AppDatabase.getInstance(this).connectionDao();
         sessionManager = new SessionManager(this);
 
         if (getIntent().hasExtra("connection_id")) {
@@ -78,7 +79,7 @@ public class ConnectionDetailActivity extends AppCompatActivity {
         Connection connection;
         if (connectionId == null) {
             // New connection
-            connection = new Connection(UUID.randomUUID().toString(), companyId, name, type, status);
+            connection = new Connection(UUID.randomUUID().toString(), companyId, name, type, status, "ACTIVE");
             connectionDao.insert(connection);
             Toast.makeText(this, "تم إضافة الاتصال بنجاح.", Toast.LENGTH_SHORT).show();
         } else {
