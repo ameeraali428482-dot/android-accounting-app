@@ -1,22 +1,24 @@
-import java.util.Date;
 package com.example.androidapp.ui.accountstatement;
 
+import java.util.Date;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.entities.AccountStatement;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+
+
+
+
 
 public class AccountStatementAdapter extends RecyclerView.Adapter<AccountStatementAdapter.AccountStatementViewHolder> {
 

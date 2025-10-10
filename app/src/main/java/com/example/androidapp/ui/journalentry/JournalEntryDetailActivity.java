@@ -7,23 +7,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.entities.JournalEntry;
 import com.example.androidapp.data.entities.JournalEntryItem;
 import com.example.androidapp.ui.journalentry.viewmodel.JournalEntryViewModel;
 import com.example.androidapp.utils.SessionManager;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+
+
+
+
+
 
 public class JournalEntryDetailActivity extends AppCompatActivity {
 

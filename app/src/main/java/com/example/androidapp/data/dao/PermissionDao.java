@@ -7,6 +7,8 @@ import androidx.room.Query;
 import java.util.List;
 import com.example.androidapp.data.entities.Permission;
 
+
+
 @Dao
 public interface PermissionDao {
     @Insert

@@ -1,5 +1,7 @@
-import java.util.Date;
 package com.example.androidapp.models;
+
+import java.util.Date;
+
 
 public class JournalEntry {
     private String id;

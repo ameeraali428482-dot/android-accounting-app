@@ -17,6 +17,8 @@ import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
+
+
 public class RoleListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private GenericAdapter<Role> adapter;

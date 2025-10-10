@@ -1,5 +1,6 @@
-import java.util.Date;
 package com.example.androidapp.data;
+
+import java.util.Date;
 import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
@@ -9,6 +10,7 @@ import com.example.androidapp.data.dao.*;
 import com.example.androidapp.data.entities.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 @Database(entities = {
         User.class, Company.class, Role.class, Permission.class, Membership.class,
         Account.class, Item.class, ItemUnit.class, Customer.class, Supplier.class,

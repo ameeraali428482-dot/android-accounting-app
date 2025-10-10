@@ -1,6 +1,6 @@
-import java.util.Date;
 package com.example.androidapp.ui.voucher;
 
+import java.util.Date;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -8,17 +8,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.androidapp.App;
 import com.example.androidapp.R;
 import com.example.androidapp.data.dao.VoucherDao;
 import com.example.androidapp.data.entities.Voucher;
 import com.example.androidapp.utils.SessionManager;
-
 import java.util.Arrays;
 import java.util.UUID;
+
+
+
+
+
 
 public class VoucherDetailActivity extends AppCompatActivity {
 

@@ -9,6 +9,8 @@ import com.example.androidapp.data.dao.JournalEntryDao;
 import com.example.androidapp.data.entities.JournalEntry;
 import java.util.List;
 
+
+
 public class JournalEntryViewModel extends AndroidViewModel {
     private JournalEntryDao journalEntryDao;
 

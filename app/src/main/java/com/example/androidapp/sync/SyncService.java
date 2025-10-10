@@ -4,17 +4,19 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-
 import androidx.annotation.Nullable;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Company;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
-
 import java.util.ArrayList;
 import java.util.List;
+
+
+
+
+
 
 public class SyncService extends Service {
 

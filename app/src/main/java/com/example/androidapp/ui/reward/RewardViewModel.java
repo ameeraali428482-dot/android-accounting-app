@@ -1,14 +1,16 @@
 package com.example.androidapp.ui.reward;
 
 import android.app.Application;
-
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Reward;
-
 import java.util.List;
+
+
+
+
+
 
 public class RewardViewModel extends AndroidViewModel {
     private final LiveData<List<Reward>> allRewards;

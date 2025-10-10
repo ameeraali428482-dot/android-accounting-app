@@ -1,16 +1,18 @@
 package com.example.androidapp.ui.payment.viewmodel;
 
 import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.PaymentDao;
 import com.example.androidapp.data.entities.Payment;
-
 import java.util.List;
+
+
+
+
+
 
 public class PaymentViewModel extends AndroidViewModel {
     private PaymentDao paymentDao;

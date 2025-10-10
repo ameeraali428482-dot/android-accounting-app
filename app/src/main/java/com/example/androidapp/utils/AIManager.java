@@ -1,12 +1,14 @@
 package com.example.androidapp.utils;
 
 import android.util.Log;
-
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
-
 import java.util.HashMap;
 import java.util.Map;
+
+
+
+
 
 public class AIManager {
 

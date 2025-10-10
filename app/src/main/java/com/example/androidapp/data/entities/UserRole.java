@@ -1,10 +1,12 @@
 package com.example.androidapp.data.entities;
-import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+
+
 
 @Entity(tableName = "user_roles",
         primaryKeys = {"userId", "roleId", "companyId"},

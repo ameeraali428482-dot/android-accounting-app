@@ -2,8 +2,10 @@ package com.example.androidapp.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import java.util.HashMap;                                                                       
+
+
+
 public class SessionManager {                                                                       private static final String PREF_NAME = "AndroidAppPref";
     private static final String IS_LOGIN = "IsLoggedIn";
     public static final String KEY_USER_ID = "userId";

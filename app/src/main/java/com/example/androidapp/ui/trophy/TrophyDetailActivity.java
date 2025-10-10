@@ -6,14 +6,16 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.bumptech.glide.Glide;
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Trophy;
 import com.example.androidapp.utils.SessionManager;
+
+
+
+
 
 public class TrophyDetailActivity extends AppCompatActivity {
     private EditText etName, etDescription, etImageUrl, etPointsRequired;

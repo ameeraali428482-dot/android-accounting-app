@@ -1,19 +1,21 @@
 package com.example.androidapp.utils;
 
 import android.content.Context;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Permission;
 import com.example.androidapp.data.entities.Role;
 import com.example.androidapp.data.entities.User;
 import com.example.androidapp.data.entities.UserPermission;
 import com.example.androidapp.data.entities.UserRole;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+
+
+
+
 
 /**
  * Advanced Permission Management System

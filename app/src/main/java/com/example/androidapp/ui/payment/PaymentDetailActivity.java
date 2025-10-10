@@ -1,6 +1,6 @@
-import java.util.Date;
 package com.example.androidapp.ui.payment;
 
+import java.util.Date;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
@@ -10,18 +10,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.PaymentDao;
 import com.example.androidapp.data.entities.Payment;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.UUID;
+
+
+
+
+
 
 public class PaymentDetailActivity extends AppCompatActivity {
     private EditText editPaymentDate, editAmount, editReferenceNumber, editNotes;

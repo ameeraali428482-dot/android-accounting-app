@@ -3,6 +3,8 @@ package com.example.androidapp.ui.chat;
 import android.os.Bundle;                                                                       import androidx.appcompat.app.AppCompatActivity;
 import com.example.androidapp.R;
 
+
+
 public class NewChatActivity extends AppCompatActivity {
 
     @Override

@@ -9,6 +9,8 @@ import androidx.room.Delete;
 import com.example.androidapp.data.entities.JournalEntry;
 import java.util.List;
 
+
+
 @Dao
 public interface JournalEntryDao {
     @Insert

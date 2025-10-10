@@ -1,6 +1,8 @@
 package com.example.androidapp.data.entities;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.NonNull;
+
 
 public class ProfitLossStatement {
     private float totalRevenue;

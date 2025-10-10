@@ -3,12 +3,14 @@ package com.example.androidapp.ui.barcode;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+
+
+
 
 public class BarcodeScannerActivity extends AppCompatActivity {
 

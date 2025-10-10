@@ -1,14 +1,16 @@
 package com.example.androidapp.ui.pointtransaction;
 
 import android.app.Application;
-
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.PointTransaction;
-
 import java.util.List;
+
+
+
+
+
 
 public class PointTransactionViewModel extends AndroidViewModel {
     private final LiveData<List<PointTransaction>> allPointTransactions;

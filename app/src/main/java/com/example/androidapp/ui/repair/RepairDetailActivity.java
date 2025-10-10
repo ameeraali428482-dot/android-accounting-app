@@ -9,18 +9,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Repair;
 import com.example.androidapp.utils.SessionManager;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+
+
+
+
 
 public class RepairDetailActivity extends AppCompatActivity {
     private EditText etTitle, etDescription, etAssignedTo, etTotalCost;

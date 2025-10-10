@@ -9,6 +9,8 @@ import androidx.room.Update;
 import com.example.androidapp.data.entities.Payroll;
 import java.util.List;
 
+
+
 @Dao
 public interface PayrollDao {
     @Insert

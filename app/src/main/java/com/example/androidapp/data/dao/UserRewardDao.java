@@ -6,10 +6,12 @@ import androidx.room.Update;
 import androidx.room.Delete;
 import androidx.room.Query;
 import androidx.lifecycle.LiveData;
-
 import com.example.androidapp.data.entities.UserReward;
-
 import java.util.List;
+
+
+
+
 
 @Dao
 public interface UserRewardDao extends BaseDao<UserReward> {

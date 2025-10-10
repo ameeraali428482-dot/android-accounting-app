@@ -1,18 +1,20 @@
-import java.util.Date;
 package com.example.androidapp.ui.journalentry;
 
+import java.util.Date;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.entities.JournalEntry;
-
 import java.util.List;
+
+
+
+
+
 
 public class JournalEntryAdapter extends RecyclerView.Adapter<JournalEntryAdapter.JournalEntryViewHolder> {
 

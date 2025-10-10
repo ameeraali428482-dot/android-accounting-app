@@ -1,15 +1,17 @@
-import java.util.Date;
 package com.example.androidapp.data.repositories;
 
+import java.util.Date;
 import android.app.Application;
 import androidx.lifecycle.LiveData;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.JournalEntryItemDao;
 import com.example.androidapp.data.entities.JournalEntryItem;
-
 import java.util.List;
 import java.util.concurrent.Future;
+
+
+
+
 
 public class JournalEntryItemRepository {
     private JournalEntryItemDao journalEntryItemDao;

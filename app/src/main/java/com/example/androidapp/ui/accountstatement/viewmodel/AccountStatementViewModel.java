@@ -1,18 +1,20 @@
-import java.util.Date;
 package com.example.androidapp.ui.accountstatement.viewmodel;
 
+import java.util.Date;
 import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.AccountStatementDao;
 import com.example.androidapp.data.entities.AccountStatement;
 import com.example.androidapp.logic.AccountingManager;
-
 import java.util.List;
+
+
+
+
+
 
 public class AccountStatementViewModel extends AndroidViewModel {
     private AccountStatementDao accountStatementDao;

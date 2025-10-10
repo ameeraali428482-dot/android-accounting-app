@@ -1,6 +1,6 @@
-import java.util.Date;
 package com.example.androidapp.ui.payroll;
 
+import java.util.Date;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -8,9 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.androidapp.App;
 import com.example.androidapp.R;
 import com.example.androidapp.data.dao.EmployeeDao;
@@ -18,10 +16,14 @@ import com.example.androidapp.data.dao.PayrollDao;
 import com.example.androidapp.data.entities.Employee;
 import com.example.androidapp.data.entities.Payroll;
 import com.example.androidapp.utils.SessionManager;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+
+
+
+
 
 public class PayrollDetailActivity extends AppCompatActivity {
 

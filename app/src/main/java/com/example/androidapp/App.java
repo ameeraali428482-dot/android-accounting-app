@@ -2,9 +2,11 @@ package com.example.androidapp;
 
 import android.app.Application;
 import android.content.Intent;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.sync.SyncService;
+
+
+
 
 public class App extends Application {
 

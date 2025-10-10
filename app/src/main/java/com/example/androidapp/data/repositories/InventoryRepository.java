@@ -2,14 +2,16 @@ package com.example.androidapp.data.repositories;
 
 import android.app.Application;
 import androidx.lifecycle.LiveData;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.InventoryDao;
 import com.example.androidapp.data.entities.Inventory;
 import com.example.androidapp.data.entities.InvoiceItem;
-
 import java.util.List;
 import java.util.concurrent.Future;
+
+
+
+
 
 public class InventoryRepository {
     private InventoryDao inventoryDao;

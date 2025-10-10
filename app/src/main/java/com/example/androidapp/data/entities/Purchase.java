@@ -1,11 +1,13 @@
 package com.example.androidapp.data.entities;
-import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
 import java.util.Date;
+
+
+
 
 @Entity(tableName = "purchases")
 public class Purchase {

@@ -2,14 +2,16 @@ package com.example.androidapp.logic;
 
 import android.content.Context;
 import android.util.Log;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.InventoryDao;
 import com.example.androidapp.data.dao.ItemDao;
 import com.example.androidapp.data.entities.Inventory;
 import com.example.androidapp.data.entities.Item;
-
 import java.util.List;
+
+
+
+
 
 public class InventoryManager {
     private static final String TAG = "InventoryManager";

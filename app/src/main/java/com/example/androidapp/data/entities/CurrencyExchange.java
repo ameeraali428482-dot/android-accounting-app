@@ -1,12 +1,14 @@
-import java.util.Date;
 package com.example.androidapp.data.entities;
-import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 
+import java.util.Date;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+
+
 
 @Entity(tableName = "currency_exchanges",
         foreignKeys = {

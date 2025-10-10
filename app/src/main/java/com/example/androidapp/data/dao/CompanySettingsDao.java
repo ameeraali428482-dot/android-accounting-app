@@ -8,6 +8,8 @@ import androidx.room.Update;
 import androidx.room.Delete;
 import java.util.List;
 import com.example.androidapp.data.entities.CompanySettings;
+
+
 @Dao
 public interface CompanySettingsDao {
     @Insert

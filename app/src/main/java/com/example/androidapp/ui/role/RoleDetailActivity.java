@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
+
 public class RoleDetailActivity extends AppCompatActivity {
     private EditText etRoleName, etRoleDescription;
     private RecyclerView rvPermissions;

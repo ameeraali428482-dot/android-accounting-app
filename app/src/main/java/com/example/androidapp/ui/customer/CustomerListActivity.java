@@ -1,11 +1,10 @@
 package com.example.androidapp.ui.customer;
-import com.example.androidapp.data.entities.Customer;
 
+import com.example.androidapp.data.entities.Customer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
 import com.example.androidapp.App;
 import com.example.androidapp.R;
 import com.example.androidapp.data.dao.CustomerDao;
@@ -14,9 +13,12 @@ import com.example.androidapp.ui.common.BaseListActivity;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.List;
+
+
+
+
 
 public class CustomerListActivity extends BaseListActivity<Customer> {
 

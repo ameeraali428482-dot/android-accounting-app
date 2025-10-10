@@ -6,8 +6,10 @@ import androidx.room.Query;
 import androidx.room.Update;
 import androidx.room.Delete;
 import java.util.List;
-
 import com.example.androidapp.data.entities.AuditLog;
+
+
+
 
 @Dao
 public interface AuditLogDao {

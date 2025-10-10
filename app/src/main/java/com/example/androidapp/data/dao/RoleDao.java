@@ -11,6 +11,8 @@ import com.example.androidapp.data.entities.Permission;
 import com.example.androidapp.data.entities.RolePermission;
 import java.util.List;
 
+
+
 @Dao
 public interface RoleDao {
     @Insert

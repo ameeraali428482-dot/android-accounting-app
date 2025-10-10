@@ -1,7 +1,0 @@
-<resources>
-    <string-array name="ai_analysis_types">
-        <item>Type 1</item>
-        <item>Type 2</item>
-        <item>Type 3</item>
-    </string-array>
-</resources>

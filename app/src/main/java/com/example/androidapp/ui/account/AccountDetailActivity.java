@@ -6,17 +6,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.entities.Account;
 import com.example.androidapp.ui.account.viewmodel.AccountViewModel;
 import com.example.androidapp.utils.SessionManager;
-
 import java.util.UUID;
+
+
+
+
+
 
 public class AccountDetailActivity extends AppCompatActivity {
 

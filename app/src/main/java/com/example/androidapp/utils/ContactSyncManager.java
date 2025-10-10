@@ -7,17 +7,19 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.util.Log;
-
 import androidx.core.content.ContextCompat;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.ContactSync;
 import com.example.androidapp.data.entities.User;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+
+
+
+
 
 /**
  * Manager class for synchronizing device contacts with the application

@@ -1,23 +1,25 @@
-import java.util.Date;
 package com.example.androidapp.ui.payroll;
 
+import java.util.Date;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.App;
 import com.example.androidapp.R;
 import com.example.androidapp.data.dao.PayrollDao;
 import com.example.androidapp.data.entities.Payroll;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
-
 import java.util.List;
+
+
+
+
+
 
 public class PayrollListActivity extends AppCompatActivity {
 

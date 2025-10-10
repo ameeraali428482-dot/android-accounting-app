@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Chat;                                               import com.example.androidapp.ui.common.GenericAdapter;                                         import com.example.androidapp.utils.SessionManager;
-                                                                                                import java.text.SimpleDateFormat;                                                              import java.util.ArrayList;
 import java.util.Date;                                                                          import java.util.Locale;                                                                        import java.util.UUID;
+
+
+                                                                                                import java.text.SimpleDateFormat;                                                              import java.util.ArrayList;
                                                                                                 public class ChatDetailActivity extends AppCompatActivity {                                         private RecyclerView recyclerView;
     private EditText etMessage;                                                                     private ImageButton btnSend;                                                                    private GenericAdapter<Chat> adapter;
     private AppDatabase database;                                                                   private SessionManager sessionManager;                                                          private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());

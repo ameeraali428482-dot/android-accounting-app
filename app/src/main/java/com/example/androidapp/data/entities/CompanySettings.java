@@ -5,8 +5,10 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
 import java.util.Date;
+
+
+
 
 @Entity(tableName = "company_settings",
         foreignKeys = @ForeignKey(entity = Company.class,

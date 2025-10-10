@@ -1,23 +1,25 @@
-import java.util.ArrayList;
 package com.example.androidapp.ui.connection;
 
+import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.App;
 import com.example.androidapp.R;
 import com.example.androidapp.data.dao.ConnectionDao;
 import com.example.androidapp.data.entities.Connection;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
-
 import java.util.List;
+
+
+
+
+
 
 public class ConnectionListActivity extends AppCompatActivity {
 

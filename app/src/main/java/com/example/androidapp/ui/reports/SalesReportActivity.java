@@ -1,13 +1,11 @@
-import java.util.Date;
 package com.example.androidapp.ui.reports;
 
+import java.util.Date;
 import android.os.Bundle;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.App;
 import com.example.androidapp.R;
 import com.example.androidapp.data.dao.InvoiceDao;
@@ -16,9 +14,13 @@ import com.example.androidapp.data.entities.Invoice;
 import com.example.androidapp.data.entities.InvoiceItem;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
-
 import java.util.ArrayList;
 import java.util.List;
+
+
+
+
+
 
 public class SalesReportActivity extends AppCompatActivity {
 

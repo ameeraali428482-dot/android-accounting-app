@@ -3,7 +3,6 @@ package com.example.androidapp.logic;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.AccountStatementDao;
 import com.example.androidapp.data.entities.Account;
@@ -27,13 +26,16 @@ import com.example.androidapp.data.repositories.JournalEntryRepository;
 import com.example.androidapp.data.repositories.PaymentRepository;
 import com.example.androidapp.data.repositories.PurchaseRepository;
 import com.example.androidapp.data.repositories.ReceiptRepository;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+
+
+
+
 
 public class AccountingManager {
     private static final String TAG = "AccountingManager";

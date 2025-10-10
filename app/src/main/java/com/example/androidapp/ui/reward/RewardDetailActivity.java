@@ -8,19 +8,21 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Reward;
 import com.example.androidapp.utils.SessionManager;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+
+
+
+
 
 public class RewardDetailActivity extends AppCompatActivity {
     private EditText etName, etDescription, etPointsRequired, etValidUntil;

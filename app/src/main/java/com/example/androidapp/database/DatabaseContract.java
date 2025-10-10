@@ -1,7 +1,9 @@
-import java.util.Date;
 package com.example.androidapp.data;
 
+import java.util.Date;
 import android.provider.BaseColumns;
+
+
 
 public final class DatabaseContract {
     // To prevent someone from accidentally instantiating the contract class,

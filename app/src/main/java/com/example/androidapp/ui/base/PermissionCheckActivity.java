@@ -4,13 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.androidapp.ui.main.MainActivity;
 import com.example.androidapp.utils.PermissionManager;
-
 import java.util.concurrent.CompletableFuture;
+
+
+
+
+
 
 /**
  * Base activity that provides permission checking functionality

@@ -1,11 +1,13 @@
 package com.example.androidapp.data.entities;
-import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+
+
 
 @Entity(tableName = "inventory",
         foreignKeys = {

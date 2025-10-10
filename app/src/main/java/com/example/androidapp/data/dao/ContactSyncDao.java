@@ -1,5 +1,6 @@
-import java.util.Date;
 package com.example.androidapp.data.dao;
+
+import java.util.Date;
 import com.example.androidapp.data.entities.Account;
 import com.example.androidapp.data.entities.Item;
 import com.example.androidapp.data.entities.InvoiceItem;
@@ -18,7 +19,6 @@ import com.example.androidapp.data.entities.UserReward;
 import com.example.androidapp.data.entities.Reward;
 import com.example.androidapp.data.entities.PointTransaction;
 import com.example.androidapp.data.entities.Campaign;
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -26,10 +26,12 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
-
 import com.example.androidapp.data.entities.ContactSync;
-
 import java.util.List;
+
+
+
+
 
 @Dao
 public interface ContactSyncDao {

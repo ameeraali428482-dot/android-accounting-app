@@ -3,15 +3,17 @@ package com.example.androidapp.logic;
 import android.content.Context;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.PointTransaction;
 import com.example.androidapp.data.entities.Reward;
 import com.example.androidapp.data.entities.UserReward;
-
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+
+
+
 
 public class PointsAndRewardsManager {
 
