@@ -15,7 +15,7 @@ import java.util.List;
 
 @Dao
 public interface OrderDao extends BaseDao<Order> {
-    @Query("SELECT * FROM orders WHERE companyId = :companyId ORDER BY createdAt DESC")
+    @Query("SELECT * FROM orders WHERE companyId = :companyId ORDER BY orderDate DESC")
     LiveData<List<Order>> getAllOrders(String companyId);
 
     @Query("SELECT * FROM orders WHERE id = :orderId AND companyId = :companyId")
