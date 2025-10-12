@@ -1,49 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="24dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="اختر نوع التحليل:"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <Spinner
-        android:id="@+id/spinner_analysis_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:entries="@array/ai_analysis_types" />
+        android:text="AI Financial Analysis"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="أدخل البيانات المالية (JSON):"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/edit_text_financial_data"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="م"
-        android:inputType="textMultiLine"
-        android:lines="5"
-        android:gravity="top"
-        android:scrollbars="vertical" />
+        android:hint="Analysis Type"
+        android:layout_marginBottom="16dp"
+        app:boxBackgroundMode="outline">
+
+        <Spinner
+            android:id="@+id/spinnerAnalysisType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Financial Data (JSON)"
+        android:layout_marginBottom="16dp"
+        app:boxBackgroundMode="outline">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etFinancialData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:minLines="4"
+            android:gravity="top|start" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/button_analyze"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnAnalyze"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="16dp"
-        android:text="تحليل" />
+        android:text="Analyze"
+        android:textAllCaps="false" />
 
 </LinearLayout>

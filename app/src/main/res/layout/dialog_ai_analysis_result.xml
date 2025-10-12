@@ -3,29 +3,36 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="24dp">
 
     <TextView
-        android:id="@+id/text_view_analysis_result_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="نتيجة التحليل:"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/text_view_analysis_result"
+        android:id="@+id/tvAnalysisTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="16sp" />
+        android:text="Analysis Results"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/tvAnalysisResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:lineSpacingExtra="4dp" />
+
+    </ScrollView>
 
     <Button
-        android:id="@+id/button_close"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnClose"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="16dp"
-        android:text="إغلاق" />
+        android:text="Close"
+        android:textAllCaps="false" />
 
 </LinearLayout>

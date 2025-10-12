@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
         UserPermission.class, UserRole.class, AccountStatement.class, UserTrophy.class,
         Warehouse.class, Inventory.class, Post.class, Comment.class, Like.class, Share.class, ContactSync.class, Friend.class, AuditLog.class,
         Purchase.class, RolePermission.class
-}, version = 5, exportSchema = false)
+}, version = 6, exportSchema = false)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract PurchaseDao purchaseDao();

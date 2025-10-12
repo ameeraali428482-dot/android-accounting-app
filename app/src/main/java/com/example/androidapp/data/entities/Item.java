@@ -14,6 +14,7 @@ public class Item {
     private String category;
     private String barcode;
     private Integer quantity;
+private Float minStockLevel;
     private float cost;
 
     public Item(String id, String companyId, String name, String description, double price, String category, String barcode) {
@@ -51,7 +52,9 @@ public class Item {
     public void setBarcode(String barcode) { this.barcode = barcode; }
     
     public Integer getQuantity() { return quantity; }
+public Float getMinStockLevel() { return minStockLevel; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
+public void setMinStockLevel(Float minStockLevel) { this.minStockLevel = minStockLevel; }
     
     public float getCost() { return cost; }
     public void setCost(float cost) { this.cost = cost; }
