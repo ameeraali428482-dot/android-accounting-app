@@ -10,11 +10,6 @@ import com.example.androidapp.R;
 import com.example.androidapp.data.entities.InvoiceItem;
 import java.util.List;
 
-
-
-
-
-
 public class InvoiceItemAdapter extends RecyclerView.Adapter<InvoiceItemAdapter.InvoiceItemViewHolder> {
 
     private List<InvoiceItem> invoiceItems;
@@ -45,14 +40,21 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<InvoiceItemAdapter.
         holder.price.setText(String.format("السعر: %.2f", item.getPrice()));
         holder.total.setText(String.format("الإجمالي: %.2f", item.getTotal()));
 
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onEditItem(item);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onEditItem(item);
+                }
             }
         });
 
-            if (listener != null) {
-                listener.onDeleteItem(item);
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onDeleteItem(item);
+                }
             }
         });
     }
@@ -64,9 +66,15 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<InvoiceItemAdapter.
 
     public static class InvoiceItemViewHolder extends RecyclerView.ViewHolder {
         TextView itemName, quantity, price, total;
+        View btnDelete;
 
         public InvoiceItemViewHolder(@NonNull View itemView) {
             super(itemView);
+            itemName = itemView.findViewById(R.id.itemName);
+            quantity = itemView.findViewById(R.id.quantity);
+            price = itemView.findViewById(R.id.price);
+            total = itemView.findViewById(R.id.total);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
 
@@ -75,4 +83,3 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<InvoiceItemAdapter.
         void onDeleteItem(InvoiceItem item);
     }
 }
-
