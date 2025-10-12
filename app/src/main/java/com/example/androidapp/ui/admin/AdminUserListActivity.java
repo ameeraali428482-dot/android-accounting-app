@@ -49,7 +49,7 @@ public class AdminUserListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {(
+        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
                 new ArrayList<>(),
                 R.layout.admin_user_list_row,
                 (user, view) -> {

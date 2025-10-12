@@ -11,4 +11,8 @@
     <string name="invalid_password">يجب أن تكون كلمة المرور > 5 أحرف</string>
     <string name="login_failed">"فشل تسجيل الدخول"</string>
     <string name="title_activity_main">الرئيسية</string>
+<string name="trophy_name">Trophy Name</string>
+    <string name="trophy_description">Trophy Description</string>
+    <string name="trophy_image_url">Trophy Image URL</string>
+    <string name="points_required">Points Required</string>
 </resources>
