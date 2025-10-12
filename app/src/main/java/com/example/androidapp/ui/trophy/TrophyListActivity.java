@@ -56,8 +56,6 @@ public class TrophyListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
-                new ArrayList<>(),
                 R.layout.trophy_list_row,
                 (trophy, view) -> {
 

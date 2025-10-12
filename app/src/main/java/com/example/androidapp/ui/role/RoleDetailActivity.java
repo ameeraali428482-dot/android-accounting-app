@@ -61,8 +61,6 @@ public class RoleDetailActivity extends AppCompatActivity {
 
     private void setupPermissionsRecyclerView() {
         rvPermissions.setLayoutManager(new LinearLayoutManager(this));
-        permissionsAdapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
-                new ArrayList<>(),
                 R.layout.permission_list_row,
                 (view, permission) -> {
                     tvPermissionName.setText(permission.getAction());

@@ -52,8 +52,6 @@ public class RoleListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
-                new ArrayList<>(),
                 R.layout.role_list_row,
                 (view, role) -> {
 

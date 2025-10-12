@@ -60,8 +60,6 @@ public class PointTransactionListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
-                new ArrayList<>(),
                 R.layout.point_transaction_list_row,
                 (pointTransaction, view) -> {
                     // Bind data to views

@@ -49,8 +49,6 @@ import java.util.Date;                                                          
         layoutManager.setStackFromEnd(true); // Start from bottom
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
-                new ArrayList<>(),
                 R.layout.chat_message_row,
                 (chat, itemView) -> {
 
