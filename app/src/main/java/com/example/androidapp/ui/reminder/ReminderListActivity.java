@@ -14,6 +14,7 @@ import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ReminderListActivity extends AppCompatActivity {
     private RecyclerView reminderRecyclerView;
@@ -33,9 +34,12 @@ public class ReminderListActivity extends AppCompatActivity {
         reminderRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ReminderDetailActivity.class);
-            startActivity(intent);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ReminderListActivity.this, ReminderDetailActivity.class);
+                startActivity(intent);
+            }
         });
 
         loadReminders();
@@ -53,7 +57,7 @@ public class ReminderListActivity extends AppCompatActivity {
             return;
         }
 
-        adapter = new GenericAdapter<Reminder>(new ArrayList<>(), null) {
+        adapter = new GenericAdapter<Reminder>(new ArrayList<Reminder>()) {
             @Override
             protected int getLayoutResId() {
                 return R.layout.reminder_list_row;
@@ -69,14 +73,23 @@ public class ReminderListActivity extends AppCompatActivity {
                 reminderDate.setText(reminder.getDate());
                 reminderTime.setText(reminder.getTime());
 
-                itemView.setOnClickListener(v -> {
-                    Intent intent = new Intent(ReminderListActivity.this, ReminderDetailActivity.class);
-                    intent.putExtra("reminder_id", reminder.getId());
-                    startActivity(intent);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ReminderListActivity.this, ReminderDetailActivity.class);
+                        intent.putExtra("reminder_id", reminder.getId());
+                        startActivity(intent);
+                    }
                 });
             }
         };
 
         reminderRecyclerView.setAdapter(adapter);
+
+        database.reminderDao().getRemindersByCompanyId(companyId).observe(this, reminders -> {
+            if (reminders != null) {
+                adapter.updateData(reminders);
+            }
+        });
     }
 }

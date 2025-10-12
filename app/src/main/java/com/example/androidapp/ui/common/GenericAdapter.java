@@ -17,6 +17,10 @@ public abstract class GenericAdapter<T> extends RecyclerView.Adapter<GenericAdap
         void onItemClick(T item);
     }
 
+    public GenericAdapter(List<T> dataList) {
+        this.dataList = dataList != null ? dataList : new ArrayList<>();
+    }
+
     public GenericAdapter(List<T> dataList, OnItemClickListener<T> clickListener) {
         this.dataList = dataList != null ? dataList : new ArrayList<>();
         this.clickListener = clickListener;
@@ -48,7 +52,12 @@ public abstract class GenericAdapter<T> extends RecyclerView.Adapter<GenericAdap
         bindView(holder.itemView, item);
         
         if (clickListener != null) {
-            holder.itemView.setOnClickListener(v -> clickListener.onItemClick(item));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickListener.onItemClick(item);
+                }
+            });
         }
     }
 
@@ -59,6 +68,10 @@ public abstract class GenericAdapter<T> extends RecyclerView.Adapter<GenericAdap
 
     protected abstract int getLayoutResId();
     protected abstract void bindView(View itemView, T item);
+
+    public void setOnItemClickListener(OnItemClickListener<T> clickListener) {
+        this.clickListener = clickListener;
+    }
 
     public static class GenericViewHolder extends RecyclerView.ViewHolder {
         public GenericViewHolder(@NonNull View itemView) {

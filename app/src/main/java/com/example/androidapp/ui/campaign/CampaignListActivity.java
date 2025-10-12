@@ -13,12 +13,8 @@ import com.example.androidapp.data.dao.CampaignDao;
 import com.example.androidapp.data.entities.Campaign;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
-
-
-
-
-
 
 public class CampaignListActivity extends AppCompatActivity {
 
@@ -32,14 +28,22 @@ public class CampaignListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_campaign_list);
 
+        campaignRecyclerView = findViewById(R.id.campaignRecyclerView);
         campaignRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         campaignDao = new CampaignDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-            Intent intent = new Intent(CampaignListActivity.this, CampaignDetailActivity.class);
-            startActivity(intent);
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CampaignListActivity.this, CampaignDetailActivity.class);
+                startActivity(intent);
+            }
         });
+
+        loadCampaigns();
     }
 
     @Override
@@ -51,7 +55,6 @@ public class CampaignListActivity extends AppCompatActivity {
     private void loadCampaigns() {
         String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
         if (companyId == null) {
-            // Handle error: no company ID found
             return;
         }
 
@@ -65,15 +68,21 @@ public class CampaignListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Campaign campaign) {
+                TextView campaignName = itemView.findViewById(R.id.campaignName);
+                TextView campaignType = itemView.findViewById(R.id.campaignType);
+                TextView campaignStatus = itemView.findViewById(R.id.campaignStatus);
 
                 campaignName.setText(campaign.getName());
                 campaignType.setText("النوع: " + campaign.getType());
                 campaignStatus.setText("الحالة: " + campaign.getStatus());
 
-                itemView.setOnClickListener(v -> {
-                    Intent intent = new Intent(CampaignListActivity.this, CampaignDetailActivity.class);
-                    intent.putExtra("campaign_id", campaign.getId());
-                    startActivity(intent);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(CampaignListActivity.this, CampaignDetailActivity.class);
+                        intent.putExtra("campaign_id", campaign.getId());
+                        startActivity(intent);
+                    }
                 });
             }
         };

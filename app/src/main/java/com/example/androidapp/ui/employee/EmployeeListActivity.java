@@ -13,12 +13,8 @@ import com.example.androidapp.data.dao.EmployeeDao;
 import com.example.androidapp.data.entities.Employee;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
-
-
-
-
-
 
 public class EmployeeListActivity extends AppCompatActivity {
 
@@ -32,14 +28,22 @@ public class EmployeeListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee_list);
 
+        employeeRecyclerView = findViewById(R.id.employeeRecyclerView);
         employeeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         employeeDao = new EmployeeDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-            Intent intent = new Intent(EmployeeListActivity.this, EmployeeDetailActivity.class);
-            startActivity(intent);
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EmployeeListActivity.this, EmployeeDetailActivity.class);
+                startActivity(intent);
+            }
         });
+
+        loadEmployees();
     }
 
     @Override
@@ -51,7 +55,6 @@ public class EmployeeListActivity extends AppCompatActivity {
     private void loadEmployees() {
         String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
         if (companyId == null) {
-            // Handle error: no company ID found
             return;
         }
 
@@ -65,15 +68,21 @@ public class EmployeeListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Employee employee) {
+                TextView employeeName = itemView.findViewById(R.id.employeeName);
+                TextView employeePosition = itemView.findViewById(R.id.employeePosition);
+                TextView employeePhone = itemView.findViewById(R.id.employeePhone);
 
                 employeeName.setText(employee.getName());
                 employeePosition.setText(employee.getPosition());
                 employeePhone.setText(employee.getPhone());
 
-                itemView.setOnClickListener(v -> {
-                    Intent intent = new Intent(EmployeeListActivity.this, EmployeeDetailActivity.class);
-                    intent.putExtra("employee_id", employee.getId());
-                    startActivity(intent);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(EmployeeListActivity.this, EmployeeDetailActivity.class);
+                        intent.putExtra("employee_id", employee.getId());
+                        startActivity(intent);
+                    }
                 });
             }
         };

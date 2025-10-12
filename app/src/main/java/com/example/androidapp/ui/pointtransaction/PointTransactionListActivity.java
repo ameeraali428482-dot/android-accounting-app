@@ -1,6 +1,5 @@
 package com.example.androidapp.ui.pointtransaction;
 
-import java.util.Date;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -46,23 +45,33 @@ public class PointTransactionListActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
 
         setTitle("سجل النقاط");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(this, PointTransactionDetailActivity.class);
-            startActivity(intent);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PointTransactionListActivity.this, PointTransactionDetailActivity.class);
+                startActivity(intent);
+            }
         });
     }
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<PointTransaction>(new ArrayList<>(), R.layout.point_transaction_list_row) {
+        adapter = new GenericAdapter<PointTransaction>(new ArrayList<PointTransaction>()) {
             @Override
-            protected void bindView(View view, PointTransaction pointTransaction) {
-                TextView tvDescription = view.findViewById(R.id.tvDescription);
-                TextView tvPoints = view.findViewById(R.id.tvPoints);
-                TextView tvDate = view.findViewById(R.id.tvDate);
+            protected int getLayoutResId() {
+                return R.layout.point_transaction_list_row;
+            }
+
+            @Override
+            protected void bindView(View itemView, PointTransaction pointTransaction) {
+                TextView tvDescription = itemView.findViewById(R.id.tvDescription);
+                TextView tvPoints = itemView.findViewById(R.id.tvPoints);
+                TextView tvDate = itemView.findViewById(R.id.tvDate);
 
                 tvDescription.setText(pointTransaction.getDescription());
                 tvPoints.setText(String.format(Locale.getDefault(), "%+d نقطة", pointTransaction.getPoints()));
@@ -73,13 +82,15 @@ public class PointTransactionListActivity extends AppCompatActivity {
                 } else {
                     tvPoints.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
                 }
-            }
 
-            @Override
-            protected void onItemClick(PointTransaction pointTransaction) {
-                Intent intent = new Intent(PointTransactionListActivity.this, PointTransactionDetailActivity.class);
-                intent.putExtra("point_transaction_id", pointTransaction.getId());
-                startActivity(intent);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(PointTransactionListActivity.this, PointTransactionDetailActivity.class);
+                        intent.putExtra("point_transaction_id", pointTransaction.getId());
+                        startActivity(intent);
+                    }
+                });
             }
         };
         

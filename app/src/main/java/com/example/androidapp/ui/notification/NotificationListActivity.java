@@ -16,7 +16,6 @@ import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class NotificationListActivity extends AppCompatActivity {
@@ -40,6 +39,7 @@ public class NotificationListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        recyclerView = findViewById(R.id.recyclerView);
         setTitle("الإشعارات");
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -49,14 +49,7 @@ public class NotificationListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<Notification>(
-            new ArrayList<>(),
-            notification -> {
-                Intent intent = new Intent(NotificationListActivity.this, NotificationDetailActivity.class);
-                intent.putExtra("notification_id", notification.getId());
-                startActivity(intent);
-            }
-        ) {
+        adapter = new GenericAdapter<Notification>(new ArrayList<Notification>()) {
             @Override
             protected int getLayoutResId() {
                 return R.layout.notification_list_row;
@@ -64,6 +57,10 @@ public class NotificationListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Notification notification) {
+                TextView tvTitle = itemView.findViewById(R.id.tvTitle);
+                TextView tvMessage = itemView.findViewById(R.id.tvMessage);
+                TextView tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
+                TextView tvType = itemView.findViewById(R.id.tvType);
 
                 if (tvTitle != null) tvTitle.setText(notification.getTitle());
                 if (tvMessage != null) tvMessage.setText(notification.getMessage());
@@ -75,6 +72,15 @@ public class NotificationListActivity extends AppCompatActivity {
                 } else {
                     itemView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                 }
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(NotificationListActivity.this, NotificationDetailActivity.class);
+                        intent.putExtra("notification_id", notification.getId());
+                        startActivity(intent);
+                    }
+                });
             }
         };
         
@@ -85,7 +91,7 @@ public class NotificationListActivity extends AppCompatActivity {
         database.notificationDao().getAllNotifications()
                 .observe(this, notifications -> {
                     if (notifications != null) {
-                        adapter.setData(notifications);
+                        adapter.updateData(notifications);
                     }
                 });
     }
