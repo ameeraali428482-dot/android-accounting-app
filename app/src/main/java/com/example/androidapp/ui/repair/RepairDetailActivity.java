@@ -60,13 +60,6 @@ public class RepairDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        etTitle = // TODO: Fix findViewById;
-        etDescription = // TODO: Fix findViewById;
-        etAssignedTo = // TODO: Fix findViewById;
-        etTotalCost = // TODO: Fix findViewById;
-        btnRequestDate = // TODO: Fix findViewById;
-        btnCompletionDate = // TODO: Fix findViewById;
-        spinnerStatus = // TODO: Fix findViewById;
 
         btnRequestDate.setOnClickListener(v -> showDatePicker(true));
         btnCompletionDate.setOnClickListener(v -> showDatePicker(false));

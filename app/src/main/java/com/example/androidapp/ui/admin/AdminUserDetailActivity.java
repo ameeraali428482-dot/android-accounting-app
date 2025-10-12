@@ -60,19 +60,14 @@ public class AdminUserDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        tvUserName = // TODO: Fix findViewById;
-        tvUserEmail = // TODO: Fix findViewById;
-        rvRoles = // TODO: Fix findViewById;
     }
 
     private void setupRolesRecyclerView() {
         rvRoles.setLayoutManager(new LinearLayoutManager(this));
-        rolesAdapter = new GenericAdapter<Object>(new ArrayList<>(), null) {(
+        rolesAdapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
                 new ArrayList<>(),
                 R.layout.role_list_row, // Reusing role_list_row for simplicity
                 (role, view) -> {
-                    TextView tvRoleName = view.// TODO: Fix findViewById;
-                    TextView tvRoleDescription = view.// TODO: Fix findViewById;
 
                     tvRoleName.setText(role.getName());
                     tvRoleDescription.setText(role.getDescription());

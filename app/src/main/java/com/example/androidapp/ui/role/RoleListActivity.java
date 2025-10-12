@@ -39,8 +39,6 @@ public class RoleListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = // TODO: Fix findViewById;
-        FloatingActionButton fab = // TODO: Fix findViewById;
 
         setTitle("إدارة الأدوار");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -54,12 +52,10 @@ public class RoleListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {(
+        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
                 new ArrayList<>(),
                 R.layout.role_list_row,
                 (view, role) -> {
-                    TextView tvRoleName = view.// TODO: Fix findViewById;
-                    TextView tvRoleDescription = view.// TODO: Fix findViewById;
 
                     tvRoleName.setText(role.getName());
                     tvRoleDescription.setText(role.getDescription());

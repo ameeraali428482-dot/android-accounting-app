@@ -32,12 +32,6 @@ public class ReminderDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_detail);
 
-        titleEditText = // TODO: Fix findViewById;
-        descriptionEditText = // TODO: Fix findViewById;
-        dateEditText = // TODO: Fix findViewById;
-        timeEditText = // TODO: Fix findViewById;
-        saveButton = // TODO: Fix findViewById;
-        deleteButton = // TODO: Fix findViewById;
 
         reminderDao = new ReminderDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);

@@ -37,10 +37,6 @@ public class NotificationDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        tvTitle = // TODO: Fix findViewById;
-        tvMessage = // TODO: Fix findViewById;
-        tvType = // TODO: Fix findViewById;
-        tvTimestamp = // TODO: Fix findViewById;
     }
 
     private void loadNotificationDetails() {

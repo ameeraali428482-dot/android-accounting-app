@@ -57,18 +57,14 @@ public class RoleDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        etRoleName = // TODO: Fix findViewById;
-        etRoleDescription = // TODO: Fix findViewById;
-        rvPermissions = // TODO: Fix findViewById;
     }
 
     private void setupPermissionsRecyclerView() {
         rvPermissions.setLayoutManager(new LinearLayoutManager(this));
-        permissionsAdapter = new GenericAdapter<Object>(new ArrayList<>(), null) {(
+        permissionsAdapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
                 new ArrayList<>(),
                 R.layout.permission_list_row,
                 (view, permission) -> {
-                    TextView tvPermissionName = view.// TODO: Fix findViewById;
                     tvPermissionName.setText(permission.getAction());
                     if (selectedPermissions.stream().anyMatch(p -> p.getId().equals(permission.getId()))) {
                         view.setBackgroundColor(getResources().getColor(R.color.light_gray));

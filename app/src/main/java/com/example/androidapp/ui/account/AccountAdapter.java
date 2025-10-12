@@ -60,10 +60,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountV
 
         public AccountViewHolder(@NonNull View itemView) {
             super(itemView);
-            accountName = itemView.// TODO: Fix findViewById;
-            accountNumber = itemView.// TODO: Fix findViewById;
-            accountBalance = itemView.// TODO: Fix findViewById;
-            accountType = itemView.// TODO: Fix findViewById;
         }
 
         public void bind(final Account account, final OnAccountClickListener listener) {

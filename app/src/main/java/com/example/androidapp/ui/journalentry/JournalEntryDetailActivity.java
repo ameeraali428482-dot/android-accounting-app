@@ -73,14 +73,6 @@ public class JournalEntryDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        etDate = // TODO: Fix findViewById;
-        etDescription = // TODO: Fix findViewById;
-        etReferenceNumber = // TODO: Fix findViewById;
-        etEntryType = // TODO: Fix findViewById;
-        etTotalDebit = // TODO: Fix findViewById;
-        etTotalCredit = // TODO: Fix findViewById;
-        btnSave = // TODO: Fix findViewById;
-        btnDelete = // TODO: Fix findViewById;
     }
 
     private void setupListeners() {

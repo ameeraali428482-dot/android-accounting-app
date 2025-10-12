@@ -62,12 +62,6 @@ public class AccountDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        nameEditText = // TODO: Fix findViewById;
-        accountNumberEditText = // TODO: Fix findViewById;
-        balanceEditText = // TODO: Fix findViewById;
-        accountTypeEditText = // TODO: Fix findViewById;
-        saveButton = // TODO: Fix findViewById;
-        deleteButton = // TODO: Fix findViewById;
     }
 
     private void setupListeners() {

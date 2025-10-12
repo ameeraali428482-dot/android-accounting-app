@@ -47,8 +47,6 @@ public class PointTransactionListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = // TODO: Fix findViewById;
-        FloatingActionButton fab = // TODO: Fix findViewById;
 
         setTitle("سجل النقاط");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -62,14 +60,11 @@ public class PointTransactionListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {(
+        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
                 new ArrayList<>(),
                 R.layout.point_transaction_list_row,
                 (pointTransaction, view) -> {
                     // Bind data to views
-                    TextView tvDescription = pointTransaction.// TODO: Fix findViewById;
-                    TextView tvPoints = pointTransaction.// TODO: Fix findViewById;
-                    TextView tvDate = pointTransaction.// TODO: Fix findViewById;
 
                     tvDescription.setText(view.getDescription());
                     tvPoints.setText(String.format(Locale.getDefault(), "%+d نقطة", view.getPoints()));

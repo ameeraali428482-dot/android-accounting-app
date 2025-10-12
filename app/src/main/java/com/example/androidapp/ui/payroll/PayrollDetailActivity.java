@@ -41,12 +41,6 @@ public class PayrollDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payroll_detail);
 
-        dateEditText = // TODO: Fix findViewById;
-        amountEditText = // TODO: Fix findViewById;
-        notesEditText = // TODO: Fix findViewById;
-        employeeSpinner = // TODO: Fix findViewById;
-        saveButton = // TODO: Fix findViewById;
-        deleteButton = // TODO: Fix findViewById;
 
         payrollDao = new PayrollDao(App.getDatabaseHelper());
         employeeDao = new EmployeeDao(App.getDatabaseHelper());

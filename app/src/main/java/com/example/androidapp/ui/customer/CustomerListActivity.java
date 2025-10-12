@@ -33,7 +33,6 @@ public class CustomerListActivity extends BaseListActivity<Customer> {
         customerDao = new CustomerDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        FloatingActionButton fabAddCustomer = // TODO: Fix findViewById;
         fabAddCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,9 +42,6 @@ public class CustomerListActivity extends BaseListActivity<Customer> {
         });
 
         // Initialize RecyclerView and other common elements from BaseListActivity
-        recyclerView = // TODO: Fix findViewById;
-        loadingProgressBar = // TODO: Fix findViewById;
-        emptyStateTextView = // TODO: Fix findViewById;
 
         recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
         adapter = createAdapter();
@@ -79,9 +75,6 @@ public class CustomerListActivity extends BaseListActivity<Customer> {
 
             @Override
             protected void bindView(View itemView, Customer customer) {
-                TextView customerName = itemView.// TODO: Fix findViewById;
-                TextView customerEmail = itemView.// TODO: Fix findViewById;
-                TextView customerPhone = itemView.// TODO: Fix findViewById;
 
                 customerName.setText(customer.getName());
                 customerEmail.setText(customer.getEmail());

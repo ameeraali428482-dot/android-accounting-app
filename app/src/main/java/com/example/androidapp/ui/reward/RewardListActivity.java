@@ -43,8 +43,6 @@ public class RewardListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = // TODO: Fix findViewById;
-        FloatingActionButton fab = // TODO: Fix findViewById;
 
         setTitle("إدارة المكافآت");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -58,14 +56,11 @@ public class RewardListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {(
+        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
                 new ArrayList<>(),
                 R.layout.reward_list_row,
                 (reward, view) -> {
                     // Bind data to views
-                    TextView tvName = view.// TODO: Fix findViewById;
-                    TextView tvPointsRequired = view.// TODO: Fix findViewById;
-                    TextView tvStatus = view.// TODO: Fix findViewById;
 
                     tvName.setText(reward.getName());
                     tvPointsRequired.setText(String.format("النقاط المطلوبة: %d", reward.getPointsRequired()));

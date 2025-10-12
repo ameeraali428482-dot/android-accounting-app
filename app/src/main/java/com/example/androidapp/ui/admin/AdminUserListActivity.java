@@ -40,7 +40,6 @@ public class AdminUserListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = // TODO: Fix findViewById;
 
         setTitle("إدارة المستخدمين (المسؤولين)");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -53,8 +52,6 @@ public class AdminUserListActivity extends AppCompatActivity {
                 new ArrayList<>(),
                 R.layout.admin_user_list_row,
                 (user, view) -> {
-                    TextView tvUserName = view.// TODO: Fix findViewById;
-                    TextView tvUserEmail = view.// TODO: Fix findViewById;
 
                     tvUserName.setText(user.getUsername());
                     tvUserEmail.setText(user.getEmail());

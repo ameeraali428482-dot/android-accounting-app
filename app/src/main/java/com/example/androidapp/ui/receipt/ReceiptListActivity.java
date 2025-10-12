@@ -30,8 +30,6 @@ public class ReceiptListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receipt_list);
 
-        recyclerView = // TODO: Fix findViewById;
-        FloatingActionButton fabAddReceipt = // TODO: Fix findViewById;
 
         AppDatabase db = AppDatabase.getDatabase(this);
         receiptDao = db.receiptDao();

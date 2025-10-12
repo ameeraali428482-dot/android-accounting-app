@@ -34,11 +34,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        emailEditText = // TODO: Fix findViewById;
-        passwordEditText = // TODO: Fix findViewById;
-        loginButton = // TODO: Fix findViewById;
-        registerButton = // TODO: Fix findViewById;
-        loadingProgressBar = // TODO: Fix findViewById;
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

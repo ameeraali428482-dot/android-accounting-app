@@ -34,11 +34,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        emailEditText = // TODO: Fix findViewById;
-        passwordEditText = // TODO: Fix findViewById;
-        confirmPasswordEditText = // TODO: Fix findViewById;
-        registerButton = // TODO: Fix findViewById;
-        loadingProgressBar = // TODO: Fix findViewById;
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override

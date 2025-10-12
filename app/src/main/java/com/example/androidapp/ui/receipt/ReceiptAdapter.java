@@ -64,9 +64,6 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptV
 
         public ReceiptViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvReceiptId = itemView.// TODO: Fix findViewById;
-            tvAmount = itemView.// TODO: Fix findViewById;
-            tvDate = itemView.// TODO: Fix findViewById;
         }
 
         public void bind(final Receipt receipt, final OnReceiptClickListener listener) {

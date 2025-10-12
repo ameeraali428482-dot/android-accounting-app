@@ -36,9 +36,6 @@ public class SalesReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_report);
 
-        totalSalesTextView = // TODO: Fix findViewById;
-        totalInvoicesTextView = // TODO: Fix findViewById;
-        salesDetailRecyclerView = // TODO: Fix findViewById;
 
         invoiceDao = new InvoiceDao(App.getDatabaseHelper());
         invoiceItemDao = new InvoiceItemDao(App.getDatabaseHelper());
@@ -82,12 +79,6 @@ public class SalesReportActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, SalesReportItem item) {
-                TextView date = itemView.// TODO: Fix findViewById;
-                TextView invoiceType = itemView.// TODO: Fix findViewById;
-                TextView itemName = itemView.// TODO: Fix findViewById;
-                TextView quantity = itemView.// TODO: Fix findViewById;
-                TextView price = itemView.// TODO: Fix findViewById;
-                TextView total = itemView.// TODO: Fix findViewById;
 
                 date.setText(item.getDate());
                 invoiceType.setText(item.getInvoiceType());

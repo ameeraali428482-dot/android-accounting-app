@@ -36,11 +36,6 @@ public class PointTransactionDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_point_transaction_detail);
 
-        pointsEditText = // TODO: Fix findViewById;
-        dateEditText = // TODO: Fix findViewById;
-        typeSpinner = // TODO: Fix findViewById;
-        saveButton = // TODO: Fix findViewById;
-        deleteButton = // TODO: Fix findViewById;
 
         pointTransactionDao = AppDatabase.getInstance(this).pointTransactionDao();
         sessionManager = new SessionManager(this);

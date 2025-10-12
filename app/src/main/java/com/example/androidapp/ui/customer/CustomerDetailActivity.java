@@ -34,12 +34,6 @@ public class CustomerDetailActivity extends AppCompatActivity {
         customerDao = new CustomerDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        customerNameEditText = // TODO: Fix findViewById;
-        customerEmailEditText = // TODO: Fix findViewById;
-        customerPhoneEditText = // TODO: Fix findViewById;
-        customerAddressEditText = // TODO: Fix findViewById;
-        saveCustomerButton = // TODO: Fix findViewById;
-        deleteCustomerButton = // TODO: Fix findViewById;
 
         // Check if we are editing an existing customer
         if (getIntent().hasExtra("customerId")) {

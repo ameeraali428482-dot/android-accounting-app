@@ -43,8 +43,6 @@ public class TrophyListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = // TODO: Fix findViewById;
-        FloatingActionButton fab = // TODO: Fix findViewById;
 
         setTitle("إدارة الكؤوس");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -58,14 +56,10 @@ public class TrophyListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {(
+        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
                 new ArrayList<>(),
                 R.layout.trophy_list_row,
                 (trophy, view) -> {
-                    TextView tvName = trophy.// TODO: Fix findViewById;
-                    TextView tvDescription = trophy.// TODO: Fix findViewById;
-                    TextView tvPointsRequired = trophy.// TODO: Fix findViewById;
-                    ImageView ivTrophyImage = trophy.// TODO: Fix findViewById;
 
                     tvName.setText(view.getName());
                     tvDescription.setText(view.getDescription());

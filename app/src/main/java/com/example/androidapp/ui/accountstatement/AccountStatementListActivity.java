@@ -67,8 +67,6 @@ public class AccountStatementListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = // TODO: Fix findViewById;
-        FloatingActionButton fab = // TODO: Fix findViewById;
 
         setTitle("كشف الحساب");
         if (getSupportActionBar() != null) {
@@ -85,11 +83,6 @@ public class AccountStatementListActivity extends AppCompatActivity {
     }
 
     private void setupColumnHeaders() {
-        TextView headerDate = // TODO: Fix findViewById;
-        TextView headerDescription = // TODO: Fix findViewById;
-        TextView headerDebit = // TODO: Fix findViewById;
-        TextView headerCredit = // TODO: Fix findViewById;
-        TextView headerBalance = // TODO: Fix findViewById;
 
         headerDate.setOnClickListener(v -> sortByColumn("transactionDate"));
         headerDescription.setOnClickListener(v -> sortByColumn("description"));

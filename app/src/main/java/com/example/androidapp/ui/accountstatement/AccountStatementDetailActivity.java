@@ -72,13 +72,6 @@ public class AccountStatementDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        etTransactionDate = // TODO: Fix findViewById;
-        etDescription = // TODO: Fix findViewById;
-        etDebit = // TODO: Fix findViewById;
-        etCredit = // TODO: Fix findViewById;
-        etReferenceType = // TODO: Fix findViewById;
-        etReferenceId = // TODO: Fix findViewById;
-        btnSave = // TODO: Fix findViewById;
     }
 
     private void setupListeners() {

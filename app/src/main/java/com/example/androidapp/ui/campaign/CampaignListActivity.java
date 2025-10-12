@@ -32,13 +32,11 @@ public class CampaignListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_campaign_list);
 
-        campaignRecyclerView = // TODO: Fix findViewById;
         campaignRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         campaignDao = new CampaignDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        // TODO: Fix findViewById.setOnClickListener(v -> {
             Intent intent = new Intent(CampaignListActivity.this, CampaignDetailActivity.class);
             startActivity(intent);
         });
@@ -67,9 +65,6 @@ public class CampaignListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Campaign campaign) {
-                TextView campaignName = itemView.// TODO: Fix findViewById;
-                TextView campaignType = itemView.// TODO: Fix findViewById;
-                TextView campaignStatus = itemView.// TODO: Fix findViewById;
 
                 campaignName.setText(campaign.getName());
                 campaignType.setText("النوع: " + campaign.getType());

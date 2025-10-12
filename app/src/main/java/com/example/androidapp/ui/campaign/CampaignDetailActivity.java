@@ -32,14 +32,6 @@ public class CampaignDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_campaign_detail);
 
-        nameEditText = // TODO: Fix findViewById;
-        typeEditText = // TODO: Fix findViewById;
-        descriptionEditText = // TODO: Fix findViewById;
-        startDateEditText = // TODO: Fix findViewById;
-        endDateEditText = // TODO: Fix findViewById;
-        statusEditText = // TODO: Fix findViewById;
-        saveButton = // TODO: Fix findViewById;
-        deleteButton = // TODO: Fix findViewById;
 
         campaignDao = new CampaignDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);

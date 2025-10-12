@@ -32,13 +32,11 @@ public class SharedLinkListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shared_link_list);
 
-        sharedLinkRecyclerView = // TODO: Fix findViewById;
         sharedLinkRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         sharedLinkDao = new SharedLinkDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);
 
-        // TODO: Fix findViewById.setOnClickListener(v -> {
             Intent intent = new Intent(SharedLinkListActivity.this, SharedLinkDetailActivity.class);
             startActivity(intent);
         });
@@ -67,9 +65,6 @@ public class SharedLinkListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, SharedLink sharedLink) {
-                TextView sharedLinkName = itemView.// TODO: Fix findViewById;
-                TextView sharedLinkUrl = itemView.// TODO: Fix findViewById;
-                TextView sharedLinkExpiresAt = itemView.// TODO: Fix findViewById;
 
                 sharedLinkName.setText(sharedLink.getName());
                 sharedLinkUrl.setText(sharedLink.getUrl());

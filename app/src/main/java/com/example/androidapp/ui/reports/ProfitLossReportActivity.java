@@ -32,9 +32,6 @@ public class ProfitLossReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profit_loss_report);
 
-        totalIncomeTextView = // TODO: Fix findViewById;
-        totalExpensesTextView = // TODO: Fix findViewById;
-        netProfitLossTextView = // TODO: Fix findViewById;
 
         invoiceDao = new InvoiceDao(App.getDatabaseHelper());
         journalEntryDao = new JournalEntryDao(App.getDatabaseHelper());

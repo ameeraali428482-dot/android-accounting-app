@@ -46,8 +46,6 @@ public class UserRewardListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = // TODO: Fix findViewById;
-        FloatingActionButton fab = // TODO: Fix findViewById;
 
         setTitle("مكافآت المستخدمين");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -61,7 +59,7 @@ public class UserRewardListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {(
+        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
                 new ArrayList<>(),
                 R.layout.user_reward_list_row,
                 (userReward, view) -> {

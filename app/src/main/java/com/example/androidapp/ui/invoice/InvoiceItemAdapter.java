@@ -51,7 +51,6 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<InvoiceItemAdapter.
             }
         });
 
-        holder.itemView.// TODO: Fix findViewById.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onDeleteItem(item);
             }
@@ -68,10 +67,6 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<InvoiceItemAdapter.
 
         public InvoiceItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemName = itemView.// TODO: Fix findViewById;
-            quantity = itemView.// TODO: Fix findViewById;
-            price = itemView.// TODO: Fix findViewById;
-            total = itemView.// TODO: Fix findViewById;
         }
     }
 

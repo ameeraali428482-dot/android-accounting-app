@@ -31,14 +31,6 @@ public class EmployeeDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee_detail);
 
-        nameEditText = // TODO: Fix findViewById;
-        emailEditText = // TODO: Fix findViewById;
-        phoneEditText = // TODO: Fix findViewById;
-        positionEditText = // TODO: Fix findViewById;
-        salaryEditText = // TODO: Fix findViewById;
-        hireDateEditText = // TODO: Fix findViewById;
-        saveButton = // TODO: Fix findViewById;
-        deleteButton = // TODO: Fix findViewById;
 
         employeeDao = new EmployeeDao(App.getDatabaseHelper());
         sessionManager = new SessionManager(this);

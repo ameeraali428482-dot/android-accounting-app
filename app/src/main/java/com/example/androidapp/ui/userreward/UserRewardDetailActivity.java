@@ -59,11 +59,6 @@ public class UserRewardDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        spinnerUser = // TODO: Fix findViewById;
-        spinnerReward = // TODO: Fix findViewById;
-        etRedemptionDate = // TODO: Fix findViewById;
-        cbIsRedeemed = // TODO: Fix findViewById;
-        btnSave = // TODO: Fix findViewById;
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

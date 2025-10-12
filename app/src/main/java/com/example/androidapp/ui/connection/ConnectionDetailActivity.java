@@ -28,11 +28,6 @@ public class ConnectionDetailActivity extends AppCompatActivity {
         database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
 
-        nameEditText = // TODO: Fix findViewById;
-        typeEditText = // TODO: Fix findViewById;
-        statusEditText = // TODO: Fix findViewById;
-        saveButton = // TODO: Fix findViewById;
-        deleteButton = // TODO: Fix findViewById;
 
         if (getIntent().hasExtra("connection_id")) {
             connectionId = getIntent().getStringExtra("connection_id");

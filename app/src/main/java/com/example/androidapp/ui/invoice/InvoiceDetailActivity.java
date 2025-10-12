@@ -76,18 +76,6 @@ public class InvoiceDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        etInvoiceNumber = // TODO: Fix findViewById;
-        etInvoiceDate = // TODO: Fix findViewById;
-        etCustomerName = // TODO: Fix findViewById;
-        etInvoiceType = // TODO: Fix findViewById;
-        etSubTotal = // TODO: Fix findViewById;
-        etTax = // TODO: Fix findViewById;
-        etDiscount = // TODO: Fix findViewById;
-        etGrandTotal = // TODO: Fix findViewById;
-        invoiceItemsContainer = // TODO: Fix findViewById;
-        btnAddItem = // TODO: Fix findViewById;
-        btnSave = // TODO: Fix findViewById;
-        btnDelete = // TODO: Fix findViewById;
 
         etSubTotal.setEnabled(false);
         etGrandTotal.setEnabled(false);
@@ -120,11 +108,6 @@ public class InvoiceDetailActivity extends AppCompatActivity {
 
     private void addItemView(InvoiceItem item) {
         View itemView = getLayoutInflater().inflate(R.layout.invoice_item_row, invoiceItemsContainer, false);
-        EditText etItemName = itemView.// TODO: Fix findViewById;
-        EditText etQuantity = itemView.// TODO: Fix findViewById;
-        EditText etUnitPrice = itemView.// TODO: Fix findViewById;
-        EditText etItemTotal = itemView.// TODO: Fix findViewById;
-        Button btnRemove = itemView.// TODO: Fix findViewById;
 
         etItemTotal.setEnabled(false);
 
@@ -153,9 +136,6 @@ public class InvoiceDetailActivity extends AppCompatActivity {
     }
 
     private void calculateItemTotal(View itemView) {
-        EditText etQuantity = itemView.// TODO: Fix findViewById;
-        EditText etUnitPrice = itemView.// TODO: Fix findViewById;
-        EditText etItemTotal = itemView.// TODO: Fix findViewById;
 
         float quantity = Float.parseFloat(etQuantity.getText().toString().trim().isEmpty() ? "0" : etQuantity.getText().toString().trim());
         float unitPrice = Float.parseFloat(etUnitPrice.getText().toString().trim().isEmpty() ? "0" : etUnitPrice.getText().toString().trim());
@@ -168,7 +148,6 @@ public class InvoiceDetailActivity extends AppCompatActivity {
         float subTotal = 0.0f;
         for (int i = 0; i < invoiceItemsContainer.getChildCount(); i++) {
             View itemView = invoiceItemsContainer.getChildAt(i);
-            EditText etItemTotal = itemView.// TODO: Fix findViewById;
             subTotal += Float.parseFloat(etItemTotal.getText().toString().trim().isEmpty() ? "0" : etItemTotal.getText().toString().trim());
         }
         etSubTotal.setText(String.valueOf(subTotal));

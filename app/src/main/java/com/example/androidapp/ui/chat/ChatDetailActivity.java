@@ -35,9 +35,6 @@ import java.util.Date;                                                          
     }
 
     private void initViews() {
-        recyclerView = // TODO: Fix findViewById;
-        etMessage = // TODO: Fix findViewById;
-        btnSend = // TODO: Fix findViewById;
 
         setTitle("محادثة مع المستخدم " + otherUserId);
         if (getSupportActionBar() != null) {
@@ -52,12 +49,10 @@ import java.util.Date;                                                          
         layoutManager.setStackFromEnd(true); // Start from bottom
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {(
+        adapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
                 new ArrayList<>(),
                 R.layout.chat_message_row,
                 (chat, itemView) -> {
-                    TextView tvMessage = chat.// TODO: Fix findViewById;                                    TextView tvTimestamp = chat.// TODO: Fix findViewById;
-                    LinearLayout messageContainer = chat.// TODO: Fix findViewById;
 
                     tvMessage.setText(itemView.getMessage());
                     tvTimestamp.setText(dateFormat.format(itemView.getCreatedAt()));
