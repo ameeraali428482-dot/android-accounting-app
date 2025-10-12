@@ -3,6 +3,7 @@ package com.example.androidapp.ui.admin;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,11 +19,6 @@ import com.example.androidapp.utils.SessionManager;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
-
-
 public class AdminUserDetailActivity extends AppCompatActivity {
 
     private TextView tvUserName, tvUserEmail;
@@ -30,10 +26,10 @@ public class AdminUserDetailActivity extends AppCompatActivity {
     private GenericAdapter<Role> rolesAdapter;
     private AppDatabase database;
     private SessionManager sessionManager;
-    private int userId = -1;
+    private String userId = null;
     private User currentUser;
     private List<Role> allRoles;
-    private List<Role> selectedRoles;
+    private List<Role> selectedRoles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +43,8 @@ public class AdminUserDetailActivity extends AppCompatActivity {
         setupRolesRecyclerView();
         loadAllRoles();
 
-        userId = getIntent().getIntExtra("user_id", -1);
-        if (userId != -1) {
+        userId = getIntent().getStringExtra("user_id");
+        if (userId != null) {
             setTitle("تفاصيل المستخدم");
             loadUser();
         } else {
@@ -60,35 +56,41 @@ public class AdminUserDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        tvUserName = findViewById(R.id.tvUserName);
+        tvUserEmail = findViewById(R.id.tvUserEmail);
+        rvRoles = findViewById(R.id.rvRoles);
     }
 
     private void setupRolesRecyclerView() {
         rvRoles.setLayoutManager(new LinearLayoutManager(this));
-        rolesAdapter = new GenericAdapter<Object>(new ArrayList<>(), null) {
-                new ArrayList<>(),
-                R.layout.role_list_row, // Reusing role_list_row for simplicity
-                (role, view) -> {
+        
+        rolesAdapter = new GenericAdapter<Role>(new ArrayList<>(), R.layout.role_list_row) {
+            @Override
+            protected void bindView(View view, Role role) {
+                TextView tvRoleName = view.findViewById(R.id.tvRoleName);
+                TextView tvRoleDescription = view.findViewById(R.id.tvRoleDescription);
 
-                    tvRoleName.setText(role.getName());
-                    tvRoleDescription.setText(role.getDescription());
+                tvRoleName.setText(role.getName());
+                tvRoleDescription.setText(role.getDescription());
 
-                    // Highlight selected roles
-                    if (selectedRoles != null && selectedRoles.contains(role)) {
-                        view.setBackgroundColor(getResources().getColor(R.color.light_blue));
-                    } else {
-                        view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    }
-                },
-                role -> {
-                    // Toggle role selection
-                    if (selectedRoles.contains(role)) {
-                        selectedRoles.remove(role);
-                    } else {
-                        selectedRoles.add(role);
-                    }
-                    rolesAdapter.notifyDataSetChanged();
+                if (selectedRoles.contains(role)) {
+                    view.setBackgroundColor(getResources().getColor(R.color.light_blue));
+                } else {
+                    view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                 }
-        );
+            }
+
+            @Override
+            protected void onItemClick(Role role) {
+                if (selectedRoles.contains(role)) {
+                    selectedRoles.remove(role);
+                } else {
+                    selectedRoles.add(role);
+                }
+                rolesAdapter.notifyDataSetChanged();
+            }
+        };
+        
         rvRoles.setAdapter(rolesAdapter);
     }
 
@@ -98,7 +100,7 @@ public class AdminUserDetailActivity extends AppCompatActivity {
                     if (roles != null) {
                         allRoles = roles;
                         rolesAdapter.updateData(allRoles);
-                        if (userId != -1 && currentUser != null) {
+                        if (userId != null && currentUser != null) {
                             updateSelectedRoles();
                         }
                     }
@@ -113,8 +115,6 @@ public class AdminUserDetailActivity extends AppCompatActivity {
                         tvUserName.setText(user.getUsername());
                         tvUserEmail.setText(user.getEmail());
 
-                        // Load user's assigned roles
-                        database.userRoleDao().getRoleIdsForUser(userId);
                         database.userDao().getRolesForUser(userId)
                                 .observe(this, roles -> {
                                     selectedRoles = new ArrayList<>(roles);
@@ -138,10 +138,8 @@ public class AdminUserDetailActivity extends AppCompatActivity {
         }
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            // Clear existing roles for the user
             database.userRoleDao().deleteAllUserRoles(userId);
 
-            // Insert newly selected roles
             for (Role role : selectedRoles) {
                 database.userRoleDao().insert(new UserRole(userId, role.getId()));
             }
@@ -161,15 +159,13 @@ public class AdminUserDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_save:
-                saveUserRoles();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else if (item.getItemId() == R.id.action_save) {
+            saveUserRoles();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

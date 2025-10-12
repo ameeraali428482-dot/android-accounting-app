@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
-
 public class RoleDetailActivity extends AppCompatActivity {
     private EditText etRoleName, etRoleDescription;
     private RecyclerView rvPermissions;
@@ -57,28 +55,38 @@ public class RoleDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        etRoleName = findViewById(R.id.etRoleName);
+        etRoleDescription = findViewById(R.id.etRoleDescription);
+        rvPermissions = findViewById(R.id.rvPermissions);
     }
 
     private void setupPermissionsRecyclerView() {
         rvPermissions.setLayoutManager(new LinearLayoutManager(this));
-                R.layout.permission_list_row,
-                (view, permission) -> {
-                    tvPermissionName.setText(permission.getAction());
-                    if (selectedPermissions.stream().anyMatch(p -> p.getId().equals(permission.getId()))) {
-                        view.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                    } else {
-                        view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    }
-                },
-                permission -> {
-                    if (selectedPermissions.stream().anyMatch(p -> p.getId().equals(permission.getId()))) {
-                        selectedPermissions.removeIf(p -> p.getId().equals(permission.getId()));
-                    } else {
-                        selectedPermissions.add(permission);
-                    }
-                    permissionsAdapter.notifyDataSetChanged();
+        
+        permissionsAdapter = new GenericAdapter<Permission>(new ArrayList<>(), R.layout.permission_list_row) {
+            @Override
+            protected void bindView(View view, Permission permission) {
+                TextView tvPermissionName = view.findViewById(R.id.tvPermissionName);
+                tvPermissionName.setText(permission.getAction());
+                
+                if (selectedPermissions.stream().anyMatch(p -> p.getId().equals(permission.getId()))) {
+                    view.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                } else {
+                    view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                 }
-        );
+            }
+
+            @Override
+            protected void onItemClick(Permission permission) {
+                if (selectedPermissions.stream().anyMatch(p -> p.getId().equals(permission.getId()))) {
+                    selectedPermissions.removeIf(p -> p.getId().equals(permission.getId()));
+                } else {
+                    selectedPermissions.add(permission);
+                }
+                permissionsAdapter.notifyDataSetChanged();
+            }
+        };
+        
         rvPermissions.setAdapter(permissionsAdapter);
     }
 

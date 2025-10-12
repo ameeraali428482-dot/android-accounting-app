@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,16 +19,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
-
-
-
-
-
 public class TrophyListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private GenericAdapter<Trophy> adapter;
     private AppDatabase database;
     private SessionManager sessionManager;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +40,8 @@ public class TrophyListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        recyclerView = findViewById(R.id.recyclerView);
+        fab = findViewById(R.id.fab);
 
         setTitle("إدارة الكؤوس");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,29 +55,36 @@ public class TrophyListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-                R.layout.trophy_list_row,
-                (trophy, view) -> {
+        adapter = new GenericAdapter<Trophy>(new ArrayList<>(), R.layout.trophy_list_row) {
+            @Override
+            protected void bindView(View view, Trophy trophy) {
+                TextView tvName = view.findViewById(R.id.tvName);
+                TextView tvDescription = view.findViewById(R.id.tvDescription);
+                TextView tvPointsRequired = view.findViewById(R.id.tvPointsRequired);
+                ImageView ivTrophyImage = view.findViewById(R.id.ivTrophyImage);
 
-                    tvName.setText(view.getName());
-                    tvDescription.setText(view.getDescription());
-                    tvPointsRequired.setText("النقاط المطلوبة: " + view.getPointsRequired());
+                tvName.setText(trophy.getName());
+                tvDescription.setText(trophy.getDescription());
+                tvPointsRequired.setText("النقاط المطلوبة: " + trophy.getPointsRequired());
 
-                    if (view.getImageUrl() != null && !view.getImageUrl().isEmpty()) {
-                        Glide.with(trophy.getContext())
-                                .load(view.getImageUrl())
-                                .placeholder(R.drawable.ic_trophy_placeholder)
-                                .error(R.drawable.ic_trophy_placeholder)
-                                .into(ivTrophyImage);
-                    } else {
-                        ivTrophyImage.setImageResource(R.drawable.ic_trophy_placeholder);
-                    }
-                },
-                trophy -> {
-                    Intent intent = new Intent(this, TrophyDetailActivity.class);
-                    intent.putExtra("trophy_id", trophy.getId());
-                    startActivity(intent);
+                if (trophy.getImageUrl() != null && !trophy.getImageUrl().isEmpty()) {
+                    Glide.with(TrophyListActivity.this)
+                            .load(trophy.getImageUrl())
+                            .placeholder(R.drawable.ic_trophy_placeholder)
+                            .error(R.drawable.ic_trophy_placeholder)
+                            .into(ivTrophyImage);
+                } else {
+                    ivTrophyImage.setImageResource(R.drawable.ic_trophy_placeholder);
                 }
-        );
+            }
+
+            @Override
+            protected void onItemClick(Trophy trophy) {
+                Intent intent = new Intent(TrophyListActivity.this, TrophyDetailActivity.class);
+                intent.putExtra("trophy_id", trophy.getId());
+                startActivity(intent);
+            }
+        };
         
         recyclerView.setAdapter(adapter);
     }
@@ -100,16 +106,14 @@ public class TrophyListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case android.R.id.home: // Fixed constant expression
-                loadTrophies();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else if (item.getItemId() == R.id.action_refresh) {
+            loadTrophies();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

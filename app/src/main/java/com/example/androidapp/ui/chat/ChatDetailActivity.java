@@ -6,28 +6,46 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.TextView;
-import android.widget.LinearLayout;                                                             
+import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;                                               
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.data.entities.Chat;                                               import com.example.androidapp.ui.common.GenericAdapter;                                         import com.example.androidapp.utils.SessionManager;
-import java.util.Date;                                                                          import java.util.Locale;                                                                        import java.util.UUID;
+import com.example.androidapp.data.entities.Chat;
+import com.example.androidapp.ui.common.GenericAdapter;
+import com.example.androidapp.utils.SessionManager;
+import java.util.Date;
+import java.util.Locale;
+import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
+public class ChatDetailActivity extends AppCompatActivity {
+    private RecyclerView recyclerView;
+    private EditText etMessage;
+    private ImageButton btnSend;
+    private GenericAdapter<Chat> adapter;
+    private AppDatabase database;
+    private SessionManager sessionManager;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private String otherUserId;
 
-                                                                                                import java.text.SimpleDateFormat;                                                              import java.util.ArrayList;
-                                                                                                public class ChatDetailActivity extends AppCompatActivity {                                         private RecyclerView recyclerView;
-    private EditText etMessage;                                                                     private ImageButton btnSend;                                                                    private GenericAdapter<Chat> adapter;
-    private AppDatabase database;                                                                   private SessionManager sessionManager;                                                          private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-    private String otherUserId;                                                                                                                                                                     @Override                                                                                       protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);                                                             setContentView(R.layout.activity_chat_detail);                                                                                                                                                  database = AppDatabase.getDatabase(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat_detail);
+
+        database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
         otherUserId = getIntent().getStringExtra("other_user_id");
-                                                                                                        if (otherUserId == null || otherUserId.isEmpty()) {                                                 Toast.makeText(this, "خطأ في تحديد المستخدم", Toast.LENGTH_SHORT).show();
+
+        if (otherUserId == null || otherUserId.isEmpty()) {
+            Toast.makeText(this, "خطأ في تحديد المستخدم", Toast.LENGTH_SHORT).show();
             finish();
             return;
-        }                                                                                       
+        }
+
         initViews();
         setupRecyclerView();
         loadMessages();
@@ -35,6 +53,9 @@ import java.util.Date;                                                          
     }
 
     private void initViews() {
+        recyclerView = findViewById(R.id.recyclerView);
+        etMessage = findViewById(R.id.etMessage);
+        btnSend = findViewById(R.id.btnSend);
 
         setTitle("محادثة مع المستخدم " + otherUserId);
         if (getSupportActionBar() != null) {
@@ -46,34 +67,37 @@ import java.util.Date;                                                          
 
     private void setupRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setStackFromEnd(true); // Start from bottom
+        layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
 
-                R.layout.chat_message_row,
-                (chat, itemView) -> {
+        adapter = new GenericAdapter<Chat>(new ArrayList<>(), R.layout.chat_message_row) {
+            @Override
+            protected void bindView(View itemView, Chat chat) {
+                TextView tvMessage = itemView.findViewById(R.id.tvMessage);
+                TextView tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
+                LinearLayout messageContainer = itemView.findViewById(R.id.messageContainer);
 
-                    tvMessage.setText(itemView.getMessage());
-                    tvTimestamp.setText(dateFormat.format(itemView.getCreatedAt()));
+                tvMessage.setText(chat.getMessage());
+                tvTimestamp.setText(dateFormat.format(chat.getCreatedAt()));
 
-                    // Align messages based on sender
-                    if (itemView.getSenderId().equals(sessionManager.getCurrentUserId())) {
-                        // Sent message - align right
-                        messageContainer.setBackgroundResource(R.drawable.sent_message_background);
-                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) messageContainer.getLayoutParams();
-                        params.gravity = android.view.Gravity.END;
-                        messageContainer.setLayoutParams(params);
-                    } else {
-                        // Received message - align left
-                        messageContainer.setBackgroundResource(R.drawable.received_message_background);
-                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) messageContainer.getLayoutParams();
-                        params.gravity = android.view.Gravity.START;
-                        messageContainer.setLayoutParams(params);
-                    }
-                },
-                chat -> {
-                    // No click action for individual messages
+                if (chat.getSenderId().equals(sessionManager.getCurrentUserId())) {
+                    messageContainer.setBackgroundResource(R.drawable.sent_message_background);
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) messageContainer.getLayoutParams();
+                    params.gravity = android.view.Gravity.END;
+                    messageContainer.setLayoutParams(params);
+                } else {
+                    messageContainer.setBackgroundResource(R.drawable.received_message_background);
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) messageContainer.getLayoutParams();
+                    params.gravity = android.view.Gravity.START;
+                    messageContainer.setLayoutParams(params);
                 }
-        );
+            }
+
+            @Override
+            protected void onItemClick(Chat chat) {
+                // No click action for individual messages
+            }
+        };
 
         recyclerView.setAdapter(adapter);
     }
@@ -93,7 +117,8 @@ import java.util.Date;                                                          
         });
     }
 
-    private void markMessagesAsRead() {                                                                 new Thread(() -> {
+    private void markMessagesAsRead() {
+        new Thread(() -> {
             database.chatDao().markChatsAsRead(
                     sessionManager.getCurrentUserId(),
                     otherUserId,
@@ -133,5 +158,6 @@ import java.util.Date;                                                          
             finish();
             return true;
         }
-        return super.onOptionsItemSelected(item);                                                   }
+        return super.onOptionsItemSelected(item);
+    }
 }

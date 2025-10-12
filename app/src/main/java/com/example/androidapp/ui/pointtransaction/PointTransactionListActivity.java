@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidapp.R;
@@ -18,13 +18,7 @@ import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
-
-
-
-
-
 
 public class PointTransactionListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -32,6 +26,7 @@ public class PointTransactionListActivity extends AppCompatActivity {
     private AppDatabase database;
     private SessionManager sessionManager;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +42,8 @@ public class PointTransactionListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        recyclerView = findViewById(R.id.recyclerView);
+        fab = findViewById(R.id.fab);
 
         setTitle("سجل النقاط");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -60,26 +57,31 @@ public class PointTransactionListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-                R.layout.point_transaction_list_row,
-                (pointTransaction, view) -> {
-                    // Bind data to views
+        adapter = new GenericAdapter<PointTransaction>(new ArrayList<>(), R.layout.point_transaction_list_row) {
+            @Override
+            protected void bindView(View view, PointTransaction pointTransaction) {
+                TextView tvDescription = view.findViewById(R.id.tvDescription);
+                TextView tvPoints = view.findViewById(R.id.tvPoints);
+                TextView tvDate = view.findViewById(R.id.tvDate);
 
-                    tvDescription.setText(view.getDescription());
-                    tvPoints.setText(String.format(Locale.getDefault(), "%+d نقطة", view.getPoints()));
-                    tvDate.setText(dateFormat.format(view.getTransactionDate()));
+                tvDescription.setText(pointTransaction.getDescription());
+                tvPoints.setText(String.format(Locale.getDefault(), "%+d نقطة", pointTransaction.getPoints()));
+                tvDate.setText(dateFormat.format(pointTransaction.getTransactionDate()));
 
-                    if (view.getType().equals("EARN")) {
-                        tvPoints.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
-                    } else {
-                        tvPoints.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                    }
-                },
-                pointTransaction -> {
-                    Intent intent = new Intent(this, PointTransactionDetailActivity.class);
-                    intent.putExtra("point_transaction_id", pointTransaction.getId());
-                    startActivity(intent);
+                if (pointTransaction.getType().equals("EARN")) {
+                    tvPoints.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+                } else {
+                    tvPoints.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
                 }
-        );
+            }
+
+            @Override
+            protected void onItemClick(PointTransaction pointTransaction) {
+                Intent intent = new Intent(PointTransactionListActivity.this, PointTransactionDetailActivity.class);
+                intent.putExtra("point_transaction_id", pointTransaction.getId());
+                startActivity(intent);
+            }
+        };
         
         recyclerView.setAdapter(adapter);
     }
@@ -101,16 +103,14 @@ public class PointTransactionListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case android.R.id.home: // Fixed constant expression
-                loadPointTransactions();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else if (item.getItemId() == R.id.action_refresh) {
+            loadPointTransactions();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

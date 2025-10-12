@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,11 +15,6 @@ import com.example.androidapp.data.entities.User;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import java.util.ArrayList;
-
-
-
-
-
 
 public class AdminUserListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -40,6 +36,7 @@ public class AdminUserListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        recyclerView = findViewById(R.id.recyclerView);
 
         setTitle("إدارة المستخدمين (المسؤولين)");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -48,18 +45,23 @@ public class AdminUserListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-                R.layout.admin_user_list_row,
-                (user, view) -> {
+        adapter = new GenericAdapter<User>(new ArrayList<>(), R.layout.admin_user_list_row) {
+            @Override
+            protected void bindView(View view, User user) {
+                TextView tvUserName = view.findViewById(R.id.tvUserName);
+                TextView tvUserEmail = view.findViewById(R.id.tvUserEmail);
 
-                    tvUserName.setText(user.getUsername());
-                    tvUserEmail.setText(user.getEmail());
-                },
-                user -> {
-                    Intent intent = new Intent(this, AdminUserDetailActivity.class);
-                    intent.putExtra("user_id", user.getId());
-                    startActivity(intent);
-                }
-        );
+                tvUserName.setText(user.getUsername());
+                tvUserEmail.setText(user.getEmail());
+            }
+
+            @Override
+            protected void onItemClick(User user) {
+                Intent intent = new Intent(AdminUserListActivity.this, AdminUserDetailActivity.class);
+                intent.putExtra("user_id", user.getId());
+                startActivity(intent);
+            }
+        };
         
         recyclerView.setAdapter(adapter);
     }
@@ -81,16 +83,14 @@ public class AdminUserListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_refresh:
-                loadUsers();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else if (item.getItemId() == R.id.action_refresh) {
+            loadUsers();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

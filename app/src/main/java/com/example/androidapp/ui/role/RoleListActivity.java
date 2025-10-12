@@ -17,13 +17,12 @@ import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
-
-
 public class RoleListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private GenericAdapter<Role> adapter;
     private AppDatabase database;
     private SessionManager sessionManager;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +38,8 @@ public class RoleListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        recyclerView = findViewById(R.id.recyclerView);
+        fab = findViewById(R.id.fab);
 
         setTitle("إدارة الأدوار");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -52,18 +53,23 @@ public class RoleListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-                R.layout.role_list_row,
-                (view, role) -> {
+        adapter = new GenericAdapter<Role>(new ArrayList<>(), R.layout.role_list_row) {
+            @Override
+            protected void bindView(View view, Role role) {
+                TextView tvRoleName = view.findViewById(R.id.tvRoleName);
+                TextView tvRoleDescription = view.findViewById(R.id.tvRoleDescription);
 
-                    tvRoleName.setText(role.getName());
-                    tvRoleDescription.setText(role.getDescription());
-                },
-                role -> {
-                    Intent intent = new Intent(this, RoleDetailActivity.class);
-                    intent.putExtra("role_id", role.getId());
-                    startActivity(intent);
-                }
-        );
+                tvRoleName.setText(role.getName());
+                tvRoleDescription.setText(role.getDescription());
+            }
+
+            @Override
+            protected void onItemClick(Role role) {
+                Intent intent = new Intent(RoleListActivity.this, RoleDetailActivity.class);
+                intent.putExtra("role_id", role.getId());
+                startActivity(intent);
+            }
+        };
         
         recyclerView.setAdapter(adapter);
     }
