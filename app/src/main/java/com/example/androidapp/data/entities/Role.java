@@ -1,10 +1,12 @@
 package com.example.androidapp.data.entities;
 
 import androidx.room.*;
+import androidx.annotation.NonNull;
 
 @Entity(tableName = "roles")
 public class Role {
     @PrimaryKey
+    @NonNull
     private String id;
     private String companyId;
     private String name;
@@ -15,7 +17,8 @@ public class Role {
 
     public Role() {}
 
-    public Role(String id, String companyId, String name, String description, 
+    @Ignore
+    public Role(@NonNull String id, String companyId, String name, String description, 
                 String permissions, String createdDate, String updatedDate) {
         this.id = id;
         this.companyId = companyId;
@@ -26,8 +29,9 @@ public class Role {
         this.updatedDate = updatedDate;
     }
 
+    @NonNull
     public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public void setId(@NonNull String id) { this.id = id; }
 
     public String getCompanyId() { return companyId; }
     public void setCompanyId(String companyId) { this.companyId = companyId; }

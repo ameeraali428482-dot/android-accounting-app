@@ -1,10 +1,12 @@
 package com.example.androidapp.data.entities;
 
 import androidx.room.*;
+import androidx.annotation.NonNull;
 
 @Entity(tableName = "point_transactions")
 public class PointTransaction {
     @PrimaryKey
+    @NonNull
     private String id;
     private String companyId;
     private String userId;
@@ -17,7 +19,8 @@ public class PointTransaction {
 
     public PointTransaction() {}
 
-    public PointTransaction(String id, String companyId, String userId, int points, 
+    @Ignore
+    public PointTransaction(@NonNull String id, String companyId, String userId, int points, 
                            String transactionType, String description, String transactionDate,
                            String referenceId, String referenceType) {
         this.id = id;
@@ -31,8 +34,9 @@ public class PointTransaction {
         this.referenceType = referenceType;
     }
 
+    @NonNull
     public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public void setId(@NonNull String id) { this.id = id; }
 
     public String getCompanyId() { return companyId; }
     public void setCompanyId(String companyId) { this.companyId = companyId; }

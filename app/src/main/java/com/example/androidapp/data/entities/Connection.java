@@ -1,10 +1,12 @@
 package com.example.androidapp.data.entities;
 
 import androidx.room.*;
+import androidx.annotation.NonNull;
 
 @Entity(tableName = "connections")
 public class Connection {
     @PrimaryKey
+    @NonNull
     private String id;
     private String companyId;
     private String connectionName;
@@ -16,7 +18,8 @@ public class Connection {
 
     public Connection() {}
 
-    public Connection(String id, String companyId, String connectionName, String connectionType, 
+    @Ignore
+    public Connection(@NonNull String id, String companyId, String connectionName, String connectionType, 
                      String status, String description, String createdDate, String updatedDate) {
         this.id = id;
         this.companyId = companyId;
@@ -28,8 +31,9 @@ public class Connection {
         this.updatedDate = updatedDate;
     }
 
+    @NonNull
     public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public void setId(@NonNull String id) { this.id = id; }
 
     public String getCompanyId() { return companyId; }
     public void setCompanyId(String companyId) { this.companyId = companyId; }
