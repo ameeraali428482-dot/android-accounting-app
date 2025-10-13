@@ -74,8 +74,8 @@ public class OrderListActivity extends AppCompatActivity {
                 TextView tvTotalAmountDisplay = itemView.findViewById(R.id.tvTotalAmountDisplay);
                 TextView tvStatusDisplay = itemView.findViewById(R.id.tvStatusDisplay);
 
-                if (tvOrderNumber != null) tvOrderNumber.setText("طلب #" + order.getOrderNumber());
-                if (tvOrderDateDisplay != null) tvOrderDateDisplay.setText(order.getOrderDate());
+                if (tvOrderNumber != null) tvOrderNumber.setText("#" + order.getId());
+                if (tvOrderDateDisplay != null) tvOrderDateDisplay.setText(dateFormat.format(order.getOrderDate()));
                 if (tvTotalAmountDisplay != null) tvTotalAmountDisplay.setText(currencyFormat.format(order.getTotalAmount()));
                 if (tvStatusDisplay != null) tvStatusDisplay.setText(order.getStatus());
             }
