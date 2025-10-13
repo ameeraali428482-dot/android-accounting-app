@@ -14,8 +14,8 @@
     <color name="teal_700">#018786</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-</resources>
+
 
     <!-- الألوان المطلوبة للتطبيق -->
-    <color name="white">#FFFFFFFF</color>
     <color name="message_bubble_color">#E0E0E0</color>
+</resources>
