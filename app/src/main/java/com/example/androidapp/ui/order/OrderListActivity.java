@@ -1,6 +1,5 @@
 package com.example.androidapp.ui.order;
 
-import java.util.Date;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -43,6 +42,7 @@ public class OrderListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        recyclerView = findViewById(R.id.recyclerView);
         setTitle("الطلبات");
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,10 +56,12 @@ public class OrderListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        
-        adapter = new GenericAdapter<Order>(new ArrayList<>(), null) {
+        adapter = new GenericAdapter<Order>(new ArrayList<>(), order -> {
+            Intent intent = new Intent(OrderListActivity.this, OrderDetailActivity.class);
+            intent.putExtra("order_id", order.getId());
+            startActivity(intent);
+        }) {
             @Override
             protected int getLayoutResId() {
                 return R.layout.order_list_row;
@@ -67,74 +69,35 @@ public class OrderListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Order order) {
-                TextView tvOrderId = itemView.findViewById(R.id.tvOrderId);
-                TextView tvOrderDate = itemView.findViewById(R.id.tvOrderDate);
-                TextView tvTotalAmount = itemView.findViewById(R.id.tvTotalAmount);
-                TextView tvStatus = itemView.findViewById(R.id.tvStatus);
-                TextView tvNotes = itemView.findViewById(R.id.tvNotes);
+                TextView tvOrderNumber = itemView.findViewById(R.id.tvOrderNumber);
+                TextView tvOrderDateDisplay = itemView.findViewById(R.id.tvOrderDateDisplay);
+                TextView tvTotalAmountDisplay = itemView.findViewById(R.id.tvTotalAmountDisplay);
+                TextView tvStatusDisplay = itemView.findViewById(R.id.tvStatusDisplay);
 
-                tvOrderId.setText(order.getId());
-                tvOrderDate.setText(dateFormat.format(order.getOrderDate()));
-                tvTotalAmount.setText(currencyFormat.format(order.getTotalAmount()));
-                tvStatus.setText(order.getStatus());
-
-                if (order.getNotes() != null && !order.getNotes().isEmpty()) {
-                    tvNotes.setText(order.getNotes());
-                } else {
-                    tvNotes.setText("");
-                }
-
-                int statusBackground;
-                if (order.getStatus() != null) {
-                    switch (order.getStatus()) {
-                        case "Completed":
-                            statusBackground = R.drawable.status_active_background;
-                            break;
-                        case "Processing":
-                            statusBackground = R.drawable.status_draft_background;
-                            break;
-                        case "Cancelled":
-                            statusBackground = R.drawable.status_inactive_background;
-                            break;
-                        default:
-                            statusBackground = R.drawable.status_pending_background;
-                            break;
-                    }
-                    tvStatus.setBackgroundResource(statusBackground);
-                }
+                if (tvOrderNumber != null) tvOrderNumber.setText("طلب #" + order.getOrderNumber());
+                if (tvOrderDateDisplay != null) tvOrderDateDisplay.setText(order.getOrderDate());
+                if (tvTotalAmountDisplay != null) tvTotalAmountDisplay.setText(currencyFormat.format(order.getTotalAmount()));
+                if (tvStatusDisplay != null) tvStatusDisplay.setText(order.getStatus());
             }
         };
-        
-        adapter.setOnItemClickListener(order -> {
-            Intent intent = new Intent(this, OrderDetailActivity.class);
-            intent.putExtra("order_id", order.getId());
-            startActivity(intent);
-        });
-        
         recyclerView.setAdapter(adapter);
     }
 
     private void loadOrders() {
-        database.orderDao().getAllOrders(sessionManager.getCurrentCompanyId()).observe(this, orders -> {
-            if (orders != null) {
-                adapter.updateData(orders);
-            }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_list, menu);
-        return true;
+        String companyId = sessionManager.getCurrentCompanyId();
+        if (companyId != null) {
+            database.orderDao().getAllOrders(companyId).observe(this, orders -> {
+                if (orders != null) {
+                    adapter.updateData(orders);
+                }
+            });
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
-            return true;
-        } else if (item.getItemId() == R.id.action_refresh) {
-            loadOrders();
             return true;
         }
         return super.onOptionsItemSelected(item);

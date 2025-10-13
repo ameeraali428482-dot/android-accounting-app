@@ -30,3 +30,9 @@ public interface ChatDao extends BaseDao<Chat> {
     @Query("UPDATE chats SET isRead = 1 WHERE receiverId = :userId AND senderId = :senderId AND companyId = :companyId")
     void markChatsAsRead(String userId, String senderId, String companyId);
 }
+
+    @Query("SELECT * FROM chat WHERE (sender_id = :userId OR receiver_id = :userId) AND company_id = :companyId ORDER BY created_at DESC")
+    List<Chat> getAllChatsByUserId(String userId, String companyId);
+
+    @Query("UPDATE chat SET is_read = 1 WHERE sender_id = :otherUserId AND receiver_id = :currentUserId AND company_id = :companyId")
+    void markChatsAsRead(String currentUserId, String otherUserId, String companyId);

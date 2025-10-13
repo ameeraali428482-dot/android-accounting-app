@@ -1,11 +1,9 @@
 package com.example.androidapp.ui.role;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,23 +12,22 @@ import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Permission;
 import com.example.androidapp.data.entities.Role;
-import com.example.androidapp.data.entities.RolePermission;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class RoleDetailActivity extends AppCompatActivity {
-    private EditText etRoleName, etRoleDescription;
+    private EditText etRoleName;
+    private EditText etRoleDescription;
     private RecyclerView rvPermissions;
-    private GenericAdapter<Permission> permissionsAdapter;
+    private Button btnSaveRole;
+    private Button btnDeleteRole;
+    
     private AppDatabase database;
     private SessionManager sessionManager;
-    private String roleId = null;
-    private Role currentRole;
-    private List<Permission> allPermissions = new ArrayList<>();
-    private List<Permission> selectedPermissions = new ArrayList<>();
+    private GenericAdapter<Permission> permissionsAdapter;
+    private String roleId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,77 +39,54 @@ public class RoleDetailActivity extends AppCompatActivity {
 
         initViews();
         setupPermissionsRecyclerView();
-        loadAllPermissions();
-
+        
         roleId = getIntent().getStringExtra("role_id");
         if (roleId != null) {
-            setTitle("تعديل الدور");
+            loadRoleData(roleId);
+            btnDeleteRole.setVisibility(View.VISIBLE);
         } else {
-            setTitle("إضافة دور جديد");
+            btnDeleteRole.setVisibility(View.GONE);
         }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        btnSaveRole.setOnClickListener(v -> saveRole());
+        btnDeleteRole.setOnClickListener(v -> deleteRole());
     }
 
     private void initViews() {
-        etRoleName = findViewById(R.id.etRoleName);
-        etRoleDescription = findViewById(R.id.etRoleDescription);
-        rvPermissions = findViewById(R.id.rvPermissions);
+        etRoleName = findViewById(R.id.etRoleNameInput);
+        etRoleDescription = findViewById(R.id.etRoleDescInput);
+        rvPermissions = findViewById(R.id.rvPermissionsList);
+        btnSaveRole = findViewById(R.id.btnSaveRole);
+        btnDeleteRole = findViewById(R.id.btnDeleteRole);
     }
 
     private void setupPermissionsRecyclerView() {
         rvPermissions.setLayoutManager(new LinearLayoutManager(this));
-        
-        permissionsAdapter = new GenericAdapter<Permission>(new ArrayList<>(), R.layout.permission_list_row) {
+        permissionsAdapter = new GenericAdapter<Permission>(new ArrayList<>(), permission -> {
+            // Handle permission click
+        }) {
             @Override
-            protected void bindView(View view, Permission permission) {
-                TextView tvPermissionName = view.findViewById(R.id.tvPermissionName);
-                tvPermissionName.setText(permission.getAction());
-                
-                if (selectedPermissions.stream().anyMatch(p -> p.getId().equals(permission.getId()))) {
-                    view.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                } else {
-                    view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                }
+            protected int getLayoutResId() {
+                return R.layout.permission_list_row;
             }
 
             @Override
-            protected void onItemClick(Permission permission) {
-                if (selectedPermissions.stream().anyMatch(p -> p.getId().equals(permission.getId()))) {
-                    selectedPermissions.removeIf(p -> p.getId().equals(permission.getId()));
-                } else {
-                    selectedPermissions.add(permission);
-                }
-                permissionsAdapter.notifyDataSetChanged();
+            protected void bindView(View view, Permission permission) {
+                // Bind permission data
             }
         };
-        
         rvPermissions.setAdapter(permissionsAdapter);
     }
 
-    private void loadAllPermissions() {
-        database.permissionDao().getAllPermissions().observe(this, permissions -> {
-            if (permissions != null) {
-                allPermissions = permissions;
-                permissionsAdapter.updateData(allPermissions);
-                if (roleId != null) {
-                    loadRole();
+    private void loadRoleData(String id) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            Role role = database.roleDao().getRoleById(id, sessionManager.getCurrentCompanyId());
+            runOnUiThread(() -> {
+                if (role != null) {
+                    etRoleName.setText(role.getName());
+                    etRoleDescription.setText(role.getDescription());
                 }
-            }
-        });
-    }
-
-    private void loadRole() {
-        database.roleDao().getRoleById(roleId).observe(this, role -> {
-            if (role != null) {
-                currentRole = role;
-                etRoleName.setText(currentRole.getName());
-                etRoleDescription.setText(currentRole.getDescription());
-                database.roleDao().getPermissionsForRole(roleId).observe(this, permissions -> {
-                    selectedPermissions = new ArrayList<>(permissions);
-                    permissionsAdapter.notifyDataSetChanged();
-                });
-            }
+            });
         });
     }
 
@@ -121,51 +95,37 @@ public class RoleDetailActivity extends AppCompatActivity {
         String description = etRoleDescription.getText().toString().trim();
 
         if (name.isEmpty()) {
-            etRoleName.setError("اسم الدور مطلوب");
+            Toast.makeText(this, "الرجاء إدخال اسم الدور", Toast.LENGTH_SHORT).show();
             return;
         }
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
             if (roleId == null) {
-                String newRoleId = UUID.randomUUID().toString();
-                Role newRole = new Role(newRoleId, name, description, sessionManager.getCurrentCompanyId(), false);
-                database.roleDao().insert(newRole);
-                for (Permission p : selectedPermissions) {
-                    database.roleDao().insertRolePermission(new RolePermission(newRoleId, p.getId()));
-                }
+                Role role = new Role(UUID.randomUUID().toString(), sessionManager.getCurrentCompanyId(), name, description);
+                database.roleDao().insert(role);
             } else {
-                currentRole.setName(name);
-                currentRole.setDescription(description);
-                database.roleDao().update(currentRole);
-                database.roleDao().deleteRolePermissions(roleId);
-                for (Permission p : selectedPermissions) {
-                    database.roleDao().insertRolePermission(new RolePermission(roleId, p.getId()));
-                }
+                Role role = new Role(roleId, sessionManager.getCurrentCompanyId(), name, description);
+                database.roleDao().update(role);
             }
-
             runOnUiThread(() -> {
-                Toast.makeText(this, "تم حفظ الدور بنجاح", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "تم الحفظ بنجاح", Toast.LENGTH_SHORT).show();
                 finish();
             });
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == android.R.id.home) {
-            finish();
-            return true;
-        } else if (itemId == R.id.action_save) {
-            saveRole();
-            return true;
+    private void deleteRole() {
+        if (roleId != null) {
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                Role role = database.roleDao().getRoleById(roleId, sessionManager.getCurrentCompanyId());
+                if (role != null) {
+                    database.roleDao().delete(role);
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "تم الحذف بنجاح", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+                }
+            });
         }
-        return super.onOptionsItemSelected(item);
     }
 }

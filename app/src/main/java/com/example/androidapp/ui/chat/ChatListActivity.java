@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatListActivity extends AppCompatActivity {
-
     private RecyclerView chatRecyclerView;
     private GenericAdapter<Chat> adapter;
     private AppDatabase database;
@@ -30,19 +29,19 @@ public class ChatListActivity extends AppCompatActivity {
         database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
 
+        chatRecyclerView = findViewById(R.id.chatRecyclerView);
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new GenericAdapter<Chat>(
-            new ArrayList<>(),
-            chat -> {
-                Intent intent = new Intent(ChatListActivity.this, ChatDetailActivity.class);
-                intent.putExtra("chat_id", chat.getId());
-                intent.putExtra("other_user_id", 
-                    chat.getSenderId().equals(sessionManager.getCurrentUserId()) ? 
-                    chat.getReceiverId() : chat.getSenderId());
-                startActivity(intent);
-            }
-        ) {
+        adapter = new GenericAdapter<Chat>(new ArrayList<>(), chat -> {
+            Intent intent = new Intent(ChatListActivity.this, ChatDetailActivity.class);
+            intent.putExtra("chat_id", chat.getId());
+            intent.putExtra("other_user_id", 
+                chat.getSenderId().equals(sessionManager.getCurrentUserId()) 
+                    ? chat.getReceiverId() 
+                    : chat.getSenderId()
+            );
+            startActivity(intent);
+        }) {
             @Override
             protected int getLayoutResId() {
                 return R.layout.chat_list_row;
@@ -50,12 +49,13 @@ public class ChatListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Chat chat) {
-                
-                if (chatMessage != null) chatMessage.setText(chat.getMessage());
-                if (chatTimestamp != null) chatTimestamp.setText(chat.getCreatedAt().toString());
+                TextView chatMessagePreview = itemView.findViewById(R.id.chatMessagePreview);
+                TextView chatTimestampPreview = itemView.findViewById(R.id.chatTimestampPreview);
+
+                if (chatMessagePreview != null) chatMessagePreview.setText(chat.getMessage());
+                if (chatTimestampPreview != null) chatTimestampPreview.setText(chat.getCreatedAt().toString());
             }
         };
-        
         chatRecyclerView.setAdapter(adapter);
         loadChats();
     }
@@ -63,12 +63,14 @@ public class ChatListActivity extends AppCompatActivity {
     private void loadChats() {
         String userId = sessionManager.getCurrentUserId();
         if (userId != null) {
-            database.chatDao().getChatsByUserId(userId)
-                .observe(this, chats -> {
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                List<Chat> chats = database.chatDao().getAllChatsByUserId(userId, sessionManager.getCurrentCompanyId());
+                runOnUiThread(() -> {
                     if (chats != null) {
                         adapter.setData(chats);
                     }
                 });
+            });
         }
     }
 

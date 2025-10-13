@@ -40,8 +40,7 @@ public class RoleListActivity extends AppCompatActivity {
     private void initViews() {
         recyclerView = findViewById(R.id.recyclerView);
         fab = findViewById(R.id.fab);
-
-        setTitle("إدارة الأدوار");
+        setTitle("الأدوار");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fab.setOnClickListener(v -> {
@@ -52,25 +51,25 @@ public class RoleListActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        
-        adapter = new GenericAdapter<Role>(new ArrayList<>(), R.layout.role_list_row) {
+        adapter = new GenericAdapter<Role>(new ArrayList<>(), role -> {
+            Intent intent = new Intent(RoleListActivity.this, RoleDetailActivity.class);
+            intent.putExtra("role_id", role.getId());
+            startActivity(intent);
+        }) {
+            @Override
+            protected int getLayoutResId() {
+                return R.layout.role_list_row;
+            }
+
             @Override
             protected void bindView(View view, Role role) {
-                TextView tvRoleName = view.findViewById(R.id.tvRoleName);
-                TextView tvRoleDescription = view.findViewById(R.id.tvRoleDescription);
+                TextView tvRoleNameDisplay = view.findViewById(R.id.tvRoleNameDisplay);
+                TextView tvRoleDescDisplay = view.findViewById(R.id.tvRoleDescDisplay);
 
-                tvRoleName.setText(role.getName());
-                tvRoleDescription.setText(role.getDescription());
-            }
-
-            @Override
-            protected void onItemClick(Role role) {
-                Intent intent = new Intent(RoleListActivity.this, RoleDetailActivity.class);
-                intent.putExtra("role_id", role.getId());
-                startActivity(intent);
+                if (tvRoleNameDisplay != null) tvRoleNameDisplay.setText(role.getName());
+                if (tvRoleDescDisplay != null) tvRoleDescDisplay.setText(role.getDescription());
             }
         };
-        
         recyclerView.setAdapter(adapter);
     }
 
