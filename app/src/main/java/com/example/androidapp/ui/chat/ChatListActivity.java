@@ -29,7 +29,7 @@ public class ChatListActivity extends AppCompatActivity {
         database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
 
-        chatRecyclerView = findViewById(R.id.chatRecyclerView);
+        chatRecyclerView = findViewById(R.id.recyclerView);
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new GenericAdapter<Chat>(new ArrayList<>(), chat -> {
@@ -49,8 +49,8 @@ public class ChatListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Chat chat) {
-                TextView chatMessagePreview = itemView.findViewById(R.id.chatMessagePreview);
-                TextView chatTimestampPreview = itemView.findViewById(R.id.chatTimestampPreview);
+                TextView chatMessagePreview = itemView.findViewById(R.id.chatMessage);
+                TextView chatTimestampPreview = itemView.findViewById(R.id.chatTimestamp);
 
                 if (chatMessagePreview != null) chatMessagePreview.setText(chat.getMessage());
                 if (chatTimestampPreview != null) chatTimestampPreview.setText(chat.getCreatedAt().toString());

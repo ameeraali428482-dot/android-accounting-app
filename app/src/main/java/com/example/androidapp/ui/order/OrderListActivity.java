@@ -2,7 +2,6 @@ package com.example.androidapp.ui.order;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import com.example.androidapp.data.entities.Order;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -26,7 +24,6 @@ public class OrderListActivity extends AppCompatActivity {
     private AppDatabase database;
     private SessionManager sessionManager;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-    private NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("ar", "SA"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,27 +33,20 @@ public class OrderListActivity extends AppCompatActivity {
         database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
 
-        initViews();
-        setupRecyclerView();
-        loadOrders();
-    }
-
-    private void initViews() {
         recyclerView = findViewById(R.id.recyclerView);
-        setTitle("الطلبات");
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
             Intent intent = new Intent(this, OrderDetailActivity.class);
             startActivity(intent);
         });
+
+        setupRecyclerView();
+        loadOrders();
     }
 
     private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new GenericAdapter<Order>(new ArrayList<>(), order -> {
             Intent intent = new Intent(OrderListActivity.this, OrderDetailActivity.class);
             intent.putExtra("order_id", order.getId());
@@ -69,15 +59,18 @@ public class OrderListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Order order) {
-                TextView tvOrderNumber = itemView.findViewById(R.id.tvOrderNumber);
-                TextView tvOrderDateDisplay = itemView.findViewById(R.id.tvOrderDateDisplay);
-                TextView tvTotalAmountDisplay = itemView.findViewById(R.id.tvTotalAmountDisplay);
-                TextView tvStatusDisplay = itemView.findViewById(R.id.tvStatusDisplay);
+                // IDs من order_list_row.xml
+                TextView tvOrderId = itemView.findViewById(R.id.tvOrderId);
+                TextView tvOrderDate = itemView.findViewById(R.id.tvOrderDate);
+                TextView tvOrderTotalAmount = itemView.findViewById(R.id.tvOrderTotalAmount);
+                TextView tvOrderStatus = itemView.findViewById(R.id.tvOrderStatus);
 
-                if (tvOrderNumber != null) tvOrderNumber.setText("#" + order.getId());
-                if (tvOrderDateDisplay != null) tvOrderDateDisplay.setText(dateFormat.format(order.getOrderDate()));
-                if (tvTotalAmountDisplay != null) tvTotalAmountDisplay.setText(currencyFormat.format(order.getTotalAmount()));
-                if (tvStatusDisplay != null) tvStatusDisplay.setText(order.getStatus());
+                if (tvOrderId != null) tvOrderId.setText("#" + order.getId());
+                if (tvOrderDate != null && order.getOrderDate() != null) {
+                    tvOrderDate.setText(dateFormat.format(order.getOrderDate()));
+                }
+                if (tvOrderTotalAmount != null) tvOrderTotalAmount.setText(String.valueOf(order.getTotalAmount()));
+                if (tvOrderStatus != null) tvOrderStatus.setText(order.getStatus());
             }
         };
         recyclerView.setAdapter(adapter);
@@ -101,11 +94,5 @@ public class OrderListActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadOrders();
     }
 }

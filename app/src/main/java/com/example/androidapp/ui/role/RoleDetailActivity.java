@@ -1,11 +1,11 @@
 package com.example.androidapp.ui.role;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Role;
@@ -13,11 +13,9 @@ import com.example.androidapp.utils.SessionManager;
 import java.util.UUID;
 
 public class RoleDetailActivity extends AppCompatActivity {
-    private EditText etRoleNameInput;
-    private EditText etRoleDescInput;
-    private Button btnSaveRole;
-    private Button btnDeleteRole;
-    
+    private EditText etrolename, etroledescription;
+    private RecyclerView rvpermissions;
+    private Button btnSaveRole, btnDeleteRole;
     private AppDatabase database;
     private SessionManager sessionManager;
     private String roleId;
@@ -30,42 +28,37 @@ public class RoleDetailActivity extends AppCompatActivity {
         database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
 
-        initViews();
-        
+        // IDs من activity_role_detail.xml
+        etrolename = findViewById(R.id.etrolename);
+        etroledescription = findViewById(R.id.etroledescription);
+        rvpermissions = findViewById(R.id.rvpermissions);
+        btnSaveRole = findViewById(R.id.btnSaveRole);
+        btnDeleteRole = findViewById(R.id.btnDeleteRole);
+
         roleId = getIntent().getStringExtra("role_id");
         if (roleId != null) {
-            loadRoleData(roleId);
-            btnDeleteRole.setVisibility(View.VISIBLE);
-        } else {
-            btnDeleteRole.setVisibility(View.GONE);
+            loadRole();
         }
 
         btnSaveRole.setOnClickListener(v -> saveRole());
         btnDeleteRole.setOnClickListener(v -> deleteRole());
     }
 
-    private void initViews() {
-        etRoleNameInput = findViewById(R.id.etRoleNameInput);
-        etRoleDescInput = findViewById(R.id.etRoleDescInput);
-        btnSaveRole = findViewById(R.id.btnSaveRole);
-        btnDeleteRole = findViewById(R.id.btnDeleteRole);
-    }
-
-    private void loadRoleData(String id) {
+    private void loadRole() {
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            Role role = database.roleDao().getRoleByIdSync(id);
+            Role role = database.roleDao().getRoleByIdSync(roleId);
             runOnUiThread(() -> {
                 if (role != null) {
-                    etRoleNameInput.setText(role.getName());
-                    etRoleDescInput.setText(role.getDescription());
+                    etrolename.setText(role.getName());
+                    etroledescription.setText(role.getDescription());
                 }
             });
         });
     }
 
     private void saveRole() {
-        String name = etRoleNameInput.getText().toString().trim();
-        String description = etRoleDescInput.getText().toString().trim();
+        String name = etrolename.getText().toString().trim();
+        String description = etroledescription.getText().toString().trim();
 
         if (name.isEmpty()) {
             Toast.makeText(this, "الرجاء إدخال اسم الدور", Toast.LENGTH_SHORT).show();
@@ -73,13 +66,20 @@ public class RoleDetailActivity extends AppCompatActivity {
         }
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
+            Role role = new Role(
+                roleId != null ? roleId : UUID.randomUUID().toString(),
+                sessionManager.getCurrentCompanyId(),
+                name,
+                description,
+                true
+            );
+            
             if (roleId == null) {
-                Role role = new Role(UUID.randomUUID().toString(), sessionManager.getCurrentCompanyId(), name, description, true);
                 database.roleDao().insert(role);
             } else {
-                Role role = new Role(roleId, sessionManager.getCurrentCompanyId(), name, description, true);
                 database.roleDao().update(role);
             }
+
             runOnUiThread(() -> {
                 Toast.makeText(this, "تم الحفظ بنجاح", Toast.LENGTH_SHORT).show();
                 finish();
