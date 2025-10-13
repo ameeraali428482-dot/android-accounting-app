@@ -20,11 +20,11 @@ public interface CompanySettingsDao {
     @Delete
     void delete(CompanySettings companySettings);
 
-    @Query("SELECT * FROM companysettings WHERE companyId = :companyId LIMIT 1")
-    CompanySettings getCompanySettingsByCompanyId(String companyId);
+    @Query("SELECT * FROM companysettings LIMIT 1")
+    CompanySettings getCompanySettings();
 
-    @Query("SELECT * FROM companysettings WHERE companyId = :companyId LIMIT 1")
-    LiveData<CompanySettings> getCompanySettingsByCompanyIdLive(String companyId);
+    @Query("SELECT * FROM companysettings LIMIT 1")
+    LiveData<CompanySettings> getCompanySettingsLive();
 
     @Query("SELECT * FROM companysettings")
     LiveData<List<CompanySettings>> getAllCompanySettings();
