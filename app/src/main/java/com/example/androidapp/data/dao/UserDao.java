@@ -28,3 +28,9 @@ public interface UserDao {
     @Query("SELECT * FROM users WHERE id = :id LIMIT 1")
     User getUserById(String id);
 }
+
+    @Query("SELECT * FROM users")
+    List<User> getAllUsersSync();
+
+    @Query("SELECT * FROM users WHERE id = :userId LIMIT 1")
+    User getUserByIdSync(String userId);

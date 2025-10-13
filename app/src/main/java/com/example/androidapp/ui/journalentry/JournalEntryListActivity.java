@@ -2,101 +2,83 @@ package com.example.androidapp.ui.journalentry;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.widget.Toast;
-import androidx.annotation.NonNull;
+import android.view.View;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.JournalEntry;
-import com.example.androidapp.ui.journalentry.viewmodel.JournalEntryViewModel;
+import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
-import java.util.List;
-
-
-
-
-
 
 public class JournalEntryListActivity extends AppCompatActivity {
-
     private RecyclerView recyclerView;
-    private JournalEntryAdapter adapter;
-    private JournalEntryViewModel viewModel;
+    private GenericAdapter<JournalEntry> adapter;
+    private AppDatabase database;
     private SessionManager sessionManager;
-    private String companyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_journal_entry_list);
+        setContentView(R.layout.activity_journalentry_list);
 
+        database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
-        companyId = sessionManager.getCompanyId();
 
-        if (companyId == null) {
-            Toast.makeText(this, "معرف الشركة غير صالح", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        if (fab != null) {
+            fab.setOnClickListener(v -> {
+                Intent intent = new Intent(this, JournalEntryDetailActivity.class);
+                startActivity(intent);
+            });
         }
 
-        viewModel = new ViewModelProvider(this).get(JournalEntryViewModel.class);
-
-        initViews();
         setupRecyclerView();
         loadJournalEntries();
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    private void initViews() {
-
-        setTitle("القيود اليومية");
-
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(this, JournalEntryDetailActivity.class);
-            startActivity(intent);
-        });
     }
 
     private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new JournalEntryAdapter(new ArrayList<>(), journalEntry -> {
-            // Handle journal entry click - navigate to JournalEntryDetailActivity
+        adapter = new GenericAdapter<JournalEntry>(new ArrayList<>(), journalEntry -> {
             Intent intent = new Intent(JournalEntryListActivity.this, JournalEntryDetailActivity.class);
             intent.putExtra("journal_entry_id", journalEntry.getId());
             startActivity(intent);
-        });
+        }) {
+            @Override
+            protected int getLayoutResId() {
+                return R.layout.journalentry_list_row;
+            }
+
+            @Override
+            protected void bindView(View itemView, JournalEntry journalEntry) {
+                TextView tvEntryDate = itemView.findViewById(R.id.tvEntryDate);
+                TextView tvDescription = itemView.findViewById(R.id.tvDescription);
+                TextView tvTotalDebit = itemView.findViewById(R.id.tvTotalDebit);
+                TextView tvTotalCredit = itemView.findViewById(R.id.tvTotalCredit);
+
+                if (tvEntryDate != null) tvEntryDate.setText(journalEntry.getEntryDate());
+                if (tvDescription != null) tvDescription.setText(journalEntry.getDescription());
+                if (tvTotalDebit != null) tvTotalDebit.setText(String.valueOf(journalEntry.getTotalDebit()));
+                if (tvTotalCredit != null) tvTotalCredit.setText(String.valueOf(journalEntry.getTotalCredit()));
+            }
+        };
         recyclerView.setAdapter(adapter);
     }
 
     private void loadJournalEntries() {
-        viewModel.getAllJournalEntries(companyId).observe(this, journalEntries -> {
-            if (journalEntries != null) {
-                adapter.updateData(journalEntries);
-            }
-        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
+        String companyId = sessionManager.getCurrentCompanyId();
+        if (companyId != null) {
+            database.journalEntryDao().getAllJournalEntries(companyId).observe(this, journalEntries -> {
+                if (journalEntries != null) {
+                    adapter.updateData(journalEntries);
+                }
+            });
         }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadJournalEntries();
     }
 }
-
