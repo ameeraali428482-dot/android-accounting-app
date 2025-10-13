@@ -6,27 +6,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.data.entities.Permission;
 import com.example.androidapp.data.entities.Role;
-import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
-import java.util.ArrayList;
 import java.util.UUID;
 
 public class RoleDetailActivity extends AppCompatActivity {
     private EditText etRoleName;
     private EditText etRoleDescription;
-    private RecyclerView rvPermissions;
     private Button btnSaveRole;
     private Button btnDeleteRole;
     
     private AppDatabase database;
     private SessionManager sessionManager;
-    private GenericAdapter<Permission> permissionsAdapter;
     private String roleId;
 
     @Override
@@ -38,7 +31,6 @@ public class RoleDetailActivity extends AppCompatActivity {
         sessionManager = new SessionManager(this);
 
         initViews();
-        setupPermissionsRecyclerView();
         
         roleId = getIntent().getStringExtra("role_id");
         if (roleId != null) {
@@ -55,27 +47,8 @@ public class RoleDetailActivity extends AppCompatActivity {
     private void initViews() {
         etRoleName = findViewById(R.id.etRoleName);
         etRoleDescription = findViewById(R.id.etRoleDescription);
-        rvPermissions = findViewById(R.id.rvPermissions);
         btnSaveRole = findViewById(R.id.btnSaveRole);
         btnDeleteRole = findViewById(R.id.btnDeleteRole);
-    }
-
-    private void setupPermissionsRecyclerView() {
-        rvPermissions.setLayoutManager(new LinearLayoutManager(this));
-        permissionsAdapter = new GenericAdapter<Permission>(new ArrayList<>(), permission -> {
-            // Handle permission click if needed
-        }) {
-            @Override
-            protected int getLayoutResId() {
-                return R.layout.permission_list_row;
-            }
-
-            @Override
-            protected void bindView(View view, Permission permission) {
-                // Bind permission data
-            }
-        };
-        rvPermissions.setAdapter(permissionsAdapter);
     }
 
     private void loadRoleData(String id) {
