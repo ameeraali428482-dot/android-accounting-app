@@ -8,7 +8,8 @@ import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.User;
 
 public class AdminUserDetailActivity extends AppCompatActivity {
-    private TextView tvUserName, tvUserEmail;
+    private TextView tvUserName;
+    private TextView tvUserEmail;
     private AppDatabase database;
     private String userId;
 
@@ -27,8 +28,8 @@ public class AdminUserDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        tvUserName = findViewById(R.id.tvUserName);
-        tvUserEmail = findViewById(R.id.tvUserEmail);
+        tvUserName = findViewById(R.id.tvUserNameDisplay);
+        tvUserEmail = findViewById(R.id.tvUserEmailDisplay);
     }
 
     private void loadUser() {

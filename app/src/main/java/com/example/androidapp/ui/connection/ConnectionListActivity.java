@@ -35,9 +35,9 @@ public class ConnectionListActivity extends AppCompatActivity {
         setupRecyclerView();
         loadConnections();
 
-        Button addButton = findViewById(R.id.addButton);
-        if (addButton != null) {
-            addButton.setOnClickListener(v -> {
+        Button addConnectionButton = findViewById(R.id.addConnectionButton);
+        if (addConnectionButton != null) {
+            addConnectionButton.setOnClickListener(v -> {
                 Intent intent = new Intent(this, ConnectionDetailActivity.class);
                 startActivity(intent);
             });
@@ -57,23 +57,26 @@ public class ConnectionListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Connection connection) {
-                TextView connectionName = itemView.findViewById(R.id.connectionName);
-                TextView connectionType = itemView.findViewById(R.id.connectionType);
-                TextView connectionStatus = itemView.findViewById(R.id.connectionStatus);
+                TextView connectionNameDisplay = itemView.findViewById(R.id.connectionNameDisplay);
+                TextView connectionTypeDisplay = itemView.findViewById(R.id.connectionTypeDisplay);
+                TextView connectionStatusDisplay = itemView.findViewById(R.id.connectionStatusDisplay);
 
-                if (connectionName != null) connectionName.setText(connection.getName());
-                if (connectionType != null) connectionType.setText("النوع: " + connection.getType());
-                if (connectionStatus != null) connectionStatus.setText("الحالة: " + connection.getStatus());
+                if (connectionNameDisplay != null) connectionNameDisplay.setText(connection.getName());
+                if (connectionTypeDisplay != null) connectionTypeDisplay.setText("النوع: " + connection.getType());
+                if (connectionStatusDisplay != null) connectionStatusDisplay.setText("الحالة: " + connection.getStatus());
             }
         };
         recyclerView.setAdapter(adapter);
     }
 
     private void loadConnections() {
-        database.connectionDao().getAllConnections().observe(this, connections -> {
-            if (connections != null) {
-                adapter.updateData(connections);
-            }
-        });
+        String companyId = sessionManager.getCurrentCompanyId();
+        if (companyId != null) {
+            database.connectionDao().getAllConnections(companyId).observe(this, connections -> {
+                if (connections != null) {
+                    adapter.updateData(connections);
+                }
+            });
+        }
     }
 }

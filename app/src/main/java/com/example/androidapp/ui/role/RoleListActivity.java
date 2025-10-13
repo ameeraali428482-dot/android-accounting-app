@@ -41,9 +41,7 @@ public class RoleListActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         fab = findViewById(R.id.fab);
         setTitle("الأدوار");
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fab.setOnClickListener(v -> {
             Intent intent = new Intent(this, RoleDetailActivity.class);
@@ -65,11 +63,11 @@ public class RoleListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View view, Role role) {
-                TextView tvRoleName = view.findViewById(R.id.tvRoleName);
-                TextView tvRoleDescription = view.findViewById(R.id.tvRoleDescription);
+                TextView tvRoleNameDisplay = view.findViewById(R.id.tvRoleNameDisplay);
+                TextView tvRoleDescDisplay = view.findViewById(R.id.tvRoleDescDisplay);
 
-                if (tvRoleName != null) tvRoleName.setText(role.getName());
-                if (tvRoleDescription != null) tvRoleDescription.setText(role.getDescription());
+                if (tvRoleNameDisplay != null) tvRoleNameDisplay.setText(role.getName());
+                if (tvRoleDescDisplay != null) tvRoleDescDisplay.setText(role.getDescription());
             }
         };
         recyclerView.setAdapter(adapter);

@@ -7,7 +7,11 @@ import androidx.room.Query;
 import androidx.room.Update;
 import androidx.room.Delete;
 import com.example.androidapp.data.entities.Role;
+import com.example.androidapp.data.entities.Permission;
+import com.example.androidapp.data.entities.RolePermission;
 import java.util.List;
+
+
 
 @Dao
 public interface RoleDao {
@@ -26,6 +30,12 @@ public interface RoleDao {
     @Query("SELECT * FROM roles WHERE id = :id LIMIT 1")
     LiveData<Role> getRoleById(String id);
 
-    @Query("SELECT * FROM roles WHERE id = :id LIMIT 1")
-    Role getRoleByIdSync(String id);
+    @Query("SELECT p.* FROM permissions p INNER JOIN role_permissions rp ON p.id = rp.permissionId WHERE rp.roleId = :roleId")
+    LiveData<List<Permission>> getPermissionsForRole(String roleId);
+
+    @Insert
+    void insertRolePermission(RolePermission rolePermission);
+
+    @Query("DELETE FROM role_permissions WHERE roleId = :roleId")
+    void deleteRolePermissions(String roleId);
 }

@@ -4,19 +4,25 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Trophy;
 import com.example.androidapp.utils.SessionManager;
-import java.util.UUID;
+
+
+
+
 
 public class TrophyDetailActivity extends AppCompatActivity {
     private EditText etName, etDescription, etImageUrl, etPointsRequired;
+    private ImageView ivTrophyPreview;
     private AppDatabase database;
     private SessionManager sessionManager;
-    private String trophyId;
+    private int trophyId = -1;
     private Trophy currentTrophy;
 
     @Override
@@ -28,37 +34,47 @@ public class TrophyDetailActivity extends AppCompatActivity {
         sessionManager = new SessionManager(this);
 
         initViews();
-
-        trophyId = getIntent().getStringExtra("trophy_id");
-        if (trophyId != null) {
-            setTitle("تعديل جائزة");
+        
+        trophyId = getIntent().getIntExtra("trophy_id", -1);
+        if (trophyId != -1) {
+            setTitle("تعديل الكأس");
             loadTrophy();
         } else {
-            setTitle("جائزة جديدة");
+            setTitle("إضافة كأس جديد");
         }
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initViews() {
-        etName = findViewById(R.id.etName);
-        etDescription = findViewById(R.id.etDescription);
-        etImageUrl = findViewById(R.id.etImageUrl);
-        etPointsRequired = findViewById(R.id.etPointsRequired);
+
+        etImageUrl.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                loadImagePreview(etImageUrl.getText().toString());
+            }
+        });
+    }
+
+    private void loadImagePreview(String imageUrl) {
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Glide.with(this)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.ic_trophy_placeholder)
+                    .error(R.drawable.ic_trophy_placeholder)
+                    .into(ivTrophyPreview);
+        } else {
+            ivTrophyPreview.setImageResource(R.drawable.ic_trophy_placeholder);
+        }
     }
 
     private void loadTrophy() {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            Trophy trophy = database.trophyDao().getTrophyByIdSync(trophyId, sessionManager.getCurrentCompanyId());
-            runOnUiThread(() -> {
-                if (trophy != null) {
-                    currentTrophy = trophy;
-                    populateFields();
-                }
-            });
-        });
+        database.trophyDao().getTrophyById(trophyId, sessionManager.getCurrentCompanyId())
+                .observe(this, trophy -> {
+                    if (trophy != null) {
+                        currentTrophy = trophy;
+                        populateFields();
+                    }
+                });
     }
 
     private void populateFields() {
@@ -66,6 +82,7 @@ public class TrophyDetailActivity extends AppCompatActivity {
         etDescription.setText(currentTrophy.getDescription());
         etImageUrl.setText(currentTrophy.getImageUrl());
         etPointsRequired.setText(String.valueOf(currentTrophy.getPointsRequired()));
+        loadImagePreview(currentTrophy.getImageUrl());
     }
 
     private void saveTrophy() {
@@ -75,42 +92,38 @@ public class TrophyDetailActivity extends AppCompatActivity {
         String pointsRequiredStr = etPointsRequired.getText().toString().trim();
 
         if (name.isEmpty()) {
-            etName.setError("الرجاء إدخال الاسم");
+            etName.setError("اسم الكأس مطلوب");
             return;
         }
-
         if (pointsRequiredStr.isEmpty()) {
-            etPointsRequired.setError("الرجاء إدخال النقاط المطلوبة");
+            etPointsRequired.setError("النقاط المطلوبة مطلوبة");
             return;
         }
 
         int pointsRequired = Integer.parseInt(pointsRequiredStr);
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            if (trophyId == null) {
+            if (trophyId == -1) {
+                // Create new trophy
                 Trophy trophy = new Trophy(
-                    UUID.randomUUID().toString(),
-                    name,
-                    description,
-                    sessionManager.getCurrentCompanyId(),
-                    pointsRequired,
-                    imageUrl
+                        sessionManager.getCurrentCompanyId(),
+                        name,
+                        description,
+                        imageUrl,
+                        pointsRequired
                 );
                 database.trophyDao().insert(trophy);
             } else {
-                Trophy trophy = new Trophy(
-                    trophyId,
-                    name,
-                    description,
-                    sessionManager.getCurrentCompanyId(),
-                    pointsRequired,
-                    imageUrl
-                );
-                database.trophyDao().update(trophy);
+                // Update existing trophy
+                currentTrophy.setName(name);
+                currentTrophy.setDescription(description);
+                currentTrophy.setImageUrl(imageUrl);
+                currentTrophy.setPointsRequired(pointsRequired);
+                database.trophyDao().update(currentTrophy);
             }
 
             runOnUiThread(() -> {
-                Toast.makeText(this, "تم الحفظ بنجاح", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "تم حفظ الكأس بنجاح", Toast.LENGTH_SHORT).show();
                 finish();
             });
         });
@@ -124,14 +137,15 @@ public class TrophyDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-            return true;
-        } else if (id == R.id.action_save) {
-            saveTrophy();
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.action_save:
+                saveTrophy();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }

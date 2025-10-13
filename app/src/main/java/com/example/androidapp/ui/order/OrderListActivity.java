@@ -2,6 +2,7 @@ package com.example.androidapp.ui.order;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -48,12 +49,10 @@ public class OrderListActivity extends AppCompatActivity {
         }
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(v -> {
-                Intent intent = new Intent(this, OrderDetailActivity.class);
-                startActivity(intent);
-            });
-        }
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(this, OrderDetailActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void setupRecyclerView() {
@@ -70,17 +69,15 @@ public class OrderListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Order order) {
-                TextView tvOrderId = itemView.findViewById(R.id.tvOrderId);
-                TextView tvOrderDate = itemView.findViewById(R.id.tvOrderDate);
-                TextView tvTotalAmount = itemView.findViewById(R.id.tvTotalAmount);
-                TextView tvStatus = itemView.findViewById(R.id.tvStatus);
+                TextView tvOrderNumber = itemView.findViewById(R.id.tvOrderNumber);
+                TextView tvOrderDateDisplay = itemView.findViewById(R.id.tvOrderDateDisplay);
+                TextView tvTotalAmountDisplay = itemView.findViewById(R.id.tvTotalAmountDisplay);
+                TextView tvStatusDisplay = itemView.findViewById(R.id.tvStatusDisplay);
 
-                if (tvOrderId != null) tvOrderId.setText("طلب #" + order.getId());
-                if (tvOrderDate != null && order.getOrderDate() != null) {
-                    tvOrderDate.setText(dateFormat.format(order.getOrderDate()));
-                }
-                if (tvTotalAmount != null) tvTotalAmount.setText(currencyFormat.format(order.getTotalAmount()));
-                if (tvStatus != null) tvStatus.setText(order.getStatus());
+                if (tvOrderNumber != null) tvOrderNumber.setText("طلب #" + order.getOrderNumber());
+                if (tvOrderDateDisplay != null) tvOrderDateDisplay.setText(order.getOrderDate());
+                if (tvTotalAmountDisplay != null) tvTotalAmountDisplay.setText(currencyFormat.format(order.getTotalAmount()));
+                if (tvStatusDisplay != null) tvStatusDisplay.setText(order.getStatus());
             }
         };
         recyclerView.setAdapter(adapter);

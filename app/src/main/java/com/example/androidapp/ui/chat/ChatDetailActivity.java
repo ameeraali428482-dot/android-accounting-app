@@ -55,8 +55,8 @@ public class ChatDetailActivity extends AppCompatActivity {
 
     private void initViews() {
         recyclerView = findViewById(R.id.recyclerView);
-        etMessage = findViewById(R.id.etMessage);
-        btnSend = findViewById(R.id.btnSend);
+        etMessage = findViewById(R.id.etMessageInput);
+        btnSend = findViewById(R.id.btnSendMessage);
 
         setTitle("محادثة مع " + otherUserId);
         if (getSupportActionBar() != null) {
@@ -81,15 +81,15 @@ public class ChatDetailActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Chat chat) {
-                TextView tvMessage = itemView.findViewById(R.id.tvMessage);
-                TextView tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
-                LinearLayout messageContainer = itemView.findViewById(R.id.messageContainer);
+                TextView tvMessageText = itemView.findViewById(R.id.tvMessageText);
+                TextView tvTimestampText = itemView.findViewById(R.id.tvTimestampText);
+                LinearLayout messageContainerLayout = itemView.findViewById(R.id.messageContainerLayout);
 
-                if (tvMessage != null) tvMessage.setText(chat.getMessage());
-                if (tvTimestamp != null) tvTimestamp.setText(dateFormat.format(chat.getCreatedAt()));
+                if (tvMessageText != null) tvMessageText.setText(chat.getMessage());
+                if (tvTimestampText != null) tvTimestampText.setText(dateFormat.format(chat.getCreatedAt()));
                 
                 // Align message based on sender
-                if (messageContainer != null) {
+                if (messageContainerLayout != null) {
                     if (chat.getSenderId().equals(sessionManager.getCurrentUserId())) {
                         // My message - align right
                     } else {

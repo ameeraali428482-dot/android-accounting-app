@@ -9,23 +9,15 @@ import androidx.room.Update;
 import com.example.androidapp.data.entities.Trophy;
 import java.util.List;
 
+
+
+
+
 @Dao
-public interface TrophyDao {
-    @Insert
-    void insert(Trophy trophy);
-
-    @Update
-    void update(Trophy trophy);
-
-    @Delete
-    void delete(Trophy trophy);
-
-    @Query("SELECT * FROM trophies WHERE companyId = :companyId")
+public interface TrophyDao extends BaseDao<Trophy> {
+    @Query("SELECT * FROM trophies WHERE companyId = :companyId ORDER BY name ASC")
     LiveData<List<Trophy>> getAllTrophies(String companyId);
 
-    @Query("SELECT * FROM trophies WHERE id = :id AND companyId = :companyId LIMIT 1")
-    LiveData<Trophy> getTrophyById(String id, String companyId);
-
-    @Query("SELECT * FROM trophies WHERE id = :id AND companyId = :companyId LIMIT 1")
-    Trophy getTrophyByIdSync(String id, String companyId);
+    @Query("SELECT * FROM trophies WHERE id = :trophyId AND companyId = :companyId")
+    LiveData<Trophy> getTrophyById(String trophyId, String companyId);
 }
