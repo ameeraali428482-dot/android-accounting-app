@@ -3,44 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="16dp"
+    android:background="?attr/selectableItemBackground">
 
     <TextView
-        android:id="@+id/journal_entry_date"
+        android:id="@+id/tvEntryNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="16sp"
         android:textStyle="bold"
-        android:textSize="18sp"
-        android:text="تاريخ القيد"/>
+        android:text="رقم القيد" />
 
     <TextView
-        android:id="@+id/journal_entry_description"
+        android:id="@+id/tvEntryDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:textSize="14sp"
-        android:text="الوصف"/>
+        android:text="الوصف" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
 
         <TextView
-            android:id="@+id/journal_entry_total_debit"
+            android:id="@+id/tvTotalDebit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="14sp"
-            android:text="مدين: 0.00"/>
+            android:text="المدين: 0" />
 
         <TextView
-            android:id="@+id/journal_entry_total_credit"
+            android:id="@+id/tvTotalCredit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="14sp"
-            android:text="دائن: 0.00"/>
-
+            android:text="الدائن: 0" />
     </LinearLayout>
-
 </LinearLayout>
