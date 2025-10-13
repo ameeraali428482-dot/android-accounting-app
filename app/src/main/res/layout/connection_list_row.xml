@@ -4,29 +4,30 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="?attr/selectableItemBackground">
+    android:background="?android:attr/selectableItemBackground">
 
     <TextView
-        android:id="@+id/connectionName"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvConnectionName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:text="اسم الاتصال" />
+        android:text="Connection Name"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/connectionType"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvConnectionType"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:text="Connection Type"
         android:textSize="14sp"
-        android:text="نوع الاتصال" />
+        android:layout_marginTop="4dp" />
 
     <TextView
-        android:id="@+id/connectionStatus"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvConnectionStatus"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:text="Status"
         android:textSize="14sp"
-        android:text="الحالة" />
+        android:layout_marginTop="4dp" />
+
 </LinearLayout>

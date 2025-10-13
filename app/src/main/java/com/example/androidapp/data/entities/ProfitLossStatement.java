@@ -1,61 +1,53 @@
 package com.example.androidapp.data.entities;
 
-import androidx.annotation.NonNull;
+import androidx.room.*;
 import androidx.annotation.NonNull;
 
-
+@Entity(tableName = "profit_loss_statements")
 public class ProfitLossStatement {
-    private float totalRevenue;
-    private float totalCostOfGoodsSold;
-    private float grossProfit;
-    private float operatingExpenses;
-    private float netProfit;
+    @PrimaryKey
+    @NonNull
+    private String id;
+    private String companyId;
+    private String period;
+    private double totalRevenue;
+    private double totalExpenses;
+    private double netProfit;
+    private String createdDate;
 
-    public ProfitLossStatement(float totalRevenue, float totalCostOfGoodsSold, float grossProfit, float operatingExpenses, float netProfit) {
+    public ProfitLossStatement() {}
+
+    public ProfitLossStatement(@NonNull String id, String companyId, String period, 
+                              double totalRevenue, double totalExpenses, double netProfit, 
+                              String createdDate) {
+        this.id = id;
+        this.companyId = companyId;
+        this.period = period;
         this.totalRevenue = totalRevenue;
-        this.totalCostOfGoodsSold = totalCostOfGoodsSold;
-        this.grossProfit = grossProfit;
-        this.operatingExpenses = operatingExpenses;
+        this.totalExpenses = totalExpenses;
         this.netProfit = netProfit;
+        this.createdDate = createdDate;
     }
 
-    public float getTotalRevenue() {
-        return totalRevenue;
-    }
+    @NonNull
+    public String getId() { return id; }
+    public void setId(@NonNull String id) { this.id = id; }
 
-    public void setTotalRevenue(float totalRevenue) {
-        this.totalRevenue = totalRevenue;
-    }
+    public String getCompanyId() { return companyId; }
+    public void setCompanyId(String companyId) { this.companyId = companyId; }
 
-    public float getTotalCostOfGoodsSold() {
-        return totalCostOfGoodsSold;
-    }
+    public String getPeriod() { return period; }
+    public void setPeriod(String period) { this.period = period; }
 
-    public void setTotalCostOfGoodsSold(float totalCostOfGoodsSold) {
-        this.totalCostOfGoodsSold = totalCostOfGoodsSold;
-    }
+    public double getTotalRevenue() { return totalRevenue; }
+    public void setTotalRevenue(double totalRevenue) { this.totalRevenue = totalRevenue; }
 
-    public float getGrossProfit() {
-        return grossProfit;
-    }
+    public double getTotalExpenses() { return totalExpenses; }
+    public void setTotalExpenses(double totalExpenses) { this.totalExpenses = totalExpenses; }
 
-    public void setGrossProfit(float grossProfit) {
-        this.grossProfit = grossProfit;
-    }
+    public double getNetProfit() { return netProfit; }
+    public void setNetProfit(double netProfit) { this.netProfit = netProfit; }
 
-    public float getOperatingExpenses() {
-        return operatingExpenses;
-    }
-
-    public void setOperatingExpenses(float operatingExpenses) {
-        this.operatingExpenses = operatingExpenses;
-    }
-
-    public float getNetProfit() {
-        return netProfit;
-    }
-
-    public void setNetProfit(float netProfit) {
-        this.netProfit = netProfit;
-    }
+    public String getCreatedDate() { return createdDate; }
+    public void setCreatedDate(String createdDate) { this.createdDate = createdDate; }
 }

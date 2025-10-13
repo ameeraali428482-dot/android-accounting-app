@@ -1,11 +1,13 @@
 package com.example.androidapp.data.entities;
 
 import androidx.room.*;
+import androidx.annotation.NonNull;
 import java.util.Date;
 
 @Entity(tableName = "chat_messages")
 public class ChatMessage {
     @PrimaryKey
+    @NonNull
     private String id;
     private String chatId;
     private String senderId;
@@ -17,7 +19,8 @@ public class ChatMessage {
 
     public ChatMessage() {}
 
-    public ChatMessage(String id, String chatId, String senderId, String message, 
+    @Ignore
+    public ChatMessage(@NonNull String id, String chatId, String senderId, String message, 
                       String messageType, Date timestamp, boolean isRead, String companyId) {
         this.id = id;
         this.chatId = chatId;
@@ -29,8 +32,9 @@ public class ChatMessage {
         this.companyId = companyId;
     }
 
+    @NonNull
     public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public void setId(@NonNull String id) { this.id = id; }
 
     public String getChatId() { return chatId; }
     public void setChatId(String chatId) { this.chatId = chatId; }

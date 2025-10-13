@@ -1,24 +1,53 @@
 package com.example.androidapp.data.entities;
 
-import androidx.annotation.NonNull;
+import androidx.room.*;
 import androidx.annotation.NonNull;
 
-
+@Entity(tableName = "balance_sheets")
 public class BalanceSheet {
-    // Placeholder for a complex BalanceSheet object
-    // In a real application, this would contain aggregated data for assets, liabilities, and equity.
-    // For now, it's an empty class to resolve compilation errors.
+    @PrimaryKey
+    @NonNull
+    private String id;
+    private String companyId;
+    private String period;
+    private double totalAssets;
+    private double totalLiabilities;
+    private double totalEquity;
+    private String createdDate;
 
-    public BalanceSheet() {
-        // Default constructor
+    public BalanceSheet() {}
+
+    public BalanceSheet(@NonNull String id, String companyId, String period, 
+                       double totalAssets, double totalLiabilities, double totalEquity, 
+                       String createdDate) {
+        this.id = id;
+        this.companyId = companyId;
+        this.period = period;
+        this.totalAssets = totalAssets;
+        this.totalLiabilities = totalLiabilities;
+        this.totalEquity = totalEquity;
+        this.createdDate = createdDate;
     }
 
-    // You would add properties and methods here to represent the balance sheet data
-    // For example:
-    // private float totalAssets;
-    // private float totalLiabilities;
-    // private float totalEquity;
+    @NonNull
+    public String getId() { return id; }
+    public void setId(@NonNull String id) { this.id = id; }
 
-    // public float getTotalAssets() { return totalAssets; }
-    // public void setTotalAssets(float totalAssets) { this.totalAssets = totalAssets; }
+    public String getCompanyId() { return companyId; }
+    public void setCompanyId(String companyId) { this.companyId = companyId; }
+
+    public String getPeriod() { return period; }
+    public void setPeriod(String period) { this.period = period; }
+
+    public double getTotalAssets() { return totalAssets; }
+    public void setTotalAssets(double totalAssets) { this.totalAssets = totalAssets; }
+
+    public double getTotalLiabilities() { return totalLiabilities; }
+    public void setTotalLiabilities(double totalLiabilities) { this.totalLiabilities = totalLiabilities; }
+
+    public double getTotalEquity() { return totalEquity; }
+    public void setTotalEquity(double totalEquity) { this.totalEquity = totalEquity; }
+
+    public String getCreatedDate() { return createdDate; }
+    public void setCreatedDate(String createdDate) { this.createdDate = createdDate; }
 }
