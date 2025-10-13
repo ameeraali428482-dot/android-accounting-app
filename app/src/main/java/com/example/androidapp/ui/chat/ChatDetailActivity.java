@@ -2,36 +2,30 @@ package com.example.androidapp.ui.chat;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.ChatMessage;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
-import java.util.concurrent.Executors;
 
 public class ChatDetailActivity extends AppCompatActivity {
+
     private RecyclerView recyclerView;
-    private EditText etMessageInput;
-    private Button btnSendMessage;
+    private EditText messageEditText;
+    private ImageButton sendButton;
     private GenericAdapter<ChatMessage> adapter;
     private AppDatabase database;
     private SessionManager sessionManager;
     private String chatId;
+    private String companyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,83 +34,78 @@ public class ChatDetailActivity extends AppCompatActivity {
 
         database = AppDatabase.getInstance(this);
         sessionManager = new SessionManager(this);
-
-        recyclerView = findViewById(R.id.recyclerView);
-        etMessageInput = findViewById(R.id.etMessageInput);
-        btnSendMessage = findViewById(R.id.btnSendMessage);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
         chatId = getIntent().getStringExtra("chat_id");
 
-        btnSendMessage.setOnClickListener(v -> sendMessage());
-
+        initViews();
+        setupRecyclerView();
         loadMessages();
     }
 
-    private void loadMessages() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+    private void initViews() {
+        recyclerView = findViewById(R.id.recyclerView);
+        messageEditText = findViewById(R.id.messageEditText);
+        sendButton = findViewById(R.id.sendButton);
 
-        adapter = new GenericAdapter<>(new ArrayList<>(), new GenericAdapter.OnItemClickListener<ChatMessage>() {
-            @Override
-            public void onItemClick(ChatMessage item) {
-                // لا حاجة لعمل شيء عند النقر على الرسالة
-            }
-        }) {
+        sendButton.setOnClickListener(v -> sendMessage());
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        
+        adapter = new GenericAdapter<>(new ArrayList<>(), null) {
             @Override
             protected int getLayoutResId() {
-                return R.layout.chat_message_item;
+                return R.layout.chat_message_row;
             }
 
             @Override
             protected void bindView(View itemView, ChatMessage message) {
-                TextView tvMessageText = itemView.findViewById(R.id.tvMessageText);
-                TextView tvTimestampText = itemView.findViewById(R.id.tvTimestampText);
-
-                tvMessageText.setText(message.getMessageText());
+                // ربط البيانات مع عناصر الواجهة في chat_message_row.xml
+                TextView messageText = itemView.findViewById(R.id.messageText);
+                TextView senderName = itemView.findViewById(R.id.senderName);
+                TextView timestamp = itemView.findViewById(R.id.timestamp);
                 
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-                tvTimestampText.setText(sdf.format(message.getTimestamp()));
+                messageText.setText(message.getMessage());
+                senderName.setText(message.getSenderId());
+                timestamp.setText(message.getTimestamp().toString());
             }
         };
-
+        
         recyclerView.setAdapter(adapter);
+    }
 
-        if (chatId != null) {
-            database.chatMessageDao().getMessagesByChatId(chatId, companyId).observe(this, messages -> {
-                if (messages != null) {
-                    adapter.updateData(messages);
-                }
-            });
+    private void loadMessages() {
+        if (chatId != null && companyId != null) {
+            database.chatMessageDao().getMessagesByChat(chatId, companyId)
+                    .observe(this, messages -> {
+                        if (messages != null) {
+                            adapter.updateData(messages);
+                            recyclerView.scrollToPosition(messages.size() - 1);
+                        }
+                    });
         }
     }
 
     private void sendMessage() {
-        String messageText = etMessageInput.getText().toString().trim();
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
-        String userId = sessionManager.getUserDetails().get(SessionManager.KEY_USER_ID);
-
-        if (messageText.isEmpty()) {
-            Toast.makeText(this, "الرجاء إدخال نص الرسالة", Toast.LENGTH_SHORT).show();
+        String messageText = messageEditText.getText().toString().trim();
+        if (messageText.isEmpty() || chatId == null || companyId == null) {
             return;
         }
 
-        ChatMessage chatMessage = new ChatMessage(
+        String userId = sessionManager.getUserDetails().get(SessionManager.KEY_USER_ID);
+        ChatMessage message = new ChatMessage(
             UUID.randomUUID().toString(),
-            companyId,
             chatId,
             userId,
             messageText,
+            "TEXT",
             new Date(),
-            false
+            false,
+            companyId
         );
 
-        Executors.newSingleThreadExecutor().execute(() -> {
-            database.chatMessageDao().insert(chatMessage);
-            runOnUiThread(() -> {
-                etMessageInput.setText("");
-                Toast.makeText(this, "تم إرسال الرسالة", Toast.LENGTH_SHORT).show();
-            });
-        });
+        database.chatMessageDao().insert(message);
+        messageEditText.setText("");
     }
 }

@@ -1,60 +1,60 @@
 package com.example.androidapp.data.entities;
 
-import androidx.annotation.NonNull;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-import java.util.Date;
+import androidx.room.*;
 
-@Entity(tableName = "pointtransactions")
+@Entity(tableName = "point_transactions")
 public class PointTransaction {
     @PrimaryKey
-    @NonNull
     private String id;
     private String companyId;
-    private String type;
-    private int points;
-    private Date date;
     private String userId;
+    private int points;
+    private String transactionType;
     private String description;
+    private String transactionDate;
     private String referenceId;
-    private Date createdAt;
+    private String referenceType;
 
-    public PointTransaction(@NonNull String id, String companyId, String type, int points, Date date, String userId) {
+    public PointTransaction() {}
+
+    public PointTransaction(String id, String companyId, String userId, int points, 
+                           String transactionType, String description, String transactionDate,
+                           String referenceId, String referenceType) {
         this.id = id;
         this.companyId = companyId;
-        this.type = type;
-        this.points = points;
-        this.date = date;
         this.userId = userId;
-        this.createdAt = new Date();
+        this.points = points;
+        this.transactionType = transactionType;
+        this.description = description;
+        this.transactionDate = transactionDate;
+        this.referenceId = referenceId;
+        this.referenceType = referenceType;
     }
 
-    // Getters and Setters
-    @NonNull
     public String getId() { return id; }
-    public void setId(@NonNull String id) { this.id = id; }
+    public void setId(String id) { this.id = id; }
 
     public String getCompanyId() { return companyId; }
     public void setCompanyId(String companyId) { this.companyId = companyId; }
 
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 
     public int getPoints() { return points; }
     public void setPoints(int points) { this.points = points; }
 
-    public Date getDate() { return date; }
-    public void setDate(Date date) { this.date = date; }
-
-    public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
+    public String getTransactionType() { return transactionType; }
+    public void setTransactionType(String transactionType) { this.transactionType = transactionType; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
+    public String getTransactionDate() { return transactionDate; }
+    public void setTransactionDate(String transactionDate) { this.transactionDate = transactionDate; }
+
     public String getReferenceId() { return referenceId; }
     public void setReferenceId(String referenceId) { this.referenceId = referenceId; }
 
-    public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public String getReferenceType() { return referenceType; }
+    public void setReferenceType(String referenceType) { this.referenceType = referenceType; }
 }

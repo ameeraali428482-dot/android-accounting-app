@@ -3,7 +3,6 @@ package com.example.androidapp.ui.connection;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +14,7 @@ import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Connection;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -23,7 +23,7 @@ public class ConnectionListActivity extends AppCompatActivity {
     private GenericAdapter<Connection> adapter;
     private AppDatabase database;
     private SessionManager sessionManager;
-    private Button addButton;
+    private FloatingActionButton fabAddConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +34,11 @@ public class ConnectionListActivity extends AppCompatActivity {
         sessionManager = new SessionManager(this);
 
         recyclerView = findViewById(R.id.recyclerView);
-        addButton = findViewById(R.id.addButton);
+        fabAddConnection = findViewById(R.id.fabAddConnection);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        addButton.setOnClickListener(v -> {
+        fabAddConnection.setOnClickListener(v -> {
             Intent intent = new Intent(ConnectionListActivity.this, ConnectionDetailActivity.class);
             startActivity(intent);
         });
@@ -64,13 +64,13 @@ public class ConnectionListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Connection connection) {
-                TextView connectionName = itemView.findViewById(R.id.connectionName);
-                TextView connectionType = itemView.findViewById(R.id.connectionType);
-                TextView connectionStatus = itemView.findViewById(R.id.connectionStatus);
+                TextView tvConnectionName = itemView.findViewById(R.id.tvConnectionName);
+                TextView tvConnectionType = itemView.findViewById(R.id.tvConnectionType);
+                TextView tvConnectionStatus = itemView.findViewById(R.id.tvConnectionStatus);
 
-                connectionName.setText(connection.getConnectionName());
-                connectionType.setText(connection.getConnectionType());
-                connectionStatus.setText(connection.getConnectionStatus());
+                tvConnectionName.setText(connection.getConnectionName());
+                tvConnectionType.setText(connection.getConnectionType());
+                tvConnectionStatus.setText(connection.getStatus());
             }
         };
 

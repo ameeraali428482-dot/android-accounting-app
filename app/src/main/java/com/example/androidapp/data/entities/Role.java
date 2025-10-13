@@ -1,44 +1,49 @@
 package com.example.androidapp.data.entities;
 
-import androidx.annotation.NonNull;
-import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.PrimaryKey;
+import androidx.room.*;
 
-
-@Entity(tableName = "roles",
-        foreignKeys = @ForeignKey(entity = Company.class,
-                                  parentColumns = "id",
-                                  childColumns = "companyId",
-                                  onDelete = ForeignKey.CASCADE),
-        indices = {@Index(value = "companyId")})
+@Entity(tableName = "roles")
 public class Role {
     @PrimaryKey
-    @NonNull
     private String id;
+    private String companyId;
     private String name;
     private String description;
-    private String companyId;
-    private boolean isDefault;
+    private String permissions;
+    private String createdDate;
+    private String updatedDate;
 
-    public Role(@NonNull String id, String name, String description, String companyId, boolean isDefault) {
+    public Role() {}
+
+    public Role(String id, String companyId, String name, String description, 
+                String permissions, String createdDate, String updatedDate) {
         this.id = id;
+        this.companyId = companyId;
         this.name = name;
         this.description = description;
-        this.companyId = companyId;
-        this.isDefault = isDefault;
+        this.permissions = permissions;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
     }
 
-    @NonNull
     public String getId() { return id; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
+    public void setId(String id) { this.id = id; }
+
     public String getCompanyId() { return companyId; }
-    public boolean isDefault() { return isDefault; }
-    public void setId(@NonNull String id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
-    public void setDescription(String description) { this.description = description; }
     public void setCompanyId(String companyId) { this.companyId = companyId; }
-    public void setDefault(boolean aDefault) { isDefault = aDefault; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getPermissions() { return permissions; }
+    public void setPermissions(String permissions) { this.permissions = permissions; }
+
+    public String getCreatedDate() { return createdDate; }
+    public void setCreatedDate(String createdDate) { this.createdDate = createdDate; }
+
+    public String getUpdatedDate() { return updatedDate; }
+    public void setUpdatedDate(String updatedDate) { this.updatedDate = updatedDate; }
 }
