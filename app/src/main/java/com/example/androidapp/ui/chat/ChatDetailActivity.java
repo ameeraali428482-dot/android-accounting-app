@@ -24,8 +24,8 @@ import java.util.UUID;
 
 public class ChatDetailActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private EditText etMessage;
-    private ImageButton btnSend;
+    private EditText etMessageInput;
+    private ImageButton btnSendMessage;
     private GenericAdapter<Chat> adapter;
     private AppDatabase database;
     private SessionManager sessionManager;
@@ -55,15 +55,15 @@ public class ChatDetailActivity extends AppCompatActivity {
 
     private void initViews() {
         recyclerView = findViewById(R.id.recyclerView);
-        etMessage = findViewById(R.id.etMessageInput);
-        btnSend = findViewById(R.id.btnSendMessage);
+        etMessageInput = findViewById(R.id.etMessageInput);
+        btnSendMessage = findViewById(R.id.btnSendMessage);
 
-        setTitle("محادثة مع " + otherUserId);
+        setTitle("محادثة");
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        btnSend.setOnClickListener(v -> sendMessage());
+        btnSendMessage.setOnClickListener(v -> sendMessage());
     }
 
     private void setupRecyclerView() {
@@ -71,9 +71,7 @@ public class ChatDetailActivity extends AppCompatActivity {
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new GenericAdapter<Chat>(new ArrayList<>(), chat -> {
-            // Handle chat click if needed
-        }) {
+        adapter = new GenericAdapter<Chat>(new ArrayList<>(), chat -> {}) {
             @Override
             protected int getLayoutResId() {
                 return R.layout.chat_message_row;
@@ -83,19 +81,9 @@ public class ChatDetailActivity extends AppCompatActivity {
             protected void bindView(View itemView, Chat chat) {
                 TextView tvMessageText = itemView.findViewById(R.id.tvMessageText);
                 TextView tvTimestampText = itemView.findViewById(R.id.tvTimestampText);
-                LinearLayout messageContainerLayout = itemView.findViewById(R.id.messageContainerLayout);
 
                 if (tvMessageText != null) tvMessageText.setText(chat.getMessage());
                 if (tvTimestampText != null) tvTimestampText.setText(dateFormat.format(chat.getCreatedAt()));
-                
-                // Align message based on sender
-                if (messageContainerLayout != null) {
-                    if (chat.getSenderId().equals(sessionManager.getCurrentUserId())) {
-                        // My message - align right
-                    } else {
-                        // Other user's message - align left
-                    }
-                }
             }
         };
         recyclerView.setAdapter(adapter);
@@ -127,7 +115,7 @@ public class ChatDetailActivity extends AppCompatActivity {
     }
 
     private void sendMessage() {
-        String messageText = etMessage.getText().toString().trim();
+        String messageText = etMessageInput.getText().toString().trim();
         if (messageText.isEmpty()) {
             return;
         }
@@ -145,7 +133,7 @@ public class ChatDetailActivity extends AppCompatActivity {
 
         new Thread(() -> {
             database.chatDao().insert(newChat);
-            runOnUiThread(() -> etMessage.setText(""));
+            runOnUiThread(() -> etMessageInput.setText(""));
         }).start();
     }
 

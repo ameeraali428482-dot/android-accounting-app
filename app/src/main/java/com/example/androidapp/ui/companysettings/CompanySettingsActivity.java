@@ -42,7 +42,7 @@ public class CompanySettingsActivity extends AppCompatActivity {
 
     private void loadSettings() {
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            CompanySettings settings = database.companySettingsDao().getCompanySettings();
+            CompanySettings settings = database.companySettingsDao().getCompanySettingsByCompanyId(sessionManager.getCurrentCompanyId());
             runOnUiThread(() -> {
                 if (settings != null) {
                     currentSettings = settings;

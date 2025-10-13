@@ -24,7 +24,7 @@ public class JournalEntryListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_journalentry_list);
+        setContentView(R.layout.activity_journal_entry_list);
 
         database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
@@ -52,18 +52,18 @@ public class JournalEntryListActivity extends AppCompatActivity {
         }) {
             @Override
             protected int getLayoutResId() {
-                return R.layout.journalentry_list_row;
+                return R.layout.journal_entry_list_row;
             }
 
             @Override
             protected void bindView(View itemView, JournalEntry journalEntry) {
-                TextView tvEntryDate = itemView.findViewById(R.id.tvEntryDate);
-                TextView tvDescription = itemView.findViewById(R.id.tvDescription);
+                TextView tvEntryNumber = itemView.findViewById(R.id.tvEntryNumber);
+                TextView tvEntryDescription = itemView.findViewById(R.id.tvEntryDescription);
                 TextView tvTotalDebit = itemView.findViewById(R.id.tvTotalDebit);
                 TextView tvTotalCredit = itemView.findViewById(R.id.tvTotalCredit);
 
-                if (tvEntryDate != null) tvEntryDate.setText(journalEntry.getEntryDate());
-                if (tvDescription != null) tvDescription.setText(journalEntry.getDescription());
+                if (tvEntryNumber != null) tvEntryNumber.setText("#" + journalEntry.getId());
+                if (tvEntryDescription != null) tvEntryDescription.setText(journalEntry.getDescription());
                 if (tvTotalDebit != null) tvTotalDebit.setText(String.valueOf(journalEntry.getTotalDebit()));
                 if (tvTotalCredit != null) tvTotalCredit.setText(String.valueOf(journalEntry.getTotalCredit()));
             }
