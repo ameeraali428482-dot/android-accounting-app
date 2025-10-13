@@ -24,7 +24,7 @@ public class JournalEntryListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_journalentry_list);
+        setContentView(R.layout.activity_journal_entry_list);
 
         database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
@@ -52,20 +52,20 @@ public class JournalEntryListActivity extends AppCompatActivity {
         }) {
             @Override
             protected int getLayoutResId() {
-                return R.layout.journalentry_list_row;
+                return R.layout.journal_entry_list_row;
             }
 
             @Override
             protected void bindView(View itemView, JournalEntry journalEntry) {
-                TextView tvEntryDate = itemView.findViewById(R.id.tvEntryDate);
-                TextView tvDescription = itemView.findViewById(R.id.tvDescription);
-                TextView tvTotalDebit = itemView.findViewById(R.id.tvTotalDebit);
-                TextView tvTotalCredit = itemView.findViewById(R.id.tvTotalCredit);
+                TextView tvEntryId = itemView.findViewById(R.id.tvEntryId);
+                TextView tvEntryDescription = itemView.findViewById(R.id.tvEntryDescription);
+                TextView tvEntryDebit = itemView.findViewById(R.id.tvEntryDebit);
+                TextView tvEntryCredit = itemView.findViewById(R.id.tvEntryCredit);
 
-                if (tvEntryDate != null) tvEntryDate.setText(journalEntry.getEntryDate());
-                if (tvDescription != null) tvDescription.setText(journalEntry.getDescription());
-                if (tvTotalDebit != null) tvTotalDebit.setText(String.valueOf(journalEntry.getTotalDebit()));
-                if (tvTotalCredit != null) tvTotalCredit.setText(String.valueOf(journalEntry.getTotalCredit()));
+                if (tvEntryId != null) tvEntryId.setText("قيد #" + journalEntry.getId());
+                if (tvEntryDescription != null) tvEntryDescription.setText(journalEntry.getDescription());
+                if (tvEntryDebit != null) tvEntryDebit.setText(String.valueOf(journalEntry.getTotalDebit()));
+                if (tvEntryCredit != null) tvEntryCredit.setText(String.valueOf(journalEntry.getTotalCredit()));
             }
         };
         recyclerView.setAdapter(adapter);

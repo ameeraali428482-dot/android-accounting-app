@@ -53,9 +53,9 @@ public class RoleDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        etRoleName = findViewById(R.id.etRoleNameInput);
-        etRoleDescription = findViewById(R.id.etRoleDescInput);
-        rvPermissions = findViewById(R.id.rvPermissionsList);
+        etRoleName = findViewById(R.id.etRoleName);
+        etRoleDescription = findViewById(R.id.etRoleDescription);
+        rvPermissions = findViewById(R.id.rvPermissions);
         btnSaveRole = findViewById(R.id.btnSaveRole);
         btnDeleteRole = findViewById(R.id.btnDeleteRole);
     }
@@ -63,7 +63,7 @@ public class RoleDetailActivity extends AppCompatActivity {
     private void setupPermissionsRecyclerView() {
         rvPermissions.setLayoutManager(new LinearLayoutManager(this));
         permissionsAdapter = new GenericAdapter<Permission>(new ArrayList<>(), permission -> {
-            // Handle permission click
+            // Handle permission click if needed
         }) {
             @Override
             protected int getLayoutResId() {
@@ -80,7 +80,7 @@ public class RoleDetailActivity extends AppCompatActivity {
 
     private void loadRoleData(String id) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            Role role = database.roleDao().getRoleById(id, sessionManager.getCurrentCompanyId());
+            Role role = database.roleDao().getRoleByIdSync(id);
             runOnUiThread(() -> {
                 if (role != null) {
                     etRoleName.setText(role.getName());
@@ -101,10 +101,10 @@ public class RoleDetailActivity extends AppCompatActivity {
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
             if (roleId == null) {
-                Role role = new Role(UUID.randomUUID().toString(), sessionManager.getCurrentCompanyId(), name, description);
+                Role role = new Role(UUID.randomUUID().toString(), sessionManager.getCurrentCompanyId(), name, description, true);
                 database.roleDao().insert(role);
             } else {
-                Role role = new Role(roleId, sessionManager.getCurrentCompanyId(), name, description);
+                Role role = new Role(roleId, sessionManager.getCurrentCompanyId(), name, description, true);
                 database.roleDao().update(role);
             }
             runOnUiThread(() -> {
@@ -117,7 +117,7 @@ public class RoleDetailActivity extends AppCompatActivity {
     private void deleteRole() {
         if (roleId != null) {
             AppDatabase.databaseWriteExecutor.execute(() -> {
-                Role role = database.roleDao().getRoleById(roleId, sessionManager.getCurrentCompanyId());
+                Role role = database.roleDao().getRoleByIdSync(roleId);
                 if (role != null) {
                     database.roleDao().delete(role);
                     runOnUiThread(() -> {

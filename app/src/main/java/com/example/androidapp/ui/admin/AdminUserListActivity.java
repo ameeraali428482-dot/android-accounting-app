@@ -49,11 +49,11 @@ public class AdminUserListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View view, User user) {
-                TextView tvUserNameDisplay = view.findViewById(R.id.tvUserNameDisplay);
-                TextView tvUserEmailDisplay = view.findViewById(R.id.tvUserEmailDisplay);
+                TextView tvUserName = view.findViewById(R.id.tvUserName);
+                TextView tvUserEmail = view.findViewById(R.id.tvUserEmail);
 
-                if (tvUserNameDisplay != null) tvUserNameDisplay.setText(user.getName());
-                if (tvUserEmailDisplay != null) tvUserEmailDisplay.setText(user.getEmail());
+                if (tvUserName != null) tvUserName.setText(user.getName());
+                if (tvUserEmail != null) tvUserEmail.setText(user.getEmail());
             }
         };
         recyclerView.setAdapter(adapter);

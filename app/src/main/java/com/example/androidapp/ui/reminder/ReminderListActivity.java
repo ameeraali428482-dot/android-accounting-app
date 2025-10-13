@@ -13,14 +13,16 @@ import com.example.androidapp.data.entities.Reminder;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
 public class ReminderListActivity extends AppCompatActivity {
-    private RecyclerView reminderRecyclerView;
+    private RecyclerView recyclerView;
     private GenericAdapter<Reminder> adapter;
     private AppDatabase database;
     private SessionManager sessionManager;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,34 +32,27 @@ public class ReminderListActivity extends AppCompatActivity {
         database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
 
-        reminderRecyclerView = findViewById(R.id.reminderRecyclerView);
-        reminderRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ReminderListActivity.this, ReminderDetailActivity.class);
+        if (fab != null) {
+            fab.setOnClickListener(v -> {
+                Intent intent = new Intent(this, ReminderDetailActivity.class);
                 startActivity(intent);
-            }
-        });
-
-        loadReminders();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadReminders();
-    }
-
-    private void loadReminders() {
-        String companyId = sessionManager.getCurrentCompanyId();
-        if (companyId == null) {
-            return;
+            });
         }
 
-        adapter = new GenericAdapter<Reminder>(new ArrayList<Reminder>()) {
+        setupRecyclerView();
+        loadReminders();
+    }
+
+    private void setupRecyclerView() {
+        adapter = new GenericAdapter<Reminder>(new ArrayList<>(), reminder -> {
+            Intent intent = new Intent(ReminderListActivity.this, ReminderDetailActivity.class);
+            intent.putExtra("reminder_id", reminder.getId());
+            startActivity(intent);
+        }) {
             @Override
             protected int getLayoutResId() {
                 return R.layout.reminder_list_row;
@@ -65,31 +60,32 @@ public class ReminderListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Reminder reminder) {
-                TextView reminderTitle = itemView.findViewById(R.id.reminderTitle);
-                TextView reminderDate = itemView.findViewById(R.id.reminderDate);
-                TextView reminderTime = itemView.findViewById(R.id.reminderTime);
+                TextView tvReminderTitle = itemView.findViewById(R.id.tvReminderTitle);
+                TextView tvReminderDueDate = itemView.findViewById(R.id.tvReminderDueDate);
+                TextView tvReminderPriority = itemView.findViewById(R.id.tvReminderPriority);
 
-                reminderTitle.setText(reminder.getTitle());
-                reminderDate.setText(reminder.getDate());
-                reminderTime.setText(reminder.getTime());
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(ReminderListActivity.this, ReminderDetailActivity.class);
-                        intent.putExtra("reminder_id", reminder.getId());
-                        startActivity(intent);
-                    }
-                });
+                if (tvReminderTitle != null) tvReminderTitle.setText(reminder.getTitle());
+                if (tvReminderDueDate != null) tvReminderDueDate.setText(reminder.getDueDate());
+                if (tvReminderPriority != null) tvReminderPriority.setText(reminder.getPriority());
             }
         };
+        recyclerView.setAdapter(adapter);
+    }
 
-        reminderRecyclerView.setAdapter(adapter);
+    private void loadReminders() {
+        String companyId = sessionManager.getCurrentCompanyId();
+        if (companyId != null) {
+            database.reminderDao().getAllReminders(companyId).observe(this, reminders -> {
+                if (reminders != null) {
+                    adapter.updateData(reminders);
+                }
+            });
+        }
+    }
 
-        database.reminderDao().getRemindersByCompanyId(companyId).observe(this, reminders -> {
-            if (reminders != null) {
-                adapter.updateData(reminders);
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadReminders();
     }
 }

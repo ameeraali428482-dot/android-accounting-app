@@ -16,7 +16,6 @@ import com.example.androidapp.data.entities.Trophy;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 public class TrophyListActivity extends AppCompatActivity {
@@ -42,9 +41,10 @@ public class TrophyListActivity extends AppCompatActivity {
     private void initViews() {
         recyclerView = findViewById(R.id.recyclerView);
         fab = findViewById(R.id.fab);
-
-        setTitle("إدارة الكؤوس");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("الجوائز");
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         fab.setOnClickListener(v -> {
             Intent intent = new Intent(this, TrophyDetailActivity.class);
@@ -54,48 +54,37 @@ public class TrophyListActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        
-        adapter = new GenericAdapter<Trophy>(new ArrayList<>(), R.layout.trophy_list_row) {
+        adapter = new GenericAdapter<Trophy>(new ArrayList<>(), trophy -> {
+            Intent intent = new Intent(TrophyListActivity.this, TrophyDetailActivity.class);
+            intent.putExtra("trophy_id", trophy.getId());
+            startActivity(intent);
+        }) {
+            @Override
+            protected int getLayoutResId() {
+                return R.layout.trophy_list_row;
+            }
+
             @Override
             protected void bindView(View view, Trophy trophy) {
-                TextView tvName = view.findViewById(R.id.tvName);
-                TextView tvDescription = view.findViewById(R.id.tvDescription);
-                TextView tvPointsRequired = view.findViewById(R.id.tvPointsRequired);
-                ImageView ivTrophyImage = view.findViewById(R.id.ivTrophyImage);
+                TextView tvTrophyName = view.findViewById(R.id.tvTrophyName);
+                TextView tvTrophyDescription = view.findViewById(R.id.tvTrophyDescription);
+                TextView tvTrophyPoints = view.findViewById(R.id.tvTrophyPoints);
 
-                tvName.setText(trophy.getName());
-                tvDescription.setText(trophy.getDescription());
-                tvPointsRequired.setText("النقاط المطلوبة: " + trophy.getPointsRequired());
-
-                if (trophy.getImageUrl() != null && !trophy.getImageUrl().isEmpty()) {
-                    Glide.with(TrophyListActivity.this)
-                            .load(trophy.getImageUrl())
-                            .placeholder(R.drawable.ic_trophy_placeholder)
-                            .error(R.drawable.ic_trophy_placeholder)
-                            .into(ivTrophyImage);
-                } else {
-                    ivTrophyImage.setImageResource(R.drawable.ic_trophy_placeholder);
-                }
-            }
-
-            @Override
-            protected void onItemClick(Trophy trophy) {
-                Intent intent = new Intent(TrophyListActivity.this, TrophyDetailActivity.class);
-                intent.putExtra("trophy_id", trophy.getId());
-                startActivity(intent);
+                if (tvTrophyName != null) tvTrophyName.setText(trophy.getName());
+                if (tvTrophyDescription != null) tvTrophyDescription.setText(trophy.getDescription());
+                if (tvTrophyPoints != null) tvTrophyPoints.setText(trophy.getPointsRequired() + " نقطة");
             }
         };
-        
         recyclerView.setAdapter(adapter);
     }
 
     private void loadTrophies() {
         database.trophyDao().getAllTrophies(sessionManager.getCurrentCompanyId())
-                .observe(this, trophies -> {
-                    if (trophies != null) {
-                        adapter.updateData(trophies);
-                    }
-                });
+            .observe(this, trophies -> {
+                if (trophies != null) {
+                    adapter.updateData(trophies);
+                }
+            });
     }
 
     @Override
