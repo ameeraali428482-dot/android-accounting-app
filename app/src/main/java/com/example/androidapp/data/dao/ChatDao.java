@@ -1,3 +1,4 @@
+
 package com.example.androidapp.data.dao;
 
 import androidx.room.Dao;
@@ -9,12 +10,9 @@ import androidx.lifecycle.LiveData;
 import com.example.androidapp.data.entities.Chat;
 import java.util.List;
 
-
-
-
-
 @Dao
 public interface ChatDao extends BaseDao<Chat> {
+
     @Query("SELECT * FROM chats WHERE companyId = :companyId ORDER BY createdAt DESC")
     LiveData<List<Chat>> getAllChats(String companyId);
 
@@ -29,10 +27,11 @@ public interface ChatDao extends BaseDao<Chat> {
 
     @Query("UPDATE chats SET isRead = 1 WHERE receiverId = :userId AND senderId = :senderId AND companyId = :companyId")
     void markChatsAsRead(String userId, String senderId, String companyId);
-}
 
-    @Query("SELECT * FROM chat WHERE (sender_id = :userId OR receiver_id = :userId) AND company_id = :companyId ORDER BY created_at DESC")
+    // ✅ أضف هذه الدوال الإضافية داخل نفس الواجهة وليس بعدها
+    @Query("SELECT * FROM chats WHERE (senderId = :userId OR receiverId = :userId) AND companyId = :companyId ORDER BY createdAt DESC")
     List<Chat> getAllChatsByUserId(String userId, String companyId);
 
-    @Query("UPDATE chat SET is_read = 1 WHERE sender_id = :otherUserId AND receiver_id = :currentUserId AND company_id = :companyId")
-    void markChatsAsRead(String currentUserId, String otherUserId, String companyId);
+    @Query("UPDATE chats SET isRead = 1 WHERE senderId = :otherUserId AND receiverId = :currentUserId AND companyId = :companyId")
+    void markChatsAsReadByUser(String currentUserId, String otherUserId, String companyId);
+}
