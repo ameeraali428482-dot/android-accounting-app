@@ -59,8 +59,8 @@ public class RoleDetailActivity extends AppCompatActivity {
             Role role = database.roleDao().getRoleByIdSync(roleId);
             if (role != null) {
                 runOnUiThread(() -> {
-                    etRoleName.setText(role.getName());
-                    etRoleDescription.setText(role.getDescription());
+                    etRoleName.setText(role.getRoleName());
+                    etRoleDescription.setText(role.getRoleDescription());
                 });
             }
         });
@@ -80,17 +80,17 @@ public class RoleDetailActivity extends AppCompatActivity {
             if (roleId == null) {
                 Role role = new Role(
                     UUID.randomUUID().toString(),
+                    companyId,
                     roleName,
                     roleDescription,
-                    companyId,
-                    false
+                    ""
                 );
                 database.roleDao().insert(role);
             } else {
                 Role role = database.roleDao().getRoleByIdSync(roleId);
                 if (role != null) {
-                    role.setName(roleName);
-                    role.setDescription(roleDescription);
+                    role.setRoleName(roleName);
+                    role.setRoleDescription(roleDescription);
                     database.roleDao().update(role);
                 }
             }

@@ -22,7 +22,7 @@ public interface RoleDao {
     @Delete
     void delete(Role role);
 
-    @Query("SELECT * FROM roles WHERE companyId = :companyId ORDER BY name ASC")
+    @Query("SELECT * FROM roles WHERE companyId = :companyId ORDER BY roleName ASC")
     LiveData<List<Role>> getAllRoles(String companyId);
 
     @Query("SELECT * FROM roles WHERE id = :roleId AND companyId = :companyId")
@@ -31,7 +31,7 @@ public interface RoleDao {
     @Query("SELECT * FROM roles WHERE id = :roleId")
     Role getRoleByIdSync(String roleId);
 
-    @Query("SELECT * FROM roles WHERE name = :roleName AND companyId = :companyId")
+    @Query("SELECT * FROM roles WHERE roleName = :roleName AND companyId = :companyId")
     Role getRoleByName(String roleName, String companyId);
 
     @Query("DELETE FROM roles WHERE companyId = :companyId")

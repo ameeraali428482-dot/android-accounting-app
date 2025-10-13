@@ -63,10 +63,10 @@ public class PointTransactionDetailActivity extends AppCompatActivity {
             if (pointTransaction != null) {
                 runOnUiThread(() -> {
                     etUserId.setText(pointTransaction.getUserId());
-                    etTransactionType.setText(pointTransaction.getType());
+                    etTransactionType.setText(pointTransaction.getTransactionType());
                     etPoints.setText(String.valueOf(pointTransaction.getPoints()));
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                    etDate.setText(sdf.format(pointTransaction.getDate()));
+                    etDate.setText(sdf.format(pointTransaction.getTransactionDate()));
                     etDescription.setText(pointTransaction.getDescription());
                 });
             }
@@ -92,18 +92,18 @@ public class PointTransactionDetailActivity extends AppCompatActivity {
                 PointTransaction pointTransaction = new PointTransaction(
                     UUID.randomUUID().toString(),
                     companyId,
+                    userId,
                     transactionType,
                     points,
                     new Date(),
-                    userId
+                    description
                 );
-                pointTransaction.setDescription(description);
                 database.pointTransactionDao().insert(pointTransaction);
             } else {
                 PointTransaction pointTransaction = database.pointTransactionDao().getPointTransactionByIdSync(pointTransactionId);
                 if (pointTransaction != null) {
                     pointTransaction.setUserId(userId);
-                    pointTransaction.setType(transactionType);
+                    pointTransaction.setTransactionType(transactionType);
                     pointTransaction.setPoints(points);
                     pointTransaction.setDescription(description);
                     database.pointTransactionDao().update(pointTransaction);

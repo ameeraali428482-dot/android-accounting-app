@@ -72,13 +72,9 @@ public class PointTransactionListActivity extends AppCompatActivity {
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-                if (pointTransaction.getDescription() != null) {
-                    tvDescription.setText(pointTransaction.getDescription());
-                } else {
-                    tvDescription.setText(pointTransaction.getType());
-                }
+                tvDescription.setText(pointTransaction.getDescription());
                 tvPoints.setText(String.valueOf(pointTransaction.getPoints()));
-                tvDate.setText(dateFormat.format(pointTransaction.getDate()));
+                tvDate.setText(dateFormat.format(pointTransaction.getTransactionDate()));
             }
         };
 
