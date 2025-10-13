@@ -6,7 +6,9 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+
 import com.example.androidapp.data.entities.Connection;
+
 import java.util.List;
 
 @Dao
@@ -20,15 +22,15 @@ public interface ConnectionDao {
     @Delete
     void delete(Connection connection);
 
-    @Query("SELECT * FROM connections")
-    LiveData<List<Connection>> getAllConnections();
+    @Query("SELECT * FROM connections WHERE companyId = :companyId ORDER BY connectionName ASC")
+    LiveData<List<Connection>> getAllConnections(String companyId);
 
-    @Query("SELECT * FROM connections WHERE companyId = :companyId")
-    LiveData<List<Connection>> getConnectionsByCompany(String companyId);
+    @Query("SELECT * FROM connections WHERE id = :connectionId AND companyId = :companyId")
+    LiveData<Connection> getConnectionById(String connectionId, String companyId);
 
-    @Query("SELECT * FROM connections WHERE id = :id LIMIT 1")
-    LiveData<Connection> getConnectionById(String id);
+    @Query("SELECT * FROM connections WHERE id = :connectionId")
+    Connection getConnectionByIdSync(String connectionId);
 
-    @Query("SELECT * FROM connections WHERE id = :id LIMIT 1")
-    Connection getConnectionByIdSync(String id);
+    @Query("DELETE FROM connections WHERE companyId = :companyId")
+    void deleteAllConnections(String companyId);
 }

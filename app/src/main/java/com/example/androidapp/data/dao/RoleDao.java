@@ -2,16 +2,14 @@ package com.example.androidapp.data.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
-import androidx.room.Delete;
+
 import com.example.androidapp.data.entities.Role;
-import com.example.androidapp.data.entities.Permission;
-import com.example.androidapp.data.entities.RolePermission;
+
 import java.util.List;
-
-
 
 @Dao
 public interface RoleDao {
@@ -24,18 +22,18 @@ public interface RoleDao {
     @Delete
     void delete(Role role);
 
-    @Query("SELECT * FROM roles WHERE companyId = :companyId")
+    @Query("SELECT * FROM roles WHERE companyId = :companyId ORDER BY roleName ASC")
     LiveData<List<Role>> getAllRoles(String companyId);
 
-    @Query("SELECT * FROM roles WHERE id = :id LIMIT 1")
-    LiveData<Role> getRoleById(String id);
+    @Query("SELECT * FROM roles WHERE id = :roleId AND companyId = :companyId")
+    LiveData<Role> getRoleById(String roleId, String companyId);
 
-    @Query("SELECT p.* FROM permissions p INNER JOIN role_permissions rp ON p.id = rp.permissionId WHERE rp.roleId = :roleId")
-    LiveData<List<Permission>> getPermissionsForRole(String roleId);
+    @Query("SELECT * FROM roles WHERE id = :roleId")
+    Role getRoleByIdSync(String roleId);
 
-    @Insert
-    void insertRolePermission(RolePermission rolePermission);
+    @Query("SELECT * FROM roles WHERE roleName = :roleName AND companyId = :companyId")
+    Role getRoleByName(String roleName, String companyId);
 
-    @Query("DELETE FROM role_permissions WHERE roleId = :roleId")
-    void deleteRolePermissions(String roleId);
+    @Query("DELETE FROM roles WHERE companyId = :companyId")
+    void deleteAllRoles(String companyId);
 }

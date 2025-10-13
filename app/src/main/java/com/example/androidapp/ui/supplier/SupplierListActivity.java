@@ -1,73 +1,62 @@
 package com.example.androidapp.ui.supplier;
 
-import com.example.androidapp.data.entities.Supplier;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import com.example.androidapp.App;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.androidapp.R;
-import com.example.androidapp.data.dao.SupplierDao;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Supplier;
-import com.example.androidapp.ui.common.BaseListActivity;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
-import java.util.List;
 
-
-
-
-
-public class SupplierListActivity extends BaseListActivity<Supplier> {
-
-    private SupplierDao supplierDao;
+public class SupplierListActivity extends AppCompatActivity {
+    private RecyclerView recyclerView;
+    private GenericAdapter<Supplier> adapter;
+    private AppDatabase database;
     private SessionManager sessionManager;
+    private FloatingActionButton fabAddSupplier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supplier_list);
 
-        supplierDao = new SupplierDao(App.getDatabaseHelper());
+        database = AppDatabase.getInstance(this);
         sessionManager = new SessionManager(this);
 
-        fabAddSupplier.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SupplierListActivity.this, SupplierDetailActivity.class);
-                startActivity(intent);
-            }
+        recyclerView = findViewById(R.id.recyclerView);
+        fabAddSupplier = findViewById(R.id.fabAddSupplier);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        fabAddSupplier.setOnClickListener(v -> {
+            Intent intent = new Intent(SupplierListActivity.this, SupplierDetailActivity.class);
+            startActivity(intent);
         });
 
-        // Initialize RecyclerView and other common elements from BaseListActivity
+        loadSuppliers();
+    }
 
-        recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
-        adapter = createAdapter();
-        recyclerView.setAdapter(adapter);
+    private void loadSuppliers() {
+        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
 
-        adapter.setOnItemClickListener(new GenericAdapter.OnItemClickListener<Supplier>() {
+        adapter = new GenericAdapter<>(new ArrayList<>(), new GenericAdapter.OnItemClickListener<Supplier>() {
             @Override
-            public void onItemClick(Supplier supplier) {
+            public void onItemClick(Supplier item) {
                 Intent intent = new Intent(SupplierListActivity.this, SupplierDetailActivity.class);
-                intent.putExtra("supplierId", supplier.getId());
+                intent.putExtra("supplier_id", item.getId());
                 startActivity(intent);
             }
-        });
-
-        loadData();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadData(); // Refresh data when returning to this activity
-    }
-
-    @Override
-    protected GenericAdapter<Supplier> createAdapter() {
-        return new GenericAdapter<Supplier>(new ArrayList<>()) {
+        }) {
             @Override
             protected int getLayoutResId() {
                 return R.layout.supplier_list_row;
@@ -75,30 +64,28 @@ public class SupplierListActivity extends BaseListActivity<Supplier> {
 
             @Override
             protected void bindView(View itemView, Supplier supplier) {
+                TextView tvSupplierName = itemView.findViewById(R.id.tvSupplierName);
+                TextView tvSupplierPhone = itemView.findViewById(R.id.tvSupplierPhone);
+                TextView tvSupplierEmail = itemView.findViewById(R.id.tvSupplierEmail);
 
-                supplierName.setText(supplier.getName());
-                supplierEmail.setText(supplier.getEmail());
-                supplierPhone.setText(supplier.getPhone());
+                tvSupplierName.setText(supplier.getSupplierName());
+                tvSupplierPhone.setText(supplier.getPhone());
+                tvSupplierEmail.setText(supplier.getEmail());
             }
         };
+
+        recyclerView.setAdapter(adapter);
+
+        database.supplierDao().getAllSuppliers(companyId).observe(this, suppliers -> {
+            if (suppliers != null) {
+                adapter.updateData(suppliers);
+            }
+        });
     }
 
     @Override
-    protected void loadData() {
-        showLoading();
-        // In a real app, this would be an async operation
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_CURRENT_ORG_ID);
-        if (companyId != null) {
-            List<Supplier> suppliers = supplierDao.getSuppliersByCompanyId(companyId);
-            showData(suppliers);
-        } else {
-            showData(new ArrayList<>()); // No company selected or logged in
-        }
-    }
-
-    @Override
-    protected String getEmptyStateMessage() {
-        return "لا يوجد موردون لعرضهم. اضغط على زر الإضافة لإنشاء مورد جديد.";
+    protected void onResume() {
+        super.onResume();
+        loadSuppliers();
     }
 }
-

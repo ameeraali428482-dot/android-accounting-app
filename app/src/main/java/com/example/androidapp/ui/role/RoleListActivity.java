@@ -4,15 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Role;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 public class RoleListActivity extends AppCompatActivity {
@@ -20,33 +23,39 @@ public class RoleListActivity extends AppCompatActivity {
     private GenericAdapter<Role> adapter;
     private AppDatabase database;
     private SessionManager sessionManager;
+    private FloatingActionButton fabAddRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_role_list);
 
-        database = AppDatabase.getDatabase(this);
+        database = AppDatabase.getInstance(this);
         sessionManager = new SessionManager(this);
 
         recyclerView = findViewById(R.id.recyclerView);
+        fabAddRole = findViewById(R.id.fabAddRole);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(this, RoleDetailActivity.class);
+        fabAddRole.setOnClickListener(v -> {
+            Intent intent = new Intent(RoleListActivity.this, RoleDetailActivity.class);
             startActivity(intent);
         });
 
-        setupRecyclerView();
         loadRoles();
     }
 
-    private void setupRecyclerView() {
-        adapter = new GenericAdapter<Role>(new ArrayList<>(), role -> {
-            Intent intent = new Intent(RoleListActivity.this, RoleDetailActivity.class);
-            intent.putExtra("role_id", role.getId());
-            startActivity(intent);
+    private void loadRoles() {
+        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+
+        adapter = new GenericAdapter<>(new ArrayList<>(), new GenericAdapter.OnItemClickListener<Role>() {
+            @Override
+            public void onItemClick(Role item) {
+                Intent intent = new Intent(RoleListActivity.this, RoleDetailActivity.class);
+                intent.putExtra("role_id", item.getId());
+                startActivity(intent);
+            }
         }) {
             @Override
             protected int getLayoutResId() {
@@ -55,22 +64,26 @@ public class RoleListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View view, Role role) {
-                // IDs من role_list_row.xml
-                TextView tvrolename = view.findViewById(R.id.tvrolename);
-                TextView tvroledescription = view.findViewById(R.id.tvroledescription);
+                TextView tvRoleName = view.findViewById(R.id.tvRoleName);
+                TextView tvRoleDescription = view.findViewById(R.id.tvRoleDescription);
 
-                if (tvrolename != null) tvrolename.setText(role.getName());
-                if (tvroledescription != null) tvroledescription.setText(role.getDescription());
+                tvRoleName.setText(role.getRoleName());
+                tvRoleDescription.setText(role.getRoleDescription());
             }
         };
-        recyclerView.setAdapter(adapter);
-    }
 
-    private void loadRoles() {
-        database.roleDao().getAllRoles(sessionManager.getCurrentCompanyId()).observe(this, roles -> {
+        recyclerView.setAdapter(adapter);
+
+        database.roleDao().getAllRoles(companyId).observe(this, roles -> {
             if (roles != null) {
                 adapter.updateData(roles);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadRoles();
     }
 }

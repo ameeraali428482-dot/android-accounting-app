@@ -4,55 +4,59 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.data.entities.CompanySettings;
+import com.example.androidapp.data.entities.Company;
 import com.example.androidapp.utils.SessionManager;
-import java.util.UUID;
+
+import java.util.concurrent.Executors;
 
 public class CompanySettingsActivity extends AppCompatActivity {
-    private EditText etCompanyName, etCompanyAddress, etCompanyPhone, etCompanyEmail;
+    private EditText etCompanyName;
+    private EditText etCompanyAddress;
+    private EditText etCompanyPhone;
+    private EditText etCompanyEmail;
     private Button btnSaveSettings;
+
     private AppDatabase database;
     private SessionManager sessionManager;
-    private CompanySettings currentSettings;
+    private String companyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_company_settings);
 
-        database = AppDatabase.getDatabase(this);
+        database = AppDatabase.getInstance(this);
         sessionManager = new SessionManager(this);
 
-        initViews();
-        loadSettings();
-
-        btnSaveSettings.setOnClickListener(v -> saveSettings());
-    }
-
-    private void initViews() {
         etCompanyName = findViewById(R.id.etCompanyName);
         etCompanyAddress = findViewById(R.id.etCompanyAddress);
         etCompanyPhone = findViewById(R.id.etCompanyPhone);
         etCompanyEmail = findViewById(R.id.etCompanyEmail);
         btnSaveSettings = findViewById(R.id.btnSaveSettings);
+
+        companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+
+        loadCompanySettings();
+
+        btnSaveSettings.setOnClickListener(v -> saveSettings());
     }
 
-    private void loadSettings() {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            CompanySettings settings = database.companySettingsDao().getCompanySettingsByCompanyId(sessionManager.getCurrentCompanyId());
-            runOnUiThread(() -> {
-                if (settings != null) {
-                    currentSettings = settings;
-                    etCompanyName.setText(settings.getCompanyName());
-                    etCompanyAddress.setText(settings.getCompanyAddress());
-                    etCompanyPhone.setText(settings.getCompanyPhone());
-                    etCompanyEmail.setText(settings.getCompanyEmail());
+    private void loadCompanySettings() {
+        if (companyId != null) {
+            database.companyDao().getCompanyById(companyId).observe(this, company -> {
+                if (company != null) {
+                    etCompanyName.setText(company.getCompanyName());
+                    etCompanyAddress.setText(company.getAddress());
+                    etCompanyPhone.setText(company.getPhone());
+                    etCompanyEmail.setText(company.getEmail());
                 }
             });
-        });
+        }
     }
 
     private void saveSettings() {
@@ -66,30 +70,19 @@ public class CompanySettingsActivity extends AppCompatActivity {
             return;
         }
 
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            String companyId = sessionManager.getCurrentCompanyId();
-            
-            if (currentSettings == null) {
-                CompanySettings settings = new CompanySettings(
-                    UUID.randomUUID().toString(),
-                    companyId,
-                    name,
-                    address,
-                    phone,
-                    email
-                );
-                database.companySettingsDao().insert(settings);
-            } else {
-                currentSettings.setCompanyName(name);
-                currentSettings.setCompanyAddress(address);
-                currentSettings.setCompanyPhone(phone);
-                currentSettings.setCompanyEmail(email);
-                database.companySettingsDao().update(currentSettings);
-            }
+        Executors.newSingleThreadExecutor().execute(() -> {
+            database.companyDao().getCompanyById(companyId).observeForever(company -> {
+                if (company != null) {
+                    company.setCompanyName(name);
+                    company.setAddress(address);
+                    company.setPhone(phone);
+                    company.setEmail(email);
+                    database.companyDao().update(company);
 
-            runOnUiThread(() -> {
-                Toast.makeText(this, "تم حفظ الإعدادات بنجاح", Toast.LENGTH_SHORT).show();
-                finish();
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "تم حفظ الإعدادات بنجاح", Toast.LENGTH_SHORT).show();
+                    });
+                }
             });
         });
     }

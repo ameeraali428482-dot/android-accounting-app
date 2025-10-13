@@ -4,25 +4,27 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import com.bumptech.glide.Glide;
+
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Trophy;
 import com.example.androidapp.utils.SessionManager;
 
-
-
-
+import java.util.UUID;
+import java.util.concurrent.Executors;
 
 public class TrophyDetailActivity extends AppCompatActivity {
-    private EditText etName, etDescription, etImageUrl, etPointsRequired;
-    private ImageView ivTrophyPreview;
+    private EditText etTrophyName;
+    private EditText etTrophyDescription;
+    private EditText etPointsRequired;
+    private EditText etImageUrl;
+
     private AppDatabase database;
     private SessionManager sessionManager;
-    private int trophyId = -1;
+    private String trophyId;
     private Trophy currentTrophy;
 
     @Override
@@ -30,122 +32,108 @@ public class TrophyDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trophy_detail);
 
-        database = AppDatabase.getDatabase(this);
+        database = AppDatabase.getInstance(this);
         sessionManager = new SessionManager(this);
 
-        initViews();
+        etTrophyName = findViewById(R.id.etTrophyName);
+        etTrophyDescription = findViewById(R.id.etTrophyDescription);
+        etPointsRequired = findViewById(R.id.etPointsRequired);
+        etImageUrl = findViewById(R.id.etImageUrl);
+
+        trophyId = getIntent().getStringExtra("trophy_id");
+
+        if (trophyId != null) {
+            loadTrophyDetails();
+        }
+    }
+
+    private void loadTrophyDetails() {
+        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
         
-        trophyId = getIntent().getIntExtra("trophy_id", -1);
-        if (trophyId != -1) {
-            setTitle("تعديل الكأس");
-            loadTrophy();
-        } else {
-            setTitle("إضافة كأس جديد");
-        }
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    private void initViews() {
-
-        etImageUrl.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                loadImagePreview(etImageUrl.getText().toString());
-            }
-        });
-    }
-
-    private void loadImagePreview(String imageUrl) {
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            Glide.with(this)
-                    .load(imageUrl)
-                    .placeholder(R.drawable.ic_trophy_placeholder)
-                    .error(R.drawable.ic_trophy_placeholder)
-                    .into(ivTrophyPreview);
-        } else {
-            ivTrophyPreview.setImageResource(R.drawable.ic_trophy_placeholder);
-        }
-    }
-
-    private void loadTrophy() {
-        database.trophyDao().getTrophyById(trophyId, sessionManager.getCurrentCompanyId())
+        database.trophyDao().getTrophyById(trophyId, companyId)
                 .observe(this, trophy -> {
                     if (trophy != null) {
                         currentTrophy = trophy;
-                        populateFields();
+                        etTrophyName.setText(trophy.getTrophyName());
+                        etTrophyDescription.setText(trophy.getTrophyDescription());
+                        etPointsRequired.setText(String.valueOf(trophy.getPointsRequired()));
+                        etImageUrl.setText(trophy.getImageUrl());
                     }
                 });
     }
 
-    private void populateFields() {
-        etName.setText(currentTrophy.getName());
-        etDescription.setText(currentTrophy.getDescription());
-        etImageUrl.setText(currentTrophy.getImageUrl());
-        etPointsRequired.setText(String.valueOf(currentTrophy.getPointsRequired()));
-        loadImagePreview(currentTrophy.getImageUrl());
-    }
-
     private void saveTrophy() {
-        String name = etName.getText().toString().trim();
-        String description = etDescription.getText().toString().trim();
+        String name = etTrophyName.getText().toString().trim();
+        String description = etTrophyDescription.getText().toString().trim();
+        String pointsStr = etPointsRequired.getText().toString().trim();
         String imageUrl = etImageUrl.getText().toString().trim();
-        String pointsRequiredStr = etPointsRequired.getText().toString().trim();
+        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
 
-        if (name.isEmpty()) {
-            etName.setError("اسم الكأس مطلوب");
-            return;
-        }
-        if (pointsRequiredStr.isEmpty()) {
-            etPointsRequired.setError("النقاط المطلوبة مطلوبة");
+        if (name.isEmpty() || pointsStr.isEmpty()) {
+            Toast.makeText(this, "الرجاء إدخال الاسم والنقاط المطلوبة", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        int pointsRequired = Integer.parseInt(pointsRequiredStr);
+        int pointsRequired = Integer.parseInt(pointsStr);
 
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            if (trophyId == -1) {
-                // Create new trophy
+        Executors.newSingleThreadExecutor().execute(() -> {
+            if (trophyId == null) {
                 Trophy trophy = new Trophy(
-                        sessionManager.getCurrentCompanyId(),
-                        name,
-                        description,
-                        imageUrl,
-                        pointsRequired
+                    UUID.randomUUID().toString(),
+                    companyId,
+                    name,
+                    description,
+                    pointsRequired,
+                    imageUrl
                 );
                 database.trophyDao().insert(trophy);
             } else {
-                // Update existing trophy
-                currentTrophy.setName(name);
-                currentTrophy.setDescription(description);
-                currentTrophy.setImageUrl(imageUrl);
-                currentTrophy.setPointsRequired(pointsRequired);
-                database.trophyDao().update(currentTrophy);
+                if (currentTrophy != null) {
+                    currentTrophy.setTrophyName(name);
+                    currentTrophy.setTrophyDescription(description);
+                    currentTrophy.setPointsRequired(pointsRequired);
+                    currentTrophy.setImageUrl(imageUrl);
+                    database.trophyDao().update(currentTrophy);
+                }
             }
 
             runOnUiThread(() -> {
-                Toast.makeText(this, "تم حفظ الكأس بنجاح", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "تم حفظ الجائزة بنجاح", Toast.LENGTH_SHORT).show();
                 finish();
             });
         });
     }
 
+    private void deleteTrophy() {
+        if (currentTrophy != null) {
+            Executors.newSingleThreadExecutor().execute(() -> {
+                database.trophyDao().delete(currentTrophy);
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "تم حذف الجائزة بنجاح", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            });
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_trophy_detail, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_save:
-                saveTrophy();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        
+        if (id == R.id.action_save) {
+            saveTrophy();
+            return true;
+        } else if (id == R.id.action_delete) {
+            deleteTrophy();
+            return true;
         }
+        
+        return super.onOptionsItemSelected(item);
     }
 }

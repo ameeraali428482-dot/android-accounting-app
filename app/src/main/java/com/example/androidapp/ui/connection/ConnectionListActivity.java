@@ -5,14 +5,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Connection;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
+
 import java.util.ArrayList;
 
 public class ConnectionListActivity extends AppCompatActivity {
@@ -20,35 +23,39 @@ public class ConnectionListActivity extends AppCompatActivity {
     private GenericAdapter<Connection> adapter;
     private AppDatabase database;
     private SessionManager sessionManager;
+    private Button addButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connection_list);
 
-        database = AppDatabase.getDatabase(this);
+        database = AppDatabase.getInstance(this);
         sessionManager = new SessionManager(this);
 
         recyclerView = findViewById(R.id.recyclerView);
+        addButton = findViewById(R.id.addButton);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        setupRecyclerView();
-        loadConnections();
+        addButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ConnectionListActivity.this, ConnectionDetailActivity.class);
+            startActivity(intent);
+        });
 
-        Button addButton = findViewById(R.id.addButton);
-        if (addButton != null) {
-            addButton.setOnClickListener(v -> {
-                Intent intent = new Intent(this, ConnectionDetailActivity.class);
-                startActivity(intent);
-            });
-        }
+        loadConnections();
     }
 
-    private void setupRecyclerView() {
-        adapter = new GenericAdapter<Connection>(new ArrayList<>(), connection -> {
-            Intent intent = new Intent(ConnectionListActivity.this, ConnectionDetailActivity.class);
-            intent.putExtra("connection_id", connection.getId());
-            startActivity(intent);
+    private void loadConnections() {
+        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+
+        adapter = new GenericAdapter<>(new ArrayList<>(), new GenericAdapter.OnItemClickListener<Connection>() {
+            @Override
+            public void onItemClick(Connection item) {
+                Intent intent = new Intent(ConnectionListActivity.this, ConnectionDetailActivity.class);
+                intent.putExtra("connection_id", item.getId());
+                startActivity(intent);
+            }
         }) {
             @Override
             protected int getLayoutResId() {
@@ -61,19 +68,24 @@ public class ConnectionListActivity extends AppCompatActivity {
                 TextView connectionType = itemView.findViewById(R.id.connectionType);
                 TextView connectionStatus = itemView.findViewById(R.id.connectionStatus);
 
-                if (connectionName != null) connectionName.setText(connection.getName());
-                if (connectionType != null) connectionType.setText("النوع: " + connection.getType());
-                if (connectionStatus != null) connectionStatus.setText("الحالة: " + connection.getStatus());
+                connectionName.setText(connection.getConnectionName());
+                connectionType.setText(connection.getConnectionType());
+                connectionStatus.setText(connection.getConnectionStatus());
             }
         };
-        recyclerView.setAdapter(adapter);
-    }
 
-    private void loadConnections() {
-        database.connectionDao().getAllConnections().observe(this, connections -> {
+        recyclerView.setAdapter(adapter);
+
+        database.connectionDao().getAllConnections(companyId).observe(this, connections -> {
             if (connections != null) {
                 adapter.updateData(connections);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadConnections();
     }
 }

@@ -4,16 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.User;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class AdminUserListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -26,21 +28,25 @@ public class AdminUserListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_user_list);
 
-        database = AppDatabase.getDatabase(this);
+        database = AppDatabase.getInstance(this);
         sessionManager = new SessionManager(this);
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        setupRecyclerView();
         loadUsers();
     }
 
-    private void setupRecyclerView() {
-        adapter = new GenericAdapter<User>(new ArrayList<>(), user -> {
-            Intent intent = new Intent(AdminUserListActivity.this, AdminUserDetailActivity.class);
-            intent.putExtra("user_id", user.getId());
-            startActivity(intent);
+    private void loadUsers() {
+        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+
+        adapter = new GenericAdapter<>(new ArrayList<>(), new GenericAdapter.OnItemClickListener<User>() {
+            @Override
+            public void onItemClick(User item) {
+                Intent intent = new Intent(AdminUserListActivity.this, AdminUserDetailActivity.class);
+                intent.putExtra("user_id", item.getId());
+                startActivity(intent);
+            }
         }) {
             @Override
             protected int getLayoutResId() {
@@ -52,21 +58,17 @@ public class AdminUserListActivity extends AppCompatActivity {
                 TextView tvUserNameDisplay = view.findViewById(R.id.tvUserNameDisplay);
                 TextView tvUserEmailDisplay = view.findViewById(R.id.tvUserEmailDisplay);
 
-                if (tvUserNameDisplay != null) tvUserNameDisplay.setText(user.getName());
-                if (tvUserEmailDisplay != null) tvUserEmailDisplay.setText(user.getEmail());
+                tvUserNameDisplay.setText(user.getUsername());
+                tvUserEmailDisplay.setText(user.getEmail());
             }
         };
-        recyclerView.setAdapter(adapter);
-    }
 
-    private void loadUsers() {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            List<User> users = database.userDao().getAllUsersSync();
-            runOnUiThread(() -> {
-                if (users != null) {
-                    adapter.setData(users);
-                }
-            });
+        recyclerView.setAdapter(adapter);
+
+        database.userDao().getAllUsers(companyId).observe(this, users -> {
+            if (users != null) {
+                adapter.updateData(users);
+            }
         });
     }
 

@@ -1,20 +1,24 @@
 package com.example.androidapp.ui.payment.viewmodel;
 
 import android.app.Application;
-import androidx.annotation.NonNull;
+
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.PaymentDao;
 import com.example.androidapp.data.entities.Payment;
+
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class PaymentViewModel extends AndroidViewModel {
     private PaymentDao paymentDao;
 
-    public PaymentViewModel(@NonNull Application application) {
+    public PaymentViewModel(Application application) {
         super(application);
-        paymentDao = AppDatabase.getDatabase(application).paymentDao();
+        AppDatabase database = AppDatabase.getInstance(application);
+        paymentDao = database.paymentDao();
     }
 
     public LiveData<List<Payment>> getAllPayments(String companyId) {
@@ -26,20 +30,14 @@ public class PaymentViewModel extends AndroidViewModel {
     }
 
     public void insert(Payment payment) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            paymentDao.insert(payment);
-        });
+        Executors.newSingleThreadExecutor().execute(() -> paymentDao.insert(payment));
     }
 
     public void update(Payment payment) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            paymentDao.update(payment);
-        });
+        Executors.newSingleThreadExecutor().execute(() -> paymentDao.update(payment));
     }
 
     public void delete(Payment payment) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            paymentDao.delete(payment);
-        });
+        Executors.newSingleThreadExecutor().execute(() -> paymentDao.delete(payment));
     }
 }

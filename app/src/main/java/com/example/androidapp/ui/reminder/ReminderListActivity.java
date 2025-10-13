@@ -4,60 +4,61 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Reminder;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
 public class ReminderListActivity extends AppCompatActivity {
     private RecyclerView reminderRecyclerView;
     private GenericAdapter<Reminder> adapter;
     private AppDatabase database;
     private SessionManager sessionManager;
+    private FloatingActionButton fabAddReminder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_list);
 
-        database = AppDatabase.getDatabase(this);
+        database = AppDatabase.getInstance(this);
         sessionManager = new SessionManager(this);
 
         reminderRecyclerView = findViewById(R.id.reminderRecyclerView);
+        fabAddReminder = findViewById(R.id.fabAddReminder);
+
         reminderRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ReminderListActivity.this, ReminderDetailActivity.class);
-                startActivity(intent);
-            }
+        fabAddReminder.setOnClickListener(v -> {
+            Intent intent = new Intent(ReminderListActivity.this, ReminderDetailActivity.class);
+            startActivity(intent);
         });
 
         loadReminders();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadReminders();
-    }
-
     private void loadReminders() {
-        String companyId = sessionManager.getCurrentCompanyId();
-        if (companyId == null) {
-            return;
-        }
+        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
 
-        adapter = new GenericAdapter<Reminder>(new ArrayList<Reminder>()) {
+        adapter = new GenericAdapter<>(new ArrayList<>(), new GenericAdapter.OnItemClickListener<Reminder>() {
+            @Override
+            public void onItemClick(Reminder item) {
+                Intent intent = new Intent(ReminderListActivity.this, ReminderDetailActivity.class);
+                intent.putExtra("reminder_id", item.getId());
+                startActivity(intent);
+            }
+        }) {
             @Override
             protected int getLayoutResId() {
                 return R.layout.reminder_list_row;
@@ -70,26 +71,27 @@ public class ReminderListActivity extends AppCompatActivity {
                 TextView reminderTime = itemView.findViewById(R.id.reminderTime);
 
                 reminderTitle.setText(reminder.getTitle());
-                reminderDate.setText(reminder.getDate());
-                reminderTime.setText(reminder.getTime());
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(ReminderListActivity.this, ReminderDetailActivity.class);
-                        intent.putExtra("reminder_id", reminder.getId());
-                        startActivity(intent);
-                    }
-                });
+                
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                
+                reminderDate.setText(dateFormat.format(reminder.getReminderDateTime()));
+                reminderTime.setText(timeFormat.format(reminder.getReminderDateTime()));
             }
         };
 
         reminderRecyclerView.setAdapter(adapter);
 
-        database.reminderDao().getRemindersByCompanyId(companyId).observe(this, reminders -> {
+        database.reminderDao().getAllReminders(companyId).observe(this, reminders -> {
             if (reminders != null) {
                 adapter.updateData(reminders);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadReminders();
     }
 }

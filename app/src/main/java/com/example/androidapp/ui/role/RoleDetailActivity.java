@@ -4,18 +4,26 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Role;
 import com.example.androidapp.utils.SessionManager;
+
 import java.util.UUID;
+import java.util.concurrent.Executors;
 
 public class RoleDetailActivity extends AppCompatActivity {
-    private EditText etrolename, etroledescription;
-    private RecyclerView rvpermissions;
-    private Button btnSaveRole, btnDeleteRole;
+    private EditText etRoleName;
+    private EditText etRoleDescription;
+    private RecyclerView rvPermissions;
+    private Button btnSaveRole;
+    private Button btnDeleteRole;
+    
     private AppDatabase database;
     private SessionManager sessionManager;
     private String roleId;
@@ -25,63 +33,70 @@ public class RoleDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_role_detail);
 
-        database = AppDatabase.getDatabase(this);
+        database = AppDatabase.getInstance(this);
         sessionManager = new SessionManager(this);
 
-        // IDs من activity_role_detail.xml
-        etrolename = findViewById(R.id.etrolename);
-        etroledescription = findViewById(R.id.etroledescription);
-        rvpermissions = findViewById(R.id.rvpermissions);
+        etRoleName = findViewById(R.id.etRoleName);
+        etRoleDescription = findViewById(R.id.etRoleDescription);
+        rvPermissions = findViewById(R.id.rvPermissions);
         btnSaveRole = findViewById(R.id.btnSaveRole);
         btnDeleteRole = findViewById(R.id.btnDeleteRole);
 
+        rvPermissions.setLayoutManager(new LinearLayoutManager(this));
+
         roleId = getIntent().getStringExtra("role_id");
+
         if (roleId != null) {
-            loadRole();
+            loadRoleDetails();
         }
 
         btnSaveRole.setOnClickListener(v -> saveRole());
         btnDeleteRole.setOnClickListener(v -> deleteRole());
     }
 
-    private void loadRole() {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
+    private void loadRoleDetails() {
+        Executors.newSingleThreadExecutor().execute(() -> {
             Role role = database.roleDao().getRoleByIdSync(roleId);
-            runOnUiThread(() -> {
-                if (role != null) {
-                    etrolename.setText(role.getName());
-                    etroledescription.setText(role.getDescription());
-                }
-            });
+            if (role != null) {
+                runOnUiThread(() -> {
+                    etRoleName.setText(role.getRoleName());
+                    etRoleDescription.setText(role.getRoleDescription());
+                });
+            }
         });
     }
 
     private void saveRole() {
-        String name = etrolename.getText().toString().trim();
-        String description = etroledescription.getText().toString().trim();
+        String roleName = etRoleName.getText().toString().trim();
+        String roleDescription = etRoleDescription.getText().toString().trim();
+        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
 
-        if (name.isEmpty()) {
+        if (roleName.isEmpty()) {
             Toast.makeText(this, "الرجاء إدخال اسم الدور", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            Role role = new Role(
-                roleId != null ? roleId : UUID.randomUUID().toString(),
-                sessionManager.getCurrentCompanyId(),
-                name,
-                description,
-                true
-            );
-            
+        Executors.newSingleThreadExecutor().execute(() -> {
             if (roleId == null) {
+                Role role = new Role(
+                    UUID.randomUUID().toString(),
+                    companyId,
+                    roleName,
+                    roleDescription,
+                    ""
+                );
                 database.roleDao().insert(role);
             } else {
-                database.roleDao().update(role);
+                Role role = database.roleDao().getRoleByIdSync(roleId);
+                if (role != null) {
+                    role.setRoleName(roleName);
+                    role.setRoleDescription(roleDescription);
+                    database.roleDao().update(role);
+                }
             }
 
             runOnUiThread(() -> {
-                Toast.makeText(this, "تم الحفظ بنجاح", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "تم حفظ الدور بنجاح", Toast.LENGTH_SHORT).show();
                 finish();
             });
         });
@@ -89,12 +104,12 @@ public class RoleDetailActivity extends AppCompatActivity {
 
     private void deleteRole() {
         if (roleId != null) {
-            AppDatabase.databaseWriteExecutor.execute(() -> {
+            Executors.newSingleThreadExecutor().execute(() -> {
                 Role role = database.roleDao().getRoleByIdSync(roleId);
                 if (role != null) {
                     database.roleDao().delete(role);
                     runOnUiThread(() -> {
-                        Toast.makeText(this, "تم الحذف بنجاح", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "تم حذف الدور بنجاح", Toast.LENGTH_SHORT).show();
                         finish();
                     });
                 }

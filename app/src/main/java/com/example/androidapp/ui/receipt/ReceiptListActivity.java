@@ -3,75 +3,89 @@ package com.example.androidapp.ui.receipt;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
-import com.example.androidapp.data.dao.ReceiptDao;
 import com.example.androidapp.data.entities.Receipt;
+import com.example.androidapp.ui.common.GenericAdapter;
+import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.List;
 
-
-
-
-
+import java.util.ArrayList;
 
 public class ReceiptListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private ReceiptAdapter adapter;
-    private ReceiptDao receiptDao;
-    private String companyId = "default_company"; // Replace with actual company ID
+    private GenericAdapter<Receipt> adapter;
+    private AppDatabase database;
+    private SessionManager sessionManager;
+    private FloatingActionButton fabAddReceipt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receipt_list);
 
+        database = AppDatabase.getInstance(this);
+        sessionManager = new SessionManager(this);
 
-        AppDatabase db = AppDatabase.getDatabase(this);
-        receiptDao = db.receiptDao();
+        recyclerView = findViewById(R.id.recyclerView);
+        fabAddReceipt = findViewById(R.id.fabAddReceipt);
 
-        setupRecyclerView();
-        loadReceipts();
-
-        fabAddReceipt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ReceiptListActivity.this, ReceiptDetailActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ReceiptAdapter(this, receipt -> {
+
+        fabAddReceipt.setOnClickListener(v -> {
             Intent intent = new Intent(ReceiptListActivity.this, ReceiptDetailActivity.class);
-            intent.putExtra("receipt_id", receipt.getId());
             startActivity(intent);
         });
-        recyclerView.setAdapter(adapter);
+
+        loadReceipts();
     }
 
     private void loadReceipts() {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            List<Receipt> receipts = receiptDao.getAllReceipts(companyId);
-            runOnUiThread(() -> {
-                if (receipts != null && !receipts.isEmpty()) {
-                    adapter.setReceipts(receipts);
-                } else {
-                    Toast.makeText(this, "لا توجد إيصالات", Toast.LENGTH_SHORT).show();
-                }
-            });
+        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+
+        adapter = new GenericAdapter<>(new ArrayList<>(), new GenericAdapter.OnItemClickListener<Receipt>() {
+            @Override
+            public void onItemClick(Receipt item) {
+                Intent intent = new Intent(ReceiptListActivity.this, ReceiptDetailActivity.class);
+                intent.putExtra("receipt_id", item.getId());
+                startActivity(intent);
+            }
+        }) {
+            @Override
+            protected int getLayoutResId() {
+                return R.layout.receipt_list_row;
+            }
+
+            @Override
+            protected void bindView(View itemView, Receipt receipt) {
+                TextView tvReceiptNumber = itemView.findViewById(R.id.tvReceiptNumber);
+                TextView tvReceiptAmount = itemView.findViewById(R.id.tvReceiptAmount);
+                TextView tvReceiptDate = itemView.findViewById(R.id.tvReceiptDate);
+
+                tvReceiptNumber.setText(receipt.getReceiptNumber());
+                tvReceiptAmount.setText(String.valueOf(receipt.getTotalAmount()));
+                tvReceiptDate.setText(receipt.getReceiptDate());
+            }
+        };
+
+        recyclerView.setAdapter(adapter);
+
+        database.receiptDao().getAllReceipts(companyId).observe(this, receipts -> {
+            if (receipts != null) {
+                adapter.updateData(receipts);
+            }
         });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadReceipts(); // Refresh data when returning to this activity
+        loadReceipts();
     }
 }

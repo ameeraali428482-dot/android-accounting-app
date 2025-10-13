@@ -1,232 +1,203 @@
 package com.example.androidapp.ui.common;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Account;
 import com.example.androidapp.data.entities.Item;
-import com.example.androidapp.utils.ExcelUtil;
 import com.example.androidapp.utils.SessionManager;
-import java.io.IOException;
+
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
-
-
+import java.util.UUID;
+import java.util.concurrent.Executors;
 
 public class ImportExportActivity extends AppCompatActivity {
+    private static final int PICK_EXCEL_FILE = 1;
+    private static final int CREATE_EXCEL_FILE = 2;
 
-    private static final String TAG = "ImportExportActivity";
-    public static final String EXTRA_DATA_TYPE = "data_type";
-
-    private String dataType;
+    private Button btnImport;
+    private Button btnExport;
     private AppDatabase database;
     private SessionManager sessionManager;
-
-    private ActivityResultLauncher<Intent> importLauncher;
-    private ActivityResultLauncher<Intent> exportLauncher;
+    private String currentImportType = "items";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_import_export);
 
-        database = AppDatabase.getDatabase(this);
+        database = AppDatabase.getInstance(this);
         sessionManager = new SessionManager(this);
 
-        dataType = getIntent().getStringExtra(EXTRA_DATA_TYPE);
-        if (dataType == null) {
-            Toast.makeText(this, "نوع البيانات غير محدد", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-
-        setTitle("استيراد/تصدير " + getDataTypeTitle(dataType));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        initLaunchers();
-        initViews();
-    }
-
-    private String getDataTypeTitle(String type) {
-        switch (type) {
-            case "items":
-                return "الأصناف";
-            case "accounts":
-                return "الحسابات";
-            // Add other data types as needed
-            default:
-                return "البيانات";
-        }
-    }
-
-    private void initViews() {
+        btnImport = findViewById(R.id.btnImport);
+        btnExport = findViewById(R.id.btnExport);
 
         btnImport.setOnClickListener(v -> openFilePickerForImport());
         btnExport.setOnClickListener(v -> createExcelFileForExport());
     }
 
-    private void initLaunchers() {
-        importLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        Uri uri = result.getData().getData();
-                        if (uri != null) {
-                            importData(uri);
-                        }
-                    }
-                });
-
-        exportLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        Uri uri = result.getData().getData();
-                        if (uri != null) {
-                            exportData(uri);
-                        }
-                    }
-                });
-    }
-
     private void openFilePickerForImport() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // .xlsx
-        importLauncher.launch(intent);
+        intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        startActivityForResult(intent, PICK_EXCEL_FILE);
     }
 
     private void createExcelFileForExport() {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // .xlsx
-        intent.putExtra(Intent.EXTRA_TITLE, getDataTypeTitle(dataType) + ".xlsx");
-        exportLauncher.launch(intent);
-    }
-
-    private void importData(Uri uri) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            List<List<String>> importedData = ExcelUtil.importDataFromExcel(this, uri);
-            if (importedData != null && !importedData.isEmpty()) {
-                // Assuming the first row is headers, skip it for data insertion
-                List<List<String>> dataRows = importedData.subList(1, importedData.size());
-                boolean success = false;
-                switch (dataType) {
-                    case "items":
-                        success = importItems(dataRows);
-                        break;
-                    case "accounts":
-                        success = importAccounts(dataRows);
-                        break;
-                }
-                boolean finalSuccess = success;
-                runOnUiThread(() -> {
-                    if (finalSuccess) {
-                        Toast.makeText(this, "تم استيراد " + getDataTypeTitle(dataType) + " بنجاح", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "فشل استيراد " + getDataTypeTitle(dataType), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                runOnUiThread(() -> Toast.makeText(this, "لا توجد بيانات للاستيراد", Toast.LENGTH_SHORT).show());
-            }
-        });
-    }
-
-    private boolean importItems(List<List<String>> dataRows) {
-        try {
-            for (List<String> row : dataRows) {
-                if (row.size() >= 4) { // Assuming name, description, price, quantity
-                    String name = row.get(0);
-                    String description = row.get(1);
-                    double price = Double.parseDouble(row.get(2));
-                    int quantity = Integer.parseInt(row.get(3));
-                    // Assuming companyId is current company
-                    Item item = new Item(sessionManager.getCurrentCompanyId(), name, description, price, quantity);
-                    database.itemDao().insert(item);
-                }
-            }
-            return true;
-        } catch (Exception e) {
-            Log.e(TAG, "Error importing items", e);
-            return false;
-        }
-    }
-
-    private boolean importAccounts(List<List<String>> dataRows) {
-        try {
-            for (List<String> row : dataRows) {
-                if (row.size() >= 3) { // Assuming name, type, balance
-                    String name = row.get(0);
-                    String type = row.get(1);
-                    double balance = Double.parseDouble(row.get(2));
-                    // Assuming companyId is current company
-                    Account account = new Account(sessionManager.getCurrentCompanyId(), name, type, balance);
-                    database.accountDao().insert(account);
-                }
-            }
-            return true;
-        } catch (Exception e) {
-            Log.e(TAG, "Error importing accounts", e);
-            return false;
-        }
-    }
-
-    private void exportData(Uri uri) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            List<List<String>> dataToExport = new ArrayList<>();
-            // Add headers
-            switch (dataType) {
-                case "items":
-                    dataToExport.add(List.of("الاسم", "الوصف", "السعر", "الكمية"));
-                    List<Item> items = database.itemDao().getAllItems(sessionManager.getCurrentCompanyId()).getValue();
-                    if (items != null) {
-                        for (Item item : items) {
-                            dataToExport.add(List.of(item.getName(), item.getDescription(), String.valueOf(item.getPrice()), String.valueOf(item.getQuantity())));
-                        }
-                    }
-                    break;
-                case "accounts":
-                    dataToExport.add(List.of("الاسم", "النوع", "الرصيد"));
-                    List<Account> accounts = database.accountDao().getAllAccounts(sessionManager.getCurrentCompanyId()).getValue();
-                    if (accounts != null) {
-                        for (Account account : accounts) {
-                            dataToExport.add(List.of(account.getName(), account.getType(), String.valueOf(account.getBalance())));
-                        }
-                    }
-                    break;
-            }
-
-            boolean success = ExcelUtil.exportDataToExcel(this, uri, dataToExport, getDataTypeTitle(dataType));
-            runOnUiThread(() -> {
-                if (success) {
-                    Toast.makeText(this, "تم تصدير " + getDataTypeTitle(dataType) + " بنجاح", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "فشل تصدير " + getDataTypeTitle(dataType), Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
+        intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        intent.putExtra(Intent.EXTRA_TITLE, "export.xlsx");
+        startActivityForResult(intent, CREATE_EXCEL_FILE);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            if (uri != null) {
+                if (requestCode == PICK_EXCEL_FILE) {
+                    importFromExcel(uri);
+                } else if (requestCode == CREATE_EXCEL_FILE) {
+                    exportToExcel(uri);
+                }
+            }
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    private void importFromExcel(Uri uri) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(uri);
+                Workbook workbook = new XSSFWorkbook(inputStream);
+                Sheet sheet = workbook.getSheetAt(0);
+
+                String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+
+                if (currentImportType.equals("items")) {
+                    for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+                        Row row = sheet.getRow(i);
+                        if (row != null) {
+                            String name = row.getCell(0).getStringCellValue();
+                            String description = row.getCell(1).getStringCellValue();
+                            double price = row.getCell(2).getNumericCellValue();
+                            String category = row.getCell(3).getStringCellValue();
+
+                            Item item = new Item(
+                                UUID.randomUUID().toString(),
+                                companyId,
+                                name,
+                                description,
+                                price,
+                                category,
+                                ""
+                            );
+                            database.itemDao().insert(item);
+                        }
+                    }
+                } else if (currentImportType.equals("accounts")) {
+                    for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+                        Row row = sheet.getRow(i);
+                        if (row != null) {
+                            String name = row.getCell(0).getStringCellValue();
+                            String type = row.getCell(1).getStringCellValue();
+                            String code = row.getCell(2).getStringCellValue();
+
+                            Account account = new Account(
+                                UUID.randomUUID().toString(),
+                                companyId,
+                                name,
+                                code,
+                                false,
+                                type,
+                                "",
+                                "0",
+                                "0",
+                                ""
+                            );
+                            database.accountDao().insert(account);
+                        }
+                    }
+                }
+
+                workbook.close();
+                inputStream.close();
+
+                runOnUiThread(() -> Toast.makeText(this, "تم الاستيراد بنجاح", Toast.LENGTH_SHORT).show());
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(() -> Toast.makeText(this, "فشل الاستيراد: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void exportToExcel(Uri uri) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                Workbook workbook = new XSSFWorkbook();
+                Sheet sheet = workbook.createSheet("Export");
+
+                String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+                List<List<String>> dataToExport = new ArrayList<>();
+
+                if (currentImportType.equals("items")) {
+                    database.itemDao().getAllItems(companyId).observeForever(items -> {
+                        for (Item item : items) {
+                            List<String> row = new ArrayList<>();
+                            row.add(item.getItemName());
+                            row.add(item.getDescription());
+                            row.add(String.valueOf(item.getPrice()));
+                            row.add(item.getCategory());
+                            dataToExport.add(row);
+                        }
+                    });
+                } else if (currentImportType.equals("accounts")) {
+                    database.accountDao().getAllAccounts(companyId).observeForever(accounts -> {
+                        for (Account account : accounts) {
+                            List<String> row = new ArrayList<>();
+                            row.add(account.getAccountName());
+                            row.add(account.getAccountType());
+                            row.add(account.getAccountCode());
+                            dataToExport.add(row);
+                        }
+                    });
+                }
+
+                for (int i = 0; i < dataToExport.size(); i++) {
+                    Row row = sheet.createRow(i);
+                    List<String> rowData = dataToExport.get(i);
+                    for (int j = 0; j < rowData.size(); j++) {
+                        row.createCell(j).setCellValue(rowData.get(j));
+                    }
+                }
+
+                OutputStream outputStream = getContentResolver().openOutputStream(uri);
+                workbook.write(outputStream);
+                workbook.close();
+                outputStream.close();
+
+                runOnUiThread(() -> Toast.makeText(this, "تم التصدير بنجاح", Toast.LENGTH_SHORT).show());
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(() -> Toast.makeText(this, "فشل التصدير: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 }
