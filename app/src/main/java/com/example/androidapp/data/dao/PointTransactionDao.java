@@ -22,21 +22,21 @@ public interface PointTransactionDao {
     @Delete
     void delete(PointTransaction pointTransaction);
 
-    @Query("SELECT * FROM point_transactions WHERE companyId = :companyId ORDER BY transactionDate DESC")
+    @Query("SELECT * FROM pointtransactions WHERE companyId = :companyId ORDER BY date DESC")
     LiveData<List<PointTransaction>> getAllPointTransactions(String companyId);
 
-    @Query("SELECT * FROM point_transactions WHERE id = :pointTransactionId AND companyId = :companyId")
+    @Query("SELECT * FROM pointtransactions WHERE id = :pointTransactionId AND companyId = :companyId")
     LiveData<PointTransaction> getPointTransactionById(String pointTransactionId, String companyId);
 
-    @Query("SELECT * FROM point_transactions WHERE id = :pointTransactionId")
+    @Query("SELECT * FROM pointtransactions WHERE id = :pointTransactionId")
     PointTransaction getPointTransactionByIdSync(String pointTransactionId);
 
-    @Query("SELECT * FROM point_transactions WHERE userId = :userId AND companyId = :companyId ORDER BY transactionDate DESC")
+    @Query("SELECT * FROM pointtransactions WHERE userId = :userId AND companyId = :companyId ORDER BY date DESC")
     LiveData<List<PointTransaction>> getPointTransactionsByUser(String userId, String companyId);
 
-    @Query("SELECT SUM(points) FROM point_transactions WHERE userId = :userId AND companyId = :companyId AND transactionType = 'EARN'")
+    @Query("SELECT SUM(points) FROM pointtransactions WHERE userId = :userId AND companyId = :companyId AND type = 'EARN'")
     LiveData<Integer> getTotalPointsForUser(String userId, String companyId);
 
-    @Query("DELETE FROM point_transactions WHERE companyId = :companyId")
+    @Query("DELETE FROM pointtransactions WHERE companyId = :companyId")
     void deleteAllPointTransactions(String companyId);
 }

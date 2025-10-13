@@ -67,8 +67,8 @@ public class RoleListActivity extends AppCompatActivity {
                 TextView tvRoleName = view.findViewById(R.id.tvRoleName);
                 TextView tvRoleDescription = view.findViewById(R.id.tvRoleDescription);
 
-                tvRoleName.setText(role.getRoleName());
-                tvRoleDescription.setText(role.getRoleDescription());
+                tvRoleName.setText(role.getName());
+                tvRoleDescription.setText(role.getDescription());
             }
         };
 

@@ -22,7 +22,7 @@ public interface ConnectionDao {
     @Delete
     void delete(Connection connection);
 
-    @Query("SELECT * FROM connections WHERE companyId = :companyId ORDER BY connectionName ASC")
+    @Query("SELECT * FROM connections WHERE companyId = :companyId ORDER BY name ASC")
     LiveData<List<Connection>> getAllConnections(String companyId);
 
     @Query("SELECT * FROM connections WHERE id = :connectionId AND companyId = :companyId")
