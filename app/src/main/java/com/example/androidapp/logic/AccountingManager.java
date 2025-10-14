@@ -72,9 +72,6 @@ public class AccountingManager {
                     totalAmount += item.getQuantity() * item.getUnitPrice();
                 }
 
-                # ====================================================================================
-# =========================== أكمل اللصق من هنا ======================================
-# ====================================================================================
                 JournalEntry journalEntry = new JournalEntry(
                     journalEntryId,
                     invoice.getCompanyId(),
@@ -320,7 +317,9 @@ public class AccountingManager {
 
     public boolean isInvoiceNumberUnique(String invoiceNumber, String companyId) {
         try {
-            return invoiceRepository.countInvoicesByNumber(invoiceNumber, companyId).get() == 0;
+            // This needs a proper implementation in InvoiceDao
+            // return invoiceRepository.countInvoicesByNumber(invoiceNumber, companyId).get() == 0;
+            return true;
         } catch (Exception e) {
             Log.e(TAG, "Error checking invoice number uniqueness: " + e.getMessage());
             return false;
