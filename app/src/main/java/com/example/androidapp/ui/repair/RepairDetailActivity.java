@@ -18,11 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-
-
-
-
+import java.util.UUID;
 
 public class RepairDetailActivity extends AppCompatActivity {
     private EditText etTitle, etDescription, etAssignedTo, etTotalCost;
@@ -32,7 +28,7 @@ public class RepairDetailActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     private Date requestDate, completionDate;
-    private int repairId = -1;
+    private String repairId = null;
     private Repair currentRepair;
 
     @Override
@@ -46,8 +42,8 @@ public class RepairDetailActivity extends AppCompatActivity {
         initViews();
         setupSpinner();
         
-        repairId = getIntent().getIntExtra("repair_id", -1);
-        if (repairId != -1) {
+        repairId = getIntent().getStringExtra("repair_id");
+        if (repairId != null) {
             setTitle("تعديل الإصلاح");
             loadRepair();
         } else {
@@ -56,10 +52,19 @@ public class RepairDetailActivity extends AppCompatActivity {
             btnRequestDate.setText(dateFormat.format(requestDate));
         }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void initViews() {
+        etTitle = findViewById(R.id.et_repair_title);
+        etDescription = findViewById(R.id.et_repair_description);
+        etAssignedTo = findViewById(R.id.et_repair_assigned_to);
+        etTotalCost = findViewById(R.id.et_repair_total_cost);
+        btnRequestDate = findViewById(R.id.btn_repair_request_date);
+        btnCompletionDate = findViewById(R.id.btn_repair_completion_date);
+        spinnerStatus = findViewById(R.id.spinner_repair_status);
 
         btnRequestDate.setOnClickListener(v -> showDatePicker(true));
         btnCompletionDate.setOnClickListener(v -> showDatePicker(false));
@@ -74,23 +79,21 @@ public class RepairDetailActivity extends AppCompatActivity {
 
     private void showDatePicker(boolean isRequestDate) {
         Calendar calendar = Calendar.getInstance();
-        if (isRequestDate && requestDate != null) {
-            calendar.setTime(requestDate);
-        } else if (!isRequestDate && completionDate != null) {
-            calendar.setTime(completionDate);
+        Date initialDate = isRequestDate ? requestDate : completionDate;
+        if (initialDate != null) {
+            calendar.setTime(initialDate);
         }
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
                 (view, year, month, dayOfMonth) -> {
-                    Calendar selectedDate = Calendar.getInstance();
-                    selectedDate.set(year, month, dayOfMonth);
-                    
+                    Calendar selectedCal = Calendar.getInstance();
+                    selectedCal.set(year, month, dayOfMonth);
                     if (isRequestDate) {
-                        requestDate = selectedDate.getTime();
+                        requestDate = selectedCal.getTime();
                         btnRequestDate.setText(dateFormat.format(requestDate));
                     } else {
-                        completionDate = selectedDate.getTime();
+                        completionDate = selectedCal.getTime();
                         btnCompletionDate.setText(dateFormat.format(completionDate));
                     }
                 },
@@ -113,7 +116,7 @@ public class RepairDetailActivity extends AppCompatActivity {
 
     private void populateFields() {
         etTitle.setText(currentRepair.getTitle());
-        etDescription.setText(currentRepair.getDescription());
+        etDescription.setText(currentRepair.getIssueDescription());
         etAssignedTo.setText(currentRepair.getAssignedTo());
         etTotalCost.setText(String.valueOf(currentRepair.getTotalCost()));
         
@@ -125,7 +128,6 @@ public class RepairDetailActivity extends AppCompatActivity {
             btnCompletionDate.setText(dateFormat.format(completionDate));
         }
 
-        // Set spinner selection
         String[] statuses = {"Pending", "In Progress", "Completed", "Cancelled"};
         for (int i = 0; i < statuses.length; i++) {
             if (statuses[i].equals(currentRepair.getStatus())) {
@@ -147,10 +149,10 @@ public class RepairDetailActivity extends AppCompatActivity {
             return;
         }
 
-        double totalCost = 0;
+        float totalCost = 0;
         if (!totalCostStr.isEmpty()) {
             try {
-                totalCost = Double.parseDouble(totalCostStr);
+                totalCost = Float.parseFloat(totalCostStr);
             } catch (NumberFormatException e) {
                 etTotalCost.setError("قيمة غير صحيحة");
                 return;
@@ -158,23 +160,12 @@ public class RepairDetailActivity extends AppCompatActivity {
         }
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            if (repairId == -1) {
-                // Create new repair
-                Repair repair = new Repair(
-                        sessionManager.getCurrentCompanyId(),
-                        title,
-                        description,
-                        requestDate,
-                        completionDate,
-                        status,
-                        assignedTo,
-                        totalCost
-                );
+            if (repairId == null) {
+                Repair repair = new Repair(UUID.randomUUID().toString(), sessionManager.getCurrentCompanyId(), null, "", description, status, requestDate, completionDate, totalCost, assignedTo, title);
                 database.repairDao().insert(repair);
             } else {
-                // Update existing repair
                 currentRepair.setTitle(title);
-                currentRepair.setDescription(description);
+                currentRepair.setIssueDescription(description);
                 currentRepair.setRequestDate(requestDate);
                 currentRepair.setCompletionDate(completionDate);
                 currentRepair.setStatus(status);
@@ -198,15 +189,14 @@ public class RepairDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_save:
-                saveRepair();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            finish();
+            return true;
+        } else if (itemId == R.id.action_save) {
+            saveRepair();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

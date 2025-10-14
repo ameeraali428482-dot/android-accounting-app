@@ -1,6 +1,5 @@
 package com.example.androidapp.ui.payroll;
 
-import java.util.Date;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -9,8 +8,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.androidapp.App;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.EmployeeDao;
 import com.example.androidapp.data.dao.PayrollDao;
 import com.example.androidapp.data.entities.Employee;
@@ -19,11 +18,7 @@ import com.example.androidapp.utils.SessionManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-
-
-
-
+import java.util.Calendar;
 
 public class PayrollDetailActivity extends AppCompatActivity {
 
@@ -41,9 +36,15 @@ public class PayrollDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payroll_detail);
 
+        dateEditText = findViewById(R.id.payroll_date_edit_text);
+        amountEditText = findViewById(R.id.payroll_amount_edit_text);
+        notesEditText = findViewById(R.id.payroll_notes_edit_text);
+        employeeSpinner = findViewById(R.id.employee_spinner);
+        saveButton = findViewById(R.id.save_payroll_button);
+        deleteButton = findViewById(R.id.delete_payroll_button);
 
-        payrollDao = new PayrollDao(App.getDatabaseHelper());
-        employeeDao = new EmployeeDao(App.getDatabaseHelper());
+        payrollDao = AppDatabase.getDatabase(this).payrollDao();
+        employeeDao = AppDatabase.getDatabase(this).employeeDao();
         sessionManager = new SessionManager(this);
 
         loadEmployeesIntoSpinner();
@@ -61,78 +62,96 @@ public class PayrollDetailActivity extends AppCompatActivity {
     }
 
     private void loadEmployeesIntoSpinner() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCurrentCompanyId();
         if (companyId == null) {
             Toast.makeText(this, "خطأ: لم يتم العثور على معرف الشركة.", Toast.LENGTH_SHORT).show();
             return;
         }
-        employees = employeeDao.getEmployeesByCompanyId(companyId);
-        List<String> employeeNames = new ArrayList<>();
-        for (Employee employee : employees) {
-            employeeNames.add(employee.getName());
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, employeeNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        employeeSpinner.setAdapter(adapter);
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            employees = employeeDao.getEmployeesByCompanyId(companyId);
+            List<String> employeeNames = new ArrayList<>();
+            for (Employee employee : employees) {
+                employeeNames.add(employee.getName());
+            }
+            runOnUiThread(() -> {
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, employeeNames);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                employeeSpinner.setAdapter(adapter);
+            });
+        });
     }
 
     private void loadPayrollData(String id) {
-        Payroll payroll = payrollDao.getById(id);
-        if (payroll != null) {
-            dateEditText.setText(payroll.getDate());
-            amountEditText.setText(String.valueOf(payroll.getAmount()));
-            notesEditText.setText(payroll.getNotes());
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            Payroll payroll = payrollDao.getById(id);
+            runOnUiThread(() -> {
+                if (payroll != null) {
+                    dateEditText.setText(payroll.getDate());
+                    amountEditText.setText(String.valueOf(payroll.getAmount()));
+                    notesEditText.setText(payroll.getNotes());
 
-            // Set selected employee in spinner
-            for (int i = 0; i < employees.size(); i++) {
-                if (employees.get(i).getId().equals(payroll.getEmployeeId())) {
-                    employeeSpinner.setSelection(i);
-                    break;
+                    for (int i = 0; i < employees.size(); i++) {
+                        if (employees.get(i).getId().equals(payroll.getEmployeeId())) {
+                            employeeSpinner.setSelection(i);
+                            break;
+                        }
+                    }
                 }
-            }
-        }
+            });
+        });
     }
 
     private void savePayroll() {
         String date = dateEditText.getText().toString().trim();
         String amountStr = amountEditText.getText().toString().trim();
         String notes = notesEditText.getText().toString().trim();
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCurrentCompanyId();
 
-        if (companyId == null) {
-            Toast.makeText(this, "خطأ: لم يتم العثور على معرف الشركة.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (date.isEmpty() || amountStr.isEmpty() || employeeSpinner.getSelectedItem() == null) {
+        if (companyId == null || date.isEmpty() || amountStr.isEmpty() || employeeSpinner.getSelectedItem() == null) {
             Toast.makeText(this, "الرجاء تعبئة جميع الحقول المطلوبة.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        double amount = Double.parseDouble(amountStr);
+        float amount = Float.parseFloat(amountStr);
         String selectedEmployeeId = employees.get(employeeSpinner.getSelectedItemPosition()).getId();
+        Calendar cal = Calendar.getInstance();
 
-        Payroll payroll;
-        if (payrollId == null) {
-            // New payroll
-            payroll = new Payroll(UUID.randomUUID().toString(), companyId, selectedEmployeeId, date, amount, notes);
-            payrollDao.insert(payroll);
-            Toast.makeText(this, "تم إضافة كشف المرتب بنجاح.", Toast.LENGTH_SHORT).show();
-        } else {
-            // Existing payroll
-            payroll = new Payroll(payrollId, companyId, selectedEmployeeId, date, amount, notes);
-            payrollDao.update(payroll);
-            Toast.makeText(this, "تم تحديث كشف المرتب بنجاح.", Toast.LENGTH_SHORT).show();
-        }
-        finish();
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            if (payrollId == null) {
+                Payroll payroll = new Payroll(UUID.randomUUID().toString(), companyId, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, "PROCESSED", amount, 0, 0, amount, null);
+                payroll.setEmployeeId(selectedEmployeeId);
+                payroll.setDate(date);
+                payroll.setNotes(notes);
+                payrollDao.insert(payroll);
+            } else {
+                Payroll payroll = payrollDao.getById(payrollId);
+                if (payroll != null) {
+                    payroll.setEmployeeId(selectedEmployeeId);
+                    payroll.setDate(date);
+                    payroll.setAmount(amount);
+                    payroll.setNotes(notes);
+                    payrollDao.update(payroll);
+                }
+            }
+            runOnUiThread(() -> {
+                Toast.makeText(this, "تم الحفظ بنجاح.", Toast.LENGTH_SHORT).show();
+                finish();
+            });
+        });
     }
 
     private void deletePayroll() {
         if (payrollId != null) {
-            payrollDao.delete(payrollId);
-            Toast.makeText(this, "تم حذف كشف المرتب بنجاح.", Toast.LENGTH_SHORT).show();
-            finish();
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                Payroll payroll = payrollDao.getById(payrollId);
+                if (payroll != null) {
+                    payrollDao.delete(payroll);
+                }
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "تم الحذف بنجاح.", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            });
         }
     }
 }
