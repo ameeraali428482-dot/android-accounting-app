@@ -26,9 +26,6 @@ public class ContactSyncManager {
     
     public ContactSyncManager(Context context) {
         this.context = context;
-        # ====================================================================================
-# =========================== أكمل اللصق من هنا ======================================
-# ====================================================================================
         this.database = AppDatabase.getDatabase(context);
         this.sessionManager = new SessionManager(context);
     }
@@ -160,7 +157,9 @@ public class ContactSyncManager {
         
         if (emailCursor != null && emailCursor.moveToFirst()) {
             int emailIndex = emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
-            email = emailCursor.getString(emailIndex);
+            if (emailIndex != -1) {
+                email = emailCursor.getString(emailIndex);
+            }
             emailCursor.close();
         }
         
@@ -179,7 +178,9 @@ public class ContactSyncManager {
         
         if (phoneCursor != null && phoneCursor.moveToFirst()) {
             int phoneIndex = phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-            phoneNumber = phoneCursor.getString(phoneIndex);
+            if (phoneIndex != -1) {
+                phoneNumber = phoneCursor.getString(phoneIndex);
+            }
             phoneCursor.close();
         }
         
