@@ -112,23 +112,19 @@ public class PayrollDetailActivity extends AppCompatActivity {
             return;
         }
 
-        float amount = Float.parseFloat(amountStr);
+        double amount = Double.parseDouble(amountStr);
         String selectedEmployeeId = employees.get(employeeSpinner.getSelectedItemPosition()).getId();
-        Calendar cal = Calendar.getInstance();
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
             if (payrollId == null) {
-                Payroll payroll = new Payroll(UUID.randomUUID().toString(), companyId, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, "PROCESSED", amount, 0, 0, amount, null);
-                payroll.setEmployeeId(selectedEmployeeId);
-                payroll.setDate(date);
-                payroll.setNotes(notes);
+                Payroll payroll = new Payroll(UUID.randomUUID().toString(), companyId, selectedEmployeeId, date, amount, notes);
                 payrollDao.insert(payroll);
             } else {
                 Payroll payroll = payrollDao.getById(payrollId);
                 if (payroll != null) {
                     payroll.setEmployeeId(selectedEmployeeId);
                     payroll.setDate(date);
-                    payroll.setAmount(amount);
+                    payroll.setAmount((float)amount);
                     payroll.setNotes(notes);
                     payrollDao.update(payroll);
                 }

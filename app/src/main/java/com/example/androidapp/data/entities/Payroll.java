@@ -3,8 +3,10 @@ package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.Index;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import java.util.Calendar;
+import java.util.UUID;
 
 @Entity(tableName = "payrolls",
         foreignKeys = {
@@ -25,10 +27,10 @@ public class Payroll {
     private float totalBonuses;
     private float netPayable;
     private String journalEntryId;
-    private String employeeId; // Added for simplicity in detail view
-    private String date; // Added for simplicity
-    private float amount; // Added for simplicity
-    private String notes; // Added for simplicity
+    private String employeeId;
+    private String date;
+    private float amount;
+    private String notes;
 
     public Payroll(@NonNull String id, String companyId, int year, int month, String status, float totalSalary, float totalDeductions, float totalBonuses, float netPayable, String journalEntryId) {
         this.id = id;
@@ -41,6 +43,22 @@ public class Payroll {
         this.totalBonuses = totalBonuses;
         this.netPayable = netPayable;
         this.journalEntryId = journalEntryId;
+    }
+
+    @Ignore
+    public Payroll(@NonNull String id, String companyId, String employeeId, String date, double amount, String notes) {
+        this.id = id;
+        this.companyId = companyId;
+        this.employeeId = employeeId;
+        this.date = date;
+        this.amount = (float) amount;
+        this.notes = notes;
+        Calendar cal = Calendar.getInstance();
+        this.year = cal.get(Calendar.YEAR);
+        this.month = cal.get(Calendar.MONTH) + 1;
+        this.status = "PROCESSED";
+        this.totalSalary = (float) amount;
+        this.netPayable = (float) amount;
     }
 
     // Getters

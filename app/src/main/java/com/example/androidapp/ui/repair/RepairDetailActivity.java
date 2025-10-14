@@ -161,7 +161,7 @@ public class RepairDetailActivity extends AppCompatActivity {
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
             if (repairId == null) {
-                Repair repair = new Repair(UUID.randomUUID().toString(), sessionManager.getCurrentCompanyId(), null, "", description, status, requestDate, completionDate, totalCost, assignedTo, title);
+                Repair repair = new Repair(sessionManager.getCurrentCompanyId(), title, description, requestDate, completionDate, status, assignedTo, totalCost);
                 database.repairDao().insert(repair);
             } else {
                 currentRepair.setTitle(title);

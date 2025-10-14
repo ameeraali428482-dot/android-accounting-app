@@ -3,9 +3,13 @@ package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.UUID;
 
 @Entity(tableName = "repairs",
         foreignKeys = {
@@ -44,6 +48,19 @@ public class Repair {
         this.title = title;
     }
 
+    @Ignore
+    public Repair(String companyId, String title, String description, Date requestDate, Date completionDate, String status, String assignedTo, double totalCost) {
+        this.id = UUID.randomUUID().toString();
+        this.companyId = companyId;
+        this.title = title;
+        this.issueDescription = description;
+        this.requestDate = requestDate;
+        this.completionDate = completionDate;
+        this.status = status;
+        this.assignedTo = assignedTo;
+        this.totalCost = (float) totalCost;
+    }
+
     // Getters
     @NonNull
     public String getId() { return id; }
@@ -59,6 +76,7 @@ public class Repair {
     public float getTotalCost() { return totalCost; }
     public String getAssignedTo() { return assignedTo; }
     public String getTitle() { return title; }
+    public String getRepairDate() { return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(requestDate); }
 
     // Setters
     public void setId(@NonNull String id) { this.id = id; }
