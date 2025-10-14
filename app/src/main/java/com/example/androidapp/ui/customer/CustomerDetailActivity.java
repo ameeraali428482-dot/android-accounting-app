@@ -6,17 +6,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.androidapp.App;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.CustomerDao;
 import com.example.androidapp.data.entities.Customer;
 import com.example.androidapp.utils.SessionManager;
 import java.util.UUID;
-
-
-
-
-
 
 public class CustomerDetailActivity extends AppCompatActivity {
 
@@ -31,11 +26,16 @@ public class CustomerDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_detail);
 
-        customerDao = new CustomerDao(App.getDatabaseHelper());
+        customerDao = AppDatabase.getDatabase(this).customerDao();
         sessionManager = new SessionManager(this);
 
+        customerNameEditText = findViewById(R.id.customer_name_edit_text);
+        customerEmailEditText = findViewById(R.id.customer_email_edit_text);
+        customerPhoneEditText = findViewById(R.id.customer_phone_edit_text);
+        customerAddressEditText = findViewById(R.id.customer_address_edit_text);
+        saveCustomerButton = findViewById(R.id.save_customer_button);
+        deleteCustomerButton = findViewById(R.id.delete_customer_button);
 
-        // Check if we are editing an existing customer
         if (getIntent().hasExtra("customerId")) {
             currentCustomerId = getIntent().getStringExtra("customerId");
             loadCustomerDetails(currentCustomerId);
@@ -44,32 +44,25 @@ public class CustomerDetailActivity extends AppCompatActivity {
             deleteCustomerButton.setVisibility(View.GONE);
         }
 
-        saveCustomerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveCustomer();
-            }
-        });
-
-        deleteCustomerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteCustomer();
-            }
-        });
+        saveCustomerButton.setOnClickListener(v -> saveCustomer());
+        deleteCustomerButton.setOnClickListener(v -> deleteCustomer());
     }
 
     private void loadCustomerDetails(String customerId) {
-        Customer customer = customerDao.getById(customerId);
-        if (customer != null) {
-            customerNameEditText.setText(customer.getName());
-            customerEmailEditText.setText(customer.getEmail());
-            customerPhoneEditText.setText(customer.getPhone());
-            customerAddressEditText.setText(customer.getAddress());
-        } else {
-            Toast.makeText(this, "العميل غير موجود.", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            Customer customer = customerDao.getById(customerId);
+            runOnUiThread(() -> {
+                if (customer != null) {
+                    customerNameEditText.setText(customer.getName());
+                    customerEmailEditText.setText(customer.getEmail());
+                    customerPhoneEditText.setText(customer.getPhone());
+                    customerAddressEditText.setText(customer.getAddress());
+                } else {
+                    Toast.makeText(this, "العميل غير موجود.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+        });
     }
 
     private void saveCustomer() {
@@ -84,46 +77,45 @@ public class CustomerDetailActivity extends AppCompatActivity {
             return;
         }
 
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_CURRENT_ORG_ID);
+        String companyId = sessionManager.getCurrentCompanyId();
         if (companyId == null) {
-            Toast.makeText(this, "لا توجد شركة محددة. يرجى تسجيل الدخول واختيار شركة.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "لا توجد شركة محددة.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        Customer customer;
-        if (currentCustomerId == null) {
-            // New customer
-            customer = new Customer(UUID.randomUUID().toString(), companyId, name, email, phone, address);
-            long result = customerDao.insert(customer);
-            if (result != -1) {
-                Toast.makeText(this, "تم إضافة العميل بنجاح.", Toast.LENGTH_SHORT).show();
-                finish();
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            if (currentCustomerId == null) {
+                Customer customer = new Customer(UUID.randomUUID().toString(), companyId, name, email, phone, address);
+                customerDao.insert(customer);
             } else {
-                Toast.makeText(this, "فشل إضافة العميل.", Toast.LENGTH_SHORT).show();
+                Customer customer = customerDao.getById(currentCustomerId);
+                if (customer != null) {
+                    customer.setName(name);
+                    customer.setEmail(email);
+                    customer.setPhone(phone);
+                    customer.setAddress(address);
+                    customerDao.update(customer);
+                }
             }
-        } else {
-            // Existing customer
-            customer = new Customer(currentCustomerId, companyId, name, email, phone, address);
-            int result = customerDao.update(customer);
-            if (result > 0) {
-                Toast.makeText(this, "تم تحديث العميل بنجاح.", Toast.LENGTH_SHORT).show();
+            runOnUiThread(() -> {
+                Toast.makeText(this, "تم الحفظ بنجاح.", Toast.LENGTH_SHORT).show();
                 finish();
-            } else {
-                Toast.makeText(this, "فشل تحديث العميل.", Toast.LENGTH_SHORT).show();
-            }
-        }
+            });
+        });
     }
 
     private void deleteCustomer() {
         if (currentCustomerId != null) {
-            int result = customerDao.delete(currentCustomerId);
-            if (result > 0) {
-                Toast.makeText(this, "تم حذف العميل بنجاح.", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                Toast.makeText(this, "فشل حذف العميل.", Toast.LENGTH_SHORT).show();
-            }
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                Customer customer = customerDao.getById(currentCustomerId);
+                if (customer != null) {
+                    customerDao.delete(customer);
+                }
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "تم الحذف بنجاح.", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            });
         }
     }
 }
-

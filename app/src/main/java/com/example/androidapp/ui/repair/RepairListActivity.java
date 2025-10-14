@@ -31,16 +31,13 @@ public class RepairListActivity extends AppCompatActivity {
         database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
 
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RepairListActivity.this, RepairDetailActivity.class);
-                startActivity(intent);
-            }
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(RepairListActivity.this, RepairDetailActivity.class);
+            startActivity(intent);
         });
 
         loadRepairs();
@@ -48,11 +45,13 @@ public class RepairListActivity extends AppCompatActivity {
 
     private void loadRepairs() {
         String companyId = sessionManager.getCurrentCompanyId();
-        if (companyId == null) {
-            return;
-        }
+        if (companyId == null) return;
 
-        adapter = new GenericAdapter<Repair>(new ArrayList<Repair>()) {
+        adapter = new GenericAdapter<Repair>(new ArrayList<>(), item -> {
+            Intent intent = new Intent(RepairListActivity.this, RepairDetailActivity.class);
+            intent.putExtra("repair_id", item.getId());
+            startActivity(intent);
+        }) {
             @Override
             protected int getLayoutResId() {
                 return R.layout.repair_list_row;
@@ -60,33 +59,20 @@ public class RepairListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Repair repair) {
-                TextView repairTitle = itemView.findViewById(R.id.repairTitle);
-                TextView repairStatus = itemView.findViewById(R.id.repairStatus);
-                TextView repairDate = itemView.findViewById(R.id.repairDate);
+                TextView repairTitle = itemView.findViewById(R.id.tv_repair_title);
+                TextView repairStatus = itemView.findViewById(R.id.tv_repair_status);
+                TextView repairDate = itemView.findViewById(R.id.tv_repair_request_date);
 
                 if (repairTitle != null) repairTitle.setText(repair.getTitle());
                 if (repairStatus != null) repairStatus.setText("الحالة: " + repair.getStatus());
                 if (repairDate != null) repairDate.setText("التاريخ: " + repair.getRepairDate());
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(RepairListActivity.this, RepairDetailActivity.class);
-                        intent.putExtra("repair_id", repair.getId());
-                        startActivity(intent);
-                    }
-                });
             }
         };
-
         recyclerView.setAdapter(adapter);
 
-        database.repairDao().getAllRepairs(companyId).observe(this, new androidx.lifecycle.Observer<List<Repair>>() {
-            @Override
-            public void onChanged(List<Repair> repairs) {
-                if (repairs != null) {
-                    adapter.updateData(repairs);
-                }
+        database.repairDao().getAllRepairs(companyId).observe(this, repairs -> {
+            if (repairs != null) {
+                adapter.updateData(repairs);
             }
         });
     }

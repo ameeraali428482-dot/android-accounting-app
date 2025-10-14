@@ -1,27 +1,26 @@
 package com.example.androidapp.ui.customer;
 
-import com.example.androidapp.data.entities.Customer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import com.example.androidapp.App;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.CustomerDao;
 import com.example.androidapp.data.entities.Customer;
-import com.example.androidapp.ui.common.BaseListActivity;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+public class CustomerListActivity extends AppCompatActivity {
 
-
-
-
-public class CustomerListActivity extends BaseListActivity<Customer> {
-
+    private RecyclerView recyclerView;
+    private GenericAdapter<Customer> adapter;
     private CustomerDao customerDao;
     private SessionManager sessionManager;
 
@@ -30,44 +29,28 @@ public class CustomerListActivity extends BaseListActivity<Customer> {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_list);
 
-        customerDao = new CustomerDao(App.getDatabaseHelper());
+        customerDao = AppDatabase.getDatabase(this).customerDao();
         sessionManager = new SessionManager(this);
 
-        fabAddCustomer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CustomerListActivity.this, CustomerDetailActivity.class);
-                startActivity(intent);
-            }
+        recyclerView = findViewById(R.id.recyclerView);
+        FloatingActionButton fabAddCustomer = findViewById(R.id.fab_add_customer);
+
+        fabAddCustomer.setOnClickListener(view -> {
+            Intent intent = new Intent(CustomerListActivity.this, CustomerDetailActivity.class);
+            startActivity(intent);
         });
 
-        // Initialize RecyclerView and other common elements from BaseListActivity
-
-        recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
-        adapter = createAdapter();
-        recyclerView.setAdapter(adapter);
-
-        adapter.setOnItemClickListener(new GenericAdapter.OnItemClickListener<Customer>() {
-            @Override
-            public void onItemClick(Customer customer) {
-                Intent intent = new Intent(CustomerListActivity.this, CustomerDetailActivity.class);
-                intent.putExtra("customerId", customer.getId());
-                startActivity(intent);
-            }
-        });
-
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        setupAdapter();
         loadData();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadData(); // Refresh data when returning to this activity
-    }
-
-    @Override
-    protected GenericAdapter<Customer> createAdapter() {
-        return new GenericAdapter<Customer>(new ArrayList<>()) {
+    private void setupAdapter() {
+        adapter = new GenericAdapter<Customer>(new ArrayList<>(), customer -> {
+            Intent intent = new Intent(CustomerListActivity.this, CustomerDetailActivity.class);
+            intent.putExtra("customerId", customer.getId());
+            startActivity(intent);
+        }) {
             @Override
             protected int getLayoutResId() {
                 return R.layout.customer_list_row;
@@ -75,30 +58,31 @@ public class CustomerListActivity extends BaseListActivity<Customer> {
 
             @Override
             protected void bindView(View itemView, Customer customer) {
+                TextView customerName = itemView.findViewById(R.id.customer_name);
+                TextView customerEmail = itemView.findViewById(R.id.customer_email);
+                TextView customerPhone = itemView.findViewById(R.id.customer_phone);
 
                 customerName.setText(customer.getName());
                 customerEmail.setText(customer.getEmail());
                 customerPhone.setText(customer.getPhone());
             }
         };
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
-    protected void loadData() {
-        showLoading();
-        // In a real app, this would be an async operation
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_CURRENT_ORG_ID);
+    protected void onResume() {
+        super.onResume();
+        loadData();
+    }
+
+    private void loadData() {
+        String companyId = sessionManager.getCurrentCompanyId();
         if (companyId != null) {
-            List<Customer> customers = customerDao.getCustomersByCompanyId(companyId);
-            showData(customers);
-        } else {
-            showData(new ArrayList<>()); // No company selected or logged in
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                List<Customer> customers = customerDao.getCustomersByCompanyId(companyId);
+                runOnUiThread(() -> adapter.updateData(customers));
+            });
         }
     }
-
-    @Override
-    protected String getEmptyStateMessage() {
-        return "لا يوجد عملاء لعرضهم. اضغط على زر الإضافة لإنشاء عميل جديد.";
-    }
 }
-

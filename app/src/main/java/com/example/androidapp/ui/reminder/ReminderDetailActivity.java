@@ -34,17 +34,18 @@ public class ReminderDetailActivity extends AppCompatActivity {
         db = AppDatabase.getInstance(this);
         sm = new SessionManager(this);
 
-        etTitle = findViewById(R.id.etTitle);
-        etDesc  = findViewById(R.id.etDescription);
-        etDate  = findViewById(R.id.etDate);
-        etTime  = findViewById(R.id.etTime);
-        btnSave = findViewById(R.id.btnSave);
-        btnDel  = findViewById(R.id.btnDelete);
+        etTitle = findViewById(R.id.reminder_title_edit_text);
+        etDesc  = findViewById(R.id.reminder_description_edit_text);
+        etDate  = findViewById(R.id.reminder_date_edit_text);
+        etTime  = findViewById(R.id.reminder_time_edit_text);
+        btnSave = findViewById(R.id.save_reminder_button);
+        btnDel  = findViewById(R.id.delete_reminder_button);
 
         reminderId = getIntent().getStringExtra("reminder_id");
         if (reminderId != null) load();
 
         etDate.setOnClickListener(v -> pickDateTime());
+        etTime.setOnClickListener(v -> pickDateTime());
         btnSave.setOnClickListener(v -> save());
         btnDel .setOnClickListener(v -> delete());
     }
@@ -67,19 +68,21 @@ public class ReminderDetailActivity extends AppCompatActivity {
             if (r != null) {
                 etTitle.setText(r.getTitle());
                 etDesc .setText(r.getDescription());
-                etDate .setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(r.getReminderDateTime()));
-                etTime .setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(r.getReminderDateTime()));
+                if (r.getReminderDateTime() != null) {
+                    etDate.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(r.getReminderDateTime()));
+                    etTime.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(r.getReminderDateTime()));
+                }
             }
         });
     }
 
     private void save() {
         String title = etTitle.getText().toString().trim();
-        String desc  = etDesc .getText().toString().trim();
-        String date  = etDate .getText().toString().trim();
-        String time  = etTime .getText().toString().trim();
-        String companyId = sm.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
-        String userId    = sm.getUserDetails().get(SessionManager.KEY_USER_ID);
+        String desc  = etDesc.getText().toString().trim();
+        String date  = etDate.getText().toString().trim();
+        String time  = etTime.getText().toString().trim();
+        String companyId = sm.getCurrentCompanyId();
+        String userId    = sm.getCurrentUserId();
 
         if (title.isEmpty() || date.isEmpty() || time.isEmpty()) {
             Toast.makeText(this, "أكمل الحقول", Toast.LENGTH_SHORT).show();
@@ -92,15 +95,7 @@ public class ReminderDetailActivity extends AppCompatActivity {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             if (reminderId == null) {
-                Reminder r = new Reminder();
-                r.setId(UUID.randomUUID().toString());
-                r.setCompanyId(companyId);
-                r.setUserId(userId);
-                r.setTitle(title);
-                r.setDescription(desc);
-                r.setReminderDateTime(dt);
-                r.setActive(true);
-                r.setNotificationType("NOTIFICATION");
+                Reminder r = new Reminder(UUID.randomUUID().toString(), companyId, userId, title, desc, dt, true, "NOTIFICATION");
                 db.reminderDao().insert(r);
             } else {
                 Reminder r = db.reminderDao().getReminderByIdSync(reminderId);

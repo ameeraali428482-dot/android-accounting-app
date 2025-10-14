@@ -51,15 +51,31 @@ public class PayrollListActivity extends AppCompatActivity {
 
     private void loadPayrolls() {
         String companyId = sessionManager.getCurrentCompanyId();
-        if (companyId == null) {
-            return;
-        }
+        if (companyId == null) return;
 
-        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+        adapter = new GenericAdapter<Payroll>(new ArrayList<>(), item -> {
             Intent intent = new Intent(PayrollListActivity.this, PayrollDetailActivity.class);
             intent.putExtra("payroll_id", item.getId());
             startActivity(intent);
-        });
+        }) {
+            @Override
+            protected int getLayoutResId() {
+                return R.layout.payroll_list_row;
+            }
+
+            @Override
+            protected void bindView(View itemView, Payroll payroll) {
+                TextView payrollId = itemView.findViewById(R.id.payroll_id);
+                TextView payrollEmployeeId = itemView.findViewById(R.id.payroll_employee_id);
+                TextView payrollDate = itemView.findViewById(R.id.payroll_date);
+                TextView payrollAmount = itemView.findViewById(R.id.payroll_amount);
+
+                payrollId.setText("ID: " + payroll.getId());
+                payrollEmployeeId.setText("معرف الموظف: " + payroll.getEmployeeId());
+                payrollDate.setText("التاريخ: " + payroll.getDate());
+                payrollAmount.setText(String.format("المبلغ: %.2f", payroll.getAmount()));
+            }
+        };
         payrollRecyclerView.setAdapter(adapter);
 
         payrollDao.getPayrollsByCompanyId(companyId).observe(this, payrolls -> {

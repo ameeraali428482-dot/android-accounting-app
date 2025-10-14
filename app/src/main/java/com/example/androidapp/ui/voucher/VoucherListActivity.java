@@ -50,15 +50,29 @@ public class VoucherListActivity extends AppCompatActivity {
 
     private void loadVouchers() {
         String companyId = sessionManager.getCurrentCompanyId();
-        if (companyId == null) {
-            return;
-        }
+        if (companyId == null) return;
 
-        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
-            Intent intent = new Intent(VoucherListActivity.this, VoucherDetailActivity.class);
-            intent.putExtra("voucher_id", item.getId());
-            startActivity(intent);
-        });
+        adapter = new GenericAdapter<Voucher>(new ArrayList<>(), item -> {
+            Intent i = new Intent(VoucherListActivity.this, VoucherDetailActivity.class);
+            i.putExtra("voucher_id", item.getId());
+            startActivity(i);
+        }) {
+            @Override
+            protected int getLayoutResId() {
+                return R.layout.voucher_list_row;
+            }
+
+            @Override
+            protected void bindView(View itemView, Voucher voucher) {
+                TextView voucherType = itemView.findViewById(R.id.voucher_type);
+                TextView voucherAmount = itemView.findViewById(R.id.voucher_amount);
+                TextView voucherDate = itemView.findViewById(R.id.voucher_date);
+
+                voucherType.setText("النوع: " + voucher.getType().toString());
+                voucherAmount.setText(String.format("المبلغ: %.2f", voucher.getAmount()));
+                voucherDate.setText("التاريخ: " + voucher.getDate());
+            }
+        };
         voucherRecyclerView.setAdapter(adapter);
 
         voucherDao.getVouchersByCompanyId(companyId).observe(this, vouchers -> {
