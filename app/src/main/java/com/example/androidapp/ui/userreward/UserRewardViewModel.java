@@ -7,50 +7,35 @@ import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.UserReward;
 import java.util.List;
 
-
-
-
-
-
 public class UserRewardViewModel extends AndroidViewModel {
-    private final LiveData<List<UserReward>> allUserRewards;
     private final AppDatabase database;
 
     public UserRewardViewModel(Application application) {
         super(application);
         database = AppDatabase.getDatabase(application);
-        // This will need to be updated to filter by orgId
-        allUserRewards = database.userRewardDao().getAllUserRewards(0); // Placeholder orgId
     }
 
-    public LiveData<List<UserReward>> getAllUserRewards(int orgId) {
+    public LiveData<List<UserReward>> getAllUserRewards(String orgId) {
         return database.userRewardDao().getAllUserRewards(orgId);
     }
 
-    public LiveData<List<UserReward>> getUserRewardsByUserId(int userId, int orgId) {
+    public LiveData<List<UserReward>> getUserRewardsByUserId(String userId, String orgId) {
         return database.userRewardDao().getUserRewardsByUserId(userId, orgId);
     }
 
-    public LiveData<UserReward> getUserRewardById(int id, int orgId) {
+    public LiveData<UserReward> getUserRewardById(String id, String orgId) {
         return database.userRewardDao().getUserRewardById(id, orgId);
     }
 
     public void insert(UserReward userReward) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            database.userRewardDao().insert(userReward);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> database.userRewardDao().insert(userReward));
     }
 
     public void update(UserReward userReward) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            database.userRewardDao().update(userReward);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> database.userRewardDao().update(userReward));
     }
 
     public void delete(UserReward userReward) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            database.userRewardDao().delete(userReward);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> database.userRewardDao().delete(userReward));
     }
 }
-

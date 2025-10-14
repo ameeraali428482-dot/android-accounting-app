@@ -14,7 +14,6 @@ import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
-import java.util.List;
 
 public class UserRewardListActivity extends AppCompatActivity {
 
@@ -31,16 +30,13 @@ public class UserRewardListActivity extends AppCompatActivity {
         database = AppDatabase.getDatabase(this);
         sessionManager = new SessionManager(this);
 
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(UserRewardListActivity.this, UserRewardDetailActivity.class);
-                startActivity(intent);
-            }
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(UserRewardListActivity.this, UserRewardDetailActivity.class);
+            startActivity(intent);
         });
 
         loadUserRewards();
@@ -52,33 +48,11 @@ public class UserRewardListActivity extends AppCompatActivity {
             return;
         }
 
-        adapter = new GenericAdapter<UserReward>(new ArrayList<UserReward>()) {
-            @Override
-            protected int getLayoutResId() {
-                return R.layout.user_reward_list_row;
-            }
-
-            @Override
-            protected void bindView(View itemView, UserReward userReward) {
-                TextView rewardName = itemView.findViewById(R.id.rewardName);
-                TextView rewardPoints = itemView.findViewById(R.id.rewardPoints);
-                TextView rewardStatus = itemView.findViewById(R.id.rewardStatus);
-
-                if (rewardName != null) rewardName.setText(userReward.getRewardName());
-                if (rewardPoints != null) rewardPoints.setText("النقاط: " + userReward.getPointsRequired());
-                if (rewardStatus != null) rewardStatus.setText("الحالة: " + userReward.getStatus());
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(UserRewardListActivity.this, UserRewardDetailActivity.class);
-                        intent.putExtra("user_reward_id", userReward.getId());
-                        startActivity(intent);
-                    }
-                });
-            }
-        };
-
+        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+            Intent intent = new Intent(UserRewardListActivity.this, UserRewardDetailActivity.class);
+            intent.putExtra("user_reward_id", item.getId());
+            startActivity(intent);
+        });
         recyclerView.setAdapter(adapter);
 
         database.userRewardDao().getAllUserRewards(companyId).observe(this, userRewards -> {

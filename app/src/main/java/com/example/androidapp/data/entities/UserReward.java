@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import java.util.Date;
 import java.util.UUID;
@@ -15,7 +14,7 @@ import java.util.UUID;
                 @ForeignKey(entity = Reward.class, parentColumns = "id", childColumns = "rewardId", onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Company.class, parentColumns = "id", childColumns = "companyId", onDelete = ForeignKey.CASCADE)
         },
-        indices = {@Index(value = "userId"), @Index(value = "rewardId"), @Index(value = "companyId")})
+        indices = {@Index("userId"), @Index("rewardId"), @Index("companyId")})
 public class UserReward {
     @PrimaryKey
     @NonNull
@@ -28,7 +27,6 @@ public class UserReward {
     public Date redemptionDate;
     public boolean isRedeemed;
 
-    // Constructor الأساسي لـ Room
     public UserReward(@NonNull String id, @NonNull String userId, String rewardId, @NonNull String companyId, Date redemptionDate, boolean isRedeemed) {
         this.id = id;
         this.userId = userId;
@@ -38,7 +36,6 @@ public class UserReward {
         this.isRedeemed = isRedeemed;
     }
 
-    // Constructor المساعد
     @Ignore
     public UserReward(@NonNull String userId, String rewardId, @NonNull String companyId, Date redemptionDate, boolean isRedeemed) {
         this.id = UUID.randomUUID().toString();
@@ -49,20 +46,27 @@ public class UserReward {
         this.isRedeemed = isRedeemed;
     }
 
-    // Getters and Setters
+    // Getters
     @NonNull
     public String getId() { return id; }
-    public void setId(@NonNull String id) { this.id = id; }
     @NonNull
     public String getUserId() { return userId; }
-    public void setUserId(@NonNull String userId) { this.userId = userId; }
     public String getRewardId() { return rewardId; }
-    public void setRewardId(String rewardId) { this.rewardId = rewardId; }
     @NonNull
     public String getCompanyId() { return companyId; }
-    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
     public Date getRedemptionDate() { return redemptionDate; }
-    public void setRedemptionDate(Date redemptionDate) { this.redemptionDate = redemptionDate; }
     public boolean isRedeemed() { return isRedeemed; }
+    
+    // Placeholder Getters for UI
+    public String getRewardName() { return "Reward " + rewardId; }
+    public int getPointsRequired() { return 0; }
+    public String getStatus() { return isRedeemed ? "Redeemed" : "Available"; }
+
+    // Setters
+    public void setId(@NonNull String id) { this.id = id; }
+    public void setUserId(@NonNull String userId) { this.userId = userId; }
+    public void setRewardId(String rewardId) { this.rewardId = rewardId; }
+    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
+    public void setRedemptionDate(Date redemptionDate) { this.redemptionDate = redemptionDate; }
     public void setRedeemed(boolean redeemed) { isRedeemed = redeemed; }
 }

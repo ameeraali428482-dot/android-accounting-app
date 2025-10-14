@@ -4,18 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.JournalEntry;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
 public class JournalEntryListActivity extends AppCompatActivity {
@@ -23,7 +20,6 @@ public class JournalEntryListActivity extends AppCompatActivity {
     private GenericAdapter<JournalEntry> adapter;
     private AppDatabase database;
     private SessionManager sessionManager;
-    private FloatingActionButton fabAddJournalEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +29,8 @@ public class JournalEntryListActivity extends AppCompatActivity {
         database = AppDatabase.getInstance(this);
         sessionManager = new SessionManager(this);
 
-        recyclerView = findViewById(R.id.recyclerView);
-        fabAddJournalEntry = findViewById(R.id.fabAddJournalEntry);
+        recyclerView = findViewById(R.id.recycler_view_journal_entries);
+        FloatingActionButton fabAddJournalEntry = findViewById(R.id.fab_add_journal_entry);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -47,35 +43,14 @@ public class JournalEntryListActivity extends AppCompatActivity {
     }
 
     private void loadJournalEntries() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCurrentCompanyId();
+        if (companyId == null) return;
 
-        adapter = new GenericAdapter<>(new ArrayList<>(), new GenericAdapter.OnItemClickListener<JournalEntry>() {
-            @Override
-            public void onItemClick(JournalEntry item) {
-                Intent intent = new Intent(JournalEntryListActivity.this, JournalEntryDetailActivity.class);
-                intent.putExtra("journalentry_id", item.getId());
-                startActivity(intent);
-            }
-        }) {
-            @Override
-            protected int getLayoutResId() {
-                return R.layout.journal_entry_list_row;
-            }
-
-            @Override
-            protected void bindView(View itemView, JournalEntry journalEntry) {
-                TextView tvEntryNumber = itemView.findViewById(R.id.tvEntryNumber);
-                TextView tvEntryDescription = itemView.findViewById(R.id.tvEntryDescription);
-                TextView tvTotalDebit = itemView.findViewById(R.id.tvTotalDebit);
-                TextView tvTotalCredit = itemView.findViewById(R.id.tvTotalCredit);
-
-                tvEntryNumber.setText(journalEntry.getEntryNumber());
-                tvEntryDescription.setText(journalEntry.getDescription());
-                tvTotalDebit.setText(String.valueOf(journalEntry.getTotalDebit()));
-                tvTotalCredit.setText(String.valueOf(journalEntry.getTotalCredit()));
-            }
-        };
-
+        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+            Intent i = new Intent(JournalEntryListActivity.this, JournalEntryDetailActivity.class);
+            i.putExtra("journal_entry_id", item.getId());
+            startActivity(i);
+        });
         recyclerView.setAdapter(adapter);
 
         database.journalEntryDao().getAllJournalEntries(companyId).observe(this, journalEntries -> {

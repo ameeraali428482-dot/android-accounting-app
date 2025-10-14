@@ -20,7 +20,6 @@ public class TrophyListActivity extends AppCompatActivity {
     private GenericAdapter<Trophy> adapter;
     private AppDatabase db;
     private SessionManager sm;
-    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +29,8 @@ public class TrophyListActivity extends AppCompatActivity {
         db = AppDatabase.getInstance(this);
         sm = new SessionManager(this);
 
-        recyclerView = findViewById(R.id.recyclerView);
-        fab          = findViewById(R.id.fab);
+        recyclerView = findViewById(R.id.recycler_view);
+        FloatingActionButton fab = findViewById(R.id.fab);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -44,33 +43,21 @@ public class TrophyListActivity extends AppCompatActivity {
     }
 
     private void loadTrophies() {
-        String companyId = sm.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sm.getCurrentCompanyId();
         if (companyId == null) return;
 
         adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
             Intent i = new Intent(TrophyListActivity.this, TrophyDetailActivity.class);
             i.putExtra("trophy_id", item.getId());
             startActivity(i);
-        }) {
-            @Override
-            protected int getLayoutResId() {
-                return R.layout.trophy_list_row;
-            }
-
-            @Override
-            protected void bindView(View itemView, Trophy t) {
-                TextView tvName  = itemView.findViewById(R.id.tvName);
-                TextView tvDesc  = itemView.findViewById(R.id.tvDescription);
-                TextView tvPts   = itemView.findViewById(R.id.tvPointsRequired);
-
-                tvName .setText(t.getTrophyName());
-                tvDesc .setText(t.getTrophyDescription());
-                tvPts  .setText(String.valueOf(t.getPointsRequired()));
-            }
-        };
-
+        });
         recyclerView.setAdapter(adapter);
-        db.trophyDao().getAllTrophies(companyId).observe(this, list -> adapter.updateData(list));
+        
+        db.trophyDao().getAllTrophies(companyId).observe(this, list -> {
+            if (list != null) {
+                adapter.updateData(list);
+            }
+        });
     }
 
     @Override
