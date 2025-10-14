@@ -1,51 +1,61 @@
 package com.example.androidapp.data.entities;
 
-import java.util.Date;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-
-
 @Entity(tableName = "campaigns",
         foreignKeys = @ForeignKey(entity = Company.class,
                                   parentColumns = "id",
                                   childColumns = "companyId",
                                   onDelete = ForeignKey.CASCADE),
-        indices = {@Index(value = "companyId")})
+        indices = {@Index("companyId")})
 public class Campaign {
     @PrimaryKey
-    private @NonNull String id;
+    @NonNull
+    private String id;
     private String name;
     private String description;
-    private @NonNull String companyId;
+    @NonNull
+    private String companyId;
     private String createdAt;
     private String startDate;
+    private String endDate;
+    private String status;
+    private String type;
 
-    public Campaign(@NonNull String id, String name, String description, @NonNull String companyId, String createdAt, String startDate) {
+    public Campaign(@NonNull String id, @NonNull String companyId, String name, String type, String description, String startDate, String endDate, String status) {
         this.id = id;
-        this.name = name;
-        this.description = description;
         this.companyId = companyId;
-        this.createdAt = createdAt;
+        this.name = name;
+        this.type = type;
+        this.description = description;
         this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
     }
 
-    // Getters and Setters
+    // Getters
     @NonNull
     public String getId() { return id; }
-    public void setId(@NonNull String id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
     @NonNull
     public String getCompanyId() { return companyId; }
-    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
-    public String getCreatedAt() { return createdAt; }
-    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public String getName() { return name; }
+    public String getType() { return type; }
+    public String getDescription() { return description; }
     public String getStartDate() { return startDate; }
+    public String getEndDate() { return endDate; }
+    public String getStatus() { return status; }
+
+    // Setters
+    public void setId(@NonNull String id) { this.id = id; }
+    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
+    public void setName(String name) { this.name = name; }
+    public void setType(String type) { this.type = type; }
+    public void setDescription(String description) { this.description = description; }
     public void setStartDate(String startDate) { this.startDate = startDate; }
+    public void setEndDate(String endDate) { this.endDate = endDate; }
+    public void setStatus(String status) { this.status = status; }
 }
