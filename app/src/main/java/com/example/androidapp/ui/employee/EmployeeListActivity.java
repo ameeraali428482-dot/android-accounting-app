@@ -52,9 +52,7 @@ public class EmployeeListActivity extends AppCompatActivity {
 
     private void loadEmployees() {
         String companyId = sessionManager.getCurrentCompanyId();
-        if (companyId == null) {
-            return;
-        }
+        if (companyId == null) return;
 
         adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
             Intent intent = new Intent(EmployeeListActivity.this, EmployeeDetailActivity.class);

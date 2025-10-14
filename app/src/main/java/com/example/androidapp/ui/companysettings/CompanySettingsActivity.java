@@ -7,14 +7,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
+import com.example.androidapp.data.dao.CompanyDao;
 import com.example.androidapp.data.entities.Company;
 import com.example.androidapp.utils.SessionManager;
-import java.util.concurrent.Executors;
 
 public class CompanySettingsActivity extends AppCompatActivity {
     private EditText etName, etAddress, etPhone, etEmail;
     private Button btnSave;
-    private AppDatabase db;
+    private CompanyDao companyDao;
     private SessionManager sm;
     private String companyId;
 
@@ -23,7 +23,7 @@ public class CompanySettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_company_settings);
 
-        db = AppDatabase.getInstance(this);
+        companyDao = AppDatabase.getInstance(this).companyDao();
         sm = new SessionManager(this);
 
         etName    = findViewById(R.id.etCompanyName);
@@ -32,7 +32,7 @@ public class CompanySettingsActivity extends AppCompatActivity {
         etEmail   = findViewById(R.id.etCompanyEmail);
         btnSave   = findViewById(R.id.btnSaveSettings);
 
-        companyId = sm.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        companyId = sm.getCurrentCompanyId();
 
         loadCompany();
 
@@ -41,12 +41,12 @@ public class CompanySettingsActivity extends AppCompatActivity {
 
     private void loadCompany() {
         if (companyId == null) return;
-        db.companyDao().getCompanyById(companyId).observe(this, c -> {
+        companyDao.getCompanyById(companyId).observe(this, c -> {
             if (c != null) {
-                etName   .setText(c.getCompanyName());
+                etName.setText(c.getName());
                 etAddress.setText(c.getAddress());
-                etPhone  .setText(c.getPhone());
-                etEmail  .setText(c.getEmail());
+                etPhone.setText(c.getPhone());
+                // etEmail.setText(c.getEmail()); // Company entity does not have email
             }
         });
     }
@@ -62,14 +62,14 @@ public class CompanySettingsActivity extends AppCompatActivity {
             return;
         }
 
-        Executors.newSingleThreadExecutor().execute(() -> {
-            Company c = db.companyDao().getCompanyByIdSync(companyId);
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            Company c = companyDao.getCompanyByIdSync(companyId);
             if (c != null) {
-                c.setCompanyName(name);
+                c.setName(name);
                 c.setAddress(address);
                 c.setPhone(phone);
-                c.setEmail(email);
-                db.companyDao().update(c);
+                // c.setEmail(email); // Company entity does not have email
+                companyDao.update(c);
             }
             runOnUiThread(() -> Toast.makeText(this, "تم الحفظ", Toast.LENGTH_SHORT).show());
         });

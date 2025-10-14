@@ -35,7 +35,7 @@ public class Campaign {
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
-        this.createdAt = new java.util.Date().toString(); // Set current date on creation
+        this.createdAt = new java.util.Date().toString();
     }
 
     // Getters
@@ -49,7 +49,7 @@ public class Campaign {
     public String getStartDate() { return startDate; }
     public String getEndDate() { return endDate; }
     public String getStatus() { return status; }
-    public String getCreatedAt() { return createdAt; } // <-- الدالة المضافة
+    public String getCreatedAt() { return createdAt; }
 
     // Setters
     public void setId(@NonNull String id) { this.id = id; }
@@ -60,5 +60,5 @@ public class Campaign {
     public void setStartDate(String startDate) { this.startDate = startDate; }
     public void setEndDate(String endDate) { this.endDate = endDate; }
     public void setStatus(String status) { this.status = status; }
-    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; } // <-- الدالة المضافة
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
 }

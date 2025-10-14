@@ -16,12 +16,6 @@ import com.example.androidapp.ui.accountstatement.AccountStatementListActivity;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
-import java.util.List;
-
-
-
-
-
 
 public class AccountListActivity extends AppCompatActivity {
 
@@ -50,14 +44,11 @@ public class AccountListActivity extends AppCompatActivity {
         initViews();
         setupRecyclerView();
         loadAccounts();
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     private void initViews() {
-
+        recyclerView = findViewById(R.id.recycler_view_accounts);
+        FloatingActionButton fab = findViewById(R.id.fab_add_account);
         setTitle("الحسابات");
 
         fab.setOnClickListener(v -> {
@@ -69,7 +60,6 @@ public class AccountListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AccountAdapter(new ArrayList<>(), account -> {
-            // Handle account click - navigate to AccountStatementListActivity
             Intent intent = new Intent(AccountListActivity.this, AccountStatementListActivity.class);
             intent.putExtra("account_id", account.getId());
             startActivity(intent);
@@ -86,18 +76,8 @@ public class AccountListActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         loadAccounts();
     }
 }
-

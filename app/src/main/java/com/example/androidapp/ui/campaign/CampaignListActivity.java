@@ -7,14 +7,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.androidapp.App;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.CampaignDao;
 import com.example.androidapp.data.entities.Campaign;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.List;
+import java.util.ArrayList;
 
 public class CampaignListActivity extends AppCompatActivity {
 
@@ -28,19 +28,16 @@ public class CampaignListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_campaign_list);
 
-        campaignRecyclerView = findViewById(R.id.campaignRecyclerView);
+        campaignRecyclerView = findViewById(R.id.campaign_recycler_view);
         campaignRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        campaignDao = new CampaignDao(App.getDatabaseHelper());
+        campaignDao = AppDatabase.getDatabase(this).campaignDao();
         sessionManager = new SessionManager(this);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CampaignListActivity.this, CampaignDetailActivity.class);
-                startActivity(intent);
-            }
+        FloatingActionButton fab = findViewById(R.id.add_campaign_button);
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(CampaignListActivity.this, CampaignDetailActivity.class);
+            startActivity(intent);
         });
 
         loadCampaigns();
@@ -53,39 +50,20 @@ public class CampaignListActivity extends AppCompatActivity {
     }
 
     private void loadCampaigns() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
-        if (companyId == null) {
-            return;
-        }
+        String companyId = sessionManager.getCurrentCompanyId();
+        if (companyId == null) return;
 
-        List<Campaign> campaigns = campaignDao.getCampaignsByCompanyId(companyId);
-
-        adapter = new GenericAdapter<Campaign>(campaigns) {
-            @Override
-            protected int getLayoutResId() {
-                return R.layout.campaign_list_row;
-            }
-
-            @Override
-            protected void bindView(View itemView, Campaign campaign) {
-                TextView campaignName = itemView.findViewById(R.id.campaignName);
-                TextView campaignType = itemView.findViewById(R.id.campaignType);
-                TextView campaignStatus = itemView.findViewById(R.id.campaignStatus);
-
-                campaignName.setText(campaign.getName());
-                campaignType.setText("النوع: " + campaign.getType());
-                campaignStatus.setText("الحالة: " + campaign.getStatus());
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(CampaignListActivity.this, CampaignDetailActivity.class);
-                        intent.putExtra("campaign_id", campaign.getId());
-                        startActivity(intent);
-                    }
-                });
-            }
-        };
+        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+            Intent intent = new Intent(CampaignListActivity.this, CampaignDetailActivity.class);
+            intent.putExtra("campaign_id", item.getId());
+            startActivity(intent);
+        });
         campaignRecyclerView.setAdapter(adapter);
+
+        campaignDao.getAllCampaigns(companyId).observe(this, campaigns -> {
+            if (campaigns != null) {
+                adapter.updateData(campaigns);
+            }
+        });
     }
 }

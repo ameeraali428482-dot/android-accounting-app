@@ -1,5 +1,6 @@
 package com.example.androidapp.data.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -7,9 +8,6 @@ import androidx.room.Update;
 import androidx.room.Delete;
 import java.util.List;
 import com.example.androidapp.data.entities.Company;
-
-
-
 
 @Dao
 public interface CompanyDao {
@@ -23,8 +21,11 @@ public interface CompanyDao {
     void delete(Company company);
 
     @Query("SELECT * FROM companies")
-        List<Company> getAllCompanies();
+    List<Company> getAllCompanies();
 
     @Query("SELECT * FROM companies WHERE id = :id LIMIT 1")
-    Company getCompanyById(String id);
+    LiveData<Company> getCompanyById(String id);
+
+    @Query("SELECT * FROM companies WHERE id = :id LIMIT 1")
+    Company getCompanyByIdSync(String id);
 }

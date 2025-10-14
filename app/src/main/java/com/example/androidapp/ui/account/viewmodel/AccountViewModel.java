@@ -9,11 +9,6 @@ import com.example.androidapp.data.dao.AccountDao;
 import com.example.androidapp.data.entities.Account;
 import java.util.List;
 
-
-
-
-
-
 public class AccountViewModel extends AndroidViewModel {
     private AccountDao accountDao;
 
@@ -31,20 +26,14 @@ public class AccountViewModel extends AndroidViewModel {
     }
 
     public void insert(Account account) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            accountDao.insert(account);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> accountDao.insert(account));
     }
 
     public void update(Account account) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            accountDao.update(account);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> accountDao.update(account));
     }
 
     public void delete(Account account) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            accountDao.delete(account);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> accountDao.delete(account));
     }
 }
