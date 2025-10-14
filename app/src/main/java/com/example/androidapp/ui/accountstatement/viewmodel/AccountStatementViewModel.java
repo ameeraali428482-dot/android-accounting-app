@@ -1,6 +1,5 @@
 package com.example.androidapp.ui.accountstatement.viewmodel;
 
-import java.util.Date;
 import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -10,11 +9,6 @@ import com.example.androidapp.data.dao.AccountStatementDao;
 import com.example.androidapp.data.entities.AccountStatement;
 import com.example.androidapp.logic.AccountingManager;
 import java.util.List;
-
-
-
-
-
 
 public class AccountStatementViewModel extends AndroidViewModel {
     private AccountStatementDao accountStatementDao;
@@ -40,18 +34,16 @@ public class AccountStatementViewModel extends AndroidViewModel {
     }
 
     public void update(AccountStatement accountStatement) {
-        // For updates, we need to recalculate from the updated statement's date
         AppDatabase.databaseWriteExecutor.execute(() -> {
             accountStatementDao.update(accountStatement);
-            accountingManager.recalculateRunningBalances(accountStatement.getCompanyId(), accountStatement.getAccountId(), accountStatement.getTransactionDate());
+            accountingManager.recalculateRunningBalances(accountStatement.getCompanyId(), accountStatement.getAccountId(), accountStatement.getDate());
         });
     }
 
     public void delete(AccountStatement accountStatement) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             accountStatementDao.delete(accountStatement);
-            // After deletion, recalculate running balances from the deleted statement's date
-            accountingManager.recalculateRunningBalances(accountStatement.getCompanyId(), accountStatement.getAccountId(), accountStatement.getTransactionDate());
+            accountingManager.recalculateRunningBalances(accountStatement.getCompanyId(), accountStatement.getAccountId(), accountStatement.getDate());
         });
     }
 }

@@ -1,23 +1,17 @@
 package com.example.androidapp.ui.campaign;
 
-import java.util.Date;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.androidapp.App;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.CampaignDao;
 import com.example.androidapp.data.entities.Campaign;
 import com.example.androidapp.utils.SessionManager;
 import java.util.UUID;
-
-
-
-
-
 
 public class CampaignDetailActivity extends AppCompatActivity {
 
@@ -32,9 +26,17 @@ public class CampaignDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_campaign_detail);
 
-
-        campaignDao = new CampaignDao(App.getDatabaseHelper());
+        campaignDao = AppDatabase.getDatabase(this).campaignDao();
         sessionManager = new SessionManager(this);
+
+        nameEditText = findViewById(R.id.campaign_name_edit_text);
+        typeEditText = findViewById(R.id.campaign_type_edit_text);
+        descriptionEditText = findViewById(R.id.campaign_description_edit_text);
+        startDateEditText = findViewById(R.id.campaign_start_date_edit_text);
+        endDateEditText = findViewById(R.id.campaign_end_date_edit_text);
+        statusEditText = findViewById(R.id.campaign_status_edit_text);
+        saveButton = findViewById(R.id.save_campaign_button);
+        deleteButton = findViewById(R.id.delete_campaign_button);
 
         if (getIntent().hasExtra("campaign_id")) {
             campaignId = getIntent().getStringExtra("campaign_id");
@@ -49,15 +51,16 @@ public class CampaignDetailActivity extends AppCompatActivity {
     }
 
     private void loadCampaignData(String id) {
-        Campaign campaign = campaignDao.getById(id);
-        if (campaign != null) {
-            nameEditText.setText(campaign.getName());
-            typeEditText.setText(campaign.getType());
-            descriptionEditText.setText(campaign.getDescription());
-            startDateEditText.setText(campaign.getStartDate());
-            endDateEditText.setText(campaign.getEndDate());
-            statusEditText.setText(campaign.getStatus());
-        }
+        campaignDao.getCampaignById(id, sessionManager.getCurrentCompanyId()).observe(this, campaign -> {
+            if (campaign != null) {
+                nameEditText.setText(campaign.getName());
+                typeEditText.setText(campaign.getType());
+                descriptionEditText.setText(campaign.getDescription());
+                startDateEditText.setText(campaign.getStartDate());
+                endDateEditText.setText(campaign.getEndDate());
+                statusEditText.setText(campaign.getStatus());
+            }
+        });
     }
 
     private void saveCampaign() {
@@ -67,7 +70,7 @@ public class CampaignDetailActivity extends AppCompatActivity {
         String startDate = startDateEditText.getText().toString().trim();
         String endDate = endDateEditText.getText().toString().trim();
         String status = statusEditText.getText().toString().trim();
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCurrentCompanyId();
 
         if (companyId == null) {
             Toast.makeText(this, "خطأ: لم يتم العثور على معرف الشركة.", Toast.LENGTH_SHORT).show();
@@ -79,26 +82,41 @@ public class CampaignDetailActivity extends AppCompatActivity {
             return;
         }
 
-        Campaign campaign;
-        if (campaignId == null) {
-            // New campaign
-            campaign = new Campaign(UUID.randomUUID().toString(), companyId, name, type, description, startDate, endDate, status);
-            campaignDao.insert(campaign);
-            Toast.makeText(this, "تم إضافة الحملة بنجاح.", Toast.LENGTH_SHORT).show();
-        } else {
-            // Existing campaign
-            campaign = new Campaign(campaignId, companyId, name, type, description, startDate, endDate, status);
-            campaignDao.update(campaign);
-            Toast.makeText(this, "تم تحديث الحملة بنجاح.", Toast.LENGTH_SHORT).show();
-        }
-        finish();
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            if (campaignId == null) {
+                Campaign campaign = new Campaign(UUID.randomUUID().toString(), companyId, name, type, description, startDate, endDate, status);
+                campaignDao.insert(campaign);
+            } else {
+                campaignDao.getCampaignById(campaignId, companyId).observe(this, campaign -> {
+                    if (campaign != null) {
+                        campaign.setName(name);
+                        campaign.setType(type);
+                        campaign.setDescription(description);
+                        campaign.setStartDate(startDate);
+                        campaign.setEndDate(endDate);
+                        campaign.setStatus(status);
+                        AppDatabase.databaseWriteExecutor.execute(() -> campaignDao.update(campaign));
+                    }
+                });
+            }
+            runOnUiThread(() -> {
+                Toast.makeText(this, "تم الحفظ بنجاح.", Toast.LENGTH_SHORT).show();
+                finish();
+            });
+        });
     }
 
     private void deleteCampaign() {
         if (campaignId != null) {
-            campaignDao.delete(campaignId);
-            Toast.makeText(this, "تم حذف الحملة بنجاح.", Toast.LENGTH_SHORT).show();
-            finish();
+            campaignDao.getCampaignById(campaignId, sessionManager.getCurrentCompanyId()).observe(this, campaign -> {
+                if (campaign != null) {
+                    AppDatabase.databaseWriteExecutor.execute(() -> campaignDao.delete(campaign));
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "تم الحذف بنجاح.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+                }
+            });
         }
     }
 }
