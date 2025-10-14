@@ -8,10 +8,6 @@ import com.example.androidapp.data.entities.Payment;
 import java.util.List;
 import java.util.concurrent.Future;
 
-
-
-
-
 public class PaymentRepository {
     private PaymentDao paymentDao;
 

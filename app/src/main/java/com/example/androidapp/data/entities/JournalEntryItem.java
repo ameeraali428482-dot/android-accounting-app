@@ -1,13 +1,11 @@
 package com.example.androidapp.data.entities;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
-
+import java.util.UUID;
 
 @Entity(tableName = "journal_entry_items",
         foreignKeys = {
@@ -23,14 +21,16 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "journalEntryId"), @Index(value = "accountId")})
 public class JournalEntryItem {
     @PrimaryKey
-    public @NonNull String id;
+    @NonNull
+    public String id;
     public String journalEntryId;
     public String accountId;
     public float debit;
     public float credit;
     public String description;
 
-    public JournalEntryItem(String id, String journalEntryId, String accountId, float debit, float credit, String description) {
+    // Constructor الكامل
+    public JournalEntryItem(@NonNull String id, String journalEntryId, String accountId, float debit, float credit, String description) {
         this.id = id;
         this.journalEntryId = journalEntryId;
         this.accountId = accountId;
@@ -39,11 +39,23 @@ public class JournalEntryItem {
         this.description = description;
     }
 
+    // Constructor المُستخدم في AccountingManager (مع توليد ID تلقائي)
+    public JournalEntryItem(String journalEntryId, String accountId, float debit, float credit, String description) {
+        this.id = UUID.randomUUID().toString();
+        this.journalEntryId = journalEntryId;
+        this.accountId = accountId;
+        this.debit = debit;
+        this.credit = credit;
+        this.description = description;
+    }
+
+    // Getters and Setters
+    @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -87,4 +99,3 @@ public class JournalEntryItem {
         this.description = description;
     }
 }
-

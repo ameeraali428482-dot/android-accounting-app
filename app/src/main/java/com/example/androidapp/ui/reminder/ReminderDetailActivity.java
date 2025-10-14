@@ -1,151 +1,126 @@
 package com.example.androidapp.ui.reminder;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Reminder;
 import com.example.androidapp.utils.SessionManager;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
 public class ReminderDetailActivity extends AppCompatActivity {
-    private EditText etTitle;
-    private EditText etDescription;
-    private EditText etDate;
-    private EditText etTime;
-    private Button btnSave;
-    private Button btnDelete;
-
-    private AppDatabase database;
-    private SessionManager sessionManager;
+    private EditText etTitle, etDesc, etDate, etTime;
+    private Button btnSave, btnDel;
+    private AppDatabase db;
+    private SessionManager sm;
     private String reminderId;
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_detail);
 
-        database = AppDatabase.getInstance(this);
-        sessionManager = new SessionManager(this);
+        db = AppDatabase.getInstance(this);
+        sm = new SessionManager(this);
 
         etTitle = findViewById(R.id.etTitle);
-        etDescription = findViewById(R.id.etDescription);
-        etDate = findViewById(R.id.etDate);
-        etTime = findViewById(R.id.etTime);
+        etDesc  = findViewById(R.id.etDescription);
+        etDate  = findViewById(R.id.etDate);
+        etTime  = findViewById(R.id.etTime);
         btnSave = findViewById(R.id.btnSave);
-        btnDelete = findViewById(R.id.btnDelete);
+        btnDel  = findViewById(R.id.btnDelete);
 
         reminderId = getIntent().getStringExtra("reminder_id");
+        if (reminderId != null) load();
 
-        if (reminderId != null) {
-            loadReminderDetails();
-        }
-
-        btnSave.setOnClickListener(v -> saveReminder());
-        btnDelete.setOnClickListener(v -> deleteReminder());
+        etDate.setOnClickListener(v -> pickDateTime());
+        btnSave.setOnClickListener(v -> save());
+        btnDel .setOnClickListener(v -> delete());
     }
 
-    private void loadReminderDetails() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
-            database.reminderDao().getReminderById(reminderId, companyId).observeForever(reminder -> {
-                if (reminder != null) {
-                    runOnUiThread(() -> {
-                        etTitle.setText(reminder.getTitle());
-                        etDescription.setText(reminder.getDescription());
-                        
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                        
-                        etDate.setText(dateFormat.format(reminder.getReminderDateTime()));
-                        etTime.setText(timeFormat.format(reminder.getReminderDateTime()));
-                    });
-                }
-            });
+    private void pickDateTime() {
+        Calendar c = Calendar.getInstance();
+        new DatePickerDialog(this, (d, y, m, day) -> {
+            c.set(y, m, day);
+            new TimePickerDialog(this, (t, hh, mm) -> {
+                c.set(Calendar.HOUR_OF_DAY, hh);
+                c.set(Calendar.MINUTE, mm);
+                etDate.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(c.getTime()));
+                etTime.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(c.getTime()));
+            }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    private void load() {
+        db.reminderDao().getReminderById(reminderId).observe(this, r -> {
+            if (r != null) {
+                etTitle.setText(r.getTitle());
+                etDesc .setText(r.getDescription());
+                etDate .setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(r.getReminderDateTime()));
+                etTime .setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(r.getReminderDateTime()));
+            }
         });
     }
 
-    private void saveReminder() {
+    private void save() {
         String title = etTitle.getText().toString().trim();
-        String description = etDescription.getText().toString().trim();
-        String dateStr = etDate.getText().toString().trim();
-        String timeStr = etTime.getText().toString().trim();
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
-        String userId = sessionManager.getUserDetails().get(SessionManager.KEY_USER_ID);
+        String desc  = etDesc .getText().toString().trim();
+        String date  = etDate .getText().toString().trim();
+        String time  = etTime .getText().toString().trim();
+        String companyId = sm.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String userId    = sm.getUserDetails().get(SessionManager.KEY_USER_ID);
 
-        if (title.isEmpty() || dateStr.isEmpty() || timeStr.isEmpty()) {
-            Toast.makeText(this, "الرجاء إدخال جميع الحقول المطلوبة", Toast.LENGTH_SHORT).show();
+        if (title.isEmpty() || date.isEmpty() || time.isEmpty()) {
+            Toast.makeText(this, "أكمل الحقول", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        Date reminderDateTime;
-        try {
-            reminderDateTime = sdf.parse(dateStr + " " + timeStr);
-        } catch (ParseException e) {
-            Toast.makeText(this, "صيغة التاريخ أو الوقت غير صحيحة", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        Date dt;
+        try { dt = sdf.parse(date + " " + time); }
+        catch (Exception e) { Toast.makeText(this, "صيغة تاريخ/وقت خاطئة", Toast.LENGTH_SHORT).show(); return; }
 
         Executors.newSingleThreadExecutor().execute(() -> {
             if (reminderId == null) {
-                Reminder reminder = new Reminder(
-                    UUID.randomUUID().toString(),
-                    companyId,
-                    userId,
-                    title,
-                    description,
-                    reminderDateTime,
-                    false,
-                    true,
-                    "NOTIFICATION",
-                    null,
-                    null,
-                    null
-                );
-                database.reminderDao().insert(reminder);
+                Reminder r = new Reminder();
+                r.setId(UUID.randomUUID().toString());
+                r.setCompanyId(companyId);
+                r.setUserId(userId);
+                r.setTitle(title);
+                r.setDescription(desc);
+                r.setReminderDateTime(dt);
+                r.setActive(true);
+                r.setNotificationType("NOTIFICATION");
+                db.reminderDao().insert(r);
             } else {
-                database.reminderDao().getReminderById(reminderId, companyId).observeForever(reminder -> {
-                    if (reminder != null) {
-                        reminder.setTitle(title);
-                        reminder.setDescription(description);
-                        reminder.setReminderDateTime(reminderDateTime);
-                        database.reminderDao().update(reminder);
-                    }
-                });
+                Reminder r = db.reminderDao().getReminderByIdSync(reminderId);
+                if (r != null) {
+                    r.setTitle(title);
+                    r.setDescription(desc);
+                    r.setReminderDateTime(dt);
+                    db.reminderDao().update(r);
+                }
             }
-
-            runOnUiThread(() -> {
-                Toast.makeText(this, "تم حفظ التذكير بنجاح", Toast.LENGTH_SHORT).show();
-                finish();
-            });
+            runOnUiThread(() -> { Toast.makeText(this, "تم الحفظ", Toast.LENGTH_SHORT).show(); finish(); });
         });
     }
 
-    private void deleteReminder() {
+    private void delete() {
         if (reminderId != null) {
             Executors.newSingleThreadExecutor().execute(() -> {
-                String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
-                database.reminderDao().getReminderById(reminderId, companyId).observeForever(reminder -> {
-                    if (reminder != null) {
-                        database.reminderDao().delete(reminder);
-                        runOnUiThread(() -> {
-                            Toast.makeText(this, "تم حذف التذكير بنجاح", Toast.LENGTH_SHORT).show();
-                            finish();
-                        });
-                    }
-                });
+                Reminder r = db.reminderDao().getReminderByIdSync(reminderId);
+                if (r != null) db.reminderDao().delete(r);
+                runOnUiThread(() -> { Toast.makeText(this, "تم الحذف", Toast.LENGTH_SHORT).show(); finish(); });
             });
         }
     }

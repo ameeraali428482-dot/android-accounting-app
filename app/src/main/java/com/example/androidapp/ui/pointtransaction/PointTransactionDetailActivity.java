@@ -4,14 +4,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.PointTransaction;
 import com.example.androidapp.utils.SessionManager;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -19,115 +16,93 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 
 public class PointTransactionDetailActivity extends AppCompatActivity {
-    private EditText etUserId;
-    private EditText etTransactionType;
-    private EditText etPoints;
-    private EditText etDate;
-    private EditText etDescription;
-    private Button btnSave;
-    private Button btnDelete;
-
-    private AppDatabase database;
-    private SessionManager sessionManager;
-    private String pointTransactionId;
+    private EditText etUserId, etType, etPoints, etDate, etDesc;
+    private Button btnSave, btnDel;
+    private AppDatabase db;
+    private SessionManager sm;
+    private String trxId;
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_point_transaction_detail);
 
-        database = AppDatabase.getInstance(this);
-        sessionManager = new SessionManager(this);
+        db = AppDatabase.getInstance(this);
+        sm = new SessionManager(this);
 
         etUserId = findViewById(R.id.etUserId);
-        etTransactionType = findViewById(R.id.etTransactionType);
+        etType   = findViewById(R.id.etTransactionType);
         etPoints = findViewById(R.id.etPoints);
-        etDate = findViewById(R.id.etDate);
-        etDescription = findViewById(R.id.etDescription);
-        btnSave = findViewById(R.id.btnSave);
-        btnDelete = findViewById(R.id.btnDelete);
+        etDate   = findViewById(R.id.etDate);
+        etDesc   = findViewById(R.id.etDescription);
+        btnSave  = findViewById(R.id.btnSave);
+        btnDel   = findViewById(R.id.btnDelete);
 
-        pointTransactionId = getIntent().getStringExtra("pointtransaction_id");
+        trxId = getIntent().getStringExtra("pointtransaction_id");
+        if (trxId != null) load();
 
-        if (pointTransactionId != null) {
-            loadPointTransactionDetails();
-        }
-
-        btnSave.setOnClickListener(v -> savePointTransaction());
-        btnDelete.setOnClickListener(v -> deletePointTransaction());
+        btnSave.setOnClickListener(v -> save());
+        btnDel .setOnClickListener(v -> delete());
     }
 
-    private void loadPointTransactionDetails() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            PointTransaction pointTransaction = database.pointTransactionDao().getPointTransactionByIdSync(pointTransactionId);
-            if (pointTransaction != null) {
-                runOnUiThread(() -> {
-                    etUserId.setText(pointTransaction.getUserId());
-                    etTransactionType.setText(pointTransaction.getTransactionType());
-                    etPoints.setText(String.valueOf(pointTransaction.getPoints()));
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                    etDate.setText(sdf.format(pointTransaction.getTransactionDate()));
-                    etDescription.setText(pointTransaction.getDescription());
-                });
+    private void load() {
+        db.pointTransactionDao().getPointTransactionById(trxId).observe(this, p -> {
+            if (p != null) {
+                etUserId.setText(p.getUserId());
+                etType  .setText(p.getTransactionType());
+                etPoints.setText(String.valueOf(p.getPoints()));
+                etDate  .setText(sdf.format(p.getTransactionDate()));
+                etDesc  .setText(p.getDescription());
             }
         });
     }
 
-    private void savePointTransaction() {
+    private void save() {
         String userId = etUserId.getText().toString().trim();
-        String transactionType = etTransactionType.getText().toString().trim();
-        String pointsStr = etPoints.getText().toString().trim();
-        String description = etDescription.getText().toString().trim();
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String type   = etType  .getText().toString().trim();
+        String ptsStr = etPoints.getText().toString().trim();
+        String desc   = etDesc  .getText().toString().trim();
+        String companyId = sm.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
 
-        if (userId.isEmpty() || transactionType.isEmpty() || pointsStr.isEmpty()) {
-            Toast.makeText(this, "الرجاء إدخال جميع الحقول المطلوبة", Toast.LENGTH_SHORT).show();
+        if (userId.isEmpty() || type.isEmpty() || ptsStr.isEmpty()) {
+            Toast.makeText(this, "أكمل الحقول المطلوبة", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        int points = Integer.parseInt(pointsStr);
+        int pts = Integer.parseInt(ptsStr);
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            if (pointTransactionId == null) {
-                PointTransaction pointTransaction = new PointTransaction(
-                    UUID.randomUUID().toString(),
-                    companyId,
-                    userId,
-                    transactionType,
-                    points,
-                    new Date(),
-                    description
-                );
-                database.pointTransactionDao().insert(pointTransaction);
+            if (trxId == null) {
+                PointTransaction p = new PointTransaction();
+                p.setId(UUID.randomUUID().toString());
+                p.setCompanyId(companyId);
+                p.setUserId(userId);
+                p.setTransactionType(type);
+                p.setPoints(pts);
+                p.setTransactionDate(new Date());
+                p.setDescription(desc);
+                db.pointTransactionDao().insert(p);
             } else {
-                PointTransaction pointTransaction = database.pointTransactionDao().getPointTransactionByIdSync(pointTransactionId);
-                if (pointTransaction != null) {
-                    pointTransaction.setUserId(userId);
-                    pointTransaction.setTransactionType(transactionType);
-                    pointTransaction.setPoints(points);
-                    pointTransaction.setDescription(description);
-                    database.pointTransactionDao().update(pointTransaction);
+                PointTransaction p = db.pointTransactionDao().getPointTransactionByIdSync(trxId);
+                if (p != null) {
+                    p.setUserId(userId);
+                    p.setTransactionType(type);
+                    p.setPoints(pts);
+                    p.setDescription(desc);
+                    db.pointTransactionDao().update(p);
                 }
             }
-
-            runOnUiThread(() -> {
-                Toast.makeText(this, "تم حفظ المعاملة بنجاح", Toast.LENGTH_SHORT).show();
-                finish();
-            });
+            runOnUiThread(() -> { Toast.makeText(this, "تم الحفظ", Toast.LENGTH_SHORT).show(); finish(); });
         });
     }
 
-    private void deletePointTransaction() {
-        if (pointTransactionId != null) {
+    private void delete() {
+        if (trxId != null) {
             Executors.newSingleThreadExecutor().execute(() -> {
-                PointTransaction pointTransaction = database.pointTransactionDao().getPointTransactionByIdSync(pointTransactionId);
-                if (pointTransaction != null) {
-                    database.pointTransactionDao().delete(pointTransaction);
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "تم حذف المعاملة بنجاح", Toast.LENGTH_SHORT).show();
-                        finish();
-                    });
-                }
+                PointTransaction p = db.pointTransactionDao().getPointTransactionByIdSync(trxId);
+                if (p != null) db.pointTransactionDao().delete(p);
+                runOnUiThread(() -> { Toast.makeText(this, "تم الحذف", Toast.LENGTH_SHORT).show(); finish(); });
             });
         }
     }

@@ -4,78 +4,57 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.entities.Receipt;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptViewHolder> {
-    private List<Receipt> receipts = new ArrayList<>();
-    private OnItemClickListener listener;
+public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.Holder> {
 
-    public interface OnItemClickListener {
-        void onItemClick(Receipt receipt);
+    public interface OnClickListener { void onClick(Receipt r); }
+
+    private List<Receipt> list;
+    private OnClickListener listener;
+
+    public ReceiptAdapter(List<Receipt> list, OnClickListener listener) {
+        this.list = list;
+        this.listener = listener;
     }
 
-    public ReceiptAdapter(OnItemClickListener listener) {
-        this.listener = listener;
+    public void updateData(List<Receipt> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public ReceiptViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.receipt_list_row, parent, false);
-        return new ReceiptViewHolder(itemView);
+    public Holder onCreateViewHolder(@NonNull ViewGroup p, int viewType) {
+        View v = LayoutInflater.from(p.getContext()).inflate(R.layout.receipt_list_row, p, false);
+        return new Holder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReceiptViewHolder holder, int position) {
-        Receipt receipt = receipts.get(position);
-        holder.bind(receipt, listener);
+    public void onBindViewHolder(@NonNull Holder h, int position) {
+        Receipt r = list.get(position);
+        h.tvNum .setText(r.getReceiptNumber());
+        h.tvAmt .setText(String.valueOf(r.getTotalAmount()));
+        h.tvDate.setText(r.getReceiptDate());
+        h.itemView.setOnClickListener(v -> listener.onClick(r));
     }
 
     @Override
     public int getItemCount() {
-        return receipts.size();
+        return list.size();
     }
 
-    public void setReceipts(List<Receipt> receipts) {
-        this.receipts = receipts;
-        notifyDataSetChanged();
-    }
-
-    static class ReceiptViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvReceiptNumber;
-        private TextView tvAmount;
-        private TextView tvDate;
-
-        public ReceiptViewHolder(@NonNull View itemView) {
+    static class Holder extends RecyclerView.ViewHolder {
+        TextView tvNum, tvAmt, tvDate;
+        Holder(@NonNull View itemView) {
             super(itemView);
-            tvReceiptNumber = itemView.findViewById(R.id.tvReceiptNumber);
-            tvAmount = itemView.findViewById(R.id.tvReceiptAmount);
+            tvNum  = itemView.findViewById(R.id.tvReceiptNumber);
+            tvAmt  = itemView.findViewById(R.id.tvReceiptAmount);
             tvDate = itemView.findViewById(R.id.tvReceiptDate);
-        }
-
-        public void bind(Receipt receipt, OnItemClickListener listener) {
-            tvReceiptNumber.setText("Receipt: " + receipt.getReceiptNumber());
-            tvAmount.setText("Amount: " + receipt.getTotalAmount());
-            
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            tvDate.setText("Date: " + receipt.getReceiptDate());
-
-            itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onItemClick(receipt);
-                }
-            });
         }
     }
 }

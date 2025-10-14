@@ -1,13 +1,10 @@
 package com.example.androidapp.data.entities;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
-
 
 @Entity(tableName = "invoice_items",
         foreignKeys = {
@@ -23,17 +20,18 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "invoiceId"), @Index(value = "itemId")})
 public class InvoiceItem {
     @PrimaryKey
-    private @NonNull String id;
+    @NonNull
+    private String id;
     private String invoiceId;
     private String itemId;
     private float quantity;
     private String unit;
-    private float price;
+    private float price; // سعر الوحدة
     private float cost;
     private float discount;
     private float tax;
 
-    public InvoiceItem(String id, String invoiceId, String itemId, float quantity, String unit, float price, float cost, float discount, float tax) {
+    public InvoiceItem(@NonNull String id, String invoiceId, String itemId, float quantity, String unit, float price, float cost, float discount, float tax) {
         this.id = id;
         this.invoiceId = invoiceId;
         this.itemId = itemId;
@@ -46,6 +44,7 @@ public class InvoiceItem {
     }
 
     // Getters
+    @NonNull
     public String getId() {
         return id;
     }
@@ -83,7 +82,7 @@ public class InvoiceItem {
     }
 
     // Setters
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -118,8 +117,19 @@ public class InvoiceItem {
     public void setTax(float tax) {
         this.tax = tax;
     }
+
+    // الدالة التي كانت تسبب الخطأ، تم تغييرها لتعيد قيمة price
     public float getUnitPrice() {
-        return unitPrice;
+        return price;
+    }
+    
+    // دالة لحساب الإجمالي
+    public float getTotal() {
+        return (quantity * price) - discount + tax;
+    }
+    
+    // دالة وهمية لاسم الصنف (يجب جلب الاسم الحقيقي من جدول الأصناف)
+    public String getItemName() {
+        return "Item " + itemId;
     }
 }
-

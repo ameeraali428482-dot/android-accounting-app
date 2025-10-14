@@ -8,10 +8,6 @@ import com.example.androidapp.data.entities.JournalEntry;
 import java.util.List;
 import java.util.concurrent.Future;
 
-
-
-
-
 public class JournalEntryRepository {
     private JournalEntryDao journalEntryDao;
 

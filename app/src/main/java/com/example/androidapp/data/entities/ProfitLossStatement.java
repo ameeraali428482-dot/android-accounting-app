@@ -15,10 +15,11 @@ public class ProfitLossStatement {
     private double netProfit;
     private String createdDate;
 
+    @Ignore
     public ProfitLossStatement() {}
 
-    public ProfitLossStatement(@NonNull String id, String companyId, String period, 
-                              double totalRevenue, double totalExpenses, double netProfit, 
+    public ProfitLossStatement(@NonNull String id, String companyId, String period,
+                              double totalRevenue, double totalExpenses, double netProfit,
                               String createdDate) {
         this.id = id;
         this.companyId = companyId;

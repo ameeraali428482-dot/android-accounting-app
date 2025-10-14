@@ -4,32 +4,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.User;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
-
 import java.util.ArrayList;
 
 public class AdminUserListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private GenericAdapter<User> adapter;
-    private AppDatabase database;
-    private SessionManager sessionManager;
+    private AppDatabase db;
+    private SessionManager sm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_user_list);
 
-        database = AppDatabase.getInstance(this);
-        sessionManager = new SessionManager(this);
+        db = AppDatabase.getInstance(this);
+        sm = new SessionManager(this);
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -38,15 +35,13 @@ public class AdminUserListActivity extends AppCompatActivity {
     }
 
     private void loadUsers() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sm.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        if (companyId == null) return;
 
-        adapter = new GenericAdapter<>(new ArrayList<>(), new GenericAdapter.OnItemClickListener<User>() {
-            @Override
-            public void onItemClick(User item) {
-                Intent intent = new Intent(AdminUserListActivity.this, AdminUserDetailActivity.class);
-                intent.putExtra("user_id", item.getId());
-                startActivity(intent);
-            }
+        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+            Intent i = new Intent(AdminUserListActivity.this, AdminUserDetailActivity.class);
+            i.putExtra("user_id", item.getId());
+            startActivity(i);
         }) {
             @Override
             protected int getLayoutResId() {
@@ -54,22 +49,16 @@ public class AdminUserListActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void bindView(View view, User user) {
-                TextView tvUserNameDisplay = view.findViewById(R.id.tvUserNameDisplay);
-                TextView tvUserEmailDisplay = view.findViewById(R.id.tvUserEmailDisplay);
-
-                tvUserNameDisplay.setText(user.getUsername());
-                tvUserEmailDisplay.setText(user.getEmail());
+            protected void bindView(View itemView, User u) {
+                TextView tvName = itemView.findViewById(R.id.tvUserNameDisplay);
+                TextView tvMail = itemView.findViewById(R.id.tvUserEmailDisplay);
+                tvName.setText(u.getUsername());
+                tvMail.setText(u.getEmail());
             }
         };
 
         recyclerView.setAdapter(adapter);
-
-        database.userDao().getAllUsers(companyId).observe(this, users -> {
-            if (users != null) {
-                adapter.updateData(users);
-            }
-        });
+        db.userDao().getAllUsers().observe(this, list -> adapter.updateData(list));
     }
 
     @Override

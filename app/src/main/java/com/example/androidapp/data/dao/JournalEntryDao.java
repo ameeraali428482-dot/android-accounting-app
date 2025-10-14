@@ -9,8 +9,6 @@ import androidx.room.Delete;
 import com.example.androidapp.data.entities.JournalEntry;
 import java.util.List;
 
-
-
 @Dao
 public interface JournalEntryDao {
     @Insert
@@ -32,5 +30,5 @@ public interface JournalEntryDao {
     List<JournalEntry> getJournalEntriesByCompanyIdAndType(String companyId, String type);
 
     @Query("SELECT COUNT(*) FROM journal_entries WHERE referenceNumber = :referenceNumber AND companyId = :companyId")
-    int countJournalEntriesByReferenceNumber(String referenceNumber, String companyId);
+    int countJournalEntryByReferenceNumber(String referenceNumber, String companyId);
 }

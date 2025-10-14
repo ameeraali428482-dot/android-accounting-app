@@ -15,10 +15,11 @@ public class BalanceSheet {
     private double totalEquity;
     private String createdDate;
 
+    @Ignore
     public BalanceSheet() {}
 
-    public BalanceSheet(@NonNull String id, String companyId, String period, 
-                       double totalAssets, double totalLiabilities, double totalEquity, 
+    public BalanceSheet(@NonNull String id, String companyId, String period,
+                       double totalAssets, double totalLiabilities, double totalEquity,
                        String createdDate) {
         this.id = id;
         this.companyId = companyId;
