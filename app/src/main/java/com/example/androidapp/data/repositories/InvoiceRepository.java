@@ -1,6 +1,5 @@
 package com.example.androidapp.data.repositories;
 
-import java.util.Date;
 import android.app.Application;
 import androidx.lifecycle.LiveData;
 import com.example.androidapp.data.AppDatabase;
@@ -8,10 +7,6 @@ import com.example.androidapp.data.dao.InvoiceDao;
 import com.example.androidapp.data.entities.Invoice;
 import java.util.List;
 import java.util.concurrent.Future;
-
-
-
-
 
 public class InvoiceRepository {
     private InvoiceDao invoiceDao;

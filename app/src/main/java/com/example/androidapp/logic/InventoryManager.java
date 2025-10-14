@@ -8,10 +8,7 @@ import com.example.androidapp.data.dao.ItemDao;
 import com.example.androidapp.data.entities.Inventory;
 import com.example.androidapp.data.entities.Item;
 import java.util.List;
-
-
-
-
+import java.util.UUID;
 
 public class InventoryManager {
     private static final String TAG = "InventoryManager";
@@ -32,8 +29,7 @@ public class InventoryManager {
                     inventory.setQuantity(inventory.getQuantity() + quantity);
                     inventoryDao.update(inventory);
                 } else {
-                    // Assuming a default cost price for new inventory items. This should be improved.
-                    inventory = new Inventory(itemId, companyId, itemId, warehouseId, quantity, 0, "");
+                    inventory = new Inventory(UUID.randomUUID().toString(), companyId, itemId, warehouseId, quantity, 0, new java.util.Date().toString());
                     inventoryDao.insert(inventory);
                 }
             } catch (Exception e) {
@@ -69,18 +65,19 @@ public class InventoryManager {
     public void checkLowStockAlerts(String companyId, LowStockAlertCallback callback) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             try {
-                List<Item> allItems = itemDao.getAllItems(companyId);
+                List<Item> allItems = itemDao.getAllItemsSync(companyId);
                 for (Item item : allItems) {
                     float totalStock = inventoryDao.getTotalQuantityByItem(item.getId(), companyId);
-                    // This assumes Item entity has a minStockLevel field, which it doesn't.
-                    // This logic needs to be adapted or the Item entity updated.
-                    // For now, we'll use a placeholder logic.
                     if (item.getReorderLevel() != null && totalStock < item.getReorderLevel()) {
-                        if (callback != null) callback.onLowStock(item, totalStock);
+                        if (callback != null) {
+                            callback.onLowStock(item, totalStock);
+                        }
                     }
                 }
             } catch (Exception e) {
-                if (callback != null) callback.onFailure(e.getMessage());
+                if (callback != null) {
+                    callback.onFailure(e.getMessage());
+                }
             }
         });
     }

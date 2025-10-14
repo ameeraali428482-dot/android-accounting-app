@@ -16,15 +16,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-
-
-
-
-
-/**
- * Manager class for synchronizing device contacts with the application
- * Handles contact import, matching with registered users, and privacy settings
- */
 public class ContactSyncManager {
     
     private static final String TAG = "ContactSyncManager";
@@ -35,29 +26,26 @@ public class ContactSyncManager {
     
     public ContactSyncManager(Context context) {
         this.context = context;
+        # ====================================================================================
+# =========================== أكمل اللصق من هنا ======================================
+# ====================================================================================
         this.database = AppDatabase.getDatabase(context);
         this.sessionManager = new SessionManager(context);
     }
     
-    /**
-     * Check if contacts permission is granted
-     */
     public boolean hasContactsPermission() {
         return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) 
                 == PackageManager.PERMISSION_GRANTED;
     }
     
-    /**
-     * Sync all device contacts with the application
-     */
     public CompletableFuture<SyncResult> syncAllContacts() {
         return CompletableFuture.supplyAsync(() -> {
             if (!hasContactsPermission()) {
                 return new SyncResult(false, "Contacts permission not granted", 0, 0, 0);
             }
             
-            int userId = sessionManager.getCurrentUserId();
-            if (userId == -1) {
+            String userId = sessionManager.getCurrentUserId();
+            if (userId == null) {
                 return new SyncResult(false, "User not logged in", 0, 0, 0);
             }
             
@@ -71,12 +59,10 @@ public class ContactSyncManager {
                             .getContactByIdentifier(userId, contact.getContactIdentifier());
                     
                     if (existingContact == null) {
-                        // New contact
                         contact.setSyncStatus(ContactSync.STATUS_SYNCED);
                         contact.setLastSyncDate(new Date());
                         newContacts.add(contact);
                     } else {
-                        // Update existing contact if information changed
                         if (hasContactChanged(existingContact, contact)) {
                             existingContact.setDisplayName(contact.getDisplayName());
                             existingContact.setEmail(contact.getEmail());
@@ -90,17 +76,14 @@ public class ContactSyncManager {
                     }
                 }
                 
-                // Insert new contacts
                 if (!newContacts.isEmpty()) {
                     database.contactSyncDao().insertAll(newContacts);
                 }
                 
-                // Update existing contacts
                 for (ContactSync contact : updatedContacts) {
                     database.contactSyncDao().update(contact);
                 }
                 
-                // Match contacts with registered users
                 int matchedUsers = matchContactsWithRegisteredUsers(userId);
                 
                 return new SyncResult(true, "Sync completed successfully", 
@@ -113,10 +96,7 @@ public class ContactSyncManager {
         }, AppDatabase.databaseWriteExecutor);
     }
     
-    /**
-     * Read contacts from device
-     */
-    private List<ContactSync> readDeviceContacts(int userId) {
+    private List<ContactSync> readDeviceContacts(String userId) {
         List<ContactSync> contacts = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         
@@ -136,20 +116,23 @@ public class ContactSyncManager {
         );
         
         if (cursor != null && cursor.moveToFirst()) {
+            int idIndex = cursor.getColumnIndex(ContactsContract.Contacts._ID);
+            int nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+            int photoIndex = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI);
+            int hasPhoneIndex = cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER);
+
             do {
-                String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                String displayName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                String photoUri = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
-                boolean hasPhoneNumber = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0;
+                String contactId = cursor.getString(idIndex);
+                String displayName = cursor.getString(nameIndex);
+                String photoUri = cursor.getString(photoIndex);
+                boolean hasPhoneNumber = cursor.getInt(hasPhoneIndex) > 0;
                 
                 ContactSync contact = new ContactSync(userId, contactId, displayName);
                 contact.setPhotoUri(photoUri);
                 
-                // Get email addresses
                 String email = getContactEmail(contentResolver, contactId);
                 contact.setEmail(email);
                 
-                // Get phone numbers
                 if (hasPhoneNumber) {
                     String phoneNumber = getContactPhoneNumber(contentResolver, contactId);
                     contact.setPhoneNumber(phoneNumber);
@@ -165,12 +148,8 @@ public class ContactSyncManager {
         return contacts;
     }
     
-    /**
-     * Get primary email address for a contact
-     */
     private String getContactEmail(ContentResolver contentResolver, String contactId) {
         String email = null;
-        
         Cursor emailCursor = contentResolver.query(
                 ContactsContract.CommonDataKinds.Email.CONTENT_URI,
                 new String[]{ContactsContract.CommonDataKinds.Email.ADDRESS},
@@ -180,19 +159,16 @@ public class ContactSyncManager {
         );
         
         if (emailCursor != null && emailCursor.moveToFirst()) {
-            email = emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS));
+            int emailIndex = emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
+            email = emailCursor.getString(emailIndex);
             emailCursor.close();
         }
         
         return email;
     }
     
-    /**
-     * Get primary phone number for a contact
-     */
     private String getContactPhoneNumber(ContentResolver contentResolver, String contactId) {
         String phoneNumber = null;
-        
         Cursor phoneCursor = contentResolver.query(
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
@@ -202,16 +178,14 @@ public class ContactSyncManager {
         );
         
         if (phoneCursor != null && phoneCursor.moveToFirst()) {
-            phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            int phoneIndex = phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+            phoneNumber = phoneCursor.getString(phoneIndex);
             phoneCursor.close();
         }
         
         return phoneNumber;
     }
     
-    /**
-     * Check if contact information has changed
-     */
     private boolean hasContactChanged(ContactSync existing, ContactSync updated) {
         return !equals(existing.getDisplayName(), updated.getDisplayName()) ||
                !equals(existing.getEmail(), updated.getEmail()) ||
@@ -223,26 +197,19 @@ public class ContactSyncManager {
         return (str1 == null && str2 == null) || (str1 != null && str1.equals(str2));
     }
     
-    /**
-     * Match synced contacts with registered users in the system
-     */
-    private int matchContactsWithRegisteredUsers(int userId) {
+    private int matchContactsWithRegisteredUsers(String userId) {
         int matchedCount = 0;
-        
-        // Get all contacts that might be registered users
         List<ContactSync> potentialMatches = database.contactSyncDao().findPotentialRegisteredUsers(userId);
         
         for (ContactSync contact : potentialMatches) {
             User matchedUser = null;
             
-            // Try to match by email first
             if (contact.getEmail() != null && !contact.getEmail().isEmpty()) {
                 matchedUser = database.userDao().getUserByEmail(contact.getEmail());
             }
             
-            // Try to match by phone number if email didn't match
             if (matchedUser == null && contact.getPhoneNumber() != null && !contact.getPhoneNumber().isEmpty()) {
-                matchedUser = database.userDao().getUserByPhoneNumber(contact.getPhoneNumber());
+                matchedUser = database.userDao().getUserByPhone(contact.getPhoneNumber());
             }
             
             if (matchedUser != null) {
@@ -260,31 +227,24 @@ public class ContactSyncManager {
         return matchedCount;
     }
     
-    /**
-     * Find contacts that are registered users
-     */
     public CompletableFuture<List<ContactSync>> findRegisteredContacts() {
         return CompletableFuture.supplyAsync(() -> {
-            int userId = sessionManager.getCurrentUserId();
+            String userId = sessionManager.getCurrentUserId();
             return database.contactSyncDao().getRegisteredUserContacts(userId).getValue();
         }, AppDatabase.databaseWriteExecutor);
     }
     
-    /**
-     * Suggest friends based on contacts
-     */
     public CompletableFuture<List<User>> suggestFriendsFromContacts() {
         return CompletableFuture.supplyAsync(() -> {
-            int userId = sessionManager.getCurrentUserId();
+            String userId = sessionManager.getCurrentUserId();
             List<ContactSync> registeredContacts = database.contactSyncDao().getRegisteredUserContacts(userId).getValue();
             List<User> suggestions = new ArrayList<>();
             
             if (registeredContacts != null) {
                 for (ContactSync contact : registeredContacts) {
-                    if (contact.isRegisteredUser() && contact.getRegisteredUserId() != userId) {
-                        // Check if they're not already friends
+                    if (contact.isRegisteredUser() && !contact.getRegisteredUserId().equals(userId)) {
                         if (database.friendDao().getFriendship(userId, contact.getRegisteredUserId()) == null) {
-                            User user = database.userDao().getUserById(contact.getRegisteredUserId());
+                            User user = database.userDao().getUserByIdSync(contact.getRegisteredUserId());
                             if (user != null) {
                                 suggestions.add(user);
                             }
@@ -297,50 +257,42 @@ public class ContactSyncManager {
         }, AppDatabase.databaseWriteExecutor);
     }
     
-    /**
-     * Enable or disable sync for a specific contact
-     */
-    public void updateContactSyncPermission(int contactId, boolean allowSync) {
+    public void updateContactSyncPermission(String contactId, boolean allowSync) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             database.contactSyncDao().updateSyncPermission(contactId, allowSync);
         });
     }
     
-    /**
-     * Delete all contacts for current user
-     */
     public CompletableFuture<Boolean> deleteAllContacts() {
         return CompletableFuture.supplyAsync(() -> {
-            int userId = sessionManager.getCurrentUserId();
+            String userId = sessionManager.getCurrentUserId();
             int deletedCount = database.contactSyncDao().deleteAllUserContacts(userId);
             return deletedCount > 0;
         }, AppDatabase.databaseWriteExecutor);
     }
     
-    /**
-     * Get sync statistics
-     */
     public CompletableFuture<SyncStats> getSyncStats() {
         return CompletableFuture.supplyAsync(() -> {
-            int userId = sessionManager.getCurrentUserId();
+            String userId = sessionManager.getCurrentUserId();
             
-            int totalContacts = database.contactSyncDao().getTotalContactsCount(userId).getValue();
-            int registeredContacts = database.contactSyncDao().getRegisteredContactsCount(userId).getValue();
-            int pendingSync = database.contactSyncDao().getPendingSyncCount(userId).getValue();
+            Integer totalContacts = database.contactSyncDao().getTotalContactsCount(userId).getValue();
+            Integer registeredContacts = database.contactSyncDao().getRegisteredContactsCount(userId).getValue();
+            Integer pendingSync = database.contactSyncDao().getPendingSyncCount(userId).getValue();
             
-            return new SyncStats(totalContacts, registeredContacts, pendingSync);
+            return new SyncStats(
+                totalContacts != null ? totalContacts : 0,
+                registeredContacts != null ? registeredContacts : 0,
+                pendingSync != null ? pendingSync : 0
+            );
         }, AppDatabase.databaseWriteExecutor);
     }
     
-    /**
-     * Result class for sync operations
-     */
     public static class SyncResult {
-        private boolean success;
-        private String message;
-        private int newContacts;
-        private int updatedContacts;
-        private int matchedUsers;
+        public boolean success;
+        public String message;
+        public int newContacts;
+        public int updatedContacts;
+        public int matchedUsers;
         
         public SyncResult(boolean success, String message, int newContacts, int updatedContacts, int matchedUsers) {
             this.success = success;
@@ -349,32 +301,17 @@ public class ContactSyncManager {
             this.updatedContacts = updatedContacts;
             this.matchedUsers = matchedUsers;
         }
-        
-        // Getters
-        public boolean isSuccess() { return success; }
-        public String getMessage() { return message; }
-        public int getNewContacts() { return newContacts; }
-        public int getUpdatedContacts() { return updatedContacts; }
-        public int getMatchedUsers() { return matchedUsers; }
     }
     
-    /**
-     * Statistics class for sync information
-     */
     public static class SyncStats {
-        private int totalContacts;
-        private int registeredContacts;
-        private int pendingSync;
+        public int totalContacts;
+        public int registeredContacts;
+        public int pendingSync;
         
         public SyncStats(int totalContacts, int registeredContacts, int pendingSync) {
             this.totalContacts = totalContacts;
             this.registeredContacts = registeredContacts;
             this.pendingSync = pendingSync;
         }
-        
-        // Getters
-        public int getTotalContacts() { return totalContacts; }
-        public int getRegisteredContacts() { return registeredContacts; }
-        public int getPendingSync() { return pendingSync; }
     }
 }

@@ -2,6 +2,7 @@ package com.example.androidapp.data.entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "items")
@@ -19,7 +20,8 @@ public class Item {
     private Float minStockLevel;
     private float cost;
 
-    public Item(@NonNull String id, String companyId, String name, String description, double price, String category, String barcode) {
+    // Constructor for Room
+    public Item(@NonNull String id, String companyId, String name, String description, double price, String category, String barcode, Integer quantity, Float minStockLevel, float cost) {
         this.id = id;
         this.companyId = companyId;
         this.name = name;
@@ -27,9 +29,13 @@ public class Item {
         this.price = price;
         this.category = category;
         this.barcode = barcode;
-        this.quantity = 0;
-        this.cost = 0.0f;
+        this.quantity = quantity;
+        this.minStockLevel = minStockLevel;
+        this.cost = cost;
     }
+
+    @Ignore
+    public Item() {}
 
     // Getters and Setters
     @NonNull
@@ -62,7 +68,12 @@ public class Item {
 
     public float getCost() { return cost; }
     public void setCost(float cost) { this.cost = cost; }
+
     public float getCostPrice() {
-        return costPrice;
+        return cost; // تصحيح: إرجاع المتغير الصحيح 'cost'
+    }
+
+    public Float getReorderLevel() {
+        return minStockLevel; // إضافة الدالة المفقودة
     }
 }

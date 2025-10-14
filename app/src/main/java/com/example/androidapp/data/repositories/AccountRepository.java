@@ -8,10 +8,6 @@ import com.example.androidapp.data.entities.Account;
 import java.util.List;
 import java.util.concurrent.Future;
 
-
-
-
-
 public class AccountRepository {
     private AccountDao accountDao;
 
