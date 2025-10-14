@@ -4,16 +4,13 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
+import com.example.androidapp.data.dao.ReceiptDao;
 import com.example.androidapp.data.entities.Receipt;
 import com.example.androidapp.utils.SessionManager;
-
 import java.util.UUID;
-import java.util.concurrent.Executors;
 
 public class ReceiptDetailActivity extends AppCompatActivity {
     private EditText etReceiptNumber;
@@ -23,7 +20,7 @@ public class ReceiptDetailActivity extends AppCompatActivity {
     private Button btnSave;
     private Button btnDelete;
 
-    private AppDatabase database;
+    private ReceiptDao receiptDao;
     private SessionManager sessionManager;
     private String receiptId;
 
@@ -35,12 +32,12 @@ public class ReceiptDetailActivity extends AppCompatActivity {
         database = AppDatabase.getInstance(this);
         sessionManager = new SessionManager(this);
 
-        etReceiptNumber = findViewById(R.id.etReceiptNumber);
-        etReceiptDate = findViewById(R.id.etReceiptDate);
-        etTotalAmount = findViewById(R.id.etTotalAmount);
-        etCustomerName = findViewById(R.id.etCustomerName);
-        btnSave = findViewById(R.id.btnSave);
-        btnDelete = findViewById(R.id.btnDelete);
+        etReceiptNumber = findViewById(R.id.et_receipt_number);
+        etReceiptDate = findViewById(R.id.et_receipt_date);
+        etTotalAmount = findViewById(R.id.et_total_amount);
+        etCustomerName = findViewById(R.id.et_customer_name);
+        btnSave = findViewById(R.id.btn_save_receipt);
+        btnDelete = findViewById(R.id.btn_delete_receipt);
 
         receiptId = getIntent().getStringExtra("receipt_id");
 
@@ -53,15 +50,17 @@ public class ReceiptDetailActivity extends AppCompatActivity {
     }
 
     private void loadReceiptDetails() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
-        
-        database.receiptDao().getReceiptById(receiptId, companyId).observe(this, receipt -> {
-            if (receipt != null) {
-                etReceiptNumber.setText(receipt.getReceiptNumber());
-                etReceiptDate.setText(receipt.getReceiptDate());
-                etTotalAmount.setText(String.valueOf(receipt.getTotalAmount()));
-                etCustomerName.setText(receipt.getCustomerId());
-            }
+        String companyId = sessionManager.getCurrentCompanyId();
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            Receipt receipt = receiptDao.getReceiptById(receiptId, companyId);
+            runOnUiThread(() -> {
+                if (receipt != null) {
+                    etReceiptNumber.setText(receipt.getReferenceNumber());
+                    etReceiptDate.setText(receipt.getReceiptDate());
+                    etTotalAmount.setText(String.valueOf(receipt.getAmount()));
+                    etCustomerName.setText(receipt.getPayerId());
+                }
+            });
         });
     }
 
@@ -70,39 +69,29 @@ public class ReceiptDetailActivity extends AppCompatActivity {
         String receiptDate = etReceiptDate.getText().toString().trim();
         String totalAmountStr = etTotalAmount.getText().toString().trim();
         String customerName = etCustomerName.getText().toString().trim();
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCurrentCompanyId();
 
         if (receiptNumber.isEmpty() || totalAmountStr.isEmpty()) {
             Toast.makeText(this, "الرجاء إدخال جميع الحقول المطلوبة", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        double totalAmount = Double.parseDouble(totalAmountStr);
+        float totalAmount = Float.parseFloat(totalAmountStr);
 
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
             if (receiptId == null) {
-                Receipt receipt = new Receipt(
-                    UUID.randomUUID().toString(),
-                    companyId,
-                    receiptNumber,
-                    customerName,
-                    receiptDate,
-                    totalAmount,
-                    ""
-                );
-                database.receiptDao().insert(receipt);
+                Receipt receipt = new Receipt(UUID.randomUUID().toString(), companyId, receiptDate, customerName, "Customer", totalAmount, "CASH", receiptNumber, "", null);
+                receiptDao.insert(receipt);
             } else {
-                database.receiptDao().getReceiptById(receiptId, companyId).observeForever(receipt -> {
-                    if (receipt != null) {
-                        receipt.setReceiptNumber(receiptNumber);
-                        receipt.setReceiptDate(receiptDate);
-                        receipt.setTotalAmount(totalAmount);
-                        receipt.setCustomerId(customerName);
-                        database.receiptDao().update(receipt);
-                    }
-                });
+                Receipt receipt = receiptDao.getReceiptById(receiptId, companyId);
+                if (receipt != null) {
+                    receipt.setReferenceNumber(receiptNumber);
+                    receipt.setReceiptDate(receiptDate);
+                    receipt.setAmount(totalAmount);
+                    receipt.setPayerId(customerName);
+                    receiptDao.update(receipt);
+                }
             }
-
             runOnUiThread(() -> {
                 Toast.makeText(this, "تم حفظ الإيصال بنجاح", Toast.LENGTH_SHORT).show();
                 finish();
@@ -112,17 +101,15 @@ public class ReceiptDetailActivity extends AppCompatActivity {
 
     private void deleteReceipt() {
         if (receiptId != null) {
-            Executors.newSingleThreadExecutor().execute(() -> {
-                String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
-                database.receiptDao().getReceiptById(receiptId, companyId).observeForever(receipt -> {
-                    if (receipt != null) {
-                        database.receiptDao().delete(receipt);
-                        runOnUiThread(() -> {
-                            Toast.makeText(this, "تم حذف الإيصال بنجاح", Toast.LENGTH_SHORT).show();
-                            finish();
-                        });
-                    }
-                });
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                Receipt receipt = receiptDao.getReceiptById(receiptId, sessionManager.getCurrentCompanyId());
+                if (receipt != null) {
+                    receiptDao.delete(receipt);
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "تم حذف الإيصال بنجاح", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+                }
             });
         }
     }

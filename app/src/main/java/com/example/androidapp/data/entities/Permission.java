@@ -20,14 +20,6 @@ public class Permission {
         this.description = description;
         this.group = group;
     }
-    
-    @Ignore
-    public Permission(String action, String description, String group, String name) {
-        this.action = action;
-        this.description = description;
-        this.group = group;
-        this.id = name;
-    }
 
     // Getters
     @NonNull

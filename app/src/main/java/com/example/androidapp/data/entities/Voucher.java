@@ -6,7 +6,8 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import com.example.androidapp.database.DatabaseContract.VoucherType;
+import com.example.androidapp.data.DatabaseContract.VoucherType; // تصحيح المسار
+import java.util.UUID;
 
 @Entity(tableName = "vouchers",
         foreignKeys = {
@@ -25,6 +26,7 @@ public class Voucher {
     private String description;
     private String journalEntryId;
 
+    // مُنشئ أساسي لـ Room
     public Voucher(@NonNull String id, String companyId, VoucherType type, String date, float amount, String description, String journalEntryId) {
         this.id = id;
         this.companyId = companyId;
@@ -35,6 +37,7 @@ public class Voucher {
         this.journalEntryId = journalEntryId;
     }
 
+    // مُنشئ مساعد للاستخدام في الكود
     @Ignore
     public Voucher(@NonNull String id, String companyId, String type, String date, double amount, String description) {
         this.id = id;
