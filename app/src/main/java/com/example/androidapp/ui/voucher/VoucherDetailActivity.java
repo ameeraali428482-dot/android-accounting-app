@@ -12,7 +12,7 @@ import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.VoucherDao;
 import com.example.androidapp.data.entities.Voucher;
-import com.example.androidapp.database.DatabaseContract.VoucherType;
+import com.example.androidapp.data.DatabaseContract.VoucherType; // تم تصحيح المسار
 import com.example.androidapp.utils.SessionManager;
 import java.util.Arrays;
 import java.util.UUID;

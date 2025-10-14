@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import java.util.Calendar;
 import java.util.UUID;
@@ -13,7 +14,7 @@ import java.util.UUID;
                 @ForeignKey(entity = Company.class, parentColumns = "id", childColumns = "companyId", onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = JournalEntry.class, parentColumns = "id", childColumns = "journalEntryId", onDelete = ForeignKey.SET_NULL)
         },
-        indices = {@Index(value = "companyId"), @Index(value = "journalEntryId")})
+        indices = {@Index("companyId"), @Index("journalEntryId")}) // <-- تم التصحيح هنا
 public class Payroll {
     @PrimaryKey
     @NonNull

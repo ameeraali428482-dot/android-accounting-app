@@ -6,15 +6,14 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import com.example.androidapp.data.DatabaseContract.VoucherType; // تصحيح المسار
-import java.util.UUID;
+import com.example.androidapp.data.DatabaseContract.VoucherType; // تم تصحيح المسار
 
 @Entity(tableName = "vouchers",
         foreignKeys = {
                 @ForeignKey(entity = Company.class, parentColumns = "id", childColumns = "companyId", onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = JournalEntry.class, parentColumns = "id", childColumns = "journalEntryId", onDelete = ForeignKey.SET_NULL)
         },
-        indices = {@Index(value = "companyId"), @Index(value = "journalEntryId")})
+        indices = {@Index("companyId"), @Index("journalEntryId")})
 public class Voucher {
     @PrimaryKey
     @NonNull
@@ -26,7 +25,6 @@ public class Voucher {
     private String description;
     private String journalEntryId;
 
-    // مُنشئ أساسي لـ Room
     public Voucher(@NonNull String id, String companyId, VoucherType type, String date, float amount, String description, String journalEntryId) {
         this.id = id;
         this.companyId = companyId;
@@ -37,7 +35,6 @@ public class Voucher {
         this.journalEntryId = journalEntryId;
     }
 
-    // مُنشئ مساعد للاستخدام في الكود
     @Ignore
     public Voucher(@NonNull String id, String companyId, String type, String date, double amount, String description) {
         this.id = id;
