@@ -1,6 +1,5 @@
 package com.example.androidapp.ui.voucher;
 
-import java.util.Date;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -9,18 +8,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.androidapp.App;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.VoucherDao;
 import com.example.androidapp.data.entities.Voucher;
+import com.example.androidapp.database.DatabaseContract.VoucherType;
 import com.example.androidapp.utils.SessionManager;
 import java.util.Arrays;
 import java.util.UUID;
-
-
-
-
-
 
 public class VoucherDetailActivity extends AppCompatActivity {
 
@@ -36,8 +31,14 @@ public class VoucherDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voucher_detail);
 
+        dateEditText = findViewById(R.id.voucher_date_edit_text);
+        amountEditText = findViewById(R.id.voucher_amount_edit_text);
+        descriptionEditText = findViewById(R.id.voucher_description_edit_text);
+        typeSpinner = findViewById(R.id.voucher_type_spinner);
+        saveButton = findViewById(R.id.save_voucher_button);
+        deleteButton = findViewById(R.id.delete_voucher_button);
 
-        voucherDao = new VoucherDao(App.getDatabaseHelper());
+        voucherDao = AppDatabase.getDatabase(this).voucherDao();
         sessionManager = new SessionManager(this);
 
         setupTypeSpinner();
@@ -55,66 +56,77 @@ public class VoucherDetailActivity extends AppCompatActivity {
     }
 
     private void setupTypeSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.voucher_types, android.R.layout.simple_spinner_item);
+        ArrayAdapter<VoucherType> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, VoucherType.values());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(adapter);
     }
 
     private void loadVoucherData(String id) {
-        Voucher voucher = voucherDao.getById(id);
-        if (voucher != null) {
-            dateEditText.setText(voucher.getDate());
-            amountEditText.setText(String.valueOf(voucher.getAmount()));
-            descriptionEditText.setText(voucher.getDescription());
-
-            // Set spinner selection
-            String[] types = getResources().getStringArray(R.array.voucher_types);
-            int spinnerPosition = Arrays.asList(types).indexOf(voucher.getType());
-            if (spinnerPosition >= 0) {
-                typeSpinner.setSelection(spinnerPosition);
-            }
-        }
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            Voucher voucher = voucherDao.getById(id);
+            runOnUiThread(() -> {
+                if (voucher != null) {
+                    dateEditText.setText(voucher.getDate());
+                    amountEditText.setText(String.valueOf(voucher.getAmount()));
+                    descriptionEditText.setText(voucher.getDescription());
+                    typeSpinner.setSelection(voucher.getType().ordinal());
+                }
+            });
+        });
     }
 
     private void saveVoucher() {
         String date = dateEditText.getText().toString().trim();
         String amountStr = amountEditText.getText().toString().trim();
         String description = descriptionEditText.getText().toString().trim();
-        String type = typeSpinner.getSelectedItem().toString();
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        VoucherType type = (VoucherType) typeSpinner.getSelectedItem();
+        String companyId = sessionManager.getCurrentCompanyId();
 
         if (companyId == null) {
             Toast.makeText(this, "خطأ: لم يتم العثور على معرف الشركة.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (date.isEmpty() || amountStr.isEmpty() || type.isEmpty()) {
-            Toast.makeText(this, "الرجاء تعبئة جميع الحقول المطلوبة (التاريخ، المبلغ، النوع).", Toast.LENGTH_SHORT).show();
+        if (date.isEmpty() || amountStr.isEmpty()) {
+            Toast.makeText(this, "الرجاء تعبئة التاريخ والمبلغ.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        double amount = Double.parseDouble(amountStr);
+        float amount = Float.parseFloat(amountStr);
 
-        Voucher voucher;
-        if (voucherId == null) {
-            // New voucher
-            voucher = new Voucher(UUID.randomUUID().toString(), companyId, type, date, amount, description);
-            voucherDao.insert(voucher);
-            Toast.makeText(this, "تم إضافة السند بنجاح.", Toast.LENGTH_SHORT).show();
-        } else {
-            // Existing voucher
-            voucher = new Voucher(voucherId, companyId, type, date, amount, description);
-            voucherDao.update(voucher);
-            Toast.makeText(this, "تم تحديث السند بنجاح.", Toast.LENGTH_SHORT).show();
-        }
-        finish();
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            if (voucherId == null) {
+                Voucher voucher = new Voucher(UUID.randomUUID().toString(), companyId, type, date, amount, description, null);
+                voucherDao.insert(voucher);
+            } else {
+                Voucher voucher = voucherDao.getById(voucherId);
+                if (voucher != null) {
+                    voucher.setDate(date);
+                    voucher.setAmount(amount);
+                    voucher.setDescription(description);
+                    voucher.setType(type);
+                    voucherDao.update(voucher);
+                }
+            }
+            runOnUiThread(() -> {
+                Toast.makeText(this, "تم الحفظ بنجاح.", Toast.LENGTH_SHORT).show();
+                finish();
+            });
+        });
     }
 
     private void deleteVoucher() {
         if (voucherId != null) {
-            voucherDao.delete(voucherId);
-            Toast.makeText(this, "تم حذف السند بنجاح.", Toast.LENGTH_SHORT).show();
-            finish();
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                Voucher voucher = voucherDao.getById(voucherId);
+                if (voucher != null) {
+                    voucherDao.delete(voucher);
+                }
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "تم الحذف بنجاح.", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            });
         }
     }
 }

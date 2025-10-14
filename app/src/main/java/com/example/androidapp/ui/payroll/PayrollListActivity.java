@@ -7,14 +7,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.androidapp.App;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.PayrollDao;
 import com.example.androidapp.data.entities.Payroll;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.List;
+import java.util.ArrayList;
 
 public class PayrollListActivity extends AppCompatActivity {
 
@@ -28,19 +28,16 @@ public class PayrollListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payroll_list);
 
-        payrollRecyclerView = findViewById(R.id.payrollRecyclerView);
+        payrollRecyclerView = findViewById(R.id.payroll_recycler_view);
         payrollRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        payrollDao = new PayrollDao(App.getDatabaseHelper());
+        payrollDao = AppDatabase.getDatabase(this).payrollDao();
         sessionManager = new SessionManager(this);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(PayrollListActivity.this, PayrollDetailActivity.class);
-                startActivity(intent);
-            }
+        FloatingActionButton fab = findViewById(R.id.add_payroll_button);
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(PayrollListActivity.this, PayrollDetailActivity.class);
+            startActivity(intent);
         });
 
         loadPayrolls();
@@ -53,41 +50,22 @@ public class PayrollListActivity extends AppCompatActivity {
     }
 
     private void loadPayrolls() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCurrentCompanyId();
         if (companyId == null) {
             return;
         }
 
-        List<Payroll> payrolls = payrollDao.getPayrollsByCompanyId(companyId);
-
-        adapter = new GenericAdapter<Payroll>(payrolls) {
-            @Override
-            protected int getLayoutResId() {
-                return R.layout.payroll_list_row;
-            }
-
-            @Override
-            protected void bindView(View itemView, Payroll payroll) {
-                TextView payrollId = itemView.findViewById(R.id.payrollId);
-                TextView payrollEmployeeId = itemView.findViewById(R.id.payrollEmployeeId);
-                TextView payrollDate = itemView.findViewById(R.id.payrollDate);
-                TextView payrollAmount = itemView.findViewById(R.id.payrollAmount);
-
-                payrollId.setText("ID: " + payroll.getId());
-                payrollEmployeeId.setText("معرف الموظف: " + payroll.getEmployeeId());
-                payrollDate.setText("التاريخ: " + payroll.getDate());
-                payrollAmount.setText(String.format("المبلغ: %.2f", payroll.getAmount()));
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(PayrollListActivity.this, PayrollDetailActivity.class);
-                        intent.putExtra("payroll_id", payroll.getId());
-                        startActivity(intent);
-                    }
-                });
-            }
-        };
+        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+            Intent intent = new Intent(PayrollListActivity.this, PayrollDetailActivity.class);
+            intent.putExtra("payroll_id", item.getId());
+            startActivity(intent);
+        });
         payrollRecyclerView.setAdapter(adapter);
+
+        payrollDao.getPayrollsByCompanyId(companyId).observe(this, payrolls -> {
+            if (payrolls != null) {
+                adapter.updateData(payrolls);
+            }
+        });
     }
 }

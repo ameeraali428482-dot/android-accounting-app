@@ -21,10 +21,13 @@ public interface ReminderDao {
     void delete(Reminder reminder);
 
     @Query("SELECT * FROM reminders")
-    List<Reminder> getAllReminders();
+    LiveData<List<Reminder>> getAllReminders();
 
     @Query("SELECT * FROM reminders WHERE id = :id LIMIT 1")
-    Reminder getReminderById(String id);
+    LiveData<Reminder> getReminderById(String id);
+    
+    @Query("SELECT * FROM reminders WHERE id = :id LIMIT 1")
+    Reminder getReminderByIdSync(String id);
 
     @Query("SELECT * FROM reminders WHERE companyId = :companyId")
     LiveData<List<Reminder>> getRemindersByCompanyId(String companyId);

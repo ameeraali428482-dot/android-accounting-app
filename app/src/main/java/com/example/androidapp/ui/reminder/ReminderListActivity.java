@@ -22,7 +22,6 @@ public class ReminderListActivity extends AppCompatActivity {
     private GenericAdapter<Reminder> adapter;
     private AppDatabase db;
     private SessionManager sm;
-    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +31,8 @@ public class ReminderListActivity extends AppCompatActivity {
         db = AppDatabase.getInstance(this);
         sm = new SessionManager(this);
 
-        recyclerView = findViewById(R.id.recyclerView);
-        fab          = findViewById(R.id.fab);
+        recyclerView = findViewById(R.id.reminder_recycler_view);
+        FloatingActionButton fab = findViewById(R.id.add_reminder_button);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -46,7 +45,7 @@ public class ReminderListActivity extends AppCompatActivity {
     }
 
     private void loadReminders() {
-        String companyId = sm.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sm.getCurrentCompanyId();
         if (companyId == null) return;
 
         adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
@@ -61,18 +60,20 @@ public class ReminderListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Reminder r) {
-                TextView tvTitle = itemView.findViewById(R.id.reminderTitle);
-                TextView tvDate  = itemView.findViewById(R.id.reminderDate);
-                TextView tvTime  = itemView.findViewById(R.id.reminderTime);
+                TextView tvTitle = itemView.findViewById(R.id.reminder_title);
+                TextView tvDate  = itemView.findViewById(R.id.reminder_date);
+                TextView tvTime  = itemView.findViewById(R.id.reminder_time);
 
                 tvTitle.setText(r.getTitle());
-                tvDate .setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(r.getReminderDateTime()));
-                tvTime .setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(r.getReminderDateTime()));
+                if (r.getReminderDateTime() != null) {
+                    tvDate.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(r.getReminderDateTime()));
+                    tvTime.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(r.getReminderDateTime()));
+                }
             }
         };
 
         recyclerView.setAdapter(adapter);
-        db.reminderDao().getAllReminders().observe(this, list -> adapter.updateData(list));
+        db.reminderDao().getRemindersByCompanyId(companyId).observe(this, list -> adapter.updateData(list));
     }
 
     @Override

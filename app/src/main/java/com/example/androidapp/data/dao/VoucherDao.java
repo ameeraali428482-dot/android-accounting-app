@@ -1,5 +1,6 @@
 package com.example.androidapp.data.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -7,9 +8,6 @@ import androidx.room.Update;
 import androidx.room.Delete;
 import java.util.List;
 import com.example.androidapp.data.entities.Voucher;
-
-
-
 
 @Dao
 public interface VoucherDao {
@@ -26,5 +24,8 @@ public interface VoucherDao {
     List<Voucher> getAllVouchers();
 
     @Query("SELECT * FROM vouchers WHERE id = :id LIMIT 1")
-    Voucher getVoucherById(String id);
+    Voucher getById(String id);
+
+    @Query("SELECT * FROM vouchers WHERE companyId = :companyId")
+    LiveData<List<Voucher>> getVouchersByCompanyId(String companyId);
 }

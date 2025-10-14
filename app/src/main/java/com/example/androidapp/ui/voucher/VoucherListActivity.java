@@ -7,17 +7,16 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.androidapp.App;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.VoucherDao;
 import com.example.androidapp.data.entities.Voucher;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.List;
+import java.util.ArrayList;
 
 public class VoucherListActivity extends AppCompatActivity {
-
     private RecyclerView voucherRecyclerView;
     private VoucherDao voucherDao;
     private SessionManager sessionManager;
@@ -28,19 +27,16 @@ public class VoucherListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voucher_list);
 
-        voucherRecyclerView = findViewById(R.id.voucherRecyclerView);
+        voucherRecyclerView = findViewById(R.id.voucher_recycler_view);
         voucherRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        voucherDao = new VoucherDao(App.getDatabaseHelper());
+        voucherDao = AppDatabase.getDatabase(this).voucherDao();
         sessionManager = new SessionManager(this);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(VoucherListActivity.this, VoucherDetailActivity.class);
-                startActivity(intent);
-            }
+        FloatingActionButton fab = findViewById(R.id.add_voucher_button);
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(VoucherListActivity.this, VoucherDetailActivity.class);
+            startActivity(intent);
         });
 
         loadVouchers();
@@ -53,39 +49,22 @@ public class VoucherListActivity extends AppCompatActivity {
     }
 
     private void loadVouchers() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCurrentCompanyId();
         if (companyId == null) {
             return;
         }
 
-        List<Voucher> vouchers = voucherDao.getVouchersByCompanyId(companyId);
-
-        adapter = new GenericAdapter<Voucher>(vouchers) {
-            @Override
-            protected int getLayoutResId() {
-                return R.layout.voucher_list_row;
-            }
-
-            @Override
-            protected void bindView(View itemView, Voucher voucher) {
-                TextView voucherType = itemView.findViewById(R.id.voucherType);
-                TextView voucherAmount = itemView.findViewById(R.id.voucherAmount);
-                TextView voucherDate = itemView.findViewById(R.id.voucherDate);
-
-                voucherType.setText("النوع: " + voucher.getType());
-                voucherAmount.setText(String.format("المبلغ: %.2f", voucher.getAmount()));
-                voucherDate.setText("التاريخ: " + voucher.getDate());
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(VoucherListActivity.this, VoucherDetailActivity.class);
-                        intent.putExtra("voucher_id", voucher.getId());
-                        startActivity(intent);
-                    }
-                });
-            }
-        };
+        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+            Intent intent = new Intent(VoucherListActivity.this, VoucherDetailActivity.class);
+            intent.putExtra("voucher_id", item.getId());
+            startActivity(intent);
+        });
         voucherRecyclerView.setAdapter(adapter);
+
+        voucherDao.getVouchersByCompanyId(companyId).observe(this, vouchers -> {
+            if (vouchers != null) {
+                adapter.updateData(vouchers);
+            }
+        });
     }
 }

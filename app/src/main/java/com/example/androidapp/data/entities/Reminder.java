@@ -1,153 +1,63 @@
 package com.example.androidapp.data.entities;
 
-import java.util.Date;
-import androidx.annotation.NonNull;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
-
+import java.util.Date;
 
 @Entity(tableName = "reminders",
         foreignKeys = {
-                @ForeignKey(entity = Company.class,
-                           parentColumns = "id",
-                           childColumns = "companyId",
-                           onDelete = ForeignKey.CASCADE),
-                @ForeignKey(entity = User.class,
-                           parentColumns = "id",
-                           childColumns = "assignedToId",
-                           onDelete = ForeignKey.SET_NULL)
+                @ForeignKey(entity = Company.class, parentColumns = "id", childColumns = "companyId", onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "userId", onDelete = ForeignKey.SET_NULL)
         },
-        indices = {@Index(value = "companyId"), @Index(value = "assignedToId")})
+        indices = {@Index(value = "companyId"), @Index(value = "userId")})
 public class Reminder {
     @PrimaryKey
-    private @NonNull String id;
+    @NonNull
+    private String id;
     private String companyId;
+    private String userId;
     private String title;
     private String description;
-    private String dueDate;
-    private String priority;
-    private boolean isCompleted;
-    private boolean isExecuted;
-    private String actionType;
-    private String actionPayload; // JSON string
-    private String assignedToId;
-    private String createdAt;
+    private Date reminderDateTime;
+    private boolean isActive;
+    private String notificationType;
 
-    public Reminder(String id, String companyId, String title, String description, String dueDate, String priority, boolean isCompleted, boolean isExecuted, String actionType, String actionPayload, String assignedToId, String createdAt) {
+    public Reminder(@NonNull String id, String companyId, String userId, String title, String description, Date reminderDateTime, boolean isActive, String notificationType) {
         this.id = id;
         this.companyId = companyId;
+        this.userId = userId;
         this.title = title;
         this.description = description;
-        this.dueDate = dueDate;
-        this.priority = priority;
-        this.isCompleted = isCompleted;
-        this.isExecuted = isExecuted;
-        this.actionType = actionType;
-        this.actionPayload = actionPayload;
-        this.assignedToId = assignedToId;
-        this.createdAt = createdAt;
+        this.reminderDateTime = reminderDateTime;
+        this.isActive = isActive;
+        this.notificationType = notificationType;
     }
+
+    @Ignore
+    public Reminder() {}
 
     // Getters
-    public String getId() {
-        return id;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getDueDate() {
-        return dueDate;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public boolean isCompleted() {
-        return isCompleted;
-    }
-
-    public boolean isExecuted() {
-        return isExecuted;
-    }
-
-    public String getActionType() {
-        return actionType;
-    }
-
-    public String getActionPayload() {
-        return actionPayload;
-    }
-
-    public String getAssignedToId() {
-        return assignedToId;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
+    @NonNull
+    public String getId() { return id; }
+    public String getCompanyId() { return companyId; }
+    public String getUserId() { return userId; }
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public Date getReminderDateTime() { return reminderDateTime; }
+    public boolean isActive() { return isActive; }
+    public String getNotificationType() { return notificationType; }
 
     // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
-
-    public void setCompleted(boolean completed) {
-        isCompleted = completed;
-    }
-
-    public void setExecuted(boolean executed) {
-        isExecuted = executed;
-    }
-
-    public void setActionType(String actionType) {
-        this.actionType = actionType;
-    }
-
-    public void setActionPayload(String actionPayload) {
-        this.actionPayload = actionPayload;
-    }
-
-    public void setAssignedToId(String assignedToId) {
-        this.assignedToId = assignedToId;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
+    public void setId(@NonNull String id) { this.id = id; }
+    public void setCompanyId(String companyId) { this.companyId = companyId; }
+    public void setUserId(String userId) { this.userId = userId; }
+    public void setTitle(String title) { this.title = title; }
+    public void setDescription(String description) { this.description = description; }
+    public void setReminderDateTime(Date reminderDateTime) { this.reminderDateTime = reminderDateTime; }
+    public void setActive(boolean active) { isActive = active; }
+    public void setNotificationType(String notificationType) { this.notificationType = notificationType; }
 }
-
