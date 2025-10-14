@@ -62,4 +62,7 @@ public class Item {
 
     public float getCost() { return cost; }
     public void setCost(float cost) { this.cost = cost; }
+    public float getCostPrice() {
+        return costPrice;
+    }
 }

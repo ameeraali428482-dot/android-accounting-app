@@ -118,5 +118,8 @@ public class InvoiceItem {
     public void setTax(float tax) {
         this.tax = tax;
     }
+    public float getUnitPrice() {
+        return unitPrice;
+    }
 }
 
