@@ -4,26 +4,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Order;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class OrderListActivity extends AppCompatActivity {
+
     private RecyclerView recyclerView;
     private GenericAdapter<Order> adapter;
     private AppDatabase database;
     private SessionManager sessionManager;
-    private FloatingActionButton fabAddOrder;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +35,11 @@ public class OrderListActivity extends AppCompatActivity {
         sessionManager = new SessionManager(this);
 
         recyclerView = findViewById(R.id.recyclerView);
-        fabAddOrder = findViewById(R.id.fabAddOrder);
+        fab          = findViewById(R.id.fab);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        fabAddOrder.setOnClickListener(v -> {
+        fab.setOnClickListener(v -> {
             Intent intent = new Intent(OrderListActivity.this, OrderDetailActivity.class);
             startActivity(intent);
         });
@@ -48,14 +49,12 @@ public class OrderListActivity extends AppCompatActivity {
 
     private void loadOrders() {
         String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        if (companyId == null) return;
 
-        adapter = new GenericAdapter<>(new ArrayList<>(), new GenericAdapter.OnItemClickListener<Order>() {
-            @Override
-            public void onItemClick(Order item) {
-                Intent intent = new Intent(OrderListActivity.this, OrderDetailActivity.class);
-                intent.putExtra("order_id", item.getId());
-                startActivity(intent);
-            }
+        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+            Intent i = new Intent(OrderListActivity.this, OrderDetailActivity.class);
+            i.putExtra("order_id", item.getId());
+            startActivity(i);
         }) {
             @Override
             protected int getLayoutResId() {
@@ -64,25 +63,20 @@ public class OrderListActivity extends AppCompatActivity {
 
             @Override
             protected void bindView(View itemView, Order order) {
-                TextView tvOrderId = itemView.findViewById(R.id.tvOrderId);
-                TextView tvOrderDate = itemView.findViewById(R.id.tvOrderDate);
-                TextView tvOrderTotalAmount = itemView.findViewById(R.id.tvOrderTotalAmount);
-                TextView tvOrderStatus = itemView.findViewById(R.id.tvOrderStatus);
+                TextView tvOrderId     = itemView.findViewById(R.id.tvOrderId);
+                TextView tvOrderDate   = itemView.findViewById(R.id.tvOrderDate);
+                TextView tvTotalAmount = itemView.findViewById(R.id.tvOrderTotalAmount);
+                TextView tvStatus      = itemView.findViewById(R.id.tvOrderStatus);
 
-                tvOrderId.setText(order.getId());
-                tvOrderDate.setText(order.getOrderDate());
-                tvOrderTotalAmount.setText(String.valueOf(order.getTotalAmount()));
-                tvOrderStatus.setText(order.getOrderStatus());
+                tvOrderId    .setText(order.getId());
+                tvOrderDate  .setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(order.getOrderDate()));
+                tvTotalAmount.setText(String.valueOf(order.getTotalAmount()));
+                tvStatus     .setText(order.getStatus());
             }
         };
 
         recyclerView.setAdapter(adapter);
-
-        database.orderDao().getAllOrders(companyId).observe(this, orders -> {
-            if (orders != null) {
-                adapter.updateData(orders);
-            }
-        });
+        database.orderDao().getAllOrders(companyId).observe(this, list -> adapter.updateData(list));
     }
 
     @Override

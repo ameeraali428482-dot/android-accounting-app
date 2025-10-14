@@ -4,28 +4,19 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Role;
 import com.example.androidapp.utils.SessionManager;
-
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
 public class RoleDetailActivity extends AppCompatActivity {
-    private EditText etRoleName;
-    private EditText etRoleDescription;
-    private RecyclerView rvPermissions;
-    private Button btnSaveRole;
-    private Button btnDeleteRole;
-    
-    private AppDatabase database;
-    private SessionManager sessionManager;
+    private EditText etName, etDesc;
+    private Button btnSave, btnDel;
+    private AppDatabase db;
+    private SessionManager sm;
     private String roleId;
 
     @Override
@@ -33,86 +24,69 @@ public class RoleDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_role_detail);
 
-        database = AppDatabase.getInstance(this);
-        sessionManager = new SessionManager(this);
+        db = AppDatabase.getInstance(this);
+        sm = new SessionManager(this);
 
-        etRoleName = findViewById(R.id.etRoleName);
-        etRoleDescription = findViewById(R.id.etRoleDescription);
-        rvPermissions = findViewById(R.id.rvPermissions);
-        btnSaveRole = findViewById(R.id.btnSaveRole);
-        btnDeleteRole = findViewById(R.id.btnDeleteRole);
-
-        rvPermissions.setLayoutManager(new LinearLayoutManager(this));
+        etName  = findViewById(R.id.etRoleName);
+        etDesc  = findViewById(R.id.etRoleDescription);
+        btnSave = findViewById(R.id.btnSaveRole);
+        btnDel  = findViewById(R.id.btnDeleteRole);
 
         roleId = getIntent().getStringExtra("role_id");
+        if (roleId != null) load();
 
-        if (roleId != null) {
-            loadRoleDetails();
-        }
-
-        btnSaveRole.setOnClickListener(v -> saveRole());
-        btnDeleteRole.setOnClickListener(v -> deleteRole());
+        btnSave.setOnClickListener(v -> save());
+        btnDel .setOnClickListener(v -> delete());
     }
 
-    private void loadRoleDetails() {
+    private void load() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            Role role = database.roleDao().getRoleByIdSync(roleId);
-            if (role != null) {
+            Role r = db.roleDao().getRoleByIdSync(roleId);
+            if (r != null) {
                 runOnUiThread(() -> {
-                    etRoleName.setText(role.getRoleName());
-                    etRoleDescription.setText(role.getRoleDescription());
+                    etName.setText(r.getName());
+                    etDesc.setText(r.getDescription());
                 });
             }
         });
     }
 
-    private void saveRole() {
-        String roleName = etRoleName.getText().toString().trim();
-        String roleDescription = etRoleDescription.getText().toString().trim();
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+    private void save() {
+        String name = etName.getText().toString().trim();
+        String desc = etDesc.getText().toString().trim();
+        String companyId = sm.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
 
-        if (roleName.isEmpty()) {
-            Toast.makeText(this, "الرجاء إدخال اسم الدور", Toast.LENGTH_SHORT).show();
+        if (name.isEmpty()) {
+            Toast.makeText(this, "أدخل اسم الدور", Toast.LENGTH_SHORT).show();
             return;
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
             if (roleId == null) {
-                Role role = new Role(
-                    UUID.randomUUID().toString(),
-                    companyId,
-                    roleName,
-                    roleDescription,
-                    ""
-                );
-                database.roleDao().insert(role);
+                Role r = new Role();
+                r.setId(UUID.randomUUID().toString());
+                r.setCompanyId(companyId);
+                r.setName(name);
+                r.setDescription(desc);
+                db.roleDao().insert(r);
             } else {
-                Role role = database.roleDao().getRoleByIdSync(roleId);
-                if (role != null) {
-                    role.setRoleName(roleName);
-                    role.setRoleDescription(roleDescription);
-                    database.roleDao().update(role);
+                Role r = db.roleDao().getRoleByIdSync(roleId);
+                if (r != null) {
+                    r.setName(name);
+                    r.setDescription(desc);
+                    db.roleDao().update(r);
                 }
             }
-
-            runOnUiThread(() -> {
-                Toast.makeText(this, "تم حفظ الدور بنجاح", Toast.LENGTH_SHORT).show();
-                finish();
-            });
+            runOnUiThread(() -> { Toast.makeText(this, "تم الحفظ", Toast.LENGTH_SHORT).show(); finish(); });
         });
     }
 
-    private void deleteRole() {
+    private void delete() {
         if (roleId != null) {
             Executors.newSingleThreadExecutor().execute(() -> {
-                Role role = database.roleDao().getRoleByIdSync(roleId);
-                if (role != null) {
-                    database.roleDao().delete(role);
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "تم حذف الدور بنجاح", Toast.LENGTH_SHORT).show();
-                        finish();
-                    });
-                }
+                Role r = db.roleDao().getRoleByIdSync(roleId);
+                if (r != null) db.roleDao().delete(r);
+                runOnUiThread(() -> { Toast.makeText(this, "تم الحذف", Toast.LENGTH_SHORT).show(); finish(); });
             });
         }
     }

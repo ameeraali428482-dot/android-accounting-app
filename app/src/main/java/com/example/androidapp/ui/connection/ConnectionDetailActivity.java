@@ -4,27 +4,19 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Connection;
 import com.example.androidapp.utils.SessionManager;
-
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
 public class ConnectionDetailActivity extends AppCompatActivity {
-    private EditText etConnectionName;
-    private EditText etConnectionType;
-    private EditText etConnectionUrl;
-    private Button btnSaveConnection;
-    private Button btnDeleteConnection;
-    private Button btnTestConnection;
-
-    private AppDatabase database;
-    private SessionManager sessionManager;
+    private EditText etName, etType, etUrl;
+    private Button btnSave, btnDel, btnTest;
+    private AppDatabase db;
+    private SessionManager sm;
     private String connectionId;
 
     @Override
@@ -32,97 +24,78 @@ public class ConnectionDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connection_detail);
 
-        database = AppDatabase.getInstance(this);
-        sessionManager = new SessionManager(this);
+        db = AppDatabase.getInstance(this);
+        sm = new SessionManager(this);
 
-        etConnectionName = findViewById(R.id.etConnectionName);
-        etConnectionType = findViewById(R.id.etConnectionType);
-        etConnectionUrl = findViewById(R.id.etConnectionUrl);
-        btnSaveConnection = findViewById(R.id.btnSaveConnection);
-        btnDeleteConnection = findViewById(R.id.btnDeleteConnection);
-        btnTestConnection = findViewById(R.id.btnTestConnection);
+        etName  = findViewById(R.id.etConnectionName);
+        etType  = findViewById(R.id.etConnectionType);
+        etUrl   = findViewById(R.id.etConnectionUrl);
+        btnSave = findViewById(R.id.btnSaveConnection);
+        btnDel  = findViewById(R.id.btnDeleteConnection);
+        btnTest = findViewById(R.id.btnTestConnection);
 
         connectionId = getIntent().getStringExtra("connection_id");
+        if (connectionId != null) load();
 
-        if (connectionId != null) {
-            loadConnectionDetails();
-        }
-
-        btnSaveConnection.setOnClickListener(v -> saveConnection());
-        btnDeleteConnection.setOnClickListener(v -> deleteConnection());
-        btnTestConnection.setOnClickListener(v -> testConnection());
+        btnSave.setOnClickListener(v -> save());
+        btnDel .setOnClickListener(v -> delete());
+        btnTest.setOnClickListener(v -> Toast.makeText(this, "اختبار...", Toast.LENGTH_SHORT).show());
     }
 
-    private void loadConnectionDetails() {
+    private void load() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            Connection connection = database.connectionDao().getConnectionByIdSync(connectionId);
-            if (connection != null) {
+            Connection c = db.connectionDao().getConnectionByIdSync(connectionId);
+            if (c != null) {
                 runOnUiThread(() -> {
-                    etConnectionName.setText(connection.getConnectionName());
-                    etConnectionType.setText(connection.getConnectionType());
-                    etConnectionUrl.setText(connection.getConnectionUrl());
+                    etName.setText(c.getConnectionName());
+                    etType.setText(c.getConnectionType());
+                    etUrl .setText(c.getConnectionUrl());
                 });
             }
         });
     }
 
-    private void saveConnection() {
-        String name = etConnectionName.getText().toString().trim();
-        String type = etConnectionType.getText().toString().trim();
-        String url = etConnectionUrl.getText().toString().trim();
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+    private void save() {
+        String name = etName.getText().toString().trim();
+        String type = etType.getText().toString().trim();
+        String url  = etUrl .getText().toString().trim();
+        String companyId = sm.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
 
         if (name.isEmpty() || type.isEmpty()) {
-            Toast.makeText(this, "الرجاء إدخال جميع الحقول المطلوبة", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "أدخل الاسم والنوع", Toast.LENGTH_SHORT).show();
             return;
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
             if (connectionId == null) {
-                Connection connection = new Connection(
-                    UUID.randomUUID().toString(),
-                    companyId,
-                    name,
-                    type,
-                    url,
-                    "",
-                    "",
-                    "inactive"
-                );
-                database.connectionDao().insert(connection);
+                Connection c = new Connection();
+                c.setId(UUID.randomUUID().toString());
+                c.setCompanyId(companyId);
+                c.setConnectionName(name);
+                c.setConnectionType(type);
+                c.setConnectionUrl(url);
+                c.setStatus("inactive");
+                db.connectionDao().insert(c);
             } else {
-                Connection connection = database.connectionDao().getConnectionByIdSync(connectionId);
-                if (connection != null) {
-                    connection.setConnectionName(name);
-                    connection.setConnectionType(type);
-                    connection.setConnectionUrl(url);
-                    database.connectionDao().update(connection);
+                Connection c = db.connectionDao().getConnectionByIdSync(connectionId);
+                if (c != null) {
+                    c.setConnectionName(name);
+                    c.setConnectionType(type);
+                    c.setConnectionUrl(url);
+                    db.connectionDao().update(c);
                 }
             }
-
-            runOnUiThread(() -> {
-                Toast.makeText(this, "تم حفظ الاتصال بنجاح", Toast.LENGTH_SHORT).show();
-                finish();
-            });
+            runOnUiThread(() -> { Toast.makeText(this, "تم الحفظ", Toast.LENGTH_SHORT).show(); finish(); });
         });
     }
 
-    private void deleteConnection() {
+    private void delete() {
         if (connectionId != null) {
             Executors.newSingleThreadExecutor().execute(() -> {
-                Connection connection = database.connectionDao().getConnectionByIdSync(connectionId);
-                if (connection != null) {
-                    database.connectionDao().delete(connection);
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "تم حذف الاتصال بنجاح", Toast.LENGTH_SHORT).show();
-                        finish();
-                    });
-                }
+                Connection c = db.connectionDao().getConnectionByIdSync(connectionId);
+                if (c != null) db.connectionDao().delete(c);
+                runOnUiThread(() -> { Toast.makeText(this, "تم الحذف", Toast.LENGTH_SHORT).show(); finish(); });
             });
         }
-    }
-
-    private void testConnection() {
-        Toast.makeText(this, "اختبار الاتصال...", Toast.LENGTH_SHORT).show();
     }
 }

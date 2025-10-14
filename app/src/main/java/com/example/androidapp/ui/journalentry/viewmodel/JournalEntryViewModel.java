@@ -8,34 +8,33 @@ import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.JournalEntryDao;
 import com.example.androidapp.data.entities.JournalEntry;
 import java.util.List;
-
-
+import java.util.concurrent.Executors;
 
 public class JournalEntryViewModel extends AndroidViewModel {
-    private JournalEntryDao journalEntryDao;
+    private final JournalEntryDao dao;
 
-    public JournalEntryViewModel(@NonNull Application application) {
-        super(application);
-        journalEntryDao = AppDatabase.getDatabase(application).journalEntryDao();
+    public JournalEntryViewModel(@NonNull Application app) {
+        super(app);
+        dao = AppDatabase.getDatabase(app).journalEntryDao();
     }
 
     public LiveData<List<JournalEntry>> getAllJournalEntries(String companyId) {
-        return journalEntryDao.getAllJournalEntries(companyId);
+        return dao.getAllJournalEntries(companyId);
     }
 
-    public LiveData<JournalEntry> getJournalEntryById(String journalEntryId, String companyId) {
-        return journalEntryDao.getJournalEntryById(journalEntryId, companyId);
+    public LiveData<JournalEntry> getJournalEntryById(String id, String companyId) {
+        return dao.getJournalEntryById(id, companyId);
     }
 
-    public void insert(JournalEntry journalEntry) {
-        AppDatabase.databaseWriteExecutor.execute(() -> journalEntryDao.insert(journalEntry));
+    public void insert(JournalEntry je) {
+        Executors.newSingleThreadExecutor().execute(() -> dao.insert(je));
     }
 
-    public void update(JournalEntry journalEntry) {
-        AppDatabase.databaseWriteExecutor.execute(() -> journalEntryDao.update(journalEntry));
+    public void update(JournalEntry je) {
+        Executors.newSingleThreadExecutor().execute(() -> dao.update(je));
     }
 
-    public void delete(JournalEntry journalEntry) {
-        AppDatabase.databaseWriteExecutor.execute(() -> journalEntryDao.delete(journalEntry));
+    public void delete(JournalEntry je) {
+        Executors.newSingleThreadExecutor().execute(() -> dao.delete(je));
     }
 }

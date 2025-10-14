@@ -4,18 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Role;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
 public class RoleListActivity extends AppCompatActivity {
@@ -23,7 +20,7 @@ public class RoleListActivity extends AppCompatActivity {
     private GenericAdapter<Role> adapter;
     private AppDatabase database;
     private SessionManager sessionManager;
-    private FloatingActionButton fabAddRole;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +31,13 @@ public class RoleListActivity extends AppCompatActivity {
         sessionManager = new SessionManager(this);
 
         recyclerView = findViewById(R.id.recyclerView);
-        fabAddRole = findViewById(R.id.fabAddRole);
+        fab          = findViewById(R.id.fab);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        fabAddRole.setOnClickListener(v -> {
-            Intent intent = new Intent(RoleListActivity.this, RoleDetailActivity.class);
-            startActivity(intent);
+        fab.setOnClickListener(v -> {
+            Intent i = new Intent(RoleListActivity.this, RoleDetailActivity.class);
+            startActivity(i);
         });
 
         loadRoles();
@@ -48,14 +45,12 @@ public class RoleListActivity extends AppCompatActivity {
 
     private void loadRoles() {
         String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        if (companyId == null) return;
 
-        adapter = new GenericAdapter<>(new ArrayList<>(), new GenericAdapter.OnItemClickListener<Role>() {
-            @Override
-            public void onItemClick(Role item) {
-                Intent intent = new Intent(RoleListActivity.this, RoleDetailActivity.class);
-                intent.putExtra("role_id", item.getId());
-                startActivity(intent);
-            }
+        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+            Intent i = new Intent(RoleListActivity.this, RoleDetailActivity.class);
+            i.putExtra("role_id", item.getId());
+            startActivity(i);
         }) {
             @Override
             protected int getLayoutResId() {
@@ -63,22 +58,16 @@ public class RoleListActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void bindView(View view, Role role) {
-                TextView tvRoleName = view.findViewById(R.id.tvRoleName);
-                TextView tvRoleDescription = view.findViewById(R.id.tvRoleDescription);
-
-                tvRoleName.setText(role.getRoleName());
-                tvRoleDescription.setText(role.getRoleDescription());
+            protected void bindView(View itemView, Role role) {
+                TextView tvName = itemView.findViewById(R.id.tvRoleName);
+                TextView tvDesc = itemView.findViewById(R.id.tvRoleDescription);
+                tvName.setText(role.getName());
+                tvDesc.setText(role.getDescription());
             }
         };
 
         recyclerView.setAdapter(adapter);
-
-        database.roleDao().getAllRoles(companyId).observe(this, roles -> {
-            if (roles != null) {
-                adapter.updateData(roles);
-            }
-        });
+        database.roleDao().getAllRoles(companyId).observe(this, list -> adapter.updateData(list));
     }
 
     @Override
