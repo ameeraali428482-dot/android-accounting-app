@@ -18,6 +18,13 @@ public class Role {
     public Role() {}
 
     @Ignore
+    public Role(String name, String description, String companyId) {
+        this.name = name;
+        this.description = description;
+        this.companyId = companyId;
+    }
+
+    @Ignore
     public Role(@NonNull String id, String companyId, String name, String description, 
                 String permissions, String createdDate, String updatedDate) {
         this.id = id;

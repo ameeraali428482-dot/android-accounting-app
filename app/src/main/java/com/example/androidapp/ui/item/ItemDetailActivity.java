@@ -6,17 +6,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.androidapp.App;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.R;
 import com.example.androidapp.data.dao.ItemDao;
 import com.example.androidapp.data.entities.Item;
 import com.example.androidapp.utils.SessionManager;
 import java.util.UUID;
-
-
-
-
-
 
 public class ItemDetailActivity extends AppCompatActivity {
 
@@ -25,17 +20,26 @@ public class ItemDetailActivity extends AppCompatActivity {
     private ItemDao itemDao;
     private SessionManager sessionManager;
     private String currentItemId = null;
+    private String companyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
 
-        itemDao = new ItemDao(App.getDatabaseHelper());
+        itemDao = AppDatabase.getDatabase(this).itemDao();
         sessionManager = new SessionManager(this);
+        companyId = sessionManager.getCurrentCompanyId();
 
+        itemNameEditText = findViewById(R.id.item_name_edit_text);
+        itemDescriptionEditText = findViewById(R.id.item_description_edit_text);
+        itemPriceEditText = findViewById(R.id.item_price_edit_text);
+        itemCostEditText = findViewById(R.id.item_cost_edit_text);
+        itemCategoryEditText = findViewById(R.id.item_category_edit_text);
+        itemBarcodeEditText = findViewById(R.id.item_barcode_edit_text);
+        saveItemButton = findViewById(R.id.save_item_button);
+        deleteItemButton = findViewById(R.id.delete_item_button);
 
-        // Check if we are editing an existing item
         if (getIntent().hasExtra("itemId")) {
             currentItemId = getIntent().getStringExtra("itemId");
             loadItemDetails(currentItemId);
@@ -44,34 +48,27 @@ public class ItemDetailActivity extends AppCompatActivity {
             deleteItemButton.setVisibility(View.GONE);
         }
 
-        saveItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveItem();
-            }
-        });
-
-        deleteItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteItem();
-            }
-        });
+        saveItemButton.setOnClickListener(v -> saveItem());
+        deleteItemButton.setOnClickListener(v -> deleteItem());
     }
 
     private void loadItemDetails(String itemId) {
-        Item item = itemDao.getById(itemId);
-        if (item != null) {
-            itemNameEditText.setText(item.getName());
-            itemDescriptionEditText.setText(item.getDescription());
-            itemPriceEditText.setText(String.valueOf(item.getPrice()));
-            itemCostEditText.setText(String.valueOf(item.getCost()));
-            itemCategoryEditText.setText(item.getCategory());
-            itemBarcodeEditText.setText(item.getBarcode());
-        } else {
-            Toast.makeText(this, "الصنف غير موجود.", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            Item item = itemDao.getItemById(itemId, companyId);
+            runOnUiThread(() -> {
+                if (item != null) {
+                    itemNameEditText.setText(item.getName());
+                    itemDescriptionEditText.setText(item.getDescription());
+                    itemPriceEditText.setText(String.valueOf(item.getPrice()));
+                    itemCostEditText.setText(String.valueOf(item.getCost()));
+                    itemCategoryEditText.setText(item.getCategory());
+                    itemBarcodeEditText.setText(item.getBarcode());
+                } else {
+                    Toast.makeText(this, "الصنف غير موجود.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+        });
     }
 
     private void saveItem() {
@@ -82,65 +79,54 @@ public class ItemDetailActivity extends AppCompatActivity {
         String category = itemCategoryEditText.getText().toString().trim();
         String barcode = itemBarcodeEditText.getText().toString().trim();
 
-        if (name.isEmpty()) {
-            itemNameEditText.setError("اسم الصنف مطلوب.");
-            itemNameEditText.requestFocus();
-            return;
-        }
-        if (priceStr.isEmpty()) {
-            itemPriceEditText.setError("السعر مطلوب.");
-            itemPriceEditText.requestFocus();
-            return;
-        }
-        if (costStr.isEmpty()) {
-            itemCostEditText.setError("التكلفة مطلوبة.");
-            itemCostEditText.requestFocus();
+        if (name.isEmpty() || priceStr.isEmpty() || costStr.isEmpty()) {
+            Toast.makeText(this, "الرجاء تعبئة الحقول المطلوبة.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        float price = Float.parseFloat(priceStr);
+        double price = Double.parseDouble(priceStr);
         float cost = Float.parseFloat(costStr);
 
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_CURRENT_ORG_ID);
         if (companyId == null) {
-            Toast.makeText(this, "لا توجد شركة محددة. يرجى تسجيل الدخول واختيار شركة.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "لا توجد شركة محددة.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        Item item;
-        if (currentItemId == null) {
-            // New item
-            item = new Item(UUID.randomUUID().toString(), companyId, name, description, price, cost, category, barcode);
-            long result = itemDao.insert(item);
-            if (result != -1) {
-                Toast.makeText(this, "تم إضافة الصنف بنجاح.", Toast.LENGTH_SHORT).show();
-                finish();
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            if (currentItemId == null) {
+                Item item = new Item(UUID.randomUUID().toString(), companyId, name, description, price, category, barcode, 0, 0f, cost);
+                itemDao.insert(item);
             } else {
-                Toast.makeText(this, "فشل إضافة الصنف.", Toast.LENGTH_SHORT).show();
+                Item item = itemDao.getItemById(currentItemId, companyId);
+                if (item != null) {
+                    item.setName(name);
+                    item.setDescription(description);
+                    item.setPrice(price);
+                    item.setCost(cost);
+                    item.setCategory(category);
+                    item.setBarcode(barcode);
+                    itemDao.update(item);
+                }
             }
-        } else {
-            // Existing item
-            item = new Item(currentItemId, companyId, name, description, price, cost, category, barcode);
-            int result = itemDao.update(item);
-            if (result > 0) {
-                Toast.makeText(this, "تم تحديث الصنف بنجاح.", Toast.LENGTH_SHORT).show();
+            runOnUiThread(() -> {
+                Toast.makeText(this, "تم الحفظ بنجاح.", Toast.LENGTH_SHORT).show();
                 finish();
-            } else {
-                Toast.makeText(this, "فشل تحديث الصنف.", Toast.LENGTH_SHORT).show();
-            }
-        }
+            });
+        });
     }
 
     private void deleteItem() {
         if (currentItemId != null) {
-            int result = itemDao.delete(currentItemId);
-            if (result > 0) {
-                Toast.makeText(this, "تم حذف الصنف بنجاح.", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                Toast.makeText(this, "فشل حذف الصنف.", Toast.LENGTH_SHORT).show();
-            }
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                Item item = itemDao.getItemById(currentItemId, companyId);
+                if (item != null) {
+                    itemDao.delete(item);
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "تم حذف الصنف بنجاح.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+                }
+            });
         }
     }
 }
-

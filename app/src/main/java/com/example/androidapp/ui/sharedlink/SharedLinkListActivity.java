@@ -7,13 +7,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.androidapp.App;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.SharedLinkDao;
 import com.example.androidapp.data.entities.SharedLink;
 import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SharedLinkListActivity extends AppCompatActivity {
@@ -28,19 +29,16 @@ public class SharedLinkListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shared_link_list);
 
-        sharedLinkRecyclerView = findViewById(R.id.sharedLinkRecyclerView);
+        sharedLinkRecyclerView = findViewById(R.id.shared_link_recycler_view);
         sharedLinkRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        sharedLinkDao = new SharedLinkDao(App.getDatabaseHelper());
+        sharedLinkDao = AppDatabase.getDatabase(this).sharedLinkDao();
         sessionManager = new SessionManager(this);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SharedLinkListActivity.this, SharedLinkDetailActivity.class);
-                startActivity(intent);
-            }
+        FloatingActionButton fab = findViewById(R.id.add_shared_link_button);
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(SharedLinkListActivity.this, SharedLinkDetailActivity.class);
+            startActivity(intent);
         });
 
         loadSharedLinks();
@@ -53,39 +51,37 @@ public class SharedLinkListActivity extends AppCompatActivity {
     }
 
     private void loadSharedLinks() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCurrentCompanyId();
         if (companyId == null) {
             return;
         }
 
-        List<SharedLink> sharedLinks = sharedLinkDao.getSharedLinksByCompanyId(companyId);
-
-        adapter = new GenericAdapter<SharedLink>(sharedLinks) {
-            @Override
-            protected int getLayoutResId() {
-                return R.layout.shared_link_list_row;
-            }
-
-            @Override
-            protected void bindView(View itemView, SharedLink sharedLink) {
-                TextView sharedLinkName = itemView.findViewById(R.id.sharedLinkName);
-                TextView sharedLinkUrl = itemView.findViewById(R.id.sharedLinkUrl);
-                TextView sharedLinkExpiresAt = itemView.findViewById(R.id.sharedLinkExpiresAt);
-
-                sharedLinkName.setText(sharedLink.getName());
-                sharedLinkUrl.setText(sharedLink.getUrl());
-                sharedLinkExpiresAt.setText("ينتهي في: " + sharedLink.getExpiresAt());
-
-                itemView.setOnClickListener(new View.OnClickListener() {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            List<SharedLink> sharedLinks = sharedLinkDao.getSharedLinksByCompanyId(companyId);
+            runOnUiThread(() -> {
+                adapter = new GenericAdapter<>(sharedLinks, item -> {
+                    Intent i = new Intent(SharedLinkListActivity.this, SharedLinkDetailActivity.class);
+                    i.putExtra("shared_link_id", item.getId());
+                    startActivity(i);
+                }) {
                     @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(SharedLinkListActivity.this, SharedLinkDetailActivity.class);
-                        intent.putExtra("shared_link_id", sharedLink.getId());
-                        startActivity(intent);
+                    protected int getLayoutResId() {
+                        return R.layout.shared_link_list_row;
                     }
-                });
-            }
-        };
-        sharedLinkRecyclerView.setAdapter(adapter);
+
+                    @Override
+                    protected void bindView(View itemView, SharedLink sharedLink) {
+                        TextView sharedLinkName = itemView.findViewById(R.id.shared_link_name);
+                        TextView sharedLinkUrl = itemView.findViewById(R.id.shared_link_url);
+                        TextView sharedLinkExpiresAt = itemView.findViewById(R.id.shared_link_expires_at);
+
+                        sharedLinkName.setText(sharedLink.getName());
+                        sharedLinkUrl.setText(sharedLink.getUrl());
+                        sharedLinkExpiresAt.setText("ينتهي في: " + sharedLink.getExpiresAt());
+                    }
+                };
+                sharedLinkRecyclerView.setAdapter(adapter);
+            });
+        });
     }
 }

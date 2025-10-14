@@ -1,13 +1,10 @@
 package com.example.androidapp.data.entities;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
-
 
 @Entity(tableName = "shared_links",
         foreignKeys = @ForeignKey(entity = Company.class,
@@ -17,7 +14,8 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "companyId"), @Index(value = "token", unique = true)})
 public class SharedLink {
     @PrimaryKey
-    private @NonNull String id;
+    @NonNull
+    private String id;
     private String companyId;
     private String token;
     private String type;
@@ -26,7 +24,7 @@ public class SharedLink {
     private String createdAt;
     private String expiresAt;
 
-    public SharedLink(String id, String companyId, String token, String type, String filters, String password, String createdAt, String expiresAt) {
+    public SharedLink(@NonNull String id, String companyId, String token, String type, String filters, String password, String createdAt, String expiresAt) {
         this.id = id;
         this.companyId = companyId;
         this.token = token;
@@ -38,68 +36,25 @@ public class SharedLink {
     }
 
     // Getters
-    public String getId() {
-        return id;
-    }
+    @NonNull
+    public String getId() { return id; }
+    public String getCompanyId() { return companyId; }
+    public String getToken() { return token; }
+    public String getType() { return type; }
+    public String getFilters() { return filters; }
+    public String getPassword() { return password; }
+    public String getCreatedAt() { return createdAt; }
+    public String getExpiresAt() { return expiresAt; }
+    public String getName() { return "Link for " + type; } // Placeholder name
+    public String getUrl() { return "https://example.com/shared/" + token; } // Placeholder URL
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getFilters() {
-        return filters;
-    }
-
-    public void setFilters(String filters) {
-        this.filters = filters;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getExpiresAt() {
-        return expiresAt;
-    }
-
-    public void setExpiresAt(String expiresAt) {
-        this.expiresAt = expiresAt;
-    }
+    // Setters
+    public void setId(@NonNull String id ) { this.id = id; }
+    public void setCompanyId(String companyId) { this.companyId = companyId; }
+    public void setToken(String token) { this.token = token; }
+    public void setType(String type) { this.type = type; }
+    public void setFilters(String filters) { this.filters = filters; }
+    public void setPassword(String password) { this.password = password; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public void setExpiresAt(String expiresAt) { this.expiresAt = expiresAt; }
 }
-

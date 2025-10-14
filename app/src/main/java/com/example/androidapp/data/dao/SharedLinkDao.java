@@ -1,5 +1,6 @@
 package com.example.androidapp.data.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -7,9 +8,6 @@ import androidx.room.Update;
 import androidx.room.Delete;
 import java.util.List;
 import com.example.androidapp.data.entities.SharedLink;
-
-
-
 
 @Dao
 public interface SharedLinkDao {
@@ -26,5 +24,8 @@ public interface SharedLinkDao {
     List<SharedLink> getAllSharedLinks();
 
     @Query("SELECT * FROM shared_links WHERE id = :id LIMIT 1")
-    SharedLink getSharedLinkById(String id);
+    SharedLink getById(String id);
+
+    @Query("SELECT * FROM shared_links WHERE companyId = :companyId")
+    List<SharedLink> getSharedLinksByCompanyId(String companyId);
 }

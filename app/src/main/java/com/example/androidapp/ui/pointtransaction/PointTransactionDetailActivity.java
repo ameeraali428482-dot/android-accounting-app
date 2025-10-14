@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
-import java.util.concurrent.Executors;
 
 public class PointTransactionDetailActivity extends AppCompatActivity {
     private EditText etUserId, etType, etPoints, etDate, etDesc;
@@ -47,12 +46,13 @@ public class PointTransactionDetailActivity extends AppCompatActivity {
     }
 
     private void load() {
-        db.pointTransactionDao().getPointTransactionById(trxId).observe(this, p -> {
+        String companyId = sm.getCurrentCompanyId();
+        db.pointTransactionDao().getPointTransactionById(trxId, companyId).observe(this, p -> {
             if (p != null) {
                 etUserId.setText(p.getUserId());
                 etType  .setText(p.getTransactionType());
                 etPoints.setText(String.valueOf(p.getPoints()));
-                etDate  .setText(sdf.format(p.getTransactionDate()));
+                etDate  .setText(p.getTransactionDate());
                 etDesc  .setText(p.getDescription());
             }
         });
@@ -60,10 +60,10 @@ public class PointTransactionDetailActivity extends AppCompatActivity {
 
     private void save() {
         String userId = etUserId.getText().toString().trim();
-        String type   = etType  .getText().toString().trim();
+        String type   = etType.getText().toString().trim();
         String ptsStr = etPoints.getText().toString().trim();
-        String desc   = etDesc  .getText().toString().trim();
-        String companyId = sm.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String desc   = etDesc.getText().toString().trim();
+        String companyId = sm.getCurrentCompanyId();
 
         if (userId.isEmpty() || type.isEmpty() || ptsStr.isEmpty()) {
             Toast.makeText(this, "أكمل الحقول المطلوبة", Toast.LENGTH_SHORT).show();
@@ -71,17 +71,11 @@ public class PointTransactionDetailActivity extends AppCompatActivity {
         }
 
         int pts = Integer.parseInt(ptsStr);
+        String date = sdf.format(new Date());
 
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
             if (trxId == null) {
-                PointTransaction p = new PointTransaction();
-                p.setId(UUID.randomUUID().toString());
-                p.setCompanyId(companyId);
-                p.setUserId(userId);
-                p.setTransactionType(type);
-                p.setPoints(pts);
-                p.setTransactionDate(new Date());
-                p.setDescription(desc);
+                PointTransaction p = new PointTransaction(UUID.randomUUID().toString(), companyId, userId, pts, type, desc , date, null, null);
                 db.pointTransactionDao().insert(p);
             } else {
                 PointTransaction p = db.pointTransactionDao().getPointTransactionByIdSync(trxId);
@@ -99,7 +93,7 @@ public class PointTransactionDetailActivity extends AppCompatActivity {
 
     private void delete() {
         if (trxId != null) {
-            Executors.newSingleThreadExecutor().execute(() -> {
+            AppDatabase.databaseWriteExecutor.execute(() -> {
                 PointTransaction p = db.pointTransactionDao().getPointTransactionByIdSync(trxId);
                 if (p != null) db.pointTransactionDao().delete(p);
                 runOnUiThread(() -> { Toast.makeText(this, "تم الحذف", Toast.LENGTH_SHORT).show(); finish(); });
