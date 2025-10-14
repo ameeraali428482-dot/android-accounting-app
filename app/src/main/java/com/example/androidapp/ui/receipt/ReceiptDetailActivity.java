@@ -29,7 +29,7 @@ public class ReceiptDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receipt_detail);
 
-        database = AppDatabase.getInstance(this);
+        receiptDao = AppDatabase.getDatabase(this).receiptDao();
         sessionManager = new SessionManager(this);
 
         etReceiptNumber = findViewById(R.id.et_receipt_number);
@@ -93,7 +93,7 @@ public class ReceiptDetailActivity extends AppCompatActivity {
                 }
             }
             runOnUiThread(() -> {
-                Toast.makeText(this, "تم حفظ الإيصال بنجاح", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "تم حفظ الإيصال بنجاح.", Toast.LENGTH_SHORT).show();
                 finish();
             });
         });
@@ -106,7 +106,7 @@ public class ReceiptDetailActivity extends AppCompatActivity {
                 if (receipt != null) {
                     receiptDao.delete(receipt);
                     runOnUiThread(() -> {
-                        Toast.makeText(this, "تم حذف الإيصال بنجاح", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "تم حذف الإيصال بنجاح.", Toast.LENGTH_SHORT).show();
                         finish();
                     });
                 }
