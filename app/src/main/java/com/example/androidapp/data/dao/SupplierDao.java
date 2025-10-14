@@ -1,5 +1,6 @@
 package com.example.androidapp.data.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -7,9 +8,6 @@ import androidx.room.Update;
 import androidx.room.Delete;
 import java.util.List;
 import com.example.androidapp.data.entities.Supplier;
-
-
-
 
 @Dao
 public interface SupplierDao {
@@ -26,5 +24,11 @@ public interface SupplierDao {
     List<Supplier> getAllSuppliers();
 
     @Query("SELECT * FROM suppliers WHERE id = :id LIMIT 1")
-    Supplier getSupplierById(String id);
+    Supplier getById(String id);
+
+    @Query("SELECT * FROM suppliers WHERE companyId = :companyId")
+    LiveData<List<Supplier>> getAllSuppliers(String companyId);
+    
+    @Query("SELECT * FROM suppliers WHERE companyId = :companyId")
+    List<Supplier> getSuppliersByCompanyId(String companyId);
 }

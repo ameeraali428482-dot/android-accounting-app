@@ -6,8 +6,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.androidapp.App;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.InvoiceDao;
 import com.example.androidapp.data.dao.SupplierDao;
 import com.example.androidapp.data.entities.Invoice;
@@ -16,11 +16,6 @@ import com.example.androidapp.ui.common.GenericAdapter;
 import com.example.androidapp.utils.SessionManager;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
-
-
 
 public class SupplierReportActivity extends AppCompatActivity {
 
@@ -34,9 +29,9 @@ public class SupplierReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supplier_report);
 
-
-        supplierDao = new SupplierDao(App.getDatabaseHelper());
-        invoiceDao = new InvoiceDao(App.getDatabaseHelper());
+        supplierReportRecyclerView = findViewById(R.id.supplier_report_recycler_view);
+        supplierDao = AppDatabase.getDatabase(this).supplierDao();
+        invoiceDao = AppDatabase.getDatabase(this).invoiceDao();
         sessionManager = new SessionManager(this);
 
         supplierReportRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -44,41 +39,49 @@ public class SupplierReportActivity extends AppCompatActivity {
     }
 
     private void loadSupplierReport() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCurrentCompanyId();
         if (companyId == null) {
             return;
         }
 
-        List<Supplier> suppliers = supplierDao.getSuppliersByCompanyId(companyId);
-        List<SupplierReportItem> reportItems = new ArrayList<>();
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            List<Supplier> suppliers = supplierDao.getSuppliersByCompanyId(companyId);
+            List<SupplierReportItem> reportItems = new ArrayList<>();
 
-        for (Supplier supplier : suppliers) {
-            double totalPurchases = 0;
-            List<Invoice> supplierInvoices = invoiceDao.getInvoicesBySupplierId(supplier.getId());
-            for (Invoice invoice : supplierInvoices) {
-                if ("purchase".equals(invoice.getInvoiceType())) { // Only count purchase invoices
-                    totalPurchases += invoice.getGrandTotal();
+            for (Supplier supplier : suppliers) {
+                double totalPurchases = 0;
+                List<Invoice> supplierInvoices = invoiceDao.getInvoicesBySupplierId(supplier.getId());
+                for (Invoice invoice : supplierInvoices) {
+                    if ("purchase".equals(invoice.getInvoiceType())) {
+                        totalPurchases += invoice.getTotalAmount();
+                    }
                 }
-            }
-            reportItems.add(new SupplierReportItem(supplier.getName(), supplier.getEmail(), supplier.getPhone(), totalPurchases));
-        }
-
-        GenericAdapter<SupplierReportItem> adapter = new GenericAdapter<SupplierReportItem>(reportItems) {
-            @Override
-            protected int getLayoutResId() {
-                return R.layout.supplier_report_item_row;
+                reportItems.add(new SupplierReportItem(supplier.getName(), supplier.getEmail(), supplier.getPhone(), totalPurchases));
             }
 
-            @Override
-            protected void bindView(View itemView, SupplierReportItem item) {
+            runOnUiThread(() -> {
+                GenericAdapter<SupplierReportItem> adapter = new GenericAdapter<SupplierReportItem>(reportItems, null) {
+                    @Override
+                    protected int getLayoutResId() {
+                        return R.layout.supplier_report_item_row;
+                    }
 
-                supplierName.setText(item.getName());
-                supplierEmail.setText("البريد الإلكتروني: " + item.getEmail());
-                supplierPhone.setText("الهاتف: " + item.getPhone());
-                supplierTotalPurchases.setText(String.format("إجمالي المشتريات: %.2f", item.getTotalPurchases()));
-            }
-        };
-        supplierReportRecyclerView.setAdapter(adapter);
+                    @Override
+                    protected void bindView(View itemView, SupplierReportItem item) {
+                        TextView supplierName = itemView.findViewById(R.id.report_supplier_name);
+                        TextView supplierEmail = itemView.findViewById(R.id.report_supplier_email);
+                        TextView supplierPhone = itemView.findViewById(R.id.report_supplier_phone);
+                        TextView supplierTotalPurchases = itemView.findViewById(R.id.report_supplier_total_purchases);
+
+                        supplierName.setText(item.getName());
+                        supplierEmail.setText("البريد الإلكتروني: " + item.getEmail());
+                        supplierPhone.setText("الهاتف: " + item.getPhone());
+                        supplierTotalPurchases.setText(String.format("إجمالي المشتريات: %.2f", item.getTotalPurchases()));
+                    }
+                };
+                supplierReportRecyclerView.setAdapter(adapter);
+            });
+        });
     }
 
     private static class SupplierReportItem {
@@ -94,20 +97,9 @@ public class SupplierReportActivity extends AppCompatActivity {
             this.totalPurchases = totalPurchases;
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public String getPhone() {
-            return phone;
-        }
-
-        public double getTotalPurchases() {
-            return totalPurchases;
-        }
+        public String getName() { return name; }
+        public String getEmail() { return email; }
+        public String getPhone() { return phone; }
+        public double getTotalPurchases() { return totalPurchases; }
     }
 }
