@@ -29,8 +29,8 @@ public class ImportExportActivity extends AppCompatActivity {
         db  = AppDatabase.getInstance(this);
         sm  = new SessionManager(this);
 
-        btnImport = findViewById(R.id.btnImport);
-        btnExport = findViewById(R.id.btnExport);
+        btnImport = findViewById(R.id.btn_import_excel);
+        btnExport = findViewById(R.id.btn_export_excel);
 
         btnImport.setOnClickListener(v -> {
             Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -59,14 +59,14 @@ public class ImportExportActivity extends AppCompatActivity {
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
                 List<List<String>> rows = ExcelUtil.importDataFromExcel(this, uri);
-                String companyId = sm.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+                String companyId = sm.getCurrentCompanyId();
                 for (int i = 1; i < rows.size(); i++) {
                     List<String> row = rows.get(i);
                     if (row.size() < 4) continue;
                     Item item = new Item();
                     item.setId(UUID.randomUUID().toString());
                     item.setCompanyId(companyId);
-                    item.setItemName(row.get(0));
+                    item.setName(row.get(0));
                     item.setDescription(row.get(1));
                     item.setPrice(Double.parseDouble(row.get(2)));
                     item.setCategory(row.get(3));
@@ -82,7 +82,7 @@ public class ImportExportActivity extends AppCompatActivity {
     private void exportExcel(Uri uri) {
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
-                String companyId = sm.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+                String companyId = sm.getCurrentCompanyId();
                 List<Item> list = db.itemDao().getAllItemsSync(companyId);
                 List<List<String>> data = new java.util.ArrayList<>();
                 List<String> header = new java.util.ArrayList<>();
@@ -90,7 +90,7 @@ public class ImportExportActivity extends AppCompatActivity {
                 data.add(header);
                 for (Item i : list) {
                     List<String> row = new java.util.ArrayList<>();
-                    row.add(i.getItemName());
+                    row.add(i.getName());
                     row.add(i.getDescription());
                     row.add(String.valueOf(i.getPrice()));
                     row.add(i.getCategory());

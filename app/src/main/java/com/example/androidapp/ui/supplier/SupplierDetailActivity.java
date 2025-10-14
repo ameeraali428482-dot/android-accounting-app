@@ -6,17 +6,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.androidapp.App;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.SupplierDao;
 import com.example.androidapp.data.entities.Supplier;
 import com.example.androidapp.utils.SessionManager;
 import java.util.UUID;
-
-
-
-
-
 
 public class SupplierDetailActivity extends AppCompatActivity {
 
@@ -31,11 +26,16 @@ public class SupplierDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supplier_detail);
 
-        supplierDao = new SupplierDao(App.getDatabaseHelper());
+        supplierDao = AppDatabase.getDatabase(this).supplierDao();
         sessionManager = new SessionManager(this);
 
+        supplierNameEditText = findViewById(R.id.supplier_name_edit_text);
+        supplierEmailEditText = findViewById(R.id.supplier_email_edit_text);
+        supplierPhoneEditText = findViewById(R.id.supplier_phone_edit_text);
+        supplierAddressEditText = findViewById(R.id.supplier_address_edit_text);
+        saveSupplierButton = findViewById(R.id.save_supplier_button);
+        deleteSupplierButton = findViewById(R.id.delete_supplier_button);
 
-        // Check if we are editing an existing supplier
         if (getIntent().hasExtra("supplierId")) {
             currentSupplierId = getIntent().getStringExtra("supplierId");
             loadSupplierDetails(currentSupplierId);
@@ -44,32 +44,25 @@ public class SupplierDetailActivity extends AppCompatActivity {
             deleteSupplierButton.setVisibility(View.GONE);
         }
 
-        saveSupplierButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveSupplier();
-            }
-        });
-
-        deleteSupplierButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteSupplier();
-            }
-        });
+        saveSupplierButton.setOnClickListener(v -> saveSupplier());
+        deleteSupplierButton.setOnClickListener(v -> deleteSupplier());
     }
 
     private void loadSupplierDetails(String supplierId) {
-        Supplier supplier = supplierDao.getById(supplierId);
-        if (supplier != null) {
-            supplierNameEditText.setText(supplier.getName());
-            supplierEmailEditText.setText(supplier.getEmail());
-            supplierPhoneEditText.setText(supplier.getPhone());
-            supplierAddressEditText.setText(supplier.getAddress());
-        } else {
-            Toast.makeText(this, "المورد غير موجود.", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            Supplier supplier = supplierDao.getById(supplierId);
+            runOnUiThread(() -> {
+                if (supplier != null) {
+                    supplierNameEditText.setText(supplier.getName());
+                    supplierEmailEditText.setText(supplier.getEmail());
+                    supplierPhoneEditText.setText(supplier.getPhone());
+                    supplierAddressEditText.setText(supplier.getAddress());
+                } else {
+                    Toast.makeText(this, "المورد غير موجود.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+        });
     }
 
     private void saveSupplier() {
@@ -84,46 +77,45 @@ public class SupplierDetailActivity extends AppCompatActivity {
             return;
         }
 
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_CURRENT_ORG_ID);
+        String companyId = sessionManager.getCurrentCompanyId();
         if (companyId == null) {
-            Toast.makeText(this, "لا توجد شركة محددة. يرجى تسجيل الدخول واختيار شركة.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "لا توجد شركة محددة.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        Supplier supplier;
-        if (currentSupplierId == null) {
-            // New supplier
-            supplier = new Supplier(UUID.randomUUID().toString(), companyId, name, email, phone, address);
-            long result = supplierDao.insert(supplier);
-            if (result != -1) {
-                Toast.makeText(this, "تم إضافة المورد بنجاح.", Toast.LENGTH_SHORT).show();
-                finish();
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            if (currentSupplierId == null) {
+                Supplier supplier = new Supplier(UUID.randomUUID().toString(), companyId, name, email, phone, address);
+                supplierDao.insert(supplier);
             } else {
-                Toast.makeText(this, "فشل إضافة المورد.", Toast.LENGTH_SHORT).show();
+                Supplier supplier = supplierDao.getById(currentSupplierId);
+                if (supplier != null) {
+                    supplier.setName(name);
+                    supplier.setEmail(email);
+                    supplier.setPhone(phone);
+                    supplier.setAddress(address);
+                    supplierDao.update(supplier);
+                }
             }
-        } else {
-            // Existing supplier
-            supplier = new Supplier(currentSupplierId, companyId, name, email, phone, address);
-            int result = supplierDao.update(supplier);
-            if (result > 0) {
-                Toast.makeText(this, "تم تحديث المورد بنجاح.", Toast.LENGTH_SHORT).show();
+            runOnUiThread(() -> {
+                Toast.makeText(this, "تم الحفظ بنجاح.", Toast.LENGTH_SHORT).show();
                 finish();
-            } else {
-                Toast.makeText(this, "فشل تحديث المورد.", Toast.LENGTH_SHORT).show();
-            }
-        }
+            });
+        });
     }
 
     private void deleteSupplier() {
         if (currentSupplierId != null) {
-            int result = supplierDao.delete(currentSupplierId);
-            if (result > 0) {
-                Toast.makeText(this, "تم حذف المورد بنجاح.", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                Toast.makeText(this, "فشل حذف المورد.", Toast.LENGTH_SHORT).show();
-            }
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                Supplier supplier = supplierDao.getById(currentSupplierId);
+                if (supplier != null) {
+                    supplierDao.delete(supplier);
+                }
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "تم الحذف بنجاح.", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            });
         }
     }
 }
-

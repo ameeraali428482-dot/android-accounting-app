@@ -20,7 +20,6 @@ public class Item {
     private Float minStockLevel;
     private float cost;
 
-    // Constructor for Room
     public Item(@NonNull String id, String companyId, String name, String description, double price, String category, String barcode, Integer quantity, Float minStockLevel, float cost) {
         this.id = id;
         this.companyId = companyId;
@@ -37,43 +36,30 @@ public class Item {
     @Ignore
     public Item() {}
 
-    // Getters and Setters
+    // Getters
     @NonNull
     public String getId() { return id; }
-    public void setId(@NonNull String id) { this.id = id; }
-
     public String getCompanyId() { return companyId; }
-    public void setCompanyId(String companyId) { this.companyId = companyId; }
-
     public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
     public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
     public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
-
     public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
-
     public String getBarcode() { return barcode; }
-    public void setBarcode(String barcode) { this.barcode = barcode; }
-
     public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
-
     public Float getMinStockLevel() { return minStockLevel; }
-    public void setMinStockLevel(Float minStockLevel) { this.minStockLevel = minStockLevel; }
-
     public float getCost() { return cost; }
+    public String getItemName() { return name; } // Alias for compatibility
+
+    // Setters
+    public void setId(@NonNull String id) { this.id = id; }
+    public void setCompanyId(String companyId) { this.companyId = companyId; }
+    public void setName(String name) { this.name = name; }
+    public void setDescription(String description) { this.description = description; }
+    public void setPrice(double price) { this.price = price; }
+    public void setCategory(String category) { this.category = category; }
+    public void setBarcode(String barcode) { this.barcode = barcode; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public void setMinStockLevel(Float minStockLevel) { this.minStockLevel = minStockLevel; }
     public void setCost(float cost) { this.cost = cost; }
-
-    public float getCostPrice() {
-        return cost; // تصحيح: إرجاع المتغير الصحيح 'cost'
-    }
-
-    public Float getReorderLevel() {
-        return minStockLevel; // إضافة الدالة المفقودة
-    }
+    public void setItemName(String name) { this.name = name; } // Alias for compatibility
 }

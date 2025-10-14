@@ -1,6 +1,5 @@
 package com.example.androidapp.ui.accountstatement;
 
-import java.util.Date;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +13,6 @@ import com.example.androidapp.data.entities.AccountStatement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
-
-
 
 public class AccountStatementAdapter extends RecyclerView.Adapter<AccountStatementAdapter.AccountStatementViewHolder> {
 
@@ -71,14 +65,6 @@ public class AccountStatementAdapter extends RecyclerView.Adapter<AccountStateme
         return new ArrayList<>(selectedStatements);
     }
 
-    public void setSelectionMode(boolean selectionMode) {
-        isSelectionMode = selectionMode;
-        if (!isSelectionMode) {
-            selectedStatements.clear();
-        }
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public AccountStatementViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -104,11 +90,18 @@ public class AccountStatementAdapter extends RecyclerView.Adapter<AccountStateme
 
         public AccountStatementViewHolder(@NonNull View itemView) {
             super(itemView);
+            tvSerial = itemView.findViewById(R.id.tv_serial);
+            tvDate = itemView.findViewById(R.id.tv_date);
+            tvDescription = itemView.findViewById(R.id.tv_description);
+            tvDebit = itemView.findViewById(R.id.tv_debit);
+            tvCredit = itemView.findViewById(R.id.tv_credit);
+            tvBalance = itemView.findViewById(R.id.tv_balance);
+            cbSelect = itemView.findViewById(R.id.cb_select);
         }
 
         public void bind(final AccountStatement statement, final OnItemClickListener clickListener, final OnItemLongClickListener longClickListener, boolean isSelected, boolean isSelectionMode, int position) {
             tvSerial.setText(String.valueOf(position + 1) + ".");
-            tvDate.setText(statement.getTransactionDate());
+            tvDate.setText(statement.getDate());
             tvDescription.setText(statement.getDescription());
             tvDebit.setText(decimalFormat.format(statement.getDebit()));
             tvCredit.setText(decimalFormat.format(statement.getCredit()));
