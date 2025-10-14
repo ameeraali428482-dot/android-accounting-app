@@ -3,6 +3,7 @@ package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import java.util.UUID;
@@ -29,7 +30,8 @@ public class JournalEntryItem {
     public float credit;
     public String description;
 
-    // Constructor الكامل
+    // هذا هو المُنشئ الأساسي الذي ستستخدمه Room.
+    // لا نضع @Ignore هنا.
     public JournalEntryItem(@NonNull String id, String journalEntryId, String accountId, float debit, float credit, String description) {
         this.id = id;
         this.journalEntryId = journalEntryId;
@@ -39,7 +41,8 @@ public class JournalEntryItem {
         this.description = description;
     }
 
-    // Constructor المُستخدم في AccountingManager (مع توليد ID تلقائي)
+    // هذا هو المُنشئ الإضافي. سنطلب من Room تجاهله.
+    @Ignore
     public JournalEntryItem(String journalEntryId, String accountId, float debit, float credit, String description) {
         this.id = UUID.randomUUID().toString();
         this.journalEntryId = journalEntryId;
