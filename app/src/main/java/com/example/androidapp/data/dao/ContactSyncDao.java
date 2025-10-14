@@ -1,24 +1,5 @@
 package com.example.androidapp.data.dao;
 
-import java.util.Date;
-import com.example.androidapp.data.entities.Account;
-import com.example.androidapp.data.entities.Item;
-import com.example.androidapp.data.entities.InvoiceItem;
-import com.example.androidapp.data.entities.Employee;
-import com.example.androidapp.data.entities.Voucher;
-import com.example.androidapp.data.entities.Company;
-import com.example.androidapp.data.entities.Doctor;
-import com.example.androidapp.data.entities.User;
-import com.example.androidapp.data.entities.Supplier;
-import com.example.androidapp.data.entities.Customer;
-import com.example.androidapp.data.entities.Trophy;
-import com.example.androidapp.data.entities.Order;
-import com.example.androidapp.data.entities.Repair;
-import com.example.androidapp.data.entities.Chat;
-import com.example.androidapp.data.entities.UserReward;
-import com.example.androidapp.data.entities.Reward;
-import com.example.androidapp.data.entities.PointTransaction;
-import com.example.androidapp.data.entities.Campaign;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -29,18 +10,14 @@ import androidx.room.Update;
 import com.example.androidapp.data.entities.ContactSync;
 import java.util.List;
 
-
-
-
-
 @Dao
 public interface ContactSyncDao {
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insert(ContactSync contactSync);
+    void insert(ContactSync contactSync);
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    List<Long> insertAll(List<ContactSync> contactSyncs);
+    void insertAll(List<ContactSync> contactSyncs);
     
     @Update
     int update(ContactSync contactSync);
@@ -49,93 +26,93 @@ public interface ContactSyncDao {
     int delete(ContactSync contactSync);
     
     @Query("SELECT * FROM contact_sync WHERE id = :id")
-    ContactSync getContactSyncById(int id);
+    ContactSync getContactSyncById(String id);
     
     @Query("SELECT * FROM contact_sync WHERE id = :id")
-    LiveData<ContactSync> getContactSyncByIdLive(int id);
+    LiveData<ContactSync> getContactSyncByIdLive(String id);
     
     @Query("SELECT * FROM contact_sync WHERE userId = :userId ORDER BY displayName ASC")
-    LiveData<List<ContactSync>> getUserContacts(int userId);
+    LiveData<List<ContactSync>> getUserContacts(String userId);
     
     @Query("SELECT * FROM contact_sync WHERE userId = :userId AND syncStatus = :status ORDER BY lastSyncDate DESC")
-    LiveData<List<ContactSync>> getContactsByStatus(int userId, String status);
+    LiveData<List<ContactSync>> getContactsByStatus(String userId, String status);
     
     @Query("SELECT * FROM contact_sync WHERE userId = :userId AND isRegisteredUser = 1 ORDER BY displayName ASC")
-    LiveData<List<ContactSync>> getRegisteredUserContacts(int userId);
+    LiveData<List<ContactSync>> getRegisteredUserContacts(String userId);
     
     @Query("SELECT * FROM contact_sync WHERE userId = :userId AND isRegisteredUser = 0 ORDER BY displayName ASC")
-    LiveData<List<ContactSync>> getNonRegisteredContacts(int userId);
+    LiveData<List<ContactSync>> getNonRegisteredContacts(String userId);
     
     @Query("SELECT * FROM contact_sync WHERE userId = :userId AND allowSync = 1 ORDER BY displayName ASC")
-    LiveData<List<ContactSync>> getSyncAllowedContacts(int userId);
+    LiveData<List<ContactSync>> getSyncAllowedContacts(String userId);
     
     @Query("SELECT * FROM contact_sync WHERE userId = :userId AND contactIdentifier = :contactIdentifier")
-    ContactSync getContactByIdentifier(int userId, String contactIdentifier);
+    ContactSync getContactByIdentifier(String userId, String contactIdentifier);
     
     @Query("SELECT * FROM contact_sync WHERE email = :email AND userId = :userId")
-    ContactSync getContactByEmail(int userId, String email);
+    ContactSync getContactByEmail(String userId, String email);
     
     @Query("SELECT * FROM contact_sync WHERE phoneNumber = :phoneNumber AND userId = :userId")
-    ContactSync getContactByPhone(int userId, String phoneNumber);
+    ContactSync getContactByPhone(String userId, String phoneNumber);
     
     @Query("SELECT * FROM contact_sync WHERE registeredUserId = :registeredUserId AND userId = :userId")
-    ContactSync getContactByRegisteredUserId(int userId, int registeredUserId);
+    ContactSync getContactByRegisteredUserId(String userId, String registeredUserId);
     
     @Query("SELECT COUNT(*) FROM contact_sync WHERE userId = :userId")
-    LiveData<Integer> getTotalContactsCount(int userId);
+    LiveData<Integer> getTotalContactsCount(String userId);
     
     @Query("SELECT COUNT(*) FROM contact_sync WHERE userId = :userId AND isRegisteredUser = 1")
-    LiveData<Integer> getRegisteredContactsCount(int userId);
+    LiveData<Integer> getRegisteredContactsCount(String userId);
     
     @Query("SELECT COUNT(*) FROM contact_sync WHERE userId = :userId AND syncStatus = 'PENDING'")
-    LiveData<Integer> getPendingSyncCount(int userId);
+    LiveData<Integer> getPendingSyncCount(String userId);
     
-    @Query("UPDATE contact_sync SET syncStatus = :status, lastSyncDate = datetime('now'), updatedDate = datetime('now') WHERE id = :contactId")
-    int updateSyncStatus(int contactId, String status);
+    @Query("UPDATE contact_sync SET syncStatus = :status, lastSyncDate = CURRENT_TIMESTAMP, updatedDate = CURRENT_TIMESTAMP WHERE id = :contactId")
+    int updateSyncStatus(String contactId, String status);
     
-    @Query("UPDATE contact_sync SET isRegisteredUser = :isRegistered, registeredUserId = :registeredUserId, updatedDate = datetime('now') WHERE id = :contactId")
-    int updateRegistrationStatus(int contactId, boolean isRegistered, int registeredUserId);
+    @Query("UPDATE contact_sync SET isRegisteredUser = :isRegistered, registeredUserId = :registeredUserId, updatedDate = CURRENT_TIMESTAMP WHERE id = :contactId")
+    int updateRegistrationStatus(String contactId, boolean isRegistered, String registeredUserId);
     
-    @Query("UPDATE contact_sync SET allowSync = :allowSync, updatedDate = datetime('now') WHERE id = :contactId")
-    int updateSyncPermission(int contactId, boolean allowSync);
+    @Query("UPDATE contact_sync SET allowSync = :allowSync, updatedDate = CURRENT_TIMESTAMP WHERE id = :contactId")
+    int updateSyncPermission(String contactId, boolean allowSync);
     
-    @Query("UPDATE contact_sync SET displayName = :displayName, email = :email, phoneNumber = :phoneNumber, photoUri = :photoUri, updatedDate = datetime('now') WHERE id = :contactId")
-    int updateContactInfo(int contactId, String displayName, String email, String phoneNumber, String photoUri);
+    @Query("UPDATE contact_sync SET displayName = :displayName, email = :email, phoneNumber = :phoneNumber, photoUri = :photoUri, updatedDate = CURRENT_TIMESTAMP WHERE id = :contactId")
+    int updateContactInfo(String contactId, String displayName, String email, String phoneNumber, String photoUri);
     
     @Query("DELETE FROM contact_sync WHERE userId = :userId AND allowSync = 0")
-    int deleteNonSyncContacts(int userId);
+    int deleteNonSyncContacts(String userId);
     
     @Query("DELETE FROM contact_sync WHERE userId = :userId AND syncStatus = 'FAILED'")
-    int deleteFailedSyncContacts(int userId);
+    int deleteFailedSyncContacts(String userId);
     
     @Query("DELETE FROM contact_sync WHERE userId = :userId")
-    int deleteAllUserContacts(int userId);
+    int deleteAllUserContacts(String userId);
     
     @Query("SELECT * FROM contact_sync WHERE userId = :userId AND " +
            "(displayName LIKE '%' || :searchQuery || '%' OR " +
            "email LIKE '%' || :searchQuery || '%' OR " +
            "phoneNumber LIKE '%' || :searchQuery || '%') " +
            "ORDER BY displayName ASC")
-    LiveData<List<ContactSync>> searchContacts(int userId, String searchQuery);
+    LiveData<List<ContactSync>> searchContacts(String userId, String searchQuery);
     
-    @Query("SELECT * FROM contact_sync WHERE userId = :userId AND lastSyncDate < datetime('now', '-' || :daysOld || ' days')")
-    List<ContactSync> getOutdatedContacts(int userId, int daysOld);
+    @Query("SELECT * FROM contact_sync WHERE userId = :userId AND lastSyncDate < date('now', '-' || :daysOld || ' days')")
+    List<ContactSync> getOutdatedContacts(String userId, int daysOld);
     
     @Query("SELECT * FROM contact_sync WHERE userId = :userId AND syncStatus = 'PENDING' ORDER BY createdDate ASC LIMIT :limit")
-    List<ContactSync> getPendingSyncContacts(int userId, int limit);
+    List<ContactSync> getPendingSyncContacts(String userId, int limit);
     
     @Query("SELECT DISTINCT email FROM contact_sync WHERE userId = :userId AND email IS NOT NULL AND email != ''")
-    List<String> getAllContactEmails(int userId);
+    List<String> getAllContactEmails(String userId);
     
     @Query("SELECT DISTINCT phoneNumber FROM contact_sync WHERE userId = :userId AND phoneNumber IS NOT NULL AND phoneNumber != ''")
-    List<String> getAllContactPhones(int userId);
+    List<String> getAllContactPhones(String userId);
     
-    @Query("UPDATE contact_sync SET lastSyncDate = datetime('now'), updatedDate = datetime('now') WHERE userId = :userId")
-    int updateAllSyncDates(int userId);
+    @Query("UPDATE contact_sync SET lastSyncDate = CURRENT_TIMESTAMP, updatedDate = CURRENT_TIMESTAMP WHERE userId = :userId")
+    int updateAllSyncDates(String userId);
     
     @Query("SELECT * FROM contact_sync WHERE userId = :userId AND " +
            "(email IN (SELECT email FROM users WHERE email IS NOT NULL) OR " +
-           "phoneNumber IN (SELECT phoneNumber FROM users WHERE phoneNumber IS NOT NULL)) " +
+           "phoneNumber IN (SELECT phone FROM users WHERE phone IS NOT NULL)) " +
            "AND isRegisteredUser = 0")
-    List<ContactSync> findPotentialRegisteredUsers(int userId);
+    List<ContactSync> findPotentialRegisteredUsers(String userId);
 }
