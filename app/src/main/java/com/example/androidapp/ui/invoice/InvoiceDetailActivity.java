@@ -1,6 +1,7 @@
 package com.example.androidapp.ui.invoice;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,11 +22,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
-
-
-
-
-
 
 public class InvoiceDetailActivity extends AppCompatActivity {
 
@@ -76,6 +72,18 @@ public class InvoiceDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        etInvoiceNumber = findViewById(R.id.et_invoice_number);
+        etInvoiceDate = findViewById(R.id.et_invoice_date);
+        etCustomerName = findViewById(R.id.et_customer_name);
+        etInvoiceType = findViewById(R.id.et_invoice_type);
+        etSubTotal = findViewById(R.id.et_sub_total);
+        etTax = findViewById(R.id.et_tax);
+        etDiscount = findViewById(R.id.et_discount);
+        etGrandTotal = findViewById(R.id.et_grand_total);
+        invoiceItemsContainer = findViewById(R.id.invoice_items_container);
+        btnAddItem = findViewById(R.id.btn_add_item);
+        btnSave = findViewById(R.id.btn_save_invoice);
+        btnDelete = findViewById(R.id.btn_delete_invoice);
 
         etSubTotal.setEnabled(false);
         etGrandTotal.setEnabled(false);
@@ -97,8 +105,7 @@ public class InvoiceDetailActivity extends AppCompatActivity {
                 etSubTotal.setText(String.valueOf(invoice.getSubTotal()));
                 etTax.setText(String.valueOf(invoice.getTaxAmount()));
                 etDiscount.setText(String.valueOf(invoice.getDiscountAmount()));
-                etGrandTotal.setText(String.valueOf(invoice.getGrandTotal()));
-                // TODO: Load invoice items (requires InvoiceItemDao and ViewModel support)
+                etGrandTotal.setText(String.valueOf(invoice.getTotalAmount()));
             } else {
                 Toast.makeText(this, "لم يتم العثور على الفاتورة", Toast.LENGTH_SHORT).show();
                 finish();
@@ -108,6 +115,11 @@ public class InvoiceDetailActivity extends AppCompatActivity {
 
     private void addItemView(InvoiceItem item) {
         View itemView = getLayoutInflater().inflate(R.layout.invoice_item_row, invoiceItemsContainer, false);
+        EditText etItemName = itemView.findViewById(R.id.itemName);
+        EditText etQuantity = itemView.findViewById(R.id.quantity);
+        EditText etUnitPrice = itemView.findViewById(R.id.price);
+        EditText etItemTotal = itemView.findViewById(R.id.total);
+        View btnRemove = itemView.findViewById(R.id.btnDelete);
 
         etItemTotal.setEnabled(false);
 
@@ -123,7 +135,6 @@ public class InvoiceDetailActivity extends AppCompatActivity {
             calculateTotals();
         });
 
-        // Add listeners to quantity and unit price to update item total
         etQuantity.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) calculateItemTotal(itemView);
         });
@@ -136,6 +147,9 @@ public class InvoiceDetailActivity extends AppCompatActivity {
     }
 
     private void calculateItemTotal(View itemView) {
+        EditText etQuantity = itemView.findViewById(R.id.quantity);
+        EditText etUnitPrice = itemView.findViewById(R.id.price);
+        EditText etItemTotal = itemView.findViewById(R.id.total);
 
         float quantity = Float.parseFloat(etQuantity.getText().toString().trim().isEmpty() ? "0" : etQuantity.getText().toString().trim());
         float unitPrice = Float.parseFloat(etUnitPrice.getText().toString().trim().isEmpty() ? "0" : etUnitPrice.getText().toString().trim());
@@ -148,19 +162,15 @@ public class InvoiceDetailActivity extends AppCompatActivity {
         float subTotal = 0.0f;
         for (int i = 0; i < invoiceItemsContainer.getChildCount(); i++) {
             View itemView = invoiceItemsContainer.getChildAt(i);
+            EditText etItemTotal = itemView.findViewById(R.id.total);
             subTotal += Float.parseFloat(etItemTotal.getText().toString().trim().isEmpty() ? "0" : etItemTotal.getText().toString().trim());
         }
         etSubTotal.setText(String.valueOf(subTotal));
 
-        float taxRate = Float.parseFloat(etTax.getText().toString().trim().isEmpty() ? "0" : etTax.getText().toString().trim());
-        float discountRate = Float.parseFloat(etDiscount.getText().toString().trim().isEmpty() ? "0" : etDiscount.getText().toString().trim());
-
-        float taxAmount = subTotal * (taxRate / 100);
-        float discountAmount = subTotal * (discountRate / 100);
+        float taxAmount = Float.parseFloat(etTax.getText().toString().trim().isEmpty() ? "0" : etTax.getText().toString().trim());
+        float discountAmount = Float.parseFloat(etDiscount.getText().toString().trim().isEmpty() ? "0" : etDiscount.getText().toString().trim());
         float grandTotal = subTotal + taxAmount - discountAmount;
 
-        etTax.setText(String.valueOf(taxAmount)); // Display calculated tax amount
-        etDiscount.setText(String.valueOf(discountAmount)); // Display calculated discount amount
         etGrandTotal.setText(String.valueOf(grandTotal));
     }
 
@@ -181,17 +191,13 @@ public class InvoiceDetailActivity extends AppCompatActivity {
 
         Invoice invoice;
         if (invoiceId == null) {
-            // New invoice
             invoiceId = UUID.randomUUID().toString();
-            invoice = new Invoice(invoiceId, companyId, invoiceNumber, invoiceDate, customerName, invoiceType, subTotal, taxAmount, discountAmount, grandTotal);
+            invoice = new Invoice(invoiceId, companyId, customerName, null, invoiceNumber, invoiceDate, null, grandTotal, "PENDING", invoiceType, 0, subTotal, taxAmount, discountAmount);
             viewModel.insert(invoice);
-            // TODO: Insert invoice items
             Toast.makeText(this, "تم إضافة الفاتورة بنجاح.", Toast.LENGTH_SHORT).show();
         } else {
-            // Existing invoice
-            invoice = new Invoice(invoiceId, companyId, invoiceNumber, invoiceDate, customerName, invoiceType, subTotal, taxAmount, discountAmount, grandTotal);
+            invoice = new Invoice(invoiceId, companyId, customerName, null, invoiceNumber, invoiceDate, null, grandTotal, "PENDING", invoiceType, 0, subTotal, taxAmount, discountAmount);
             viewModel.update(invoice);
-            // TODO: Update/delete existing invoice items and insert new ones
             Toast.makeText(this, "تم تحديث الفاتورة بنجاح.", Toast.LENGTH_SHORT).show();
         }
         finish();

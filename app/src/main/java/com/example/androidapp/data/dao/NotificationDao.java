@@ -1,5 +1,6 @@
 package com.example.androidapp.data.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -7,9 +8,6 @@ import androidx.room.Update;
 import androidx.room.Delete;
 import java.util.List;
 import com.example.androidapp.data.entities.Notification;
-
-
-
 
 @Dao
 public interface NotificationDao {
@@ -23,8 +21,11 @@ public interface NotificationDao {
     void delete(Notification notification);
 
     @Query("SELECT * FROM notifications")
-    List<Notification> getAllNotifications();
+    LiveData<List<Notification>> getAllNotifications();
 
     @Query("SELECT * FROM notifications WHERE id = :id LIMIT 1")
-    Notification getNotificationById(String id);
+    LiveData<Notification> getNotificationById(String id);
+
+    @Query("SELECT * FROM notifications WHERE id = :id LIMIT 1")
+    Notification getNotificationByIdSync(String id);
 }

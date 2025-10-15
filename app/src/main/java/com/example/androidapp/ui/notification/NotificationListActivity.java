@@ -28,7 +28,7 @@ public class NotificationListActivity extends AppCompatActivity {
         db = AppDatabase.getInstance(this);
         sm = new SessionManager(this);
 
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.notification_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         loadNotifs();
