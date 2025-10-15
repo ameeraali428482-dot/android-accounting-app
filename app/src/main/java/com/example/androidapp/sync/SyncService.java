@@ -7,16 +7,15 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.entities.Company;
+import com.example.androidapp.data.entities.Repair;
+import com.example.androidapp.data.entities.Order;
+import com.example.androidapp.data.entities.Notification;
+import com.example.androidapp.data.entities.Trophy;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
-
-
 
 public class SyncService extends Service {
 
@@ -41,7 +40,7 @@ public class SyncService extends Service {
         startListeningForRepairChanges();
         startListeningForOrderChanges();
         startListeningForNotificationChanges();
-        // Start other listeners for other entities here
+        startListeningForTrophyChanges();
         return START_STICKY;
     }
 
@@ -58,21 +57,15 @@ public class SyncService extends Service {
                         switch (dc.getType()) {
                             case ADDED:
                                 Log.d(TAG, "New company: " + company.getName());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.companyDao().insert(company);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.companyDao().insert(company));
                                 break;
                             case MODIFIED:
                                 Log.d(TAG, "Modified company: " + company.getName());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.companyDao().update(company);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.companyDao().update(company));
                                 break;
                             case REMOVED:
                                 Log.d(TAG, "Removed company: " + company.getName());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.companyDao().delete(company);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.companyDao().delete(company));
                                 break;
                         }
                     }
@@ -93,21 +86,15 @@ public class SyncService extends Service {
                         switch (dc.getType()) {
                             case ADDED:
                                 Log.d(TAG, "New repair: " + repair.getTitle());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.repairDao().insert(repair);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.repairDao().insert(repair));
                                 break;
                             case MODIFIED:
                                 Log.d(TAG, "Modified repair: " + repair.getTitle());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.repairDao().update(repair);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.repairDao().update(repair));
                                 break;
                             case REMOVED:
                                 Log.d(TAG, "Removed repair: " + repair.getTitle());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.repairDao().delete(repair);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.repairDao().delete(repair));
                                 break;
                         }
                     }
@@ -128,21 +115,15 @@ public class SyncService extends Service {
                         switch (dc.getType()) {
                             case ADDED:
                                 Log.d(TAG, "New order: " + order.getId());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.orderDao().insert(order);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.orderDao().insert(order));
                                 break;
                             case MODIFIED:
                                 Log.d(TAG, "Modified order: " + order.getId());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.orderDao().update(order);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.orderDao().update(order));
                                 break;
                             case REMOVED:
                                 Log.d(TAG, "Removed order: " + order.getId());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.orderDao().delete(order);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.orderDao().delete(order));
                                 break;
                         }
                     }
@@ -163,21 +144,15 @@ public class SyncService extends Service {
                         switch (dc.getType()) {
                             case ADDED:
                                 Log.d(TAG, "New notification: " + notification.getTitle());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.notificationDao().insert(notification);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.notificationDao().insert(notification));
                                 break;
                             case MODIFIED:
                                 Log.d(TAG, "Modified notification: " + notification.getTitle());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.notificationDao().update(notification);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.notificationDao().update(notification));
                                 break;
                             case REMOVED:
                                 Log.d(TAG, "Removed notification: " + notification.getTitle());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.notificationDao().delete(notification);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.notificationDao().delete(notification));
                                 break;
                         }
                     }
@@ -198,31 +173,21 @@ public class SyncService extends Service {
                         switch (dc.getType()) {
                             case ADDED:
                                 Log.d(TAG, "New trophy: " + trophy.getName());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.trophyDao().insert(trophy);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.trophyDao().insert(trophy));
                                 break;
                             case MODIFIED:
                                 Log.d(TAG, "Modified trophy: " + trophy.getName());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.trophyDao().update(trophy);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.trophyDao().update(trophy));
                                 break;
                             case REMOVED:
                                 Log.d(TAG, "Removed trophy: " + trophy.getName());
-                                AppDatabase.databaseWriteExecutor.execute(() -> {
-                                    appDatabase.trophyDao().delete(trophy);
-                                });
+                                AppDatabase.databaseWriteExecutor.execute(() -> appDatabase.trophyDao().delete(trophy));
                                 break;
                         }
                     }
                 });
         listeners.add(trophyListener);
     }
-
-    // Add similar methods for other entities (e.g., Users, Items, Invoices, etc.)
-    // private void startListeningForUserChanges() { ... }
-    // private void startListeningForItemChanges() { ... }
 
     @Override
     public void onDestroy() {

@@ -1,9 +1,7 @@
 package com.example.androidapp.ui.payment;
 
-import java.util.Date;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -15,15 +13,12 @@ import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.PaymentDao;
 import com.example.androidapp.data.entities.Payment;
+import com.example.androidapp.utils.SessionManager;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.UUID;
-
-
-
-
-
+import java.util.concurrent.Executors;
 
 public class PaymentDetailActivity extends AppCompatActivity {
     private EditText editPaymentDate, editAmount, editReferenceNumber, editNotes;
@@ -31,9 +26,10 @@ public class PaymentDetailActivity extends AppCompatActivity {
     private Spinner spinnerPayerType, spinnerPaymentMethod;
     private Button buttonSave, buttonCancel;
     private PaymentDao paymentDao;
-    private String companyId = "default_company"; // Replace with actual company ID
+    private String companyId;
     private String paymentId;
     private Payment currentPayment;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +40,8 @@ public class PaymentDetailActivity extends AppCompatActivity {
         setupSpinners();
         setupDatePicker();
 
+        sessionManager = new SessionManager(this);
+        companyId = sessionManager.getCurrentCompanyId();
         AppDatabase db = AppDatabase.getDatabase(this);
         paymentDao = db.paymentDao();
 
@@ -51,7 +49,6 @@ public class PaymentDetailActivity extends AppCompatActivity {
         if (paymentId != null) {
             loadPayment();
         } else {
-            // Set default date to today
             Calendar calendar = Calendar.getInstance();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             editPaymentDate.setText(dateFormat.format(calendar.getTime()));
@@ -62,16 +59,23 @@ public class PaymentDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        editPaymentDate = findViewById(R.id.editPaymentDate);
+        editAmount = findViewById(R.id.editAmount);
+        editReferenceNumber = findViewById(R.id.editReferenceNumber);
+        editNotes = findViewById(R.id.editNotes);
+        editPayerId = findViewById(R.id.editPayerId);
+        spinnerPayerType = findViewById(R.id.spinnerPayerType);
+        spinnerPaymentMethod = findViewById(R.id.spinnerPaymentMethod);
+        buttonSave = findViewById(R.id.buttonSave);
+        buttonCancel = findViewById(R.id.buttonCancel);
     }
 
     private void setupSpinners() {
-        // Payer Type Spinner
         String[] payerTypes = {"عميل", "مورد"};
         ArrayAdapter<String> payerTypeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, payerTypes);
         payerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPayerType.setAdapter(payerTypeAdapter);
 
-        // Payment Method Spinner
         String[] paymentMethods = {"نقد", "شيك", "تحويل بنكي", "بطاقة ائتمان", "أخرى"};
         ArrayAdapter<String> paymentMethodAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, paymentMethods);
         paymentMethodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -97,16 +101,14 @@ public class PaymentDetailActivity extends AppCompatActivity {
     }
 
     private void loadPayment() {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            currentPayment = paymentDao.getPaymentById(paymentId, companyId);
-            runOnUiThread(() -> {
-                if (currentPayment != null) {
-                    populateFields();
-                } else {
-                    Toast.makeText(this, "لم يتم العثور على المدفوعة", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            });
+        paymentDao.getPaymentById(paymentId, companyId).observe(this, payment -> {
+            if (payment != null) {
+                currentPayment = payment;
+                populateFields();
+            } else {
+                Toast.makeText(this, "لم يتم العثور على المدفوعة", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         });
     }
 
@@ -117,7 +119,6 @@ public class PaymentDetailActivity extends AppCompatActivity {
         editReferenceNumber.setText(currentPayment.getReferenceNumber());
         editNotes.setText(currentPayment.getNotes());
 
-        // Set spinner selections
         if ("Customer".equals(currentPayment.getPayerType())) {
             spinnerPayerType.setSelection(0);
         } else {
@@ -146,14 +147,12 @@ public class PaymentDetailActivity extends AppCompatActivity {
         String referenceNumber = editReferenceNumber.getText().toString().trim();
         String notes = editNotes.getText().toString().trim();
 
-        AppDatabase.databaseWriteExecutor.execute(() -> {
+        Executors.newSingleThreadExecutor().execute(() -> {
             if (currentPayment == null) {
-                // Create new payment
                 String newPaymentId = UUID.randomUUID().toString();
                 Payment newPayment = new Payment(newPaymentId, companyId, paymentDate, payerId, payerType, amount, paymentMethod, referenceNumber, notes, "COMPLETED");
                 paymentDao.insert(newPayment);
             } else {
-                // Update existing payment
                 currentPayment.setPaymentDate(paymentDate);
                 currentPayment.setPayerId(payerId);
                 currentPayment.setPayerType(payerType);
@@ -176,17 +175,14 @@ public class PaymentDetailActivity extends AppCompatActivity {
             editPaymentDate.setError("يرجى إدخال تاريخ المدفوعة");
             return false;
         }
-
         if (editPayerId.getText().toString().trim().isEmpty()) {
             editPayerId.setError("يرجى إدخال معرف الدافع");
             return false;
         }
-
         if (editAmount.getText().toString().trim().isEmpty()) {
             editAmount.setError("يرجى إدخال المبلغ");
             return false;
         }
-
         try {
             float amount = Float.parseFloat(editAmount.getText().toString().trim());
             if (amount <= 0) {
@@ -197,7 +193,6 @@ public class PaymentDetailActivity extends AppCompatActivity {
             editAmount.setError("يرجى إدخال مبلغ صحيح");
             return false;
         }
-
         return true;
     }
 }

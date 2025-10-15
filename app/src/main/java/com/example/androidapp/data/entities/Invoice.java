@@ -10,9 +10,9 @@ import androidx.room.PrimaryKey;
         foreignKeys = {
                 @ForeignKey(entity = Company.class, parentColumns = "id", childColumns = "companyId", onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Customer.class, parentColumns = "id", childColumns = "customerId", onDelete = ForeignKey.SET_NULL),
-                @ForeignKey(entity = Supplier.class, parentColumns = "id", childColumns = "supplierId", onDelete = ForeignKey.SET_NULL) // تمت الإضافة
+                @ForeignKey(entity = Supplier.class, parentColumns = "id", childColumns = "supplierId", onDelete = ForeignKey.SET_NULL)
         },
-        indices = {@Index("companyId"), @Index("customerId"), @Index("supplierId")}) // تمت الإضافة
+        indices = {@Index("companyId"), @Index("customerId"), @Index("supplierId")})
 public class Invoice {
     @PrimaryKey
     @NonNull
@@ -20,7 +20,7 @@ public class Invoice {
     @NonNull
     public String companyId;
     public String customerId;
-    public String supplierId; // <-- تم إضافة الحقل هنا
+    public String supplierId;
     public String invoiceNumber;
     public String invoiceDate;
     public String dueDate;
@@ -28,16 +28,15 @@ public class Invoice {
     public String status;
     public String invoiceType;
     public float cashAmount;
-    public float subTotal; // تمت الإضافة
-    public float taxAmount; // تمت الإضافة
-    public float discountAmount; // تمت الإضافة
+    public float subTotal;
+    public float taxAmount;
+    public float discountAmount;
 
-    // المُنشئ الأساسي لـ Room
     public Invoice(@NonNull String id, @NonNull String companyId, String customerId, String supplierId, String invoiceNumber, String invoiceDate, String dueDate, float totalAmount, String status, String invoiceType, float cashAmount, float subTotal, float taxAmount, float discountAmount) {
         this.id = id;
         this.companyId = companyId;
         this.customerId = customerId;
-        this.supplierId = supplierId; // <-- تم إضافة الحقل هنا
+        this.supplierId = supplierId;
         this.invoiceNumber = invoiceNumber;
         this.invoiceDate = invoiceDate;
         this.dueDate = dueDate;
@@ -50,13 +49,12 @@ public class Invoice {
         this.discountAmount = discountAmount;
     }
 
-    // Getters
     @NonNull
     public String getId() { return id; }
     @NonNull
     public String getCompanyId() { return companyId; }
     public String getCustomerId() { return customerId; }
-    public String getSupplierId() { return supplierId; } // <-- تم إضافة الدالة هنا
+    public String getSupplierId() { return supplierId; }
     public String getInvoiceNumber() { return invoiceNumber; }
     public String getInvoiceDate() { return invoiceDate; }
     public String getDueDate() { return dueDate; }
@@ -67,13 +65,13 @@ public class Invoice {
     public float getSubTotal() { return subTotal; }
     public float getTaxAmount() { return taxAmount; }
     public float getDiscountAmount() { return discountAmount; }
-    public String getCustomerName() { return "Customer " + customerId; } // Placeholder
+    public String getCustomerName() { return "Customer " + customerId; }
+    public float getGrandTotal() { return totalAmount; }
 
-    // Setters
     public void setId(@NonNull String id) { this.id = id; }
     public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
     public void setCustomerId(String customerId) { this.customerId = customerId; }
-    public void setSupplierId(String supplierId) { this.supplierId = supplierId; } // <-- تم إضافة الدالة هنا
+    public void setSupplierId(String supplierId) { this.supplierId = supplierId; }
     public void setInvoiceNumber(String invoiceNumber) { this.invoiceNumber = invoiceNumber; }
     public void setInvoiceDate(String invoiceDate) { this.invoiceDate = invoiceDate; }
     public void setDueDate(String dueDate) { this.dueDate = dueDate; }

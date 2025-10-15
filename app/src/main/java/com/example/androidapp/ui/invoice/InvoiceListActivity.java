@@ -15,12 +15,6 @@ import com.example.androidapp.ui.invoice.viewmodel.InvoiceViewModel;
 import com.example.androidapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
-import java.util.List;
-
-
-
-
-
 
 public class InvoiceListActivity extends AppCompatActivity {
 
@@ -29,6 +23,7 @@ public class InvoiceListActivity extends AppCompatActivity {
     private InvoiceViewModel viewModel;
     private SessionManager sessionManager;
     private String companyId;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +51,8 @@ public class InvoiceListActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-
+        recyclerView = findViewById(R.id.recycler_view_invoices);
+        fab = findViewById(R.id.fab_add_invoice);
         setTitle("الفواتير");
 
         fab.setOnClickListener(v -> {
@@ -68,7 +64,6 @@ public class InvoiceListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new InvoiceAdapter(new ArrayList<>(), invoice -> {
-            // Handle invoice click - navigate to InvoiceDetailActivity
             Intent intent = new Intent(InvoiceListActivity.this, InvoiceDetailActivity.class);
             intent.putExtra("invoice_id", invoice.getId());
             startActivity(intent);
@@ -99,4 +94,3 @@ public class InvoiceListActivity extends AppCompatActivity {
         loadInvoices();
     }
 }
-
