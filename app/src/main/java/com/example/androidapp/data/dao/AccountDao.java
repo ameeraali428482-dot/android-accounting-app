@@ -15,10 +15,13 @@ public interface AccountDao {
     LiveData<List<Account>> getAllAccounts(String companyId);
 
     @Query("SELECT * FROM accounts WHERE id = :accountId AND companyId = :companyId")
-    Account getAccountById(String accountId, String companyId);
+    LiveData<Account> getAccountById(String accountId, String companyId);
 
     @Query("SELECT * FROM accounts WHERE id = :accountId AND companyId = :companyId")
     LiveData<Account> getAccountByIdLiveData(String accountId, String companyId);
+    
+    @Query("SELECT * FROM accounts WHERE name = :accountName AND companyId = :companyId")
+    Account getAccountByNameAndCompanyId(String accountName, String companyId);
 
     @Insert
     void insert(Account account);

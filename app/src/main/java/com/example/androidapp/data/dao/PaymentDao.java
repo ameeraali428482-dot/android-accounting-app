@@ -15,7 +15,7 @@ public interface PaymentDao {
     LiveData<List<Payment>> getAllPayments(String companyId);
 
     @Query("SELECT * FROM payments WHERE id = :paymentId AND companyId = :companyId")
-    Payment getPaymentById(String paymentId, String companyId);
+    LiveData<Payment> getPaymentById(String paymentId, String companyId);
 
     @Query("SELECT * FROM payments WHERE id = :paymentId AND companyId = :companyId")
     LiveData<Payment> getPaymentByIdLiveData(String paymentId, String companyId);
@@ -28,4 +28,7 @@ public interface PaymentDao {
 
     @Delete
     void delete(Payment payment);
+    
+    @Query("SELECT COUNT(*) FROM payments WHERE referenceNumber = :referenceNumber AND companyId = :companyId")
+    int countPaymentByReferenceNumber(String referenceNumber, String companyId);
 }
