@@ -24,7 +24,7 @@ public interface InvoiceDao {
     LiveData<List<Invoice>> getAllInvoices(String companyId);
 
     @Query("SELECT * FROM invoices WHERE id = :id AND companyId = :companyId LIMIT 1")
-    Invoice getInvoiceById(String id, String companyId);
+    LiveData<Invoice> getInvoiceById(String id, String companyId);
 
     @Query("SELECT * FROM invoices WHERE companyId = :companyId AND invoiceType = :type")
     List<Invoice> getInvoicesByCompanyIdAndType(String companyId, String type);
@@ -34,4 +34,10 @@ public interface InvoiceDao {
     
     @Query("SELECT * FROM invoices WHERE customerId = :customerId")
     List<Invoice> getInvoicesByCustomerId(String customerId);
+    
+    @Query("SELECT COUNT(*) FROM invoices WHERE invoiceNumber = :invoiceNumber AND companyId = :companyId")
+    int countInvoicesByNumber(String invoiceNumber, String companyId);
+
+    @Query("SELECT SUM(totalAmount) FROM invoices WHERE companyId = :companyId AND invoiceType = 'sales' AND invoiceDate BETWEEN :startDate AND :endDate")
+    float getTotalSalesByDateRange(String companyId, String startDate, String endDate);
 }

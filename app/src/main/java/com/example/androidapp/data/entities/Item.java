@@ -49,6 +49,7 @@ public class Item {
     public Float getMinStockLevel() { return minStockLevel; }
     public float getCost() { return cost; }
     public String getItemName() { return name; } // Alias for compatibility
+    public Float getReorderLevel() { return minStockLevel; }
 
     // Setters
     public void setId(@NonNull String id) { this.id = id; }
