@@ -5,17 +5,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.EmployeeDao;
 import com.example.androidapp.data.entities.Employee;
 import com.example.androidapp.utils.SessionManager;
+
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
 public class EmployeeDetailActivity extends AppCompatActivity {
-
     private EditText nameEditText, emailEditText, phoneEditText, positionEditText, salaryEditText, hireDateEditText;
     private Button saveButton, deleteButton;
     private EmployeeDao employeeDao;
@@ -72,10 +74,16 @@ public class EmployeeDetailActivity extends AppCompatActivity {
         String email = emailEditText.getText().toString().trim();
         String phone = phoneEditText.getText().toString().trim();
         String position = positionEditText.getText().toString().trim();
-        double salary = Double.parseDouble(salaryEditText.getText().toString().trim());
         String hireDate = hireDateEditText.getText().toString().trim();
-        String companyId = sessionManager.getCurrentCompanyId();
+        double salary;
+        try {
+            salary = Double.parseDouble(salaryEditText.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            salaryEditText.setError("الرجاء إدخال قيمة صحيحة للراتب");
+            return;
+        }
 
+        String companyId = sessionManager.getCurrentCompanyId();
         if (companyId == null) {
             Toast.makeText(this, "خطأ: لم يتم العثور على معرف الشركة.", Toast.LENGTH_SHORT).show();
             return;
