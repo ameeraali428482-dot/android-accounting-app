@@ -11,6 +11,10 @@ public class Chat {
     private String lastMessage;
     private String lastMessageTime;
     private String companyId;
+    private String senderId;
+    private String receiverId;
+    private boolean isRead;
+    private long createdAt;
 
     public Chat() {
     }
@@ -63,12 +67,39 @@ public class Chat {
         this.companyId = companyId;
     }
 
-    // Added methods to fix ChatListActivity errors
     public String getChatName() {
         return name;
     }
+    
+    public String getSenderId() {
+        return senderId;
+    }
 
-    public void setChatName(String chatName) {
-        this.name = chatName;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 }
