@@ -2,15 +2,21 @@ package com.example.androidapp.data.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
-import androidx.room.Delete;
-import java.util.List;
 import com.example.androidapp.data.entities.Employee;
+import java.util.List;
 
 @Dao
 public interface EmployeeDao {
+    @Query("SELECT * FROM employees WHERE companyId = :companyId")
+    LiveData<List<Employee>> getAllEmployees(String companyId);
+
+    @Query("SELECT * FROM employees WHERE id = :employeeId AND companyId = :companyId")
+    Employee getEmployeeById(String employeeId, String companyId);
+
     @Insert
     void insert(Employee employee);
 
@@ -19,13 +25,8 @@ public interface EmployeeDao {
 
     @Delete
     void delete(Employee employee);
-
-    @Query("SELECT * FROM employees")
-    List<Employee> getAllEmployees();
-
-    @Query("SELECT * FROM employees WHERE id = :id LIMIT 1")
-    Employee getById(String id);
-
-    @Query("SELECT * FROM employees WHERE companyId = :companyId")
-    List<Employee> getEmployeesByCompanyId(String companyId);
+    
+    // Add delete by ID method to fix the error
+    @Query("DELETE FROM employees WHERE id = :employeeId")
+    void deleteById(String employeeId);
 }

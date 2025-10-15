@@ -11,6 +11,15 @@ import java.util.List;
 
 @Dao
 public interface AccountDao {
+    @Query("SELECT * FROM accounts WHERE companyId = :companyId")
+    LiveData<List<Account>> getAllAccounts(String companyId);
+
+    @Query("SELECT * FROM accounts WHERE id = :accountId AND companyId = :companyId")
+    Account getAccountById(String accountId, String companyId);
+
+    @Query("SELECT * FROM accounts WHERE id = :accountId AND companyId = :companyId")
+    LiveData<Account> getAccountByIdLiveData(String accountId, String companyId);
+
     @Insert
     void insert(Account account);
 
@@ -19,16 +28,4 @@ public interface AccountDao {
 
     @Delete
     void delete(Account account);
-
-    @Query("SELECT * FROM accounts WHERE companyId = :companyId")
-    LiveData<List<Account>> getAllAccounts(String companyId);
-
-    @Query("SELECT * FROM accounts WHERE id = :id AND companyId = :companyId LIMIT 1")
-    Account getAccountById(String id, String companyId);
-
-    @Query("SELECT * FROM accounts WHERE name = :name AND companyId = :companyId LIMIT 1")
-    Account getAccountByNameAndCompanyId(String name, String companyId);
-
-    @Query("SELECT COUNT(*) FROM accounts WHERE name = :name AND companyId = :companyId")
-    int countAccountByNameAndCompanyId(String name, String companyId);
 }
