@@ -14,7 +14,7 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/tv_user_name"
+            android:id="@+id/tvUserNameDisplay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="اسم المستخدم"
@@ -23,7 +23,7 @@
             android:textColor="@android:color/black" />
 
         <TextView
-            android:id="@+id/tv_user_email"
+            android:id="@+id/tvUserEmailDisplay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"

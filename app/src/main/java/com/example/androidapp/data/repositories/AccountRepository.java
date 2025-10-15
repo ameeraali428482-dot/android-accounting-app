@@ -41,8 +41,8 @@ public class AccountRepository {
         return accountDao.getAllAccounts(companyId);
     }
 
-    public Future<Account> getAccountById(String accountId, String companyId) {
-        return AppDatabase.databaseWriteExecutor.submit(() -> accountDao.getAccountById(accountId, companyId));
+    public LiveData<Account> getAccountById(String accountId, String companyId) {
+        return accountDao.getAccountById(accountId, companyId);
     }
 
     public Future<Account> getAccountByNameAndCompanyId(String accountName, String companyId) {

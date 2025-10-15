@@ -10,7 +10,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_admin_user_detail_name"
+            android:id="@+id/tvUserNameDisplay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="اسم المستخدم"
@@ -20,7 +20,7 @@
             android:layout_marginBottom="8dp" />
 
         <TextView
-            android:id="@+id/tv_admin_user_detail_email"
+            android:id="@+id/tvUserEmailDisplay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="البريد الإلكتروني"
@@ -28,19 +28,19 @@
             android:textColor="@android:color/darker_gray"
             android:layout_marginBottom="16dp" />
 
-        <TextView
+        <Button
+            android:id="@+id/btnActivate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="الأدوار"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_user_roles"
+            android:text="تفعيل المستخدم" />
+            
+        <Button
+            android:id="@+id/btnDeactivate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
+            android:text="إلغاء تفعيل المستخدم"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/red" />
 
     </LinearLayout>
 
