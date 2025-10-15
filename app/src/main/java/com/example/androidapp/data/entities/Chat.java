@@ -1,11 +1,14 @@
 package com.example.androidapp.data.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "chats")
 public class Chat {
     @PrimaryKey
+    @NonNull
     private String id;
     private String name;
     private String lastMessage;
@@ -19,7 +22,8 @@ public class Chat {
     public Chat() {
     }
 
-    public Chat(String id, String name, String lastMessage, String lastMessageTime, String companyId) {
+    @Ignore
+    public Chat(@NonNull String id, String name, String lastMessage, String lastMessageTime, String companyId) {
         this.id = id;
         this.name = name;
         this.lastMessage = lastMessage;
@@ -27,11 +31,12 @@ public class Chat {
         this.companyId = companyId;
     }
 
+    @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
