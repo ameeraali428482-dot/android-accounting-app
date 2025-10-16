@@ -3,7 +3,6 @@ package com.example.androidapp.ui.journalentry;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,11 +45,21 @@ public class JournalEntryListActivity extends AppCompatActivity {
         String companyId = sessionManager.getCurrentCompanyId();
         if (companyId == null) return;
 
-        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+        adapter = new GenericAdapter<JournalEntry>(new ArrayList<>(), item -> {
             Intent i = new Intent(JournalEntryListActivity.this, JournalEntryDetailActivity.class);
             i.putExtra("journal_entry_id", item.getId());
             startActivity(i);
-        });
+        }) {
+            @Override
+            protected int getLayoutResId() {
+                return R.layout.journal_entry_list_row;
+            }
+
+            @Override
+            protected void bindView(View itemView, JournalEntry journalEntry) {
+                // Bind data to views
+            }
+        };
         recyclerView.setAdapter(adapter);
 
         database.journalEntryDao().getAllJournalEntries(companyId).observe(this, journalEntries -> {

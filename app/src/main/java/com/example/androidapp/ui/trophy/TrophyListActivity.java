@@ -3,7 +3,6 @@ package com.example.androidapp.ui.trophy;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,11 +45,21 @@ public class TrophyListActivity extends AppCompatActivity {
         String companyId = sm.getCurrentCompanyId();
         if (companyId == null) return;
 
-        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+        adapter = new GenericAdapter<Trophy>(new ArrayList<>(), item -> {
             Intent i = new Intent(TrophyListActivity.this, TrophyDetailActivity.class);
             i.putExtra("trophy_id", item.getId());
             startActivity(i);
-        });
+        }) {
+            @Override
+            protected int getLayoutResId() {
+                return R.layout.trophy_list_row;
+            }
+
+            @Override
+            protected void bindView(View itemView, Trophy trophy) {
+                // Bind data to views
+            }
+        };
         recyclerView.setAdapter(adapter);
         
         db.trophyDao().getAllTrophies(companyId).observe(this, list -> {

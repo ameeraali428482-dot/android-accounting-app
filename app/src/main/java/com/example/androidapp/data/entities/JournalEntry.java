@@ -1,14 +1,10 @@
 package com.example.androidapp.data.entities;
 
-import java.util.Date;
-import androidx.annotation.NonNull;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
-
 
 @Entity(tableName = "journal_entries",
         foreignKeys = @ForeignKey(entity = Company.class,
@@ -18,16 +14,18 @@ import androidx.room.PrimaryKey;
         indices = {@Index(value = "companyId")})
 public class JournalEntry {
     @PrimaryKey
-    public @NonNull String id;
-    public @NonNull String companyId;
+    @NonNull
+    public String id;
+    @NonNull
+    public String companyId;
     public String entryDate;
     public String description;
-    public String referenceNumber; // For linking to invoices, receipts, payments
-    public String entryType; // e.g., 'Manual', 'Invoice', 'Receipt', 'Payment'
+    public String referenceNumber;
+    public String entryType;
     public float totalDebit;
     public float totalCredit;
 
-    public JournalEntry(String id, String companyId, String entryDate, String description, String referenceNumber, String entryType, float totalDebit, float totalCredit) {
+    public JournalEntry(@NonNull String id, @NonNull String companyId, String entryDate, String description, String referenceNumber, String entryType, float totalDebit, float totalCredit) {
         this.id = id;
         this.companyId = companyId;
         this.entryDate = entryDate;
@@ -38,68 +36,26 @@ public class JournalEntry {
         this.totalCredit = totalCredit;
     }
 
-    public String getId() {
-        return id;
-    }
+    // Getters
+    @NonNull
+    public String getId() { return id; }
+    @NonNull
+    public String getCompanyId() { return companyId; }
+    public String getEntryDate() { return entryDate; }
+    public String getDescription() { return description; }
+    public String getReferenceNumber() { return referenceNumber; }
+    public String getEntryType() { return entryType; }
+    public float getTotalDebit() { return totalDebit; }
+    public float getTotalCredit() { return totalCredit; }
+    public float getAmount() { return totalDebit > 0 ? totalDebit : totalCredit; } // Added for compatibility
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getEntryDate() {
-        return entryDate;
-    }
-
-    public void setEntryDate(String entryDate) {
-        this.entryDate = entryDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getReferenceNumber() {
-        return referenceNumber;
-    }
-
-    public void setReferenceNumber(String referenceNumber) {
-        this.referenceNumber = referenceNumber;
-    }
-
-    public String getEntryType() {
-        return entryType;
-    }
-
-    public void setEntryType(String entryType) {
-        this.entryType = entryType;
-    }
-
-    public float getTotalDebit() {
-        return totalDebit;
-    }
-
-    public void setTotalDebit(float totalDebit) {
-        this.totalDebit = totalDebit;
-    }
-
-    public float getTotalCredit() {
-        return totalCredit;
-    }
-
-    public void setTotalCredit(float totalCredit) {
-        this.totalCredit = totalCredit;
-    }
+    // Setters
+    public void setId(@NonNull String id) { this.id = id; }
+    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
+    public void setEntryDate(String entryDate) { this.entryDate = entryDate; }
+    public void setDescription(String description) { this.description = description; }
+    public void setReferenceNumber(String referenceNumber) { this.referenceNumber = referenceNumber; }
+    public void setEntryType(String entryType) { this.entryType = entryType; }
+    public void setTotalDebit(float totalDebit) { this.totalDebit = totalDebit; }
+    public void setTotalCredit(float totalCredit) { this.totalCredit = totalCredit; }
 }
-

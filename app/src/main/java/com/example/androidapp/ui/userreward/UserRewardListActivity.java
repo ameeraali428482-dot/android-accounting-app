@@ -48,11 +48,21 @@ public class UserRewardListActivity extends AppCompatActivity {
             return;
         }
 
-        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+        adapter = new GenericAdapter<UserReward>(new ArrayList<>(), item -> {
             Intent intent = new Intent(UserRewardListActivity.this, UserRewardDetailActivity.class);
             intent.putExtra("user_reward_id", item.getId());
             startActivity(intent);
-        });
+        }) {
+            @Override
+            protected int getLayoutResId() {
+                return R.layout.user_reward_list_row;
+            }
+
+            @Override
+            protected void bindView(View itemView, UserReward userReward) {
+                // Bind data to views
+            }
+        };
         recyclerView.setAdapter(adapter);
 
         database.userRewardDao().getAllUserRewards(companyId).observe(this, userRewards -> {

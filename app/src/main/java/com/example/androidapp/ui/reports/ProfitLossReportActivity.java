@@ -3,19 +3,14 @@ package com.example.androidapp.ui.reports;
 import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.androidapp.App;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.InvoiceDao;
 import com.example.androidapp.data.dao.JournalEntryDao;
 import com.example.androidapp.data.entities.Invoice;
 import com.example.androidapp.data.entities.JournalEntry;
 import com.example.androidapp.utils.SessionManager;
 import java.util.List;
-
-
-
-
-
 
 public class ProfitLossReportActivity extends AppCompatActivity {
 
@@ -32,16 +27,20 @@ public class ProfitLossReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profit_loss_report);
 
+        totalIncomeTextView = findViewById(R.id.total_income_text_view);
+        totalExpensesTextView = findViewById(R.id.total_expenses_text_view);
+        netProfitLossTextView = findViewById(R.id.net_profit_loss_text_view);
 
-        invoiceDao = new InvoiceDao(App.getDatabaseHelper());
-        journalEntryDao = new JournalEntryDao(App.getDatabaseHelper());
+        AppDatabase db = AppDatabase.getDatabase(this);
+        invoiceDao = db.invoiceDao();
+        journalEntryDao = db.journalEntryDao();
         sessionManager = new SessionManager(this);
 
         loadProfitLossReport();
     }
 
     private void loadProfitLossReport() {
-        String companyId = sessionManager.getUserDetails().get(SessionManager.KEY_COMPANY_ID);
+        String companyId = sessionManager.getCurrentCompanyId();
         if (companyId == null) {
             totalIncomeTextView.setText("إجمالي الإيرادات: 0.00");
             totalExpensesTextView.setText("إجمالي المصروفات: 0.00");
@@ -49,37 +48,39 @@ public class ProfitLossReportActivity extends AppCompatActivity {
             return;
         }
 
-        double totalIncome = 0;
-        double totalExpenses = 0;
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            double totalIncome = 0;
+            double totalExpenses = 0;
 
-        // Calculate income from sales invoices
-        List<Invoice> salesInvoices = invoiceDao.getInvoicesByCompanyIdAndType(companyId, "sales");
-        for (Invoice invoice : salesInvoices) {
-            totalIncome += invoice.getGrandTotal();
-        }
+            List<Invoice> salesInvoices = invoiceDao.getInvoicesByCompanyIdAndType(companyId, "sales");
+            for (Invoice invoice : salesInvoices) {
+                totalIncome += invoice.getGrandTotal();
+            }
 
-        // Calculate income from other journal entries (assuming type "income")
-        List<JournalEntry> incomeEntries = journalEntryDao.getJournalEntriesByCompanyIdAndType(companyId, "income");
-        for (JournalEntry entry : incomeEntries) {
-            totalIncome += entry.getAmount();
-        }
+            List<JournalEntry> incomeEntries = journalEntryDao.getJournalEntriesByCompanyIdAndType(companyId, "income");
+            for (JournalEntry entry : incomeEntries) {
+                totalIncome += entry.getAmount();
+            }
 
-        // Calculate expenses from purchase invoices
-        List<Invoice> purchaseInvoices = invoiceDao.getInvoicesByCompanyIdAndType(companyId, "purchase");
-        for (Invoice invoice : purchaseInvoices) {
-            totalExpenses += invoice.getGrandTotal();
-        }
+            List<Invoice> purchaseInvoices = invoiceDao.getInvoicesByCompanyIdAndType(companyId, "purchase");
+            for (Invoice invoice : purchaseInvoices) {
+                totalExpenses += invoice.getGrandTotal();
+            }
 
-        // Calculate expenses from other journal entries (assuming type "expense")
-        List<JournalEntry> expenseEntries = journalEntryDao.getJournalEntriesByCompanyIdAndType(companyId, "expense");
-        for (JournalEntry entry : expenseEntries) {
-            totalExpenses += entry.getAmount();
-        }
+            List<JournalEntry> expenseEntries = journalEntryDao.getJournalEntriesByCompanyIdAndType(companyId, "expense");
+            for (JournalEntry entry : expenseEntries) {
+                totalExpenses += entry.getAmount();
+            }
 
-        double netProfitLoss = totalIncome - totalExpenses;
+            double finalTotalIncome = totalIncome;
+            double finalTotalExpenses = totalExpenses;
+            double netProfitLoss = finalTotalIncome - finalTotalExpenses;
 
-        totalIncomeTextView.setText(String.format("إجمالي الإيرادات: %.2f", totalIncome));
-        totalExpensesTextView.setText(String.format("إجمالي المصروفات: %.2f", totalExpenses));
-        netProfitLossTextView.setText(String.format("صافي الربح/الخسارة: %.2f", netProfitLoss));
+            runOnUiThread(() -> {
+                totalIncomeTextView.setText(String.format("إجمالي الإيرادات: %.2f", finalTotalIncome));
+                totalExpensesTextView.setText(String.format("إجمالي المصروفات: %.2f", finalTotalExpenses));
+                netProfitLossTextView.setText(String.format("صافي الربح/الخسارة: %.2f", netProfitLoss));
+            });
+        });
     }
 }
