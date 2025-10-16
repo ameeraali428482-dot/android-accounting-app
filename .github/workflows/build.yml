@@ -22,7 +22,6 @@ jobs:
       run: chmod +x gradlew
         
     - name: Build APK and capture logs
-      id: build_apk
       run: ./gradlew clean assembleDebug 2> build_error.log || true
       
     - name: Upload Successful Build to Telegram
@@ -55,10 +54,8 @@ jobs:
           
           *Error Log:*
           ```
-          ${{ steps.build_apk.outputs.error_log || 'No error log captured.' }}
+          $(cat build_error.log)
           ```
           
           Full logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         format: markdown
-      env:
-        ERROR_LOG: ${{ steps.build_apk.outputs.error_log }}
