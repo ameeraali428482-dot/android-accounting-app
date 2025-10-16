@@ -11,14 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.androidapp.R;
 import com.example.androidapp.ui.main.MainActivity;
+import com.example.androidapp.utils.SessionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
-
-
-
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -26,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton, registerButton;
     private ProgressBar loadingProgressBar;
     private FirebaseAuth mAuth;
+    private SessionManager sessionManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +31,21 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+        sessionManager = new SessionManager(getApplicationContext());
 
+        // Initialize views AFTER setContentView
+        emailEditText = findViewById(R.id.email);
+        passwordEditText = findViewById(R.id.password);
+        loginButton = findViewById(R.id.login);
+        registerButton = findViewById(R.id.register);
+        loadingProgressBar = findViewById(R.id.loading);
+
+        if (sessionManager.isLoggedIn()) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,18 +87,20 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         loadingProgressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            String userId = mAuth.getCurrentUser().getUid();
+                            // Here you should fetch the companyId associated with the user
+                            // For now, let's use a placeholder
+                            String companyId = "default_company"; // FIXME: Replace with actual logic
+                            sessionManager.createLoginSession(userId, companyId);
+                            
                             Toast.makeText(LoginActivity.this, "تم تسجيل الدخول بنجاح.", Toast.LENGTH_SHORT).show();
-                            // TODO: Fetch user details from SQLite and create session
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
                         } else {
-                            // If sign in fails, display a message to the user.
                             Toast.makeText(LoginActivity.this, "فشل تسجيل الدخول: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
     }
 }
-
