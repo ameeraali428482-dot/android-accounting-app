@@ -21,12 +21,12 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
         
-    - name: Build APK
+    - name: Build APK and capture logs
       id: build_apk
-      run: ./gradlew clean assembleDebug
+      run: ./gradlew clean assembleDebug 2> build_error.log || true
       
     - name: Upload Successful Build to Telegram
-      if: success( )
+      if: success()
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -52,8 +52,13 @@ jobs:
           ❌ *Build Failed!*
           *Repository:* `${{ github.repository }}`
           *Commit:* `${{ github.sha }}`
-          *Branch:* `${{ github.ref_name }}`
           
-          Please check the build logs for more details:
-          ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          *Error Log:*
+          ```
+          ${{ steps.build_apk.outputs.error_log || 'No error log captured.' }}
+          ```
+          
+          Full logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         format: markdown
+      env:
+        ERROR_LOG: ${{ steps.build_apk.outputs.error_log }}

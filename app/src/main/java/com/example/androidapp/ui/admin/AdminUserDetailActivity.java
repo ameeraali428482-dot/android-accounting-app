@@ -26,8 +26,8 @@ public class AdminUserDetailActivity extends AppCompatActivity {
         db = AppDatabase.getInstance(this);
         sm = new SessionManager(this);
 
-        tvName  = findViewById(R.id.tvUserNameDisplay);
-        tvEmail = findViewById(R.id.tvUserEmailDisplay);
+        tvName  = findViewById(R.id.tv_admin_user_detail_name);
+        tvEmail = findViewById(R.id.tv_admin_user_detail_email);
         btnDeact= findViewById(R.id.btnDeactivate);
         btnAct  = findViewById(R.id.btnActivate);
 
@@ -51,7 +51,7 @@ public class AdminUserDetailActivity extends AppCompatActivity {
         Executors.newSingleThreadExecutor().execute(() -> {
             User u = db.userDao().getUserByIdSync(userId);
             if (u != null) {
-                u.setIsActive(active);
+                u.setActive(active); // Corrected from setIsActive to setActive
                 db.userDao().update(u);
             }
             runOnUiThread(() -> Toast.makeText(this, active ? "تم التفعيل" : "تم التعطيل", Toast.LENGTH_SHORT).show());
