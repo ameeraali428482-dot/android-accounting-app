@@ -100,7 +100,8 @@ public class RegisterActivity extends AppCompatActivity {
                             String userId = firebaseUser.getUid();
                             String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
 
-                            User newUser = new User(userId, email, password, name, "", "", 0, currentDate, currentDate, null, false, true);
+                            // Corrected User constructor call
+                            User newUser = new User(userId, email, "", name, "", null, 0, currentDate, currentDate, null, false);
 
                             AppDatabase.databaseWriteExecutor.execute(() -> {
                                 database.userDao().insert(newUser);
