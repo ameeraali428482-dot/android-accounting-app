@@ -10,22 +10,24 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.androidapp.R;
+import com.example.androidapp.data.AppDatabase;
+import com.example.androidapp.data.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-
-
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText emailEditText, passwordEditText, confirmPasswordEditText;
+    private EditText emailEditText, passwordEditText, confirmPasswordEditText, nameEditText;
     private Button registerButton;
     private ProgressBar loadingProgressBar;
     private FirebaseAuth mAuth;
+    private AppDatabase database;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,15 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
+        database = AppDatabase.getDatabase(this);
 
+        // Initialize views AFTER setContentView
+        nameEditText = findViewById(R.id.username);
+        emailEditText = findViewById(R.id.email);
+        passwordEditText = findViewById(R.id.password);
+        confirmPasswordEditText = findViewById(R.id.confirm_password);
+        registerButton = findViewById(R.id.register);
+        loadingProgressBar = findViewById(R.id.loading);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,10 +54,17 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
+        String name = nameEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
         String confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
+        if (name.isEmpty()) {
+            nameEditText.setError("الاسم مطلوب!");
+            nameEditText.requestFocus();
+            return;
+        }
+        
         if (email.isEmpty()) {
             emailEditText.setError("البريد الإلكتروني مطلوب!");
             emailEditText.requestFocus();
@@ -78,21 +95,28 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        loadingProgressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(RegisterActivity.this, "تم التسجيل بنجاح.", Toast.LENGTH_SHORT).show();
-                            // TODO: Save user details to SQLite database
-                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            finish();
+                            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                            String userId = firebaseUser.getUid();
+                            String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+
+                            User newUser = new User(userId, email, password, name, "", "", 0, currentDate, currentDate, null, false, true);
+
+                            AppDatabase.databaseWriteExecutor.execute(() -> {
+                                database.userDao().insert(newUser);
+                                runOnUiThread(() -> {
+                                    loadingProgressBar.setVisibility(View.GONE);
+                                    Toast.makeText(RegisterActivity.this, "تم التسجيل بنجاح.", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                });
+                            });
                         } else {
-                            // If sign in fails, display a message to the user.
+                            loadingProgressBar.setVisibility(View.GONE);
                             Toast.makeText(RegisterActivity.this, "فشل التسجيل: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
     }
 }
-
