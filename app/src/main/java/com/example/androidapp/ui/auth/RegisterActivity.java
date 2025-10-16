@@ -37,7 +37,6 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         database = AppDatabase.getDatabase(this);
 
-        // Initialize views AFTER setContentView
         nameEditText = findViewById(R.id.username);
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
@@ -100,8 +99,8 @@ public class RegisterActivity extends AppCompatActivity {
                             String userId = firebaseUser.getUid();
                             String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
 
-                            // Corrected User constructor call
-                            User newUser = new User(userId, email, "", name, "", null, 0, currentDate, currentDate, null, false);
+                            // Corrected User constructor call with 12 arguments
+                            User newUser = new User(userId, email, "", name, "", null, 0, currentDate, currentDate, null, false, true);
 
                             AppDatabase.databaseWriteExecutor.execute(() -> {
                                 database.userDao().insert(newUser);
