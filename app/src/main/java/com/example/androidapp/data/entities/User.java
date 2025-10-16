@@ -43,33 +43,31 @@ public class User {
         this.isActive = isActive;
     }
 
-    // Getters
+    // Getters and Setters
     @NonNull
     public String getId() { return id; }
-    public String getEmail() { return email; }
-    public String getPassword() { return password; }
-    public String getName() { return name; }
-    public String getPhone() { return phone; }
-    public String getPhoneHash() { return phoneHash; }
-    public int getPoints() { return points; }
-    public String getCreatedAt() { return createdAt; }
-    public String getUpdatedAt() { return updatedAt; }
-    public String getPersonalCompanyId() { return personalCompanyId; }
-    public boolean isOnline() { return isOnline; }
-    public boolean isActive() { return isActive; }
-    public String getUsername() { return name; } // Alias
-
-    // Setters
     public void setId(@NonNull String id) { this.id = id; }
+    public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+    public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+    public String getName() { return name; }
+    public String getUsername() { return name; }
     public void setName(String name) { this.name = name; }
+    public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+    public String getPhoneHash() { return phoneHash; }
     public void setPhoneHash(String phoneHash) { this.phoneHash = phoneHash; }
+    public int getPoints() { return points; }
     public void setPoints(int points) { this.points = points; }
+    public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public String getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
+    public String getPersonalCompanyId() { return personalCompanyId; }
     public void setPersonalCompanyId(String personalCompanyId) { this.personalCompanyId = personalCompanyId; }
+    public boolean isOnline() { return isOnline; }
     public void setOnline(boolean online) { isOnline = online; }
-    public void setIsActive(boolean active) { isActive = active; }
+    public boolean isActive() { return isActive; }
+    public void setActive(boolean active) { isActive = active; }
 }

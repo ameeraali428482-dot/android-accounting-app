@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.androidapp.R;
 import com.example.androidapp.data.AppDatabase;
+import com.example.androidapp.data.entities.Company;
 import com.example.androidapp.data.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -44,12 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.register);
         loadingProgressBar = findViewById(R.id.loading);
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                registerUser();
-            }
-        });
+        registerButton.setOnClickListener(v -> registerUser());
     }
 
     private void registerUser() {
@@ -58,30 +55,15 @@ public class RegisterActivity extends AppCompatActivity {
         String password = passwordEditText.getText().toString().trim();
         String confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
-        if (name.isEmpty()) {
-            nameEditText.setError("الاسم مطلوب!");
-            nameEditText.requestFocus();
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            Toast.makeText(this, "الرجاء تعبئة جميع الحقول", Toast.LENGTH_SHORT).show();
             return;
         }
-        
-        if (email.isEmpty()) {
-            emailEditText.setError("البريد الإلكتروني مطلوب!");
-            emailEditText.requestFocus();
-            return;
-        }
-
-        if (password.isEmpty()) {
-            passwordEditText.setError("كلمة المرور مطلوبة!");
-            passwordEditText.requestFocus();
-            return;
-        }
-
         if (password.length() < 6) {
             passwordEditText.setError("كلمة المرور يجب أن تكون 6 أحرف على الأقل!");
             passwordEditText.requestFocus();
             return;
         }
-
         if (!password.equals(confirmPassword)) {
             confirmPasswordEditText.setError("كلمتا المرور غير متطابقتين!");
             confirmPasswordEditText.requestFocus();
@@ -91,31 +73,34 @@ public class RegisterActivity extends AppCompatActivity {
         loadingProgressBar.setVisibility(View.VISIBLE);
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                            String userId = firebaseUser.getUid();
-                            String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                        String userId = firebaseUser.getUid();
+                        String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+                        
+                        // Create a personal company for the new user
+                        String personalCompanyId = UUID.randomUUID().toString();
+                        Company personalCompany = new Company(personalCompanyId, name + "'s Company", null, null, currentDate, currentDate, null, null, null, null);
+                        
+                        User newUser = new User(userId, email, "", name, "", null, 0, currentDate, currentDate, personalCompanyId, false, true);
 
-                            // Corrected User constructor call with 12 arguments
-                            User newUser = new User(userId, email, "", name, "", null, 0, currentDate, currentDate, null, false, true);
-
-                            AppDatabase.databaseWriteExecutor.execute(() -> {
-                                database.userDao().insert(newUser);
-                                runOnUiThread(() -> {
-                                    loadingProgressBar.setVisibility(View.GONE);
-                                    Toast.makeText(RegisterActivity.this, "تم التسجيل بنجاح.", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                });
+                        AppDatabase.databaseWriteExecutor.execute(() -> {
+                            database.companyDao().insert(personalCompany);
+                            database.userDao().insert(newUser);
+                            
+                            runOnUiThread(() -> {
+                                loadingProgressBar.setVisibility(View.GONE);
+                                Toast.makeText(RegisterActivity.this, "تم التسجيل بنجاح.", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
                             });
-                        } else {
-                            loadingProgressBar.setVisibility(View.GONE);
-                            Toast.makeText(RegisterActivity.this, "فشل التسجيل: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
+                        });
+                    } else {
+                        loadingProgressBar.setVisibility(View.GONE);
+                        Toast.makeText(RegisterActivity.this, "فشل التسجيل: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
