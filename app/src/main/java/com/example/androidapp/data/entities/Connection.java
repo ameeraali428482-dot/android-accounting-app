@@ -11,6 +11,7 @@ public class Connection {
     private String companyId;
     private String connectionName;
     private String connectionType;
+    private String connectionUrl; // Added field
     private String status;
     private String description;
     private String createdDate;
@@ -19,12 +20,13 @@ public class Connection {
     public Connection() {}
 
     @Ignore
-    public Connection(@NonNull String id, String companyId, String connectionName, String connectionType, 
+    public Connection(@NonNull String id, String companyId, String connectionName, String connectionType, String connectionUrl, 
                      String status, String description, String createdDate, String updatedDate) {
         this.id = id;
         this.companyId = companyId;
         this.connectionName = connectionName;
         this.connectionType = connectionType;
+        this.connectionUrl = connectionUrl;
         this.status = status;
         this.description = description;
         this.createdDate = createdDate;
@@ -43,6 +45,9 @@ public class Connection {
 
     public String getConnectionType() { return connectionType; }
     public void setConnectionType(String connectionType) { this.connectionType = connectionType; }
+
+    public String getConnectionUrl() { return connectionUrl; }
+    public void setConnectionUrl(String connectionUrl) { this.connectionUrl = connectionUrl; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }

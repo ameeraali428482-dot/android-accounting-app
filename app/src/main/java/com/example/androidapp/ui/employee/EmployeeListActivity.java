@@ -54,16 +54,32 @@ public class EmployeeListActivity extends AppCompatActivity {
         String companyId = sessionManager.getCurrentCompanyId();
         if (companyId == null) return;
 
-        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+        adapter = new GenericAdapter<Employee>(new ArrayList<>(), item -> {
             Intent intent = new Intent(EmployeeListActivity.this, EmployeeDetailActivity.class);
             intent.putExtra("employee_id", item.getId());
             startActivity(intent);
-        });
+        }) {
+            @Override
+            protected int getLayoutResId() {
+                return R.layout.employee_list_row;
+            }
+
+            @Override
+            protected void bindView(View itemView, Employee employee) {
+                TextView employeeName = itemView.findViewById(R.id.employee_name);
+                TextView employeePosition = itemView.findViewById(R.id.employee_position);
+                TextView employeePhone = itemView.findViewById(R.id.employee_phone);
+                employeeName.setText(employee.getName());
+                employeePosition.setText(employee.getPosition());
+                employeePhone.setText(employee.getPhone());
+            }
+        };
         employeeRecyclerView.setAdapter(adapter);
 
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            List<Employee> employees = employeeDao.getEmployeesByCompanyId(companyId);
-            runOnUiThread(() -> adapter.updateData(employees));
+        employeeDao.getAllEmployees(companyId).observe(this, employees -> {
+            if (employees != null) {
+                adapter.updateData(employees);
+            }
         });
     }
 }

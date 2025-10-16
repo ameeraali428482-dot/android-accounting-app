@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.Executors;
 
 public class RepairDetailActivity extends AppCompatActivity {
     private EditText etTitle, etDescription, etAssignedTo, etTotalCost;
@@ -149,19 +150,21 @@ public class RepairDetailActivity extends AppCompatActivity {
             return;
         }
 
-        float totalCost = 0;
+        final float finalTotalCost;
         if (!totalCostStr.isEmpty()) {
             try {
-                totalCost = Float.parseFloat(totalCostStr);
+                finalTotalCost = Float.parseFloat(totalCostStr);
             } catch (NumberFormatException e) {
                 etTotalCost.setError("قيمة غير صحيحة");
                 return;
             }
+        } else {
+            finalTotalCost = 0;
         }
 
-        AppDatabase.databaseWriteExecutor.execute(() -> {
+        Executors.newSingleThreadExecutor().execute(() -> {
             if (repairId == null) {
-                Repair repair = new Repair(sessionManager.getCurrentCompanyId(), title, description, requestDate, completionDate, status, assignedTo, totalCost);
+                Repair repair = new Repair(sessionManager.getCurrentCompanyId(), title, description, requestDate, completionDate, status, assignedTo, finalTotalCost);
                 database.repairDao().insert(repair);
             } else {
                 currentRepair.setTitle(title);
@@ -170,7 +173,7 @@ public class RepairDetailActivity extends AppCompatActivity {
                 currentRepair.setCompletionDate(completionDate);
                 currentRepair.setStatus(status);
                 currentRepair.setAssignedTo(assignedTo);
-                currentRepair.setTotalCost(totalCost);
+                currentRepair.setTotalCost(finalTotalCost);
                 database.repairDao().update(currentRepair);
             }
 

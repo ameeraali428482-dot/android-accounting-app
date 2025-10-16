@@ -24,7 +24,7 @@ public class CampaignListActivity extends AppCompatActivity {
     private GenericAdapter<Campaign> adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_campaign_list);
 
@@ -53,11 +53,26 @@ public class CampaignListActivity extends AppCompatActivity {
         String companyId = sessionManager.getCurrentCompanyId();
         if (companyId == null) return;
 
-        adapter = new GenericAdapter<>(new ArrayList<>(), item -> {
+        adapter = new GenericAdapter<Campaign>(new ArrayList<>(), item -> {
             Intent intent = new Intent(CampaignListActivity.this, CampaignDetailActivity.class);
             intent.putExtra("campaign_id", item.getId());
             startActivity(intent);
-        });
+        }) {
+            @Override
+            protected int getLayoutResId() {
+                return R.layout.campaign_list_row;
+            }
+
+            @Override
+            protected void bindView(View itemView, Campaign campaign) {
+                TextView campaignName = itemView.findViewById(R.id.campaign_name);
+                TextView campaignType = itemView.findViewById(R.id.campaign_type);
+                TextView campaignStatus = itemView.findViewById(R.id.campaign_status);
+                campaignName.setText(campaign.getName());
+                campaignType.setText(campaign.getType());
+                campaignStatus.setText(campaign.getStatus());
+            }
+        };
         campaignRecyclerView.setAdapter(adapter);
 
         campaignDao.getAllCampaigns(companyId).observe(this, campaigns -> {
