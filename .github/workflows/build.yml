@@ -21,11 +21,19 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
         
-    - name: Build APK and capture logs
-      run: ./gradlew clean assembleDebug 2> build_error.log || true
+    - name: Build APK
+      id: build_step
+      continue-on-error: true
+      run: ./gradlew clean assembleDebug 2> build_error.log
       
-    - name: Upload Successful Build to Telegram
+    - name: Verify APK path
       if: success()
+      run: |
+        echo "Verifying APK location..."
+        ls -l app/build/outputs/apk/debug/
+        
+    - name: Upload Successful Build to Telegram
+      if: steps.build_step.outcome == 'success'
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -42,7 +50,7 @@ jobs:
         format: markdown
 
     - name: Notify Build Failure on Telegram
-      if: failure()
+      if: steps.build_step.outcome == 'failure'
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
