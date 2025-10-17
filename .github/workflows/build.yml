@@ -53,24 +53,33 @@ jobs:
         document: app/build/outputs/apk/debug/app-debug.apk
         format: markdown
 
+    - name: Prepare Failure Message
+      if: steps.check_status.outputs.build_status == 'failure'
+      id: prep_message
+      run: |
+        ERROR_SNIPPET=$(awk '/\/home\/runner\/work\//,0' build_log.txt | head -c 3000 | sed 's/&/&amp;/g; s/</&lt;/g; s/>/&gt;/g')
+        if [ -z "$ERROR_SNIPPET" ]; then
+          ERROR_SNIPPET="Could not extract specific error. Check the full log."
+        fi
+        echo "error_message<<EOF" >> $GITHUB_ENV
+        echo "$ERROR_SNIPPET" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+
     - name: Notify Build Failure on Telegram
       if: steps.check_status.outputs.build_status == 'failure'
-      run: |
-        ERROR_MESSAGE=$(grep -A 10 "Task :app:compileDebugJavaWithJavac FAILED" build_log.txt | sed 's/`/\`/g' | sed 's/\*/\*/g')
-        if [ -z "$ERROR_MESSAGE" ]; then
-          ERROR_MESSAGE="Could not extract specific error. Check the full log."
-        fi
-        curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-        -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-        -d text="❌ *Build Failed!*
-
-*Repository:* `${{ github.repository }}`
-*Commit:* `${{ github.sha }}`
-
-*Error Snippet:*
-\`\`\`
-$ERROR_MESSAGE
-\`\`\`
-
-Full logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-        -d parse_mode="Markdown"
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        message: |
+          ❌ *Build Failed!*
+          *Repository:* `${{ github.repository }}`
+          *Commit:* `${{ github.sha }}`
+          
+          *Error Log:*
+          ```
+          ${{ env.error_message }}
+          ```
+          
+          Full logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        format: markdown
