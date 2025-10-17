@@ -21,19 +21,23 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
         
-    - name: Build APK
+    - name: Build APK with full stacktrace
       id: build_step
-      continue-on-error: true
-      run: ./gradlew clean assembleDebug 2> build_error.log
+      run: ./gradlew clean assembleDebug --stacktrace > build_log.txt 2>&1 || true
       
-    - name: Verify APK path
-      if: success()
+    - name: Check Build Status
+      id: check_status
       run: |
-        echo "Verifying APK location..."
-        ls -l app/build/outputs/apk/debug/
-        
+        if grep -q "BUILD FAILED" build_log.txt; then
+          echo "Build failed"
+          echo "build_status=failure" >> $GITHUB_OUTPUT
+        else
+          echo "Build successful"
+          echo "build_status=success" >> $GITHUB_OUTPUT
+        fi
+
     - name: Upload Successful Build to Telegram
-      if: steps.build_step.outcome == 'success'
+      if: steps.check_status.outputs.build_status == 'success'
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -50,7 +54,7 @@ jobs:
         format: markdown
 
     - name: Notify Build Failure on Telegram
-      if: steps.build_step.outcome == 'failure'
+      if: steps.check_status.outputs.build_status == 'failure'
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -60,10 +64,6 @@ jobs:
           *Repository:* `${{ github.repository }}`
           *Commit:* `${{ github.sha }}`
           
-          *Error Log:*
-          ```
-          $(cat build_error.log)
-          ```
-          
-          Full logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          See the attached log file for full details.
+        document: build_log.txt
         format: markdown
