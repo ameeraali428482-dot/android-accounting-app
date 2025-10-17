@@ -1,0 +1,12 @@
+<resources>
+    <string-array name="ai_analysis_types">
+        <item>Type 1</item>
+        <item>Type 2</item>
+        <item>Type 3</item>
+    </string-array>
+    <string-array name="point_transaction_types">
+        <item>EARN</item>
+        <item>SPEND</item>
+        <item>REFUND</item>
+    </string-array>
+</resources>
