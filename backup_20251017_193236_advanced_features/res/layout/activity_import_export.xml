@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="اختر عملية استيراد أو تصدير البيانات"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp" />
+
+    <Button
+        android:id="@+id/btn_import_excel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="استيراد من Excel"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btn_export_excel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="تصدير إلى Excel"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Barcode import will be added here later -->
+
+</LinearLayout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/et_receipt_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="رقم الإيصال" />
+
+    <EditText
+        android:id="@+id/et_receipt_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="تاريخ الإيصال" />
+
+    <EditText
+        android:id="@+id/et_total_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="المبلغ الإجمالي"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/et_customer_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="اسم العميل" />
+
+    <Button
+        android:id="@+id/btn_save_receipt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="حفظ الإيصال" />
+
+    <Button
+        android:id="@+id/btn_delete_receipt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="حذف الإيصال" />
+</LinearLayout>

@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_refresh"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:title="تحديث"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_reconcile"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="مراجعة"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_export"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="تصدير"
+        app:showAsAction="never" />
+</menu>
