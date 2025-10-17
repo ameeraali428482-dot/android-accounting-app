@@ -21,7 +21,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
         
-    - name: Build APK with full stacktrace
+    - name: Build APK and capture logs
       id: build_step
       run: ./gradlew clean assembleDebug --stacktrace > build_log.txt 2>&1 || true
       
@@ -55,15 +55,22 @@ jobs:
 
     - name: Notify Build Failure on Telegram
       if: steps.check_status.outputs.build_status == 'failure'
-      uses: appleboy/telegram-action@master
-      with:
-        to: ${{ secrets.TELEGRAM_CHAT_ID }}
-        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        message: |
-          ❌ *Build Failed!*
-          *Repository:* `${{ github.repository }}`
-          *Commit:* `${{ github.sha }}`
-          
-          See the attached log file for full details.
-        document: build_log.txt
-        format: markdown
+      run: |
+        ERROR_MESSAGE=$(grep -A 10 "Task :app:compileDebugJavaWithJavac FAILED" build_log.txt | sed 's/`/\`/g' | sed 's/\*/\*/g')
+        if [ -z "$ERROR_MESSAGE" ]; then
+          ERROR_MESSAGE="Could not extract specific error. Check the full log."
+        fi
+        curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+        -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+        -d text="❌ *Build Failed!*
+
+*Repository:* `${{ github.repository }}`
+*Commit:* `${{ github.sha }}`
+
+*Error Snippet:*
+\`\`\`
+$ERROR_MESSAGE
+\`\`\`
+
+Full logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+        -d parse_mode="Markdown"
