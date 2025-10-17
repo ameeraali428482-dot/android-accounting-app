@@ -22,7 +22,6 @@ jobs:
       run: chmod +x gradlew
         
     - name: Build APK and capture logs
-      id: build_step
       run: ./gradlew clean assembleDebug --stacktrace > build_log.txt 2>&1 || true
       
     - name: Check Build Status
@@ -53,18 +52,6 @@ jobs:
         document: app/build/outputs/apk/debug/app-debug.apk
         format: markdown
 
-    - name: Prepare Failure Message
-      if: steps.check_status.outputs.build_status == 'failure'
-      id: prep_message
-      run: |
-        ERROR_SNIPPET=$(awk '/\/home\/runner\/work\//,0' build_log.txt | head -c 3000 | sed 's/&/&amp;/g; s/</&lt;/g; s/>/&gt;/g')
-        if [ -z "$ERROR_SNIPPET" ]; then
-          ERROR_SNIPPET="Could not extract specific error. Check the full log."
-        fi
-        echo "error_message<<EOF" >> $GITHUB_ENV
-        echo "$ERROR_SNIPPET" >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
-
     - name: Notify Build Failure on Telegram
       if: steps.check_status.outputs.build_status == 'failure'
       uses: appleboy/telegram-action@master
@@ -76,10 +63,6 @@ jobs:
           *Repository:* `${{ github.repository }}`
           *Commit:* `${{ github.sha }}`
           
-          *Error Log:*
-          ```
-          ${{ env.error_message }}
-          ```
-          
-          Full logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          Please check the attached log file for full details.
+        document: build_log.txt
         format: markdown
