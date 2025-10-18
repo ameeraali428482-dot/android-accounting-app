@@ -43,4 +43,12 @@ public class Account {
     public String getAccountNumber() { return number; }
     public String getAccountType() { return type; }
     public float getCurrentBalance() { return balance; }
+
+    // Setters - مطلوبة لـ Room Database
+    public void setId(@NonNull String id) { this.id = id; }
+    public void setCompanyId(String companyId) { this.companyId = companyId; }
+    public void setName(String name) { this.name = name; }
+    public void setType(String type) { this.type = type; }
+    public void setNumber(String number) { this.number = number; }
+    public void setBalance(float balance) { this.balance = balance; }
 }

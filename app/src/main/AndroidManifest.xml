@@ -2,9 +2,81 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Internet and Network Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    
+    <!-- Storage Permissions -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" 
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    
+    <!-- Camera and Gallery Permissions -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    
+    <!-- Communication Permissions -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    
+    <!-- Location Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    
+    <!-- Notification Permissions -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    
+    <!-- Background and Foreground Service Permissions -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    
+    <!-- Bluetooth Permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH" 
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" 
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    
+    <!-- Biometric Authentication -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    
+    <!-- Calendar Permissions -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    
+    <!-- System and Security Permissions -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    
+    <!-- Features declarations -->
+    <uses-feature android:name="android.hardware.camera" 
+        android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" 
+        android:required="false" />
+    <uses-feature android:name="android.hardware.location" 
+        android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" 
+        android:required="false" />
+    <uses-feature android:name="android.hardware.fingerprint" 
+        android:required="false" />
+    <uses-feature android:name="android.hardware.bluetooth" 
+        android:required="false" />
 
     <application
         android:name=".App"
@@ -16,31 +88,467 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidApp"
-        tools:targetApi="31">
+        android:requestLegacyExternalStorage="true"
+        android:preserveLegacyExternalStorage="true"
+        tools:targetApi="33">
+        
+        <!-- Authentication Activities -->
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AndroidApp.NoActionBar">
+            android:theme="@style/Theme.AndroidApp.NoActionBar"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name=".ui.auth.RegisterActivity"
             android:exported="false"
             android:label="@string/title_activity_register"
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            android:theme="@style/Theme.AndroidApp.NoActionBar"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+            
+        <activity
+            android:name=".ui.auth.ForgotPasswordActivity"
+            android:exported="false"
+            android:label="استعادة كلمة المرور"
+            android:theme="@style/Theme.AndroidApp.NoActionBar"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        
+        <!-- Main Activities -->
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_main"
+            android:theme="@style/Theme.AndroidApp.NoActionBar"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+            
+        <activity
+            android:name=".ui.main.SplashActivity"
+            android:exported="false"
+            android:label="شاشة البدء"
+            android:theme="@style/Theme.AndroidApp.Splash"
+            android:screenOrientation="portrait" />
+        
+        <!-- Company Management Activities -->
+        <activity
+            android:name=".ui.company.CompanyDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الشركة"
+            android:parentActivityName=".ui.company.CompanyListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.company.CompanyListActivity"
+            android:exported="false"
+            android:label="قائمة الشركات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Account Management Activities -->
+        <activity
+            android:name=".ui.account.AccountDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الحساب"
+            android:parentActivityName=".ui.account.AccountListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.account.AccountListActivity"
+            android:exported="false"
+            android:label="قائمة الحسابات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Transaction Activities -->
+        <activity
+            android:name=".ui.transaction.TransactionDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل المعاملة"
+            android:parentActivityName=".ui.transaction.TransactionListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.transaction.TransactionListActivity"
+            android:exported="false"
+            android:label="قائمة المعاملات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Invoice Activities -->
+        <activity
+            android:name=".ui.invoice.InvoiceDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الفاتورة"
+            android:parentActivityName=".ui.invoice.InvoiceListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.invoice.InvoiceListActivity"
+            android:exported="false"
+            android:label="قائمة الفواتير"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Product Activities -->
+        <activity
+            android:name=".ui.product.ProductDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل المنتج"
+            android:parentActivityName=".ui.product.ProductListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.product.ProductListActivity"
+            android:exported="false"
+            android:label="قائمة المنتجات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Customer Activities -->
+        <activity
+            android:name=".ui.customer.CustomerDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل العميل"
+            android:parentActivityName=".ui.customer.CustomerListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.customer.CustomerListActivity"
+            android:exported="false"
+            android:label="قائمة العملاء"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Supplier Activities -->
+        <activity
+            android:name=".ui.supplier.SupplierDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل المورد"
+            android:parentActivityName=".ui.supplier.SupplierListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.supplier.SupplierListActivity"
+            android:exported="false"
+            android:label="قائمة الموردين"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Order Activities -->
+        <activity
+            android:name=".ui.order.OrderDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الطلب"
+            android:parentActivityName=".ui.order.OrderListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.order.OrderListActivity"
+            android:exported="false"
+            android:label="قائمة الطلبات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Category Activities -->
+        <activity
+            android:name=".ui.category.CategoryDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الفئة"
+            android:parentActivityName=".ui.category.CategoryListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.category.CategoryListActivity"
+            android:exported="false"
+            android:label="قائمة الفئات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Payment Activities -->
+        <activity
+            android:name=".ui.payment.PaymentDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الدفع"
+            android:parentActivityName=".ui.payment.PaymentListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.payment.PaymentListActivity"
+            android:exported="false"
+            android:label="قائمة المدفوعات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Report Activities -->
+        <activity
+            android:name=".ui.report.ReportDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل التقرير"
+            android:parentActivityName=".ui.report.ReportListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.report.ReportListActivity"
+            android:exported="false"
+            android:label="قائمة التقارير"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- User Management Activities -->
+        <activity
+            android:name=".ui.user.UserDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل المستخدم"
+            android:parentActivityName=".ui.user.UserListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.user.UserListActivity"
+            android:exported="false"
+            android:label="قائمة المستخدمين"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Permission and Role Activities -->
+        <activity
+            android:name=".ui.permission.PermissionDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الصلاحية"
+            android:parentActivityName=".ui.permission.PermissionListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.permission.PermissionListActivity"
+            android:exported="false"
+            android:label="قائمة الصلاحيات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.role.RoleDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الدور"
+            android:parentActivityName=".ui.role.RoleListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.role.RoleListActivity"
+            android:exported="false"
+            android:label="قائمة الأدوار"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Financial Activities -->
+        <activity
+            android:name=".ui.accountstatement.AccountStatementDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل كشف الحساب"
+            android:parentActivityName=".ui.accountstatement.AccountStatementListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.accountstatement.AccountStatementListActivity"
+            android:exported="false"
+            android:label="قائمة كشوف الحسابات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Notification Activities -->
+        <activity
+            android:name=".ui.notification.NotificationDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الإشعار"
+            android:parentActivityName=".ui.notification.NotificationListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.notification.NotificationListActivity"
+            android:exported="false"
+            android:label="قائمة الإشعارات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Audit and Admin Activities -->
+        <activity
+            android:name=".ui.audit.AuditDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل المراجعة"
+            android:parentActivityName=".ui.audit.AuditListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.audit.AuditListActivity"
+            android:exported="false"
+            android:label="قائمة المراجعات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.admin.AdminUserDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل المشرف"
+            android:parentActivityName=".ui.admin.AdminUserListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.admin.AdminUserListActivity"
+            android:exported="false"
+            android:label="قائمة المشرفين"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Additional Activities -->
+        <activity
+            android:name=".ui.blog.BlogDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل المقال"
+            android:parentActivityName=".ui.blog.BlogListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.blog.BlogListActivity"
+            android:exported="false"
+            android:label="قائمة المقالات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.coupon.CouponDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الكوبون"
+            android:parentActivityName=".ui.coupon.CouponListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.coupon.CouponListActivity"
+            android:exported="false"
+            android:label="قائمة الكوبونات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.sharedlink.SharedLinkDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الرابط المشترك"
+            android:parentActivityName=".ui.sharedlink.SharedLinkListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.sharedlink.SharedLinkListActivity"
+            android:exported="false"
+            android:label="قائمة الروابط المشتركة"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.voucher.VoucherDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل القسيمة"
+            android:parentActivityName=".ui.voucher.VoucherListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.voucher.VoucherListActivity"
+            android:exported="false"
+            android:label="قائمة القسائم"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.reward.RewardDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل المكافأة"
+            android:parentActivityName=".ui.reward.RewardListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.reward.RewardListActivity"
+            android:exported="false"
+            android:label="قائمة المكافآت"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.trophy.TrophyDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الجائزة"
+            android:parentActivityName=".ui.trophy.TrophyListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.trophy.TrophyListActivity"
+            android:exported="false"
+            android:label="قائمة الجوائز"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.userreward.UserRewardDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل مكافأة المستخدم"
+            android:parentActivityName=".ui.userreward.UserRewardListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.userreward.UserRewardListActivity"
+            android:exported="false"
+            android:label="قائمة مكافآت المستخدمين"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Special Activities from accountingapp package -->
+        <activity
+            android:name="com.example.accountingapp.ActivityLogActivity"
+            android:exported="false"
+            android:label="سجل الأنشطة"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name="com.example.accountingapp.BackupRestoreActivity"
+            android:exported="false"
+            android:label="النسخ الاحتياطي والاستعادة"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
+        <!-- Settings and Profile Activities -->
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false"
+            android:label="الإعدادات"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.profile.ProfileActivity"
+            android:exported="false"
+            android:label="الملف الشخصي"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.about.AboutActivity"
+            android:exported="false"
+            android:label="حول التطبيق"
+            android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
 
+        
+        <!-- Services -->
         <service
             android:name=".sync.SyncService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <service
             android:name=".services.MyFirebaseMessagingService"
@@ -49,6 +557,55 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        
+        <service
+            android:name=".services.BackgroundSyncService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+            
+        <service
+            android:name=".services.NotificationService"
+            android:exported="false" />
+        
+        <!-- Broadcast Receivers -->
+        <receiver
+            android:name=".receivers.BootReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        
+        <receiver
+            android:name=".receivers.NetworkChangeReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        
+        <!-- File Provider for sharing files -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        
+        <!-- Content Provider for database access -->
+        <provider
+            android:name=".data.provider.DatabaseContentProvider"
+            android:authorities="${applicationId}.database.provider"
+            android:exported="false"
+            android:enabled="true" />
 
     </application>
 

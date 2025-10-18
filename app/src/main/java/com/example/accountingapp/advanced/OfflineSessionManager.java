@@ -34,7 +34,7 @@ public class OfflineSessionManager {
         return instance;
     }
     
-    // تسجيل دخول ذكي
+    // تسجيل دخول ذكي مع تذكر البيانات
     public void loginUser(String userId, String username, String role) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
@@ -42,59 +42,46 @@ public class OfflineSessionManager {
         editor.putString(KEY_USERNAME, username);
         editor.putString(KEY_USER_ROLE, role);
         editor.putLong(KEY_LAST_LOGIN, System.currentTimeMillis());
+        editor.putBoolean(KEY_AUTO_LOGIN_ENABLED, true);
+        
+        // إضافة الحساب للحسابات المتذكرة
+        Set<String> rememberedAccounts = getRememberedAccounts();
+        rememberedAccounts.add(userId + ":" + username + ":" + role);
+        editor.putStringSet(KEY_REMEMBERED_ACCOUNTS, rememberedAccounts);
+        
         editor.apply();
         
-        // حفظ الحساب في قائمة الحسابات المحفوظة
-        saveRememberedAccount(userId, username);
-        
         Log.d(TAG, "تم تسجيل دخول المستخدم: " + username);
+        
+        // فحص النسخ الاحتياطية عند تسجيل الدخول
+        checkForBackupsOnLogin();
     }
     
-    // حفظ الحساب المتذكر
-    private void saveRememberedAccount(String userId, String username) {
-        Set<String> rememberedAccounts = getRememberedAccounts();
-        rememberedAccounts.add(userId + ":" + username);
-        prefs.edit().putStringSet(KEY_REMEMBERED_ACCOUNTS, rememberedAccounts).apply();
-    }
-    
-    // الحصول على الحسابات المحفوظة
-    public Set<String> getRememberedAccounts() {
-        return prefs.getStringSet(KEY_REMEMBERED_ACCOUNTS, new HashSet<>());
+    // تسجيل خروج مع الاحتفاظ بالبيانات للتذكر
+    public void logoutUser(boolean clearAllData) {
+        SharedPreferences.Editor editor = prefs.edit();
+        
+        if (clearAllData) {
+            // مسح جميع البيانات
+            editor.clear();
+        } else {
+            // الاحتفاظ بالبيانات للتذكر
+            editor.putBoolean(KEY_IS_LOGGED_IN, false);
+            editor.putBoolean(KEY_AUTO_LOGIN_ENABLED, false);
+        }
+        
+        editor.apply();
+        Log.d(TAG, "تم تسجيل خروج المستخدم");
     }
     
     // فحص حالة تسجيل الدخول
-    public boolean isLoggedIn() {
-        boolean isLoggedIn = prefs.getBoolean(KEY_IS_LOGGED_IN, false);
-        
-        // فحص انتهاء صلاحية الجلسة (24 ساعة افتراضياً)
-        if (isLoggedIn) {
-            long lastLogin = prefs.getLong(KEY_LAST_LOGIN, 0);
-            long sessionTimeout = prefs.getLong(KEY_SESSION_TIMEOUT, 24 * 60 * 60 * 1000); // 24 ساعة
-            
-            if (System.currentTimeMillis() - lastLogin > sessionTimeout) {
-                // انتهت صلاحية الجلسة
-                if (!isAutoLoginEnabled()) {
-                    logout();
-                    return false;
-                }
-            }
-        }
-        
-        return isLoggedIn;
+    public boolean isUserLoggedIn() {
+        return prefs.getBoolean(KEY_IS_LOGGED_IN, false);
     }
     
-    // تمكين/تعطيل الدخول التلقائي
-    public void setAutoLoginEnabled(boolean enabled) {
-        prefs.edit().putBoolean(KEY_AUTO_LOGIN_ENABLED, enabled).apply();
-    }
-    
+    // تمكين الدخول التلقائي
     public boolean isAutoLoginEnabled() {
-        return prefs.getBoolean(KEY_AUTO_LOGIN_ENABLED, true);
-    }
-    
-    // تحديث وقت آخر نشاط
-    public void updateLastActivity() {
-        prefs.edit().putLong(KEY_LAST_LOGIN, System.currentTimeMillis()).apply();
+        return prefs.getBoolean(KEY_AUTO_LOGIN_ENABLED, false) && isUserLoggedIn();
     }
     
     // الحصول على معلومات المستخدم
@@ -107,24 +94,49 @@ public class OfflineSessionManager {
     }
     
     public String getCurrentUserRole() {
-        return prefs.getString(KEY_USER_ROLE, "");
+        return prefs.getString(KEY_USER_ROLE, "user");
     }
     
-    // تسجيل خروج
-    public void logout() {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(KEY_IS_LOGGED_IN, false);
-        editor.remove(KEY_USER_ID);
-        editor.remove(KEY_USERNAME);
-        editor.remove(KEY_USER_ROLE);
-        editor.apply();
+    public long getLastLoginTime() {
+        return prefs.getLong(KEY_LAST_LOGIN, 0);
+    }
+    
+    // الحصول على الحسابات المتذكرة
+    public Set<String> getRememberedAccounts() {
+        return new HashSet<>(prefs.getStringSet(KEY_REMEMBERED_ACCOUNTS, new HashSet<>()));
+    }
+    
+    // فحص النسخ الاحتياطية عند تسجيل الدخول
+    private void checkForBackupsOnLogin() {
+        BackupManager backupManager = BackupManager.getInstance(context);
+        backupManager.checkForAvailableBackupsAndNotify();
+    }
+    
+    // تحديد مهلة الجلسة
+    public void setSessionTimeout(long timeoutMinutes) {
+        prefs.edit().putLong(KEY_SESSION_TIMEOUT, timeoutMinutes).apply();
+    }
+    
+    // فحص انتهاء الجلسة
+    public boolean isSessionExpired() {
+        long timeout = prefs.getLong(KEY_SESSION_TIMEOUT, 0);
+        if (timeout == 0) return false; // لا توجد مهلة محددة
         
-        Log.d(TAG, "تم تسجيل خروج المستخدم");
+        long lastActivity = prefs.getLong(KEY_LAST_LOGIN, 0);
+        long currentTime = System.currentTimeMillis();
+        
+        return (currentTime - lastActivity) > (timeout * 60 * 1000);
     }
     
-    // مسح كل البيانات
-    public void clearAllData() {
-        prefs.edit().clear().apply();
-        Log.d(TAG, "تم مسح جميع بيانات الجلسة");
+    // تحديث وقت النشاط الأخير
+    public void updateLastActivity() {
+        prefs.edit().putLong(KEY_LAST_LOGIN, System.currentTimeMillis()).apply();
+    }
+    
+    // مسح حساب من الحسابات المتذكرة
+    public void removeRememberedAccount(String accountInfo) {
+        Set<String> accounts = getRememberedAccounts();
+        accounts.remove(accountInfo);
+        prefs.edit().putStringSet(KEY_REMEMBERED_ACCOUNTS, accounts).apply();
     }
 }

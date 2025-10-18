@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,67 +14,51 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/textFileName"
+            android:id="@+id/fileNameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="اسم الملف"
+            android:text="backup_20231215_120000.json"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginBottom="4dp" />
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/usernameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="المستخدم: admin"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginTop="4dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginTop="8dp">
 
             <TextView
-                android:id="@+id/textDate"
+                android:id="@+id/dateText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="التاريخ"
-                android:textSize="14sp" />
+                android:text="2023-12-15 12:00"
+                android:textSize="12sp"
+                android:textColor="@android:color/darker_gray"
+                android:drawableStart="@android:drawable/ic_menu_recent_history"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical" />
 
             <TextView
-                android:id="@+id/textSize"
+                android:id="@+id/sizeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="الحجم"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnRestore"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="استعادة"
-                android:layout_marginEnd="4dp" />
-
-            <Button
-                android:id="@+id/btnExport"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="تصدير"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp" />
-
-            <Button
-                android:id="@+id/btnDelete"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="حذف"
-                android:layout_marginStart="4dp"
-                style="@style/Widget.AppCompat.Button.Colored" />
+                android:text="2.5 MB"
+                android:textSize="12sp"
+                android:textColor="@android:color/darker_gray"
+                android:drawableStart="@android:drawable/ic_menu_info_details"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical" />
 
         </LinearLayout>
 

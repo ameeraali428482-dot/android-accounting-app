@@ -45,4 +45,14 @@ public class Employee {
     public String getPosition() { return position; }
     public double getSalary() { return salary; }
     public String getHireDate() { return hireDate; }
+
+    // Setters - مطلوبة لـ Room Database
+    public void setId(@NonNull String id) { this.id = id; }
+    public void setCompanyId(String companyId) { this.companyId = companyId; }
+    public void setName(String name) { this.name = name; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public void setPosition(String position) { this.position = position; }
+    public void setSalary(double salary) { this.salary = salary; }
+    public void setHireDate(String hireDate) { this.hireDate = hireDate; }
 }
