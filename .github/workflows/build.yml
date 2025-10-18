@@ -25,10 +25,19 @@ jobs:
       - name: Build APK and capture logs
         run: |
           set -o pipefail
-          # توليد كل من build_full.log و build_short.log حتى لو فشل البناء
-          ./gradlew assembleDebug 2>&1 | tee build_full.log | tail -n 50 > build_short.log || true
+          # توليد build_full.log حتى لو فشل البناء
+          ./gradlew assembleDebug > build_full.log 2>&1 || true
+
+      - name: Check APK exists
+        run: |
+          APK_PATH="app/build/outputs/apk/debug/app-debug.apk"
+          if [ ! -f "$APK_PATH" ]; then
+            echo "APK not found, marking build as failed!"
+            exit 1
+          fi
 
       - name: Upload full build log as artifact
+        if: failure() || success()
         uses: actions/upload-artifact@v4
         with:
           name: full-build-log
@@ -40,18 +49,14 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          document: build_full.log
           message: |
             ❌ *Build Failed!*
-            *Repository:* `${{ github.repository }}`
-            *Commit:* `${{ github.sha }}`
-            *Branch:* `${{ github.ref_name }}`
+            Repository: `${{ github.repository }}`
+            Commit: `${{ github.sha }}`
+            Branch: `${{ github.ref_name }}`
             
-            *Last 50 lines of build log:*
-            ```
-            $(cat build_short.log)
-            ```
-            
-            Full log available as artifact in GitHub Actions.
+            Full build log is attached as TXT.
 
       - name: Notify Telegram on Success
         if: success()
@@ -59,11 +64,11 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          document: ${{ github.workspace }}/app/build/outputs/apk/debug/app-debug.apk
           message: |
             ✅ *Build Successful!*
-            *Repository:* `${{ github.repository }}`
-            *Commit:* `${{ github.sha }}`
-            *Branch:* `${{ github.ref_name }}`
+            Repository: `${{ github.repository }}`
+            Commit: `${{ github.sha }}`
+            Branch: `${{ github.ref_name }}`
             APK is ready for download.
-          document: ${{ github.workspace }}/app/build/outputs/apk/debug/app-debug.apk
           format: markdown
