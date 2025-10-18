@@ -2,8 +2,7 @@ name: Android CI Build with Telegram Notifications
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
 
 jobs:
@@ -23,7 +22,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build project and capture logs
+      - name: Build APK and capture logs
         run: |
           set -o pipefail
           ./gradlew assembleDebug 2>&1 | tee build_full.log | tail -n 50 > build_short.log || true
@@ -34,14 +33,28 @@ jobs:
           name: full-build-log
           path: build_full.log
 
-      - name: Commit short build log
+      - name: Check APK exists
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-          mv build_short.log build.log
-          git add build.log || true
-          git commit -m "ci: update short build log [skip ci]" || true
-          git push origin main || true
+          APK_PATH="app/build/outputs/apk/debug/app-debug.apk"
+          if [ ! -f "$APK_PATH" ]; then
+            echo "APK not found!"
+            exit 1
+          fi
+
+      - name: Notify Telegram on Success
+        if: success()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            ✅ *Build Successful!*
+            *Repository:* `${{ github.repository }}`
+            *Commit:* `${{ github.sha }}`
+            *Branch:* `${{ github.ref_name }}`
+            APK is ready for download.
+          document: ${{ github.workspace }}/app/build/outputs/apk/debug/app-debug.apk
+          format: markdown
 
       - name: Notify Telegram on Failure
         if: failure()
@@ -61,19 +74,3 @@ jobs:
             ```
             
             Full log available as artifact in GitHub Actions.
-
-      - name: Notify Telegram on Success
-        if: success()
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          message: |
-            ✅ *Build Successful!*
-            *Repository:* `${{ github.repository }}`
-            *Commit:* `${{ github.sha }}`
-            *Branch:* `${{ github.ref_name }}`
-            
-            APK ready for download.
-          document: app/build/outputs/apk/debug/app-debug.apk
-          format: markdown
