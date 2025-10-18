@@ -1,56 +1,48 @@
 package com.example.accountingapp.advanced;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class NotificationManager {
     private static final String TAG = "NotificationManager";
     private static final String PREFS_NAME = "notification_prefs";
+    private static final String KEY_NOTIFICATIONS = "notifications";
+    private static final String KEY_NOTIFICATION_ENABLED = "notification_enabled";
+    private static final String KEY_ADMIN_NOTIFICATIONS_ENABLED = "admin_notifications_enabled";
     
-    // قنوات الإشعارات
-    private static final String CHANNEL_ADMIN = "admin_notifications";
-    private static final String CHANNEL_BACKUP = "backup_notifications";
-    private static final String CHANNEL_SECURITY = "security_notifications";
-    private static final String CHANNEL_ACTIVITY = "activity_notifications";
-    private static final String CHANNEL_GENERAL = "general_notifications";
-    
-    // أنواع الإشعارات
-    public static final String TYPE_ADMIN_ACTIVITY = "admin_activity";
-    public static final String TYPE_BACKUP_RESTORE = "backup_restore";
-    public static final String TYPE_SECURITY_ALERT = "security_alert";
-    public static final String TYPE_LOGIN_ALERT = "login_alert";
-    public static final String TYPE_DATA_CHANGE = "data_change";
-    public static final String TYPE_SYSTEM_UPDATE = "system_update";
+    private static final String CHANNEL_ID = "accounting_app_channel";
+    private static final String ADMIN_CHANNEL_ID = "admin_notifications_channel";
     
     private static NotificationManager instance;
-    private Context context;
-    private NotificationManagerCompat notificationManager;
     private SharedPreferences prefs;
-    private SimpleDateFormat dateFormat;
-    private List<NotificationEntry> notificationHistory;
+    private Context context;
+    private android.app.NotificationManager systemNotificationManager;
     
     private NotificationManager(Context context) {
         this.context = context.getApplicationContext();
-        this.notificationManager = NotificationManagerCompat.from(context);
         this.prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        this.notificationHistory = new ArrayList<>();
+        this.systemNotificationManager = (android.app.NotificationManager) 
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
         
         createNotificationChannels();
-        loadNotificationHistory();
     }
     
     public static synchronized NotificationManager getInstance(Context context) {
@@ -60,438 +52,371 @@ public class NotificationManager {
         return instance;
     }
     
-    // إشعار بنشاط إداري
-    public void showAdminNotification(String title, String message, int priority) {
-        if (!isNotificationEnabled(TYPE_ADMIN_ACTIVITY)) return;
-        
-        try {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ADMIN)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                .setPriority(getPriorityLevel(priority))
-                .setAutoCancel(true);
-            
-            // إضافة أيقونة حسب الأولوية
-            if (priority >= ActivityLogManager.PRIORITY_HIGH) {
-                builder.setSmallIcon(android.R.drawable.ic_dialog_alert);
-            } else {
-                builder.setSmallIcon(android.R.drawable.ic_dialog_info);
-            }
-            
-            int notificationId = generateNotificationId();
-            notificationManager.notify(notificationId, builder.build());
-            
-            // حفظ في التاريخ
-            saveNotificationToHistory(TYPE_ADMIN_ACTIVITY, title, message, priority);
-            
-            Log.d(TAG, "تم عرض إشعار إداري: " + title);
-            
-        } catch (Exception e) {
-            Log.e(TAG, "خطأ في عرض الإشعار الإداري", e);
-        }
-    }
-    
-    // إشعار استرجاع النسخة الاحتياطية
-    public void showBackupRestoreNotification(BackupManager.BackupInfo backup, String message) {
-        if (!isNotificationEnabled(TYPE_BACKUP_RESTORE)) return;
-        
-        try {
-            // إنشاء أزرار الإجراءات
-            Intent restoreIntent = new Intent(context, BackupRestoreActivity.class);
-            restoreIntent.putExtra("backup_path", backup.filePath);
-            restoreIntent.putExtra("action", "restore");
-            PendingIntent restorePendingIntent = PendingIntent.getActivity(
-                context, 0, restoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            
-            Intent mergeIntent = new Intent(context, BackupRestoreActivity.class);
-            mergeIntent.putExtra("backup_path", backup.filePath);
-            mergeIntent.putExtra("action", "merge");
-            PendingIntent mergePendingIntent = PendingIntent.getActivity(
-                context, 1, mergeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_BACKUP)
-                .setContentTitle("نسخة احتياطية متاحة")
-                .setContentText(message)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                .setSmallIcon(android.R.drawable.ic_menu_save)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(false)
-                .addAction(android.R.drawable.ic_menu_revert, "استرجاع", restorePendingIntent)
-                .addAction(android.R.drawable.ic_menu_add, "دمج", mergePendingIntent);
-            
-            int notificationId = generateNotificationId();
-            notificationManager.notify(notificationId, builder.build());
-            
-            saveNotificationToHistory(TYPE_BACKUP_RESTORE, "نسخة احتياطية متاحة", message, 
-                                    ActivityLogManager.PRIORITY_HIGH);
-            
-            Log.d(TAG, "تم عرض إشعار النسخة الاحتياطية");
-            
-        } catch (Exception e) {
-            Log.e(TAG, "خطأ في عرض إشعار النسخة الاحتياطية", e);
-        }
-    }
-    
-    // إشعار أمني
-    public void showSecurityAlert(String alertType, String details) {
-        if (!isNotificationEnabled(TYPE_SECURITY_ALERT)) return;
-        
-        try {
-            String title = getSecurityAlertTitle(alertType);
-            
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_SECURITY)
-                .setContentTitle(title)
-                .setContentText(details)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(details))
-                .setSmallIcon(android.R.drawable.ic_dialog_alert)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setAutoCancel(true)
-                .setVibrate(new long[]{0, 500, 250, 500});
-            
-            int notificationId = generateNotificationId();
-            notificationManager.notify(notificationId, builder.build());
-            
-            saveNotificationToHistory(TYPE_SECURITY_ALERT, title, details, 
-                                    ActivityLogManager.PRIORITY_CRITICAL);
-            
-            // تسجيل في سجل الأنشطة
-            ActivityLogManager.getInstance(context).logActivity(
-                ActivityLogManager.TYPE_SECURITY,
-                "تنبيه أمني: " + alertType + " - " + details,
-                ActivityLogManager.PRIORITY_CRITICAL
-            );
-            
-            Log.d(TAG, "تم عرض تنبيه أمني: " + alertType);
-            
-        } catch (Exception e) {
-            Log.e(TAG, "خطأ في عرض التنبيه الأمني", e);
-        }
-    }
-    
-    // إشعار تسجيل دخول
-    public void showLoginAlert(String username, String deviceInfo, boolean suspicious) {
-        if (!isNotificationEnabled(TYPE_LOGIN_ALERT)) return;
-        
-        try {
-            String title = suspicious ? "محاولة دخول مشبوهة" : "تسجيل دخول جديد";
-            String message = String.format("المستخدم: %s\nالجهاز: %s\nالوقت: %s",
-                username, deviceInfo, dateFormat.format(new Date()));
-            
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_SECURITY)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                .setSmallIcon(suspicious ? android.R.drawable.ic_dialog_alert : 
-                             android.R.drawable.ic_dialog_info)
-                .setPriority(suspicious ? NotificationCompat.PRIORITY_HIGH : 
-                           NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
-            
-            if (suspicious) {
-                builder.setVibrate(new long[]{0, 300, 150, 300});
-            }
-            
-            int notificationId = generateNotificationId();
-            notificationManager.notify(notificationId, builder.build());
-            
-            saveNotificationToHistory(TYPE_LOGIN_ALERT, title, message,
-                suspicious ? ActivityLogManager.PRIORITY_HIGH : ActivityLogManager.PRIORITY_MEDIUM);
-            
-            Log.d(TAG, "تم عرض إشعار تسجيل الدخول");
-            
-        } catch (Exception e) {
-            Log.e(TAG, "خطأ في عرض إشعار تسجيل الدخول", e);
-        }
-    }
-    
-    // إشعار تغيير البيانات
-    public void showDataChangeNotification(String changeType, String details, String userId) {
-        if (!isNotificationEnabled(TYPE_DATA_CHANGE)) return;
-        
-        // فحص ما إذا كان المستخدم الحالي هو المدير
-        String currentUserId = OfflineSessionManager.getInstance(context).getCurrentUserId();
-        String currentRole = OfflineSessionManager.getInstance(context).getCurrentUserRole();
-        
-        // إشعار المدير فقط إذا لم يكن هو من قام بالتغيير
-        if ("admin".equals(currentRole) && !currentUserId.equals(userId)) {
-            try {
-                String username = getUsernameById(userId);
-                String title = "تم تعديل البيانات";
-                String message = String.format("النوع: %s\nبواسطة: %s\nالتفاصيل: %s",
-                    changeType, username, details);
-                
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ACTIVITY)
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                    .setSmallIcon(android.R.drawable.ic_menu_edit)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setAutoCancel(true);
-                
-                int notificationId = generateNotificationId();
-                notificationManager.notify(notificationId, builder.build());
-                
-                saveNotificationToHistory(TYPE_DATA_CHANGE, title, message,
-                                        ActivityLogManager.PRIORITY_MEDIUM);
-                
-                Log.d(TAG, "تم عرض إشعار تغيير البيانات");
-                
-            } catch (Exception e) {
-                Log.e(TAG, "خطأ في عرض إشعار تغيير البيانات", e);
-            }
-        }
-    }
-    
-    // إشعار عام
-    public void showGeneralNotification(String title, String message) {
-        showGeneralNotification(title, message, ActivityLogManager.PRIORITY_LOW);
-    }
-    
-    public void showGeneralNotification(String title, String message, int priority) {
-        try {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_GENERAL)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setPriority(getPriorityLevel(priority))
-                .setAutoCancel(true);
-            
-            int notificationId = generateNotificationId();
-            notificationManager.notify(notificationId, builder.build());
-            
-            saveNotificationToHistory(TYPE_SYSTEM_UPDATE, title, message, priority);
-            
-            Log.d(TAG, "تم عرض إشعار عام: " + title);
-            
-        } catch (Exception e) {
-            Log.e(TAG, "خطأ في عرض الإشعار العام", e);
-        }
-    }
-    
-    // الحصول على تاريخ الإشعارات
-    public List<NotificationEntry> getNotificationHistory(int limit) {
-        synchronized (notificationHistory) {
-            List<NotificationEntry> result = new ArrayList<>(notificationHistory);
-            
-            // ترتيب حسب الوقت (الأحدث أولاً)
-            Collections.sort(result, (a, b) -> Long.compare(b.timestamp, a.timestamp));
-            
-            if (limit > 0 && result.size() > limit) {
-                result = result.subList(0, limit);
-            }
-            
-            return result;
-        }
-    }
-    
-    // البحث في تاريخ الإشعارات
-    public List<NotificationEntry> searchNotifications(String searchTerm, int limit) {
-        List<NotificationEntry> results = new ArrayList<>();
-        String searchLower = searchTerm.toLowerCase();
-        
-        synchronized (notificationHistory) {
-            for (NotificationEntry entry : notificationHistory) {
-                if (entry.title.toLowerCase().contains(searchLower) ||
-                    entry.message.toLowerCase().contains(searchLower) ||
-                    entry.type.toLowerCase().contains(searchLower)) {
-                    
-                    results.add(entry);
-                    
-                    if (limit > 0 && results.size() >= limit) {
-                        break;
-                    }
-                }
-            }
-        }
-        
-        return results;
-    }
-    
-    // تفعيل/إلغاء أنواع الإشعارات
-    public void setNotificationEnabled(String type, boolean enabled) {
-        prefs.edit().putBoolean("notification_" + type, enabled).apply();
-    }
-    
-    public boolean isNotificationEnabled(String type) {
-        return prefs.getBoolean("notification_" + type, true);
-    }
-    
-    // مسح الإشعارات القديمة
-    public void clearOldNotifications(int daysToKeep) {
-        long cutoffTime = System.currentTimeMillis() - (daysToKeep * 24 * 60 * 60 * 1000L);
-        
-        synchronized (notificationHistory) {
-            Iterator<NotificationEntry> iterator = notificationHistory.iterator();
-            int removedCount = 0;
-            
-            while (iterator.hasNext()) {
-                NotificationEntry entry = iterator.next();
-                if (entry.timestamp < cutoffTime) {
-                    iterator.remove();
-                    removedCount++;
-                }
-            }
-            
-            if (removedCount > 0) {
-                saveNotificationHistory();
-                Log.d(TAG, "تم مسح " + removedCount + " إشعار قديم");
-            }
-        }
-    }
-    
     // إنشاء قنوات الإشعارات
     private void createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // قناة الإشعارات الإدارية
-            NotificationChannel adminChannel = new NotificationChannel(
-                CHANNEL_ADMIN,
-                "الإشعارات الإدارية",
-                android.app.NotificationManager.IMPORTANCE_HIGH
-            );
-            adminChannel.setDescription("إشعارات الأنشطة الإدارية المهمة");
-            
-            // قناة النسخ الاحتياطية
-            NotificationChannel backupChannel = new NotificationChannel(
-                CHANNEL_BACKUP,
-                "النسخ الاحتياطية",
-                android.app.NotificationManager.IMPORTANCE_HIGH
-            );
-            backupChannel.setDescription("إشعارات النسخ الاحتياطية والاسترجاع");
-            
-            // قناة الأمان
-            NotificationChannel securityChannel = new NotificationChannel(
-                CHANNEL_SECURITY,
-                "التنبيهات الأمنية",
-                android.app.NotificationManager.IMPORTANCE_MAX
-            );
-            securityChannel.setDescription("تنبيهات الأمان ومحاولات الدخول");
-            
-            // قناة الأنشطة
-            NotificationChannel activityChannel = new NotificationChannel(
-                CHANNEL_ACTIVITY,
-                "أنشطة النظام",
-                android.app.NotificationManager.IMPORTANCE_DEFAULT
-            );
-            activityChannel.setDescription("إشعارات أنشطة المستخدمين");
-            
-            // قناة عامة
+            // قناة الإشعارات العامة
             NotificationChannel generalChannel = new NotificationChannel(
-                CHANNEL_GENERAL,
-                "إشعارات عامة",
-                android.app.NotificationManager.IMPORTANCE_LOW
+                    CHANNEL_ID,
+                    "إشعارات التطبيق",
+                    android.app.NotificationManager.IMPORTANCE_DEFAULT
             );
-            generalChannel.setDescription("إشعارات عامة ومعلومات النظام");
+            generalChannel.setDescription("إشعارات عامة للتطبيق");
             
-            // تسجيل القنوات
-            android.app.NotificationManager manager = 
-                (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            // قناة إشعارات الإداريين
+            NotificationChannel adminChannel = new NotificationChannel(
+                    ADMIN_CHANNEL_ID,
+                    "إشعارات الإداريين",
+                    android.app.NotificationManager.IMPORTANCE_HIGH
+            );
+            adminChannel.setDescription("إشعارات خاصة بالمستخدمين الإداريين");
             
-            if (manager != null) {
-                manager.createNotificationChannel(adminChannel);
-                manager.createNotificationChannel(backupChannel);
-                manager.createNotificationChannel(securityChannel);
-                manager.createNotificationChannel(activityChannel);
-                manager.createNotificationChannel(generalChannel);
+            systemNotificationManager.createNotificationChannel(generalChannel);
+            systemNotificationManager.createNotificationChannel(adminChannel);
+        }
+    }
+    
+    // إرسال إشعار إداري
+    public void sendAdminNotification(ActivityLogManager.ActivityType activityType, 
+                                    String description, String userId, String username) {
+        if (!isAdminNotificationsEnabled()) {
+            return;
+        }
+        
+        try {
+            // إنشاء الإشعار
+            AppNotification notification = new AppNotification();
+            notification.id = System.currentTimeMillis() + "_admin";
+            notification.type = NotificationType.ADMIN_ACTIVITY;
+            notification.title = "نشاط إداري جديد";
+            notification.message = username + " قام بـ " + activityType.getArabicName() + ": " + description;
+            notification.userId = userId;
+            notification.username = username;
+            notification.timestamp = System.currentTimeMillis();
+            notification.isRead = false;
+            notification.priority = NotificationPriority.HIGH;
+            
+            // حفظ الإشعار
+            saveNotification(notification);
+            
+            // عرض الإشعار في النظام
+            showSystemNotification(notification);
+            
+            Log.d(TAG, "تم إرسال إشعار إداري: " + description);
+            
+        } catch (Exception e) {
+            Log.e(TAG, "خطأ في إرسال الإشعار الإداري", e);
+        }
+    }
+    
+    // إرسال إشعار عام
+    public void sendNotification(NotificationType type, String title, String message) {
+        String currentUserId = OfflineSessionManager.getInstance(context).getCurrentUserId();
+        sendNotification(type, title, message, currentUserId, NotificationPriority.NORMAL);
+    }
+    
+    // إرسال إشعار مع تفاصيل
+    public void sendNotification(NotificationType type, String title, String message, 
+                               String targetUserId, NotificationPriority priority) {
+        if (!isNotificationsEnabled()) {
+            return;
+        }
+        
+        try {
+            AppNotification notification = new AppNotification();
+            notification.id = System.currentTimeMillis() + "_" + targetUserId;
+            notification.type = type;
+            notification.title = title;
+            notification.message = message;
+            notification.userId = targetUserId;
+            notification.timestamp = System.currentTimeMillis();
+            notification.isRead = false;
+            notification.priority = priority;
+            
+            saveNotification(notification);
+            
+            // عرض الإشعار في النظام إذا كان للمستخدم الحالي
+            String currentUserId = OfflineSessionManager.getInstance(context).getCurrentUserId();
+            if (targetUserId.equals(currentUserId)) {
+                showSystemNotification(notification);
+            }
+            
+            Log.d(TAG, "تم إرسال إشعار: " + title);
+            
+        } catch (Exception e) {
+            Log.e(TAG, "خطأ في إرسال الإشعار", e);
+        }
+    }
+    
+    // حفظ الإشعار
+    private void saveNotification(AppNotification notification) throws JSONException {
+        JSONArray notifications = getNotifications();
+        
+        JSONObject notificationObj = new JSONObject();
+        notificationObj.put("id", notification.id);
+        notificationObj.put("type", notification.type.name());
+        notificationObj.put("title", notification.title);
+        notificationObj.put("message", notification.message);
+        notificationObj.put("user_id", notification.userId);
+        notificationObj.put("username", notification.username);
+        notificationObj.put("timestamp", notification.timestamp);
+        notificationObj.put("is_read", notification.isRead);
+        notificationObj.put("priority", notification.priority.name());
+        
+        notifications.put(notificationObj);
+        
+        // الاحتفاظ بآخر 500 إشعار فقط
+        if (notifications.length() > 500) {
+            JSONArray newNotifications = new JSONArray();
+            int startIndex = notifications.length() - 500;
+            for (int i = startIndex; i < notifications.length(); i++) {
+                newNotifications.put(notifications.get(i));
+            }
+            notifications = newNotifications;
+        }
+        
+        prefs.edit().putString(KEY_NOTIFICATIONS, notifications.toString()).apply();
+    }
+    
+    // عرض الإشعار في النظام
+    private void showSystemNotification(AppNotification notification) {
+        if (systemNotificationManager == null) {
+            return;
+        }
+        
+        try {
+            // تحديد القناة والأيقونة
+            String channelId = notification.type == NotificationType.ADMIN_ACTIVITY ? 
+                    ADMIN_CHANNEL_ID : CHANNEL_ID;
+            
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                    .setContentTitle(notification.title)
+                    .setContentText(notification.message)
+                    .setAutoCancel(true);
+            
+            // تعيين الأولوية
+            switch (notification.priority) {
+                case HIGH:
+                    builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+                    break;
+                case LOW:
+                    builder.setPriority(NotificationCompat.PRIORITY_LOW);
+                    break;
+                default:
+                    builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                    break;
+            }
+            
+            // عرض الإشعار
+            int notificationId = (int) (notification.timestamp % Integer.MAX_VALUE);
+            systemNotificationManager.notify(notificationId, builder.build());
+            
+        } catch (Exception e) {
+            Log.e(TAG, "خطأ في عرض إشعار النظام", e);
+        }
+    }
+    
+    // الحصول على قائمة الإشعارات
+    public JSONArray getNotifications() {
+        String notificationsString = prefs.getString(KEY_NOTIFICATIONS, "[]");
+        try {
+            return new JSONArray(notificationsString);
+        } catch (JSONException e) {
+            Log.e(TAG, "خطأ في قراءة الإشعارات", e);
+            return new JSONArray();
+        }
+    }
+    
+    // الحصول على إشعارات المستخدم الحالي
+    public List<AppNotification> getUserNotifications() {
+        String currentUserId = OfflineSessionManager.getInstance(context).getCurrentUserId();
+        return getUserNotifications(currentUserId);
+    }
+    
+    // الحصول على إشعارات مستخدم معين
+    public List<AppNotification> getUserNotifications(String userId) {
+        List<AppNotification> userNotifications = new ArrayList<>();
+        JSONArray notifications = getNotifications();
+        
+        try {
+            for (int i = notifications.length() - 1; i >= 0; i--) { // الأحدث أولاً
+                JSONObject notificationObj = notifications.getJSONObject(i);
+                
+                if (notificationObj.getString("user_id").equals(userId)) {
+                    AppNotification notification = new AppNotification();
+                    notification.id = notificationObj.getString("id");
+                    notification.type = NotificationType.valueOf(notificationObj.getString("type"));
+                    notification.title = notificationObj.getString("title");
+                    notification.message = notificationObj.getString("message");
+                    notification.userId = notificationObj.getString("user_id");
+                    notification.username = notificationObj.optString("username", "");
+                    notification.timestamp = notificationObj.getLong("timestamp");
+                    notification.isRead = notificationObj.getBoolean("is_read");
+                    notification.priority = NotificationPriority.valueOf(
+                            notificationObj.optString("priority", "NORMAL"));
+                    
+                    userNotifications.add(notification);
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "خطأ في تحويل الإشعارات", e);
+        }
+        
+        return userNotifications;
+    }
+    
+    // تمييز الإشعار كمقروء
+    public void markAsRead(String notificationId) {
+        try {
+            JSONArray notifications = getNotifications();
+            boolean updated = false;
+            
+            for (int i = 0; i < notifications.length(); i++) {
+                JSONObject notification = notifications.getJSONObject(i);
+                if (notification.getString("id").equals(notificationId)) {
+                    notification.put("is_read", true);
+                    updated = true;
+                    break;
+                }
+            }
+            
+            if (updated) {
+                prefs.edit().putString(KEY_NOTIFICATIONS, notifications.toString()).apply();
+            }
+            
+        } catch (JSONException e) {
+            Log.e(TAG, "خطأ في تمييز الإشعار كمقروء", e);
+        }
+    }
+    
+    // حذف إشعار
+    public void deleteNotification(String notificationId) {
+        try {
+            JSONArray notifications = getNotifications();
+            JSONArray newNotifications = new JSONArray();
+            
+            for (int i = 0; i < notifications.length(); i++) {
+                JSONObject notification = notifications.getJSONObject(i);
+                if (!notification.getString("id").equals(notificationId)) {
+                    newNotifications.put(notification);
+                }
+            }
+            
+            prefs.edit().putString(KEY_NOTIFICATIONS, newNotifications.toString()).apply();
+            
+        } catch (JSONException e) {
+            Log.e(TAG, "خطأ في حذف الإشعار", e);
+        }
+    }
+    
+    // عدد الإشعارات غير المقروءة
+    public int getUnreadNotificationsCount() {
+        String currentUserId = OfflineSessionManager.getInstance(context).getCurrentUserId();
+        return getUnreadNotificationsCount(currentUserId);
+    }
+    
+    // عدد الإشعارات غير المقروءة لمستخدم معين
+    public int getUnreadNotificationsCount(String userId) {
+        int count = 0;
+        List<AppNotification> notifications = getUserNotifications(userId);
+        
+        for (AppNotification notification : notifications) {
+            if (!notification.isRead) {
+                count++;
             }
         }
+        
+        return count;
     }
     
-    // الحصول على مستوى الأولوية
-    private int getPriorityLevel(int priority) {
-        switch (priority) {
-            case ActivityLogManager.PRIORITY_CRITICAL:
-                return NotificationCompat.PRIORITY_MAX;
-            case ActivityLogManager.PRIORITY_HIGH:
-                return NotificationCompat.PRIORITY_HIGH;
-            case ActivityLogManager.PRIORITY_MEDIUM:
-                return NotificationCompat.PRIORITY_DEFAULT;
-            case ActivityLogManager.PRIORITY_LOW:
-            default:
-                return NotificationCompat.PRIORITY_LOW;
-        }
+    // تمكين/تعطيل الإشعارات
+    public void setNotificationsEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_NOTIFICATION_ENABLED, enabled).apply();
     }
     
-    // الحصول على عنوان التنبيه الأمني
-    private String getSecurityAlertTitle(String alertType) {
-        switch (alertType) {
-            case "FAILED_LOGIN":
-                return "فشل تسجيل الدخول";
-            case "SUSPICIOUS_ACTIVITY":
-                return "نشاط مشبوه";
-            case "UNAUTHORIZED_ACCESS":
-                return "محاولة وصول غير مصرح";
-            case "DATA_BREACH":
-                return "اختراق محتمل للبيانات";
-            default:
-                return "تنبيه أمني";
-        }
+    public boolean isNotificationsEnabled() {
+        return prefs.getBoolean(KEY_NOTIFICATION_ENABLED, true);
     }
     
-    // الحصول على اسم المستخدم بالمعرف
-    private String getUsernameById(String userId) {
-        // هنا يجب البحث في قاعدة البيانات عن اسم المستخدم
-        return "مستخدم_" + userId;
+    // تمكين/تعطيل إشعارات الإداريين
+    public void setAdminNotificationsEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_ADMIN_NOTIFICATIONS_ENABLED, enabled).apply();
     }
     
-    // توليد معرف إشعار فريد
-    private int generateNotificationId() {
-        return (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
+    public boolean isAdminNotificationsEnabled() {
+        return prefs.getBoolean(KEY_ADMIN_NOTIFICATIONS_ENABLED, true);
     }
     
-    // حفظ الإشعار في التاريخ
-    private void saveNotificationToHistory(String type, String title, String message, int priority) {
-        synchronized (notificationHistory) {
-            NotificationEntry entry = new NotificationEntry();
-            entry.type = type;
-            entry.title = title;
-            entry.message = message;
-            entry.priority = priority;
-            entry.timestamp = System.currentTimeMillis();
+    // مسح جميع الإشعارات
+    public void clearAllNotifications() {
+        prefs.edit().remove(KEY_NOTIFICATIONS).apply();
+        Log.d(TAG, "تم مسح جميع الإشعارات");
+    }
+    
+    // مسح الإشعارات المقروءة
+    public void clearReadNotifications() {
+        try {
+            JSONArray notifications = getNotifications();
+            JSONArray newNotifications = new JSONArray();
             
-            notificationHistory.add(0, entry); // إضافة في المقدمة
-            
-            // تحديد العدد (الاحتفاظ بآخر 500 إشعار)
-            while (notificationHistory.size() > 500) {
-                notificationHistory.remove(notificationHistory.size() - 1);
+            for (int i = 0; i < notifications.length(); i++) {
+                JSONObject notification = notifications.getJSONObject(i);
+                if (!notification.getBoolean("is_read")) {
+                    newNotifications.put(notification);
+                }
             }
             
-            saveNotificationHistory();
+            prefs.edit().putString(KEY_NOTIFICATIONS, newNotifications.toString()).apply();
+            
+        } catch (JSONException e) {
+            Log.e(TAG, "خطأ في مسح الإشعارات المقروءة", e);
         }
     }
     
-    // تحميل تاريخ الإشعارات
-    private void loadNotificationHistory() {
-        // هنا يجب تحميل البيانات من التخزين الدائم
+    // أنواع الإشعارات
+    public enum NotificationType {
+        ADMIN_ACTIVITY("نشاط إداري"),
+        BACKUP_REMINDER("تذكير نسخة احتياطية"),
+        SYSTEM_UPDATE("تحديث النظام"),
+        FINANCIAL_ALERT("تنبيه مالي"),
+        USER_ACTION("إجراء مستخدم"),
+        GENERAL("عام");
+        
+        private final String arabicName;
+        
+        NotificationType(String arabicName) {
+            this.arabicName = arabicName;
+        }
+        
+        public String getArabicName() {
+            return arabicName;
+        }
     }
     
-    // حفظ تاريخ الإشعارات
-    private void saveNotificationHistory() {
-        // هنا يجب حفظ البيانات في التخزين الدائم
+    // أولويات الإشعارات
+    public enum NotificationPriority {
+        LOW, NORMAL, HIGH
     }
     
-    // فئة إدخال الإشعار
-    public static class NotificationEntry {
-        public String type;
+    // كلاس الإشعار
+    public static class AppNotification {
+        public String id;
+        public NotificationType type;
         public String title;
         public String message;
-        public int priority;
+        public String userId;
+        public String username;
         public long timestamp;
+        public boolean isRead;
+        public NotificationPriority priority;
         
         public String getFormattedDate() {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            return formatter.format(new Date(timestamp));
+            return new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                    .format(new Date(timestamp));
         }
         
-        public String getPriorityText() {
-            switch (priority) {
-                case ActivityLogManager.PRIORITY_LOW: return "منخفض";
-                case ActivityLogManager.PRIORITY_MEDIUM: return "متوسط";
-                case ActivityLogManager.PRIORITY_HIGH: return "عالي";
-                case ActivityLogManager.PRIORITY_CRITICAL: return "حرج";
-                default: return "غير محدد";
-            }
+        public String getTypeDisplayName() {
+            return type.getArabicName();
         }
     }
 }

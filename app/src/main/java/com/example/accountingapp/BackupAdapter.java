@@ -1,45 +1,73 @@
 package com.example.accountingapp;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Button;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.accountingapp.advanced.BackupManager;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupViewHolder> {
     
-    private List<BackupManager.BackupInfo> backups;
-    private OnBackupClickListener listener;
-    private SimpleDateFormat dateFormat;
-    
-    public interface OnBackupClickListener {
-        void onBackupClick(BackupManager.BackupInfo backup);
+    public interface OnBackupActionListener {
+        void onBackupAction(BackupManager.BackupInfo backup, String action);
     }
     
-    public BackupAdapter(OnBackupClickListener listener) {
+    private Context context;
+    private List<BackupManager.BackupInfo> backups;
+    private OnBackupActionListener listener;
+    
+    public BackupAdapter(Context context, OnBackupActionListener listener) {
+        this.context = context;
         this.listener = listener;
         this.backups = new ArrayList<>();
-        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+    }
+    
+    public void setBackups(List<BackupManager.BackupInfo> backups) {
+        this.backups = backups;
+        notifyDataSetChanged();
     }
     
     @NonNull
     @Override
     public BackupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_backup, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_backup, parent, false);
         return new BackupViewHolder(view);
     }
     
     @Override
     public void onBindViewHolder(@NonNull BackupViewHolder holder, int position) {
         BackupManager.BackupInfo backup = backups.get(position);
-        holder.bind(backup);
+        
+        holder.textFileName.setText(backup.fileName);
+        holder.textDate.setText(backup.getFormattedDate());
+        holder.textSize.setText(backup.getFormattedSize());
+        
+        holder.btnRestore.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onBackupAction(backup, "restore");
+            }
+        });
+        
+        holder.btnExport.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onBackupAction(backup, "export");
+            }
+        });
+        
+        holder.btnDelete.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onBackupAction(backup, "delete");
+            }
+        });
     }
     
     @Override
@@ -47,38 +75,19 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupView
         return backups.size();
     }
     
-    public void updateBackups(List<BackupManager.BackupInfo> newBackups) {
-        this.backups.clear();
-        this.backups.addAll(newBackups);
-        notifyDataSetChanged();
-    }
-    
-    class BackupViewHolder extends RecyclerView.ViewHolder {
-        private TextView fileNameText;
-        private TextView usernameText;
-        private TextView dateText;
-        private TextView sizeText;
+    static class BackupViewHolder extends RecyclerView.ViewHolder {
+        TextView textFileName, textDate, textSize;
+        Button btnRestore, btnExport, btnDelete;
         
-        public BackupViewHolder(@NonNull View itemView) {
+        BackupViewHolder(@NonNull View itemView) {
             super(itemView);
-            fileNameText = itemView.findViewById(R.id.fileNameText);
-            usernameText = itemView.findViewById(R.id.usernameText);
-            dateText = itemView.findViewById(R.id.dateText);
-            sizeText = itemView.findViewById(R.id.sizeText);
             
-            itemView.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION && listener != null) {
-                    listener.onBackupClick(backups.get(position));
-                }
-            });
-        }
-        
-        public void bind(BackupManager.BackupInfo backup) {
-            fileNameText.setText(backup.fileName);
-            usernameText.setText("المستخدم: " + backup.username);
-            dateText.setText(dateFormat.format(backup.createdDate));
-            sizeText.setText(backup.getFormattedSize());
+            textFileName = itemView.findViewById(R.id.textFileName);
+            textDate = itemView.findViewById(R.id.textDate);
+            textSize = itemView.findViewById(R.id.textSize);
+            btnRestore = itemView.findViewById(R.id.btnRestore);
+            btnExport = itemView.findViewById(R.id.btnExport);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
 }

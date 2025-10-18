@@ -1,30 +1,31 @@
 package com.example.accountingapp.advanced;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyProperties;
 import android.util.Log;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 public class AppLockManager {
     private static final String TAG = "AppLockManager";
     private static final String PREFS_NAME = "app_lock_prefs";
     private static final String KEY_LOCK_ENABLED = "lock_enabled";
-    private static final String KEY_LOCK_PASSWORD = "lock_password";
-    private static final String KEY_LOCK_ATTEMPTS = "lock_attempts";
-    private static final String KEY_LAST_LOCK_TIME = "last_lock_time";
-    private static final String KEY_AUTO_LOCK_TIMEOUT = "auto_lock_timeout";
-    private static final String KEY_FINGERPRINT_ENABLED = "fingerprint_enabled";
-    
-    private static final int MAX_ATTEMPTS = 5;
-    private static final long LOCK_COOLDOWN = 5 * 60 * 1000; // 5 دقائق
+    private static final String KEY_PASSWORD_HASH = "password_hash";
+    private static final String KEY_LOCK_TIMEOUT = "lock_timeout";
+    private static final String KEY_LAST_UNLOCK_TIME = "last_unlock_time";
+    private static final String KEY_FAILED_ATTEMPTS = "failed_attempts";
+    private static final String KEY_LOCK_TIME = "lock_time";
     
     private static AppLockManager instance;
     private SharedPreferences prefs;
     private Context context;
-    private boolean isAppLocked = false;
     
     private AppLockManager(Context context) {
         this.context = context.getApplicationContext();
@@ -38,145 +39,62 @@ public class AppLockManager {
         return instance;
     }
     
-    // تفعيل قفل التطبيق
+    // تمكين قفل التطبيق
     public void enableAppLock(String password) {
         String hashedPassword = hashPassword(password);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(KEY_LOCK_ENABLED, true);
-        editor.putString(KEY_LOCK_PASSWORD, hashedPassword);
-        editor.putInt(KEY_LOCK_ATTEMPTS, 0);
+        editor.putString(KEY_PASSWORD_HASH, hashedPassword);
+        editor.putLong(KEY_LOCK_TIMEOUT, 5 * 60 * 1000); // 5 دقائق افتراضياً
         editor.apply();
         
-        Log.d(TAG, "تم تفعيل قفل التطبيق");
+        Log.d(TAG, "تم تمكين قفل التطبيق");
     }
     
-    // إلغاء قفل التطبيق
+    // تعطيل قفل التطبيق
     public void disableAppLock() {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(KEY_LOCK_ENABLED, false);
-        editor.remove(KEY_LOCK_PASSWORD);
-        editor.putInt(KEY_LOCK_ATTEMPTS, 0);
+        editor.remove(KEY_PASSWORD_HASH);
+        editor.remove(KEY_FAILED_ATTEMPTS);
+        editor.remove(KEY_LOCK_TIME);
         editor.apply();
         
-        isAppLocked = false;
-        Log.d(TAG, "تم إلغاء قفل التطبيق");
+        Log.d(TAG, "تم تعطيل قفل التطبيق");
     }
     
-    // فحص ما إذا كان القفل مفعل
+    // فحص حالة القفل
     public boolean isLockEnabled() {
         return prefs.getBoolean(KEY_LOCK_ENABLED, false);
     }
     
-    // فحص ما إذا كان التطبيق مقفل حالياً
+    // فحص ما إذا كان التطبيق مقفل
     public boolean isAppLocked() {
-        return isAppLocked || (isLockEnabled() && shouldAutoLock());
-    }
-    
-    // محاولة فتح القفل
-    public boolean unlockApp(String password) {
         if (!isLockEnabled()) {
-            return true;
-        }
-        
-        // فحص فترة التهدئة
-        if (isInCooldown()) {
             return false;
         }
         
-        String hashedPassword = hashPassword(password);
-        String storedPassword = prefs.getString(KEY_LOCK_PASSWORD, "");
+        long lastUnlockTime = prefs.getLong(KEY_LAST_UNLOCK_TIME, 0);
+        long lockTimeout = prefs.getLong(KEY_LOCK_TIMEOUT, 5 * 60 * 1000);
         
-        if (hashedPassword.equals(storedPassword)) {
-            // نجح فتح القفل
-            isAppLocked = false;
-            resetAttempts();
-            updateLastUnlockTime();
-            Log.d(TAG, "تم فتح قفل التطبيق بنجاح");
+        return (System.currentTimeMillis() - lastUnlockTime) > lockTimeout;
+    }
+    
+    // فحص كلمة المرور
+    public boolean verifyPassword(String password) {
+        String storedHash = prefs.getString(KEY_PASSWORD_HASH, "");
+        String inputHash = hashPassword(password);
+        
+        if (storedHash.equals(inputHash)) {
+            // كلمة مرور صحيحة
+            prefs.edit().putLong(KEY_LAST_UNLOCK_TIME, System.currentTimeMillis()).apply();
+            resetFailedAttempts();
             return true;
         } else {
-            // فشل فتح القفل
-            incrementAttempts();
-            Log.d(TAG, "فشل في فتح قفل التطبيق");
+            // كلمة مرور خاطئة
+            incrementFailedAttempts();
             return false;
         }
-    }
-    
-    // قفل التطبيق فوراً
-    public void lockApp() {
-        if (isLockEnabled()) {
-            isAppLocked = true;
-            Log.d(TAG, "تم قفل التطبيق");
-        }
-    }
-    
-    // تغيير كلمة مرور القفل
-    public boolean changePassword(String oldPassword, String newPassword) {
-        if (!unlockApp(oldPassword)) {
-            return false;
-        }
-        
-        enableAppLock(newPassword);
-        Log.d(TAG, "تم تغيير كلمة مرور القفل");
-        return true;
-    }
-    
-    // تعيين مهلة القفل التلقائي
-    public void setAutoLockTimeout(long timeoutMinutes) {
-        prefs.edit().putLong(KEY_AUTO_LOCK_TIMEOUT, timeoutMinutes).apply();
-    }
-    
-    // فحص ما إذا كان يجب قفل التطبيق تلقائياً
-    private boolean shouldAutoLock() {
-        long timeout = prefs.getLong(KEY_AUTO_LOCK_TIMEOUT, 0);
-        if (timeout == 0) return false;
-        
-        long lastUnlock = prefs.getLong(KEY_LAST_LOCK_TIME, System.currentTimeMillis());
-        long currentTime = System.currentTimeMillis();
-        
-        return (currentTime - lastUnlock) > (timeout * 60 * 1000);
-    }
-    
-    // تحديث وقت آخر فتح قفل
-    private void updateLastUnlockTime() {
-        prefs.edit().putLong(KEY_LAST_LOCK_TIME, System.currentTimeMillis()).apply();
-    }
-    
-    // زيادة عدد المحاولات الفاشلة
-    private void incrementAttempts() {
-        int attempts = prefs.getInt(KEY_LOCK_ATTEMPTS, 0) + 1;
-        prefs.edit().putInt(KEY_LOCK_ATTEMPTS, attempts).apply();
-        
-        if (attempts >= MAX_ATTEMPTS) {
-            // بدء فترة التهدئة
-            prefs.edit().putLong(KEY_LAST_LOCK_TIME, System.currentTimeMillis()).apply();
-        }
-    }
-    
-    // إعادة تعيين المحاولات
-    private void resetAttempts() {
-        prefs.edit().putInt(KEY_LOCK_ATTEMPTS, 0).apply();
-    }
-    
-    // فحص فترة التهدئة
-    private boolean isInCooldown() {
-        int attempts = prefs.getInt(KEY_LOCK_ATTEMPTS, 0);
-        if (attempts < MAX_ATTEMPTS) return false;
-        
-        long lastAttempt = prefs.getLong(KEY_LAST_LOCK_TIME, 0);
-        long currentTime = System.currentTimeMillis();
-        
-        return (currentTime - lastAttempt) < LOCK_COOLDOWN;
-    }
-    
-    // الحصول على الوقت المتبقي للتهدئة
-    public long getCooldownRemainingTime() {
-        if (!isInCooldown()) return 0;
-        
-        long lastAttempt = prefs.getLong(KEY_LAST_LOCK_TIME, 0);
-        long currentTime = System.currentTimeMillis();
-        long elapsed = currentTime - lastAttempt;
-        
-        return Math.max(0, LOCK_COOLDOWN - elapsed);
     }
     
     // تشفير كلمة المرور
@@ -197,21 +115,59 @@ public class AppLockManager {
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, "خطأ في تشفير كلمة المرور", e);
-            return password; // fallback (غير آمن)
+            return password; // fallback (ليس آمن)
         }
     }
     
-    // فحص ما إذا كان يجب عرض شاشة القفل
-    public boolean shouldShowLockScreen(Activity activity) {
-        if (!isLockEnabled()) return false;
-        if (isAppLocked()) return true;
+    // زيادة عدد المحاولات الفاشلة
+    private void incrementFailedAttempts() {
+        int failedAttempts = prefs.getInt(KEY_FAILED_ATTEMPTS, 0) + 1;
+        prefs.edit().putInt(KEY_FAILED_ATTEMPTS, failedAttempts).apply();
         
-        // فحص القفل التلقائي
-        if (shouldAutoLock()) {
-            lockApp();
+        // قفل التطبيق لفترة بعد 3 محاولات فاشلة
+        if (failedAttempts >= 3) {
+            long lockTime = System.currentTimeMillis() + (30 * 60 * 1000); // 30 دقيقة
+            prefs.edit().putLong(KEY_LOCK_TIME, lockTime).apply();
+        }
+    }
+    
+    // إعادة تعيين المحاولات الفاشلة
+    private void resetFailedAttempts() {
+        prefs.edit().remove(KEY_FAILED_ATTEMPTS).remove(KEY_LOCK_TIME).apply();
+    }
+    
+    // فحص ما إذا كان التطبيق مقفل بسبب المحاولات الفاشلة
+    public boolean isTemporarilyLocked() {
+        long lockTime = prefs.getLong(KEY_LOCK_TIME, 0);
+        return lockTime > System.currentTimeMillis();
+    }
+    
+    // الحصول على وقت انتهاء القفل المؤقت
+    public long getLockEndTime() {
+        return prefs.getLong(KEY_LOCK_TIME, 0);
+    }
+    
+    // تحديث آخر وقت إلغاء قفل
+    public void updateLastUnlockTime() {
+        prefs.edit().putLong(KEY_LAST_UNLOCK_TIME, System.currentTimeMillis()).apply();
+    }
+    
+    // تغيير كلمة المرور
+    public boolean changePassword(String oldPassword, String newPassword) {
+        if (verifyPassword(oldPassword)) {
+            enableAppLock(newPassword);
             return true;
         }
-        
         return false;
+    }
+    
+    // تعيين مهلة القفل
+    public void setLockTimeout(long timeoutInMillis) {
+        prefs.edit().putLong(KEY_LOCK_TIMEOUT, timeoutInMillis).apply();
+    }
+    
+    // الحصول على مهلة القفل
+    public long getLockTimeout() {
+        return prefs.getLong(KEY_LOCK_TIMEOUT, 5 * 60 * 1000);
     }
 }

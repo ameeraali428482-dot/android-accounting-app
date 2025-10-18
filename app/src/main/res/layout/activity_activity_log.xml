@@ -2,118 +2,68 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- البحث -->
-            <EditText
-                android:id="@+id/searchEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="البحث في الأنشطة..."
-                android:drawableStart="@android:drawable/ic_menu_search"
-                android:drawablePadding="8dp"
-                android:background="@drawable/edittext_background"
-                android:padding="12dp"
-                android:layout_marginBottom="16dp" />
-
-            <!-- المرشحات -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
-
-                <Spinner
-                    android:id="@+id/typeFilterSpinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp" />
-
-                <Spinner
-                    android:id="@+id/priorityFilterSpinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp" />
-
-            </LinearLayout>
-
-            <!-- مرشح التاريخ -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
-
-                <Button
-                    android:id="@+id/dateFromButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="من: تاريخ"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:textColor="?attr/colorPrimary" />
-
-                <Button
-                    android:id="@+id/dateToButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="إلى: تاريخ"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:textColor="?attr/colorPrimary" />
-
-            </LinearLayout>
-
-            <!-- الإحصائيات -->
-            <TextView
-                android:id="@+id/statsTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/stats_background"
-                android:padding="12dp"
-                android:textSize="14sp"
-                android:layout_marginBottom="16dp" />
-
-        </LinearLayout>
-
-    </ScrollView>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:indeterminate="true" />
+        android:text="سجل الأنشطة"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/editTextSearch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="بحث..."
+            android:layout_marginEnd="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerActivityType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="120dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btnClearLog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="مسح السجل"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnExportLog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="تصدير السجل"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/activitiesRecyclerView"
+        android:id="@+id/recyclerViewActivityLog"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp" />
+        android:layout_weight="1" />
 
 </LinearLayout>

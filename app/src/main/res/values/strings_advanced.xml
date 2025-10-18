@@ -1,71 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Activity Titles -->
-    <string name="activity_backup_restore">إدارة النسخ الاحتياطية</string>
-    <string name="activity_log_title">سجل الأنشطة</string>
+    <!-- النظام المتقدم -->
+    <string name="advanced_features">الميزات المتقدمة</string>
+    <string name="offline_mode">وضع عدم الاتصال</string>
+    <string name="smart_login">الدخول الذكي</string>
+    <string name="app_lock">قفل التطبيق</string>
     
-    <!-- Backup & Restore -->
+    <!-- النسخ الاحتياطية -->
+    <string name="backup_restore">النسخ الاحتياطية</string>
     <string name="create_backup">إنشاء نسخة احتياطية</string>
-    <string name="import_backup">استيراد نسخة</string>
-    <string name="restore_backup">استرجاع النسخة</string>
-    <string name="merge_backup">دمج مع البيانات الحالية</string>
-    <string name="export_backup">تصدير النسخة</string>
-    <string name="delete_backup">حذف النسخة</string>
-    <string name="backup_details">تفاصيل النسخة</string>
+    <string name="restore_backup">استعادة نسخة احتياطية</string>
+    <string name="import_backup">استيراد نسخة احتياطية</string>
+    <string name="export_backup">تصدير نسخة احتياطية</string>
+    <string name="backup_created_successfully">تم إنشاء النسخة الاحتياطية بنجاح</string>
+    <string name="backup_restored_successfully">تم استعادة النسخة الاحتياطية بنجاح</string>
+    <string name="backup_failed">فشل في إنشاء النسخة الاحتياطية</string>
+    <string name="no_backups_found">لا توجد نسخ احتياطية</string>
     
-    <!-- Activity Log -->
-    <string name="search_activities">البحث في الأنشطة...</string>
-    <string name="filter_all">الكل</string>
-    <string name="filter_type">نوع النشاط</string>
-    <string name="filter_priority">الأولوية</string>
-    <string name="date_from">من تاريخ</string>
-    <string name="date_to">إلى تاريخ</string>
+    <!-- سجل الأنشطة -->
+    <string name="activity_log">سجل الأنشطة</string>
+    <string name="view_activity_log">عرض سجل الأنشطة</string>
+    <string name="clear_activity_log">مسح سجل الأنشطة</string>
+    <string name="export_activity_log">تصدير سجل الأنشطة</string>
+    <string name="activity_type">نوع النشاط</string>
+    <string name="all_activities">جميع الأنشطة</string>
+    <string name="search_activities">بحث في الأنشطة</string>
     
-    <!-- Priority Levels -->
-    <string name="priority_low">منخفض</string>
-    <string name="priority_medium">متوسط</string>
-    <string name="priority_high">عالي</string>
-    <string name="priority_critical">حرج</string>
+    <!-- الإشعارات -->
+    <string name="notifications">الإشعارات</string>
+    <string name="admin_notifications">إشعارات الإداريين</string>
+    <string name="notification_settings">إعدادات الإشعارات</string>
+    <string name="mark_as_read">تمييز كمقروء</string>
+    <string name="mark_all_as_read">تمييز الكل كمقروء</string>
+    <string name="clear_notifications">مسح الإشعارات</string>
+    <string name="unread_notifications">إشعارات غير مقروءة</string>
     
-    <!-- Activity Types -->
-    <string name="type_login">تسجيل دخول</string>
-    <string name="type_logout">تسجيل خروج</string>
-    <string name="type_create_account">إنشاء حساب</string>
-    <string name="type_update_account">تحديث حساب</string>
-    <string name="type_delete_account">حذف حساب</string>
-    <string name="type_transaction">معاملة</string>
-    <string name="type_report">تقرير</string>
-    <string name="type_backup">نسخة احتياطية</string>
-    <string name="type_restore">استرجاع</string>
-    <string name="type_admin_action">إجراء إداري</string>
-    <string name="type_security">أمان</string>
-    <string name="type_error">خطأ</string>
-    
-    <!-- Notifications -->
-    <string name="notification_admin_title">إشعار إداري</string>
-    <string name="notification_backup_title">نسخة احتياطية متاحة</string>
-    <string name="notification_security_title">تنبيه أمني</string>
-    <string name="notification_login_title">تسجيل دخول جديد</string>
-    
-    <!-- Messages -->
-    <string name="backup_created_success">تم إنشاء النسخة الاحتياطية بنجاح</string>
-    <string name="backup_restored_success">تم استرجاع النسخة الاحتياطية بنجاح</string>
-    <string name="backup_merged_success">تم دمج النسخة الاحتياطية بنجاح</string>
-    <string name="backup_deleted_success">تم حذف النسخة الاحتياطية</string>
-    <string name="no_backups_available">لا توجد نسخ احتياطية متاحة</string>
-    <string name="no_activities_found">لا توجد أنشطة</string>
-    
-    <!-- Confirmations -->
-    <string name="confirm_restore_backup">هل تريد استرجاع هذه النسخة الاحتياطية؟\n\nتحذير: سيتم استبدال جميع البيانات الحالية!</string>
-    <string name="confirm_merge_backup">هل تريد دمج هذه النسخة الاحتياطية مع البيانات الحالية؟\n\nسيتم الاحتفاظ بجميع البيانات الحالية وإضافة البيانات الجديدة.</string>
-    <string name="confirm_delete_backup">هل تريد حذف هذه النسخة الاحتياطية نهائياً؟\n\nلا يمكن التراجع عن هذا الإجراء.</string>
-    
-    <!-- App Lock -->
-    <string name="app_lock_enabled">تم تفعيل قفل التطبيق</string>
-    <string name="app_lock_disabled">تم إلغاء قفل التطبيق</string>
-    <string name="app_lock_password_changed">تم تغيير كلمة مرور القفل</string>
-    <string name="unlock_app">فتح قفل التطبيق</string>
+    <!-- قفل التطبيق -->
     <string name="enter_password">أدخل كلمة المرور</string>
-    <string name="incorrect_password">كلمة مرور خاطئة</string>
-    <string name="too_many_attempts">عدد كبير من المحاولات الخاطئة</string>
+    <string name="set_password">تعيين كلمة مرور</string>
+    <string name="change_password">تغيير كلمة المرور</string>
+    <string name="confirm_password">تأكيد كلمة المرور</string>
+    <string name="password_incorrect">كلمة المرور غير صحيحة</string>
+    <string name="password_set_successfully">تم تعيين كلمة المرور بنجاح</string>
+    <string name="app_locked">التطبيق مقفل</string>
+    <string name="unlock_app">إلغاء قفل التطبيق</string>
+    <string name="enable_app_lock">تمكين قفل التطبيق</string>
+    <string name="disable_app_lock">تعطيل قفل التطبيق</string>
+    
+    <!-- دمج البيانات -->
+    <string name="data_merge">دمج البيانات</string>
+    <string name="merge_with_backup">دمج مع النسخة الاحتياطية</string>
+    <string name="merge_successful">تم دمج البيانات بنجاح</string>
+    <string name="merge_conflicts_found">تم العثور على تضارب في البيانات</string>
+    <string name="resolve_conflicts">حل التضارب</string>
+    <string name="keep_backup_version">الاحتفاظ بنسخة النسخة الاحتياطية</string>
+    <string name="keep_current_version">الاحتفاظ بالنسخة الحالية</string>
+    
+    <!-- الإعدادات المتقدمة -->
+    <string name="advanced_settings">الإعدادات المتقدمة</string>
+    <string name="auto_backup">النسخ الاحتياطي التلقائي</string>
+    <string name="backup_frequency">تردد النسخ الاحتياطي</string>
+    <string name="session_timeout">مهلة الجلسة</string>
+    <string name="auto_login">الدخول التلقائي</string>
+    <string name="offline_sync">المزامنة بدون اتصال</string>
+    
+    <!-- رسائل النظام -->
+    <string name="system_ready">النظام جاهز</string>
+    <string name="offline_mode_active">وضع عدم الاتصال نشط</string>
+    <string name="online_mode_active">وضع الاتصال نشط</string>
+    <string name="sync_in_progress">المزامنة جارية</string>
+    <string name="sync_completed">تمت المزامنة</string>
+    <string name="sync_failed">فشلت المزامنة</string>
+    
+    <!-- الأذونات -->
+    <string name="permission_storage">إذن التخزين</string>
+    <string name="permission_storage_rationale">نحتاج إذن التخزين لحفظ النسخ الاحتياطية</string>
+    <string name="permission_notification">إذن الإشعارات</string>
+    <string name="permission_notification_rationale">نحتاج إذن الإشعارات لإرسال التنبيهات</string>
+    
 </resources>

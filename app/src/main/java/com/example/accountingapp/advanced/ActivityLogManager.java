@@ -3,63 +3,30 @@ package com.example.accountingapp.advanced;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class ActivityLogManager {
     private static final String TAG = "ActivityLogManager";
     private static final String PREFS_NAME = "activity_log_prefs";
-    private static final String KEY_LOG_ENABLED = "log_enabled";
+    private static final String KEY_ACTIVITY_LOG = "activity_log";
     private static final String KEY_MAX_LOG_ENTRIES = "max_log_entries";
-    private static final String KEY_LOG_RETENTION_DAYS = "log_retention_days";
-    
-    // أولويات الأنشطة
-    public static final int PRIORITY_LOW = 1;
-    public static final int PRIORITY_MEDIUM = 2;
-    public static final int PRIORITY_HIGH = 3;
-    public static final int PRIORITY_CRITICAL = 4;
-    
-    // أنواع الأنشطة
-    public static final String TYPE_LOGIN = "LOGIN";
-    public static final String TYPE_LOGOUT = "LOGOUT";
-    public static final String TYPE_CREATE_ACCOUNT = "CREATE_ACCOUNT";
-    public static final String TYPE_UPDATE_ACCOUNT = "UPDATE_ACCOUNT";
-    public static final String TYPE_DELETE_ACCOUNT = "DELETE_ACCOUNT";
-    public static final String TYPE_TRANSACTION = "TRANSACTION";
-    public static final String TYPE_REPORT = "REPORT";
-    public static final String TYPE_BACKUP = "BACKUP";
-    public static final String TYPE_RESTORE = "RESTORE";
-    public static final String TYPE_ADMIN_ACTION = "ADMIN_ACTION";
-    public static final String TYPE_SECURITY = "SECURITY";
-    public static final String TYPE_ERROR = "ERROR";
     
     private static ActivityLogManager instance;
     private SharedPreferences prefs;
     private Context context;
-    private SimpleDateFormat dateFormat;
-    private List<ActivityEntry> activityCache;
-    private final Object cacheLock = new Object();
     
     private ActivityLogManager(Context context) {
         this.context = context.getApplicationContext();
         this.prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        this.activityCache = new ArrayList<>();
-        
-        // تحميل الإعدادات الافتراضية
-        if (!prefs.contains(KEY_LOG_ENABLED)) {
-            prefs.edit()
-                 .putBoolean(KEY_LOG_ENABLED, true)
-                 .putInt(KEY_MAX_LOG_ENTRIES, 1000)
-                 .putInt(KEY_LOG_RETENTION_DAYS, 90)
-                 .apply();
-        }
-        
-        // تحميل الأنشطة المحفوظة
-        loadActivityCache();
     }
     
     public static synchronized ActivityLogManager getInstance(Context context) {
@@ -69,378 +36,221 @@ public class ActivityLogManager {
         return instance;
     }
     
-    // تسجيل نشاط جديد
-    public void logActivity(String type, String description, int priority) {
-        logActivity(type, description, priority, null);
+    // تسجيل نشاط
+    public void logActivity(ActivityType type, String description, String details) {
+        String userId = OfflineSessionManager.getInstance(context).getCurrentUserId();
+        String username = OfflineSessionManager.getInstance(context).getCurrentUsername();
+        
+        logActivity(type, description, details, userId, username);
     }
     
-    // تسجيل نشاط مع بيانات إضافية
-    public void logActivity(String type, String description, int priority, JSONObject additionalData) {
-        if (!isLoggingEnabled()) return;
-        
+    // تسجيل نشاط مع معلومات المستخدم
+    public void logActivity(ActivityType type, String description, String details, String userId, String username) {
         try {
-            ActivityEntry entry = new ActivityEntry();
-            entry.id = generateActivityId();
-            entry.type = type;
-            entry.description = description;
-            entry.priority = priority;
-            entry.timestamp = System.currentTimeMillis();
-            entry.userId = OfflineSessionManager.getInstance(context).getCurrentUserId();
-            entry.username = OfflineSessionManager.getInstance(context).getCurrentUsername();
-            entry.userRole = OfflineSessionManager.getInstance(context).getCurrentUserRole();
-            entry.additionalData = additionalData;
+            JSONObject activity = new JSONObject();
+            activity.put("id", System.currentTimeMillis() + "_" + userId);
+            activity.put("type", type.name());
+            activity.put("description", description);
+            activity.put("details", details);
+            activity.put("user_id", userId);
+            activity.put("username", username);
+            activity.put("timestamp", System.currentTimeMillis());
+            activity.put("date", getCurrentDateString());
             
-            // إضافة إلى الكاش
-            synchronized (cacheLock) {
-                activityCache.add(0, entry); // إضافة في المقدمة
-                
-                // تحديد عدد الإدخالات
-                int maxEntries = prefs.getInt(KEY_MAX_LOG_ENTRIES, 1000);
-                while (activityCache.size() > maxEntries) {
-                    activityCache.remove(activityCache.size() - 1);
-                }
+            addActivityToLog(activity);
+            
+            // إرسال إشعار للإداريين إذا لزم الأمر
+            if (shouldNotifyAdmins(type)) {
+                NotificationManager.getInstance(context)
+                    .sendAdminNotification(type, description, userId, username);
             }
             
-            // حفظ في التخزين الدائم
-            saveActivityCache();
+            Log.d(TAG, "تم تسجيل النشاط: " + description);
             
-            // إشعار الإدارة إذا كان النشاط مهماً
-            if (priority >= PRIORITY_HIGH) {
-                notifyAdminOfActivity(entry);
-            }
-            
-            Log.d(TAG, String.format("تم تسجيل نشاط: %s - %s", type, description));
-            
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Log.e(TAG, "خطأ في تسجيل النشاط", e);
         }
     }
     
-    // الحصول على سجل الأنشطة مع التصفية
-    public List<ActivityEntry> getActivityLog(ActivityFilter filter) {
-        synchronized (cacheLock) {
-            List<ActivityEntry> filteredList = new ArrayList<>();
-            
-            for (ActivityEntry entry : activityCache) {
-                if (matchesFilter(entry, filter)) {
-                    filteredList.add(entry);
-                }
+    // إضافة النشاط إلى السجل
+    private void addActivityToLog(JSONObject activity) throws JSONException {
+        JSONArray activityLog = getActivityLog();
+        activityLog.put(activity);
+        
+        // تحديد عدد الإدخالات القصوى
+        int maxEntries = prefs.getInt(KEY_MAX_LOG_ENTRIES, 1000);
+        if (activityLog.length() > maxEntries) {
+            // حذف الإدخالات القديمة
+            JSONArray newLog = new JSONArray();
+            int startIndex = activityLog.length() - maxEntries;
+            for (int i = startIndex; i < activityLog.length(); i++) {
+                newLog.put(activityLog.get(i));
             }
-            
-            // ترتيب حسب الوقت (الأحدث أولاً)
-            Collections.sort(filteredList, (a, b) -> 
-                Long.compare(b.timestamp, a.timestamp));
-            
-            // تحديد العدد المطلوب
-            if (filter.limit > 0 && filteredList.size() > filter.limit) {
-                filteredList = filteredList.subList(0, filter.limit);
-            }
-            
-            return filteredList;
+            activityLog = newLog;
         }
+        
+        // حفظ السجل المحدث
+        prefs.edit().putString(KEY_ACTIVITY_LOG, activityLog.toString()).apply();
+    }
+    
+    // الحصول على سجل الأنشطة
+    public JSONArray getActivityLog() {
+        String logString = prefs.getString(KEY_ACTIVITY_LOG, "[]");
+        try {
+            return new JSONArray(logString);
+        } catch (JSONException e) {
+            Log.e(TAG, "خطأ في قراءة سجل الأنشطة", e);
+            return new JSONArray();
+        }
+    }
+    
+    // الحصول على الأنشطة كقائمة
+    public List<ActivityEntry> getActivityEntries() {
+        List<ActivityEntry> entries = new ArrayList<>();
+        JSONArray activityLog = getActivityLog();
+        
+        try {
+            for (int i = activityLog.length() - 1; i >= 0; i--) { // الأحدث أولاً
+                JSONObject activity = activityLog.getJSONObject(i);
+                ActivityEntry entry = new ActivityEntry();
+                
+                entry.id = activity.getString("id");
+                entry.type = ActivityType.valueOf(activity.getString("type"));
+                entry.description = activity.getString("description");
+                entry.details = activity.optString("details", "");
+                entry.userId = activity.getString("user_id");
+                entry.username = activity.getString("username");
+                entry.timestamp = activity.getLong("timestamp");
+                entry.date = activity.optString("date", "");
+                
+                entries.add(entry);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "خطأ في تحويل سجل الأنشطة", e);
+        }
+        
+        return entries;
     }
     
     // الحصول على أنشطة مستخدم معين
-    public List<ActivityEntry> getUserActivities(String userId, int limit) {
-        ActivityFilter filter = new ActivityFilter();
-        filter.userId = userId;
-        filter.limit = limit;
+    public List<ActivityEntry> getUserActivities(String userId) {
+        List<ActivityEntry> userActivities = new ArrayList<>();
+        List<ActivityEntry> allActivities = getActivityEntries();
         
-        return getActivityLog(filter);
+        for (ActivityEntry entry : allActivities) {
+            if (entry.userId.equals(userId)) {
+                userActivities.add(entry);
+            }
+        }
+        
+        return userActivities;
     }
     
     // الحصول على أنشطة نوع معين
-    public List<ActivityEntry> getActivitiesByType(String type, int limit) {
-        ActivityFilter filter = new ActivityFilter();
-        filter.type = type;
-        filter.limit = limit;
+    public List<ActivityEntry> getActivitiesByType(ActivityType type) {
+        List<ActivityEntry> typeActivities = new ArrayList<>();
+        List<ActivityEntry> allActivities = getActivityEntries();
         
-        return getActivityLog(filter);
-    }
-    
-    // الحصول على الأنشطة الأخيرة للحسابات الإدارية
-    public List<ActivityEntry> getAdminActivities(int limit) {
-        ActivityFilter filter = new ActivityFilter();
-        filter.adminOnly = true;
-        filter.limit = limit;
-        
-        return getActivityLog(filter);
-    }
-    
-    // البحث في سجل الأنشطة
-    public List<ActivityEntry> searchActivities(String searchTerm, int limit) {
-        synchronized (cacheLock) {
-            List<ActivityEntry> results = new ArrayList<>();
-            String searchLower = searchTerm.toLowerCase();
-            
-            for (ActivityEntry entry : activityCache) {
-                if (entry.description.toLowerCase().contains(searchLower) ||
-                    entry.type.toLowerCase().contains(searchLower) ||
-                    entry.username.toLowerCase().contains(searchLower)) {
-                    
-                    results.add(entry);
-                    
-                    if (limit > 0 && results.size() >= limit) {
-                        break;
-                    }
-                }
+        for (ActivityEntry entry : allActivities) {
+            if (entry.type == type) {
+                typeActivities.add(entry);
             }
-            
-            return results;
         }
+        
+        return typeActivities;
+    }
+    
+    // فحص ما إذا كان يجب إشعار الإداريين
+    private boolean shouldNotifyAdmins(ActivityType type) {
+        switch (type) {
+            case CREATE_INVOICE:
+            case UPDATE_INVOICE:
+            case DELETE_INVOICE:
+            case CREATE_ACCOUNT:
+            case UPDATE_ACCOUNT:
+            case DELETE_ACCOUNT:
+            case FINANCIAL_TRANSACTION:
+                return true;
+            default:
+                return false;
+        }
+    }
+    
+    // مسح سجل الأنشطة
+    public void clearActivityLog() {
+        prefs.edit().remove(KEY_ACTIVITY_LOG).apply();
+        Log.d(TAG, "تم مسح سجل الأنشطة");
     }
     
     // تصدير سجل الأنشطة
-    public JSONArray exportActivityLog() {
-        JSONArray exported = new JSONArray();
-        
-        synchronized (cacheLock) {
-            try {
-                for (ActivityEntry entry : activityCache) {
-                    JSONObject entryJson = new JSONObject();
-                    entryJson.put("id", entry.id);
-                    entryJson.put("type", entry.type);
-                    entryJson.put("description", entry.description);
-                    entryJson.put("priority", entry.priority);
-                    entryJson.put("timestamp", entry.timestamp);
-                    entryJson.put("userId", entry.userId);
-                    entryJson.put("username", entry.username);
-                    entryJson.put("userRole", entry.userRole);
-                    
-                    if (entry.additionalData != null) {
-                        entryJson.put("additionalData", entry.additionalData);
-                    }
-                    
-                    exported.put(entryJson);
-                }
-            } catch (JSONException e) {
-                Log.e(TAG, "خطأ في تصدير سجل الأنشطة", e);
-            }
-        }
-        
-        return exported;
+    public String exportActivityLog() {
+        JSONArray activityLog = getActivityLog();
+        return activityLog.toString();
     }
     
-    // استيراد نشاط من النسخة الاحتياطية
-    public void importActivity(JSONObject activityJson) {
-        try {
-            ActivityEntry entry = new ActivityEntry();
-            entry.id = activityJson.getString("id");
-            entry.type = activityJson.getString("type");
-            entry.description = activityJson.getString("description");
-            entry.priority = activityJson.getInt("priority");
-            entry.timestamp = activityJson.getLong("timestamp");
-            entry.userId = activityJson.getString("userId");
-            entry.username = activityJson.getString("username");
-            entry.userRole = activityJson.optString("userRole", "user");
-            
-            if (activityJson.has("additionalData")) {
-                entry.additionalData = activityJson.getJSONObject("additionalData");
-            }
-            
-            synchronized (cacheLock) {
-                // فحص التكرار
-                boolean exists = activityCache.stream()
-                    .anyMatch(existing -> existing.id.equals(entry.id));
-                
-                if (!exists) {
-                    activityCache.add(entry);
-                }
-            }
-            
-        } catch (JSONException e) {
-            Log.e(TAG, "خطأ في استيراد النشاط", e);
+    // تعيين عدد الإدخالات القصوى
+    public void setMaxLogEntries(int maxEntries) {
+        prefs.edit().putInt(KEY_MAX_LOG_ENTRIES, maxEntries).apply();
+    }
+    
+    // الحصول على تاريخ اليوم كنص
+    private String getCurrentDateString() {
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+                .format(new Date());
+    }
+    
+    // أنواع الأنشطة
+    public enum ActivityType {
+        LOGIN("تسجيل دخول"),
+        LOGOUT("تسجيل خروج"),
+        CREATE_INVOICE("إنشاء فاتورة"),
+        UPDATE_INVOICE("تحديث فاتورة"),
+        DELETE_INVOICE("حذف فاتورة"),
+        CREATE_ACCOUNT("إنشاء حساب"),
+        UPDATE_ACCOUNT("تحديث حساب"),
+        DELETE_ACCOUNT("حذف حساب"),
+        FINANCIAL_TRANSACTION("معاملة مالية"),
+        BACKUP_CREATED("إنشاء نسخة احتياطية"),
+        BACKUP_RESTORED("استعادة نسخة احتياطية"),
+        DATA_EXPORT("تصدير بيانات"),
+        DATA_IMPORT("استيراد بيانات"),
+        SETTINGS_CHANGED("تغيير إعدادات"),
+        USER_CREATED("إنشاء مستخدم"),
+        USER_UPDATED("تحديث مستخدم"),
+        USER_DELETED("حذف مستخدم"),
+        PERMISSION_CHANGED("تغيير صلاحيات"),
+        SYSTEM_ERROR("خطأ في النظام"),
+        OTHER("أخرى");
+        
+        private final String arabicName;
+        
+        ActivityType(String arabicName) {
+            this.arabicName = arabicName;
+        }
+        
+        public String getArabicName() {
+            return arabicName;
         }
     }
     
-    // مسح الأنشطة القديمة
-    public void cleanOldActivities() {
-        int retentionDays = prefs.getInt(KEY_LOG_RETENTION_DAYS, 90);
-        long cutoffTime = System.currentTimeMillis() - (retentionDays * 24 * 60 * 60 * 1000L);
-        
-        synchronized (cacheLock) {
-            Iterator<ActivityEntry> iterator = activityCache.iterator();
-            int removedCount = 0;
-            
-            while (iterator.hasNext()) {
-                ActivityEntry entry = iterator.next();
-                if (entry.timestamp < cutoffTime) {
-                    iterator.remove();
-                    removedCount++;
-                }
-            }
-            
-            if (removedCount > 0) {
-                saveActivityCache();
-                Log.d(TAG, "تم مسح " + removedCount + " نشاط قديم");
-            }
-        }
-    }
-    
-    // إحصائيات الأنشطة
-    public ActivityStats getActivityStats(long fromTime, long toTime) {
-        ActivityStats stats = new ActivityStats();
-        
-        synchronized (cacheLock) {
-            for (ActivityEntry entry : activityCache) {
-                if (entry.timestamp >= fromTime && entry.timestamp <= toTime) {
-                    stats.totalActivities++;
-                    
-                    switch (entry.priority) {
-                        case PRIORITY_LOW:
-                            stats.lowPriorityCount++;
-                            break;
-                        case PRIORITY_MEDIUM:
-                            stats.mediumPriorityCount++;
-                            break;
-                        case PRIORITY_HIGH:
-                            stats.highPriorityCount++;
-                            break;
-                        case PRIORITY_CRITICAL:
-                            stats.criticalPriorityCount++;
-                            break;
-                    }
-                    
-                    // إحصائيات الأنواع
-                    stats.typeStats.put(entry.type, 
-                        stats.typeStats.getOrDefault(entry.type, 0) + 1);
-                    
-                    // إحصائيات المستخدمين
-                    stats.userStats.put(entry.userId,
-                        stats.userStats.getOrDefault(entry.userId, 0) + 1);
-                }
-            }
-        }
-        
-        return stats;
-    }
-    
-    // فحص ما إذا كان التسجيل مفعل
-    private boolean isLoggingEnabled() {
-        return prefs.getBoolean(KEY_LOG_ENABLED, true);
-    }
-    
-    // توليد معرف نشاط
-    private String generateActivityId() {
-        return "activity_" + System.currentTimeMillis() + "_" + 
-               (int)(Math.random() * 10000);
-    }
-    
-    // فحص ما إذا كان النشاط يطابق المرشح
-    private boolean matchesFilter(ActivityEntry entry, ActivityFilter filter) {
-        // فحص النوع
-        if (filter.type != null && !filter.type.equals(entry.type)) {
-            return false;
-        }
-        
-        // فحص المستخدم
-        if (filter.userId != null && !filter.userId.equals(entry.userId)) {
-            return false;
-        }
-        
-        // فحص الأولوية
-        if (filter.minPriority > 0 && entry.priority < filter.minPriority) {
-            return false;
-        }
-        
-        // فحص الوقت
-        if (filter.fromTime > 0 && entry.timestamp < filter.fromTime) {
-            return false;
-        }
-        
-        if (filter.toTime > 0 && entry.timestamp > filter.toTime) {
-            return false;
-        }
-        
-        // فحص الأنشطة الإدارية فقط
-        if (filter.adminOnly && !"admin".equals(entry.userRole)) {
-            return false;
-        }
-        
-        return true;
-    }
-    
-    // إشعار الإدارة بالنشاط المهم
-    private void notifyAdminOfActivity(ActivityEntry entry) {
-        try {
-            NotificationManager notificationManager = NotificationManager.getInstance(context);
-            
-            String message = String.format(
-                "نشاط مهم: %s\nالمستخدم: %s\nالوقت: %s",
-                entry.description,
-                entry.username,
-                dateFormat.format(new Date(entry.timestamp))
-            );
-            
-            notificationManager.showAdminNotification(
-                "نشاط مهم في النظام",
-                message,
-                entry.priority
-            );
-            
-        } catch (Exception e) {
-            Log.e(TAG, "خطأ في إشعار الإدارة", e);
-        }
-    }
-    
-    // تحميل كاش الأنشطة
-    private void loadActivityCache() {
-        // هنا يجب تحميل البيانات من التخزين الدائم
-        // يمكن استخدام SQLite أو SharedPreferences للتخزين
-    }
-    
-    // حفظ كاش الأنشطة
-    private void saveActivityCache() {
-        // هنا يجب حفظ البيانات في التخزين الدائم
-    }
-    
-    // فئة إدخال النشاط
+    // كلاس إدخال النشاط
     public static class ActivityEntry {
         public String id;
-        public String type;
+        public ActivityType type;
         public String description;
-        public int priority;
-        public long timestamp;
+        public String details;
         public String userId;
         public String username;
-        public String userRole;
-        public JSONObject additionalData;
+        public long timestamp;
+        public String date;
         
         public String getFormattedDate() {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            return formatter.format(new Date(timestamp));
+            return new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                    .format(new Date(timestamp));
         }
         
-        public String getPriorityText() {
-            switch (priority) {
-                case PRIORITY_LOW: return "منخفض";
-                case PRIORITY_MEDIUM: return "متوسط";
-                case PRIORITY_HIGH: return "عالي";
-                case PRIORITY_CRITICAL: return "حرج";
-                default: return "غير محدد";
-            }
+        public String getTypeDisplayName() {
+            return type.getArabicName();
         }
-    }
-    
-    // فئة مرشح الأنشطة
-    public static class ActivityFilter {
-        public String type;
-        public String userId;
-        public int minPriority = 0;
-        public long fromTime = 0;
-        public long toTime = 0;
-        public boolean adminOnly = false;
-        public int limit = 0;
-    }
-    
-    // فئة إحصائيات الأنشطة
-    public static class ActivityStats {
-        public int totalActivities = 0;
-        public int lowPriorityCount = 0;
-        public int mediumPriorityCount = 0;
-        public int highPriorityCount = 0;
-        public int criticalPriorityCount = 0;
-        public Map<String, Integer> typeStats = new HashMap<>();
-        public Map<String, Integer> userStats = new HashMap<>();
     }
 }

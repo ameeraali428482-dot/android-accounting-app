@@ -1,36 +1,83 @@
 package com.example.accountingapp;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.accountingapp.advanced.ActivityLogManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityLogAdapter extends RecyclerView.Adapter<ActivityLogAdapter.ActivityViewHolder> {
+public class ActivityLogAdapter extends RecyclerView.Adapter<ActivityLogAdapter.ActivityLogViewHolder> {
     
+    private Context context;
     private List<ActivityLogManager.ActivityEntry> activities;
     
-    public ActivityLogAdapter() {
+    public ActivityLogAdapter(Context context) {
+        this.context = context;
         this.activities = new ArrayList<>();
+    }
+    
+    public void setActivities(List<ActivityLogManager.ActivityEntry> activities) {
+        this.activities = activities;
+        notifyDataSetChanged();
     }
     
     @NonNull
     @Override
-    public ActivityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_activity_log, parent, false);
-        return new ActivityViewHolder(view);
+    public ActivityLogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_activity_log, parent, false);
+        return new ActivityLogViewHolder(view);
     }
     
     @Override
-    public void onBindViewHolder(@NonNull ActivityViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ActivityLogViewHolder holder, int position) {
         ActivityLogManager.ActivityEntry activity = activities.get(position);
-        holder.bind(activity);
+        
+        holder.textActivityType.setText(activity.getTypeDisplayName());
+        holder.textDescription.setText(activity.description);
+        holder.textUsername.setText(activity.username);
+        holder.textDate.setText(activity.getFormattedDate());
+        
+        if (!activity.details.isEmpty()) {
+            holder.textDetails.setText(activity.details);
+            holder.textDetails.setVisibility(View.VISIBLE);
+        } else {
+            holder.textDetails.setVisibility(View.GONE);
+        }
+        
+        // تلوين حسب نوع النشاط
+        int colorResId = getColorForActivityType(activity.type);
+        holder.textActivityType.setTextColor(context.getResources().getColor(colorResId));
+    }
+    
+    private int getColorForActivityType(ActivityLogManager.ActivityType type) {
+        switch (type) {
+            case LOGIN:
+            case LOGOUT:
+                return android.R.color.holo_blue_dark;
+            case CREATE_INVOICE:
+            case CREATE_ACCOUNT:
+                return android.R.color.holo_green_dark;
+            case UPDATE_INVOICE:
+            case UPDATE_ACCOUNT:
+                return android.R.color.holo_orange_dark;
+            case DELETE_INVOICE:
+            case DELETE_ACCOUNT:
+                return android.R.color.holo_red_dark;
+            case FINANCIAL_TRANSACTION:
+                return android.R.color.holo_purple;
+            case SYSTEM_ERROR:
+                return android.R.color.holo_red_light;
+            default:
+                return android.R.color.black;
+        }
     }
     
     @Override
@@ -38,60 +85,17 @@ public class ActivityLogAdapter extends RecyclerView.Adapter<ActivityLogAdapter.
         return activities.size();
     }
     
-    public void updateActivities(List<ActivityLogManager.ActivityEntry> newActivities) {
-        this.activities.clear();
-        this.activities.addAll(newActivities);
-        notifyDataSetChanged();
-    }
-    
-    class ActivityViewHolder extends RecyclerView.ViewHolder {
-        private TextView typeText;
-        private TextView descriptionText;
-        private TextView usernameText;
-        private TextView dateText;
-        private TextView priorityText;
+    static class ActivityLogViewHolder extends RecyclerView.ViewHolder {
+        TextView textActivityType, textDescription, textUsername, textDate, textDetails;
         
-        public ActivityViewHolder(@NonNull View itemView) {
+        ActivityLogViewHolder(@NonNull View itemView) {
             super(itemView);
-            typeText = itemView.findViewById(R.id.typeText);
-            descriptionText = itemView.findViewById(R.id.descriptionText);
-            usernameText = itemView.findViewById(R.id.usernameText);
-            dateText = itemView.findViewById(R.id.dateText);
-            priorityText = itemView.findViewById(R.id.priorityText);
-        }
-        
-        public void bind(ActivityLogManager.ActivityEntry activity) {
-            typeText.setText(activity.type);
-            descriptionText.setText(activity.description);
-            usernameText.setText(activity.username);
-            dateText.setText(activity.getFormattedDate());
-            priorityText.setText(activity.getPriorityText());
             
-            // تلوين حسب الأولوية
-            int priorityColor = getPriorityColor(activity.priority);
-            priorityText.setTextColor(priorityColor);
-            typeText.setTextColor(priorityColor);
-            
-            // خلفية مختلفة للأنشطة الحرجة
-            if (activity.priority == ActivityLogManager.PRIORITY_CRITICAL) {
-                itemView.setBackgroundColor(Color.parseColor("#FFEBEE"));
-            } else {
-                itemView.setBackgroundColor(Color.TRANSPARENT);
-            }
-        }
-        
-        private int getPriorityColor(int priority) {
-            switch (priority) {
-                case ActivityLogManager.PRIORITY_CRITICAL:
-                    return Color.parseColor("#D32F2F");
-                case ActivityLogManager.PRIORITY_HIGH:
-                    return Color.parseColor("#F57C00");
-                case ActivityLogManager.PRIORITY_MEDIUM:
-                    return Color.parseColor("#1976D2");
-                case ActivityLogManager.PRIORITY_LOW:
-                default:
-                    return Color.parseColor("#616161");
-            }
+            textActivityType = itemView.findViewById(R.id.textActivityType);
+            textDescription = itemView.findViewById(R.id.textDescription);
+            textUsername = itemView.findViewById(R.id.textUsername);
+            textDate = itemView.findViewById(R.id.textDate);
+            textDetails = itemView.findViewById(R.id.textDetails);
         }
     }
 }

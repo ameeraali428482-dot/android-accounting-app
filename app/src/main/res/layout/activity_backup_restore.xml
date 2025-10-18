@@ -5,67 +5,51 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        android:layout_height="wrap_content"
+        android:text="إدارة النسخ الاحتياطية"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp">
 
         <Button
-            android:id="@+id/createBackupButton"
+            android:id="@+id/btnCreateBackup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginEnd="8dp"
             android:text="إنشاء نسخة احتياطية"
-            android:background="?attr/colorPrimary"
-            android:textColor="@android:color/white" />
+            android:layout_marginEnd="8dp" />
 
         <Button
-            android:id="@+id/importBackupButton"
+            android:id="@+id/btnImportBackup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:text="استيراد نسخة"
-            android:background="?attr/colorSecondary"
-            android:textColor="@android:color/white" />
+            android:text="استيراد نسخة احتياطية"
+            android:layout_marginStart="8dp" />
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:indeterminate="true" />
-
     <TextView
-        android:id="@+id/statusText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="لا توجد نسخ احتياطية متاحة"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:padding="32dp"
-        android:visibility="gone" />
+        android:text="النسخ الاحتياطية المتاحة:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/backupsRecyclerView"
+        android:id="@+id/recyclerViewBackups"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp" />
+        android:layout_weight="1" />
 
 </LinearLayout>
