@@ -104,4 +104,14 @@
     <color name="material_surface">@color/surface</color>
     <color name="material_primary">@color/primary</color>
     <color name="material_surface_variant">@color/surface_variant</color>
+
+    <!-- Material Color Aliases الإضافية -->
+    <color name="material_primary_container">@color/primary_container</color>
+    <color name="material_secondary">@color/secondary</color>
+    <color name="material_secondary_container">@color/secondary_container</color>
+    <color name="material_tertiary_container">@color/tertiary_container</color>
+    <color name="material_error">@color/error</color>
+    <color name="material_error_container">@color/error_container</color>
+    <color name="material_on_surface">@color/on_surface</color>
+    <color name="material_outline">@color/outline</color>
 </resources>
