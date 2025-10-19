@@ -11,30 +11,30 @@ public interface ItemDao extends BaseDao<Item> {
     @Query("SELECT * FROM items WHERE id = :id")
     Item getById(long id);
 
-    @Query("SELECT * FROM items ORDER BY name ASC")
+    @Query("SELECT * FROM items")
     List<Item> getAll();
 
-    @Query("SELECT * FROM items WHERE category_id = :categoryId ORDER BY name ASC")
+    @Query("SELECT * FROM items WHERE categoryId = :categoryId")
     List<Item> getItemsByCategory(long categoryId);
 
-    @Query("SELECT * FROM items WHERE company_id = :companyId ORDER BY name ASC")
+    @Query("SELECT * FROM items WHERE companyId = :companyId")
     List<Item> getByCompanyId(String companyId);
 
-    @Query("SELECT * FROM items WHERE name LIKE '%' || :searchTerm || '%' ORDER BY name ASC")
+    @Query("SELECT * FROM items WHERE name LIKE '%' || :searchTerm || '%'")
     List<Item> searchByName(String searchTerm);
 
-    @Query("SELECT * FROM items WHERE is_active = 1 ORDER BY name ASC")
+    @Query("SELECT * FROM items WHERE isActive = 1")
     List<Item> getActiveItems();
 
-    @Query("SELECT COUNT(*) FROM items WHERE category_id = :categoryId")
+    @Query("SELECT COUNT(*) FROM items WHERE categoryId = :categoryId")
     int getCountByCategory(long categoryId);
 
-    @Query("UPDATE items SET is_active = 0 WHERE id = :id")
+    @Query("UPDATE items SET isActive = 0 WHERE id = :id")
     void deactivateItem(long id);
 
-    @Query("UPDATE items SET is_active = 1 WHERE id = :id")
+    @Query("UPDATE items SET isActive = 1 WHERE id = :id")
     void activateItem(long id);
 
-    @Query("DELETE FROM items WHERE company_id = :companyId")
+    @Query("DELETE FROM items WHERE companyId = :companyId")
     void deleteByCompanyId(String companyId);
 }

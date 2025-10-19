@@ -1,3 +1,4 @@
+import androidx.room.Ignore;
 package com.example.androidapp.data.entities;
 
 import androidx.room.Entity;

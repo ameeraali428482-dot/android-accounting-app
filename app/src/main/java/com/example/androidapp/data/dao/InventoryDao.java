@@ -11,7 +11,7 @@ public interface InventoryDao extends BaseDao<Inventory> {
     @Query("SELECT * FROM inventory WHERE id = :id")
     Inventory getById(long id);
 
-    @Query("SELECT * FROM inventory ORDER BY item_id ASC")
+    @Query("SELECT * FROM inventory")
     List<Inventory> getAll();
 
     @Query("SELECT * FROM inventory WHERE item_id = :itemId AND warehouse_id = :warehouseId")
