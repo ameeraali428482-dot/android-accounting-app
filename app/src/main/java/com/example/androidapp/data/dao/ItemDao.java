@@ -13,7 +13,7 @@ public interface ItemDao extends BaseDao<Item> {
     @Query("SELECT * FROM items WHERE id = :id")
     Item getItemById(long id);
     
-    @Query("SELECT * FROM items WHERE category_id = :categoryId ORDER BY name")
+    @Query("SELECT * FROM items WHERE categoryId = :categoryId ORDER BY name")
     List<Item> getItemsByCategory(long categoryId);
     
     @Query("SELECT * FROM items WHERE name LIKE '%' || :searchQuery || '%' OR description LIKE '%' || :searchQuery || '%' ORDER BY name")
@@ -22,7 +22,7 @@ public interface ItemDao extends BaseDao<Item> {
     @Query("SELECT * FROM items WHERE is_active = 1 ORDER BY name")
     List<Item> getActiveItems();
     
-    @Query("SELECT COUNT(*) FROM items WHERE category_id = :categoryId")
+    @Query("SELECT COUNT(*) FROM items WHERE categoryId = :categoryId")
     int getCountByCategory(long categoryId);
     
     @Query("UPDATE items SET is_active = 0 WHERE id = :id")
@@ -31,10 +31,10 @@ public interface ItemDao extends BaseDao<Item> {
     @Query("UPDATE items SET is_active = 1 WHERE id = :id")
     void activateItem(long id);
     
-    @Query("UPDATE items SET stock_quantity = stock_quantity - :quantity WHERE id = :id")
+    @Query("UPDATE items SET stockQuantity = stockQuantity - :quantity WHERE id = :id")
     void decreaseStock(long id, int quantity);
     
-    @Query("UPDATE items SET stock_quantity = stock_quantity + :quantity WHERE id = :id")
+    @Query("UPDATE items SET stockQuantity = stockQuantity + :quantity WHERE id = :id")
     void increaseStock(long id, int quantity);
     
     @Query("DELETE FROM items WHERE id = :id")

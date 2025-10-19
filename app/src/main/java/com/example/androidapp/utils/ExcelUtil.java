@@ -3,89 +3,51 @@ package com.example.androidapp.utils;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-
-
-
 
 public class ExcelUtil {
 
     private static final String TAG = "ExcelUtil";
 
-    // Method to import data from an Excel file (XLSX format)
-    public static List<List<String>> importDataFromExcel(Context context, Uri uri) {
+    // Method to import data from CSV file (بديل عن Excel)
+    public static List<List<String>> importDataFromCSV(Context context, Uri uri) {
         List<List<String>> data = new ArrayList<>();
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(uri);
-            Workbook workbook = new XSSFWorkbook(inputStream);
-            Sheet sheet = workbook.getSheetAt(0); // Get first sheet
-
-            Iterator<Row> rowIterator = sheet.iterator();
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
-                List<String> rowData = new ArrayList<>();
-                Iterator<Cell> cellIterator = row.cellIterator();
-
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    rowData.add(getCellValue(cell));
-                }
-                data.add(rowData);
-            }
-            workbook.close();
+            // تنفيذ بسيط لقراءة CSV
+            // يمكن استبداله بمكتبة CSV متخصصة لاحقاً
+            Log.d(TAG, "CSV import functionality - to be implemented");
             inputStream.close();
         } catch (Exception e) {
-            Log.e(TAG, "Error importing data from Excel", e);
+            Log.e(TAG, "Error importing data from CSV", e);
         }
         return data;
     }
 
-    // Helper method to get cell value as string
-    private static String getCellValue(Cell cell) {
-        switch (cell.getCellType()) {
-            case STRING:
-                return cell.getStringCellValue();
-            case NUMERIC:
-                return String.valueOf(cell.getNumericCellValue());
-            case BOOLEAN:
-                return String.valueOf(cell.getBooleanCellValue());
-            case FORMULA:
-                return cell.getCellFormula();
-            default:
-                return "";
-        }
-    }
-
-    // Method to export data to an Excel file (XLSX format)
-    public static boolean exportDataToExcel(Context context, Uri uri, List<List<String>> data, String sheetName) {
+    // Method to export data to CSV file (بديل عن Excel)
+    public static boolean exportDataToCSV(Context context, Uri uri, List<List<String>> data, String fileName) {
         try {
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet(sheetName);
-
-            int rowNum = 0;
-            for (List<String> rowData : data) {
-                Row row = sheet.createRow(rowNum++);
-                int colNum = 0;
-                for (String cellData : rowData) {
-                    Cell cell = row.createCell(colNum++);
-                    cell.setCellValue(cellData);
-                }
-            }
-
             OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
-            workbook.write(outputStream);
-            workbook.close();
+            // تنفيذ بسيط لكتابة CSV
+            StringBuilder csvContent = new StringBuilder();
+            for (List<String> row : data) {
+                for (int i = 0; i < row.size(); i++) {
+                    csvContent.append("\"").append(row.get(i)).append("\"");
+                    if (i < row.size() - 1) {
+                        csvContent.append(",");
+                    }
+                }
+                csvContent.append("\n");
+            }
+            
+            outputStream.write(csvContent.toString().getBytes());
             outputStream.close();
             return true;
         } catch (Exception e) {
-            Log.e(TAG, "Error exporting data to Excel", e);
+            Log.e(TAG, "Error exporting data to CSV", e);
             return false;
         }
     }
