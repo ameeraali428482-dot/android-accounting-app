@@ -1,10 +1,13 @@
+import androidx.annotation.NonNull;
 package com.example.androidapp.data.entities;
 
 import androidx.room.*;
 
 @Entity(tableName = "user_permissions", primaryKeys = {"userId", "permissionId"})
 public class UserPermission {
+    @NonNull
     public String userId;
+    @NonNull
     public String permissionId;
     
     @ColumnInfo(name = "granted_date")

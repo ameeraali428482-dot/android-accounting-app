@@ -1,3 +1,4 @@
+import androidx.annotation.NonNull;
 package com.example.androidapp.data.entities;
 
 import androidx.room.*;
@@ -5,6 +6,7 @@ import androidx.room.*;
 @Entity(tableName = "users")
 public class User {
     @PrimaryKey
+    @NonNull
     public String id;
     
     public String name;

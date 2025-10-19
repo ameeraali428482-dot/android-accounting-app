@@ -1,10 +1,14 @@
+import androidx.room.Ignore;
+import androidx.annotation.NonNull;
 package com.example.androidapp.data.entities;
 
 import androidx.room.*;
 
 @Entity(tableName = "user_roles", primaryKeys = {"userId", "roleId"})
 public class UserRole {
+    @NonNull
     public String userId;
+    @NonNull
     public String roleId;
     
     @ColumnInfo(name = "assigned_date")

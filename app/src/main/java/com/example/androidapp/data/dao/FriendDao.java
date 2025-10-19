@@ -1,41 +1,42 @@
 package com.example.androidapp.data.dao;
 
-import java.util.Date;
 import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Update;
+import androidx.room.*;
 import com.example.androidapp.data.entities.Friend;
 import com.example.androidapp.data.entities.User;
+
 import java.util.List;
 
-
-
-
-
 @Dao
-public interface FriendDao {
-    
-    @Insert
-    long insert(Friend friend);
-    
-    @Update
-    int update(Friend friend);
-    
-    @Delete
-    int delete(Friend friend);
+public interface FriendDao extends BaseDao<Friend> {
     
     @Query("SELECT * FROM friends WHERE id = :id")
-    Friend getFriendById(String id);
-    
-    @Query("SELECT * FROM friends WHERE userId = :userId AND status = :status ORDER BY acceptedDate DESC")
-    LiveData<List<Friend>> getFriendsByStatus(String userId, String status);
-    
-    @Query("SELECT * FROM friends WHERE (userId = :userId AND friendId = :friendId) OR (userId = :friendId AND friendId = :userId)")
+    Friend getById(String id);
+
+    @Query("SELECT * FROM friends WHERE user_id = :userId OR friend_id = :userId")
+    List<Friend> getByUserId(String userId);
+
+    @Query("SELECT * FROM friends WHERE user_id = :userId AND friend_id = :friendId")
     Friend getFriendship(String userId, String friendId);
-    
-    @Query("SELECT u.* FROM Users u INNER JOIN friends f ON u.id = f.friendId WHERE f.userId = :userId AND f.status = 'ACCEPTED' AND u.isOnline = 1")
+
+    @Query("SELECT u.* FROM users u INNER JOIN friends f ON u.id = f.friend_id WHERE f.user_id = :userId AND f.status = 'ACCEPTED'")
+    LiveData<List<User>> getFriends(String userId);
+
+    @Query("SELECT u.* FROM users u INNER JOIN friends f ON u.id = f.friend_id WHERE f.user_id = :userId AND f.status = 'PENDING'")
+    LiveData<List<User>> getPendingFriends(String userId);
+
+    @Query("SELECT u.* FROM users u INNER JOIN friends f ON u.id = f.user_id WHERE f.friend_id = :userId AND f.status = 'PENDING'")
+    LiveData<List<User>> getFriendRequests(String userId);
+
+    @Query("SELECT u.* FROM users u INNER JOIN friends f ON u.id = f.friend_id WHERE f.user_id = :userId AND f.status = 'ACCEPTED'")
     LiveData<List<User>> getOnlineFriends(String userId);
+
+    @Query("UPDATE friends SET status = :status WHERE user_id = :userId AND friend_id = :friendId")
+    void updateFriendshipStatus(String userId, String friendId, String status);
+
+    @Query("DELETE FROM friends WHERE user_id = :userId AND friend_id = :friendId")
+    void removeFriend(String userId, String friendId);
+
+    @Query("SELECT COUNT(*) FROM friends WHERE user_id = :userId AND status = 'ACCEPTED'")
+    int getFriendCount(String userId);
 }
