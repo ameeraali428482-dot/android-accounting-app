@@ -1,21 +1,28 @@
 package com.example.androidapp.ui.invoice;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.androidapp.R;
 import com.example.androidapp.data.entities.Invoice;
 import com.example.androidapp.data.entities.InvoiceItem;
+import com.example.androidapp.ui.common.EnhancedBaseActivity;
 import com.example.androidapp.ui.invoice.viewmodel.InvoiceViewModel;
 import com.example.androidapp.utils.SessionManager;
+import com.example.androidapp.utils.SearchSuggestionManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,23 +30,40 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-public class InvoiceDetailActivity extends AppCompatActivity {
+public class InvoiceDetailActivity extends EnhancedBaseActivity {
 
-    private EditText etInvoiceNumber, etInvoiceDate, etCustomerName, etInvoiceType, etSubTotal, etTax, etDiscount, etGrandTotal;
+    // المكونات الأساسية للفاتورة
+    private EditText etInvoiceNumber, etInvoiceDate, etInvoiceType, etSubTotal, etTax, etDiscount, etGrandTotal;
+    private AutoCompleteTextView etCustomerName; // تحويل لـ AutoCompleteTextView للاقتراحات
     private LinearLayout invoiceItemsContainer;
-    private Button btnAddItem, btnSave, btnDelete;
+    private Button btnAddItem, btnSave, btnDelete, btnPreview, btnPrint, btnShare, btnReadInvoice;
+    private ImageButton btnVoiceSearch; // زر البحث الصوتي
+    
+    // المكونات المتقدمة
+    private TextView tvInvoiceTitle, tvTotalInWords;
+    private View layoutCustomerDetails, layoutCompanyInfo, layoutNotes;
+    
     private InvoiceViewModel viewModel;
     private SessionManager sessionManager;
+    private SharedPreferences invoiceSettings;
     private String companyId;
     private String invoiceId = null;
     private List<InvoiceItem> currentItems = new ArrayList<>();
+    
+    // إعدادات الفاتورة
+    private boolean showCustomerDetails = true;
+    private boolean showItemCodes = true;
+    private boolean showTaxes = true;
+    private boolean autoCalculateTax = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invoice_detail);
+        setContentView(R.layout.activity_invoice_detail_enhanced);
 
+        // تهيئة المدراء
         sessionManager = new SessionManager(this);
+        invoiceSettings = getSharedPreferences("AppSettings", Context.MODE_PRIVATE);
         companyId = sessionManager.getCompanyId();
 
         if (companyId == null) {
@@ -47,6 +71,41 @@ public class InvoiceDetailActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        // تحميل إعدادات الفاتورة
+        loadInvoiceSettings();
+        
+        // تهيئة المكونات
+        initializeViews();
+        
+        // إعداد الاقتراحات الذكية
+        setupSmartSuggestions();
+        
+        // إعداد الأحداث
+        setupEventListeners();
+        
+        // تهيئة ViewModel
+        viewModel = new ViewModelProvider(this).get(InvoiceViewModel.class);
+        
+        // إعداد شريط الأدوات
+        setupToolbar();
+        
+        // معالجة Intent للتحرير أو الإنشاء الجديد
+        handleIntent();
+        
+        // إعداد التخطيط بناءً على الإعدادات
+        setupLayoutBasedOnSettings();
+    }
+    
+    /**
+     * تحميل إعدادات الفاتورة من SharedPreferences
+     */
+    private void loadInvoiceSettings() {
+        showCustomerDetails = invoiceSettings.getBoolean("show_customer_details", true);
+        showItemCodes = invoiceSettings.getBoolean("show_item_codes", true);
+        showTaxes = invoiceSettings.getBoolean("show_taxes", true);
+        autoCalculateTax = invoiceSettings.getBoolean("auto_calculate_tax", true);
+    }
 
         viewModel = new ViewModelProvider(this).get(InvoiceViewModel.class);
 

@@ -3,6 +3,7 @@ package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 import com.example.androidapp.data.DateConverter;
@@ -81,6 +82,7 @@ public class AIConversation {
         this.updatedAt = new Date();
     }
 
+    @Ignore
     public AIConversation(@NonNull String id, String userId, String conversationType, 
                          String userMessage, String aiResponse) {
         this.id = id;

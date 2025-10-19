@@ -3,6 +3,7 @@ package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 import com.example.androidapp.data.DateConverter;
@@ -123,6 +124,7 @@ public class ExternalNotification {
         this.maxRetries = 3;
     }
 
+    @Ignore
     public ExternalNotification(@NonNull String id, String userId, String recipientId,
                                String notificationChannel, String recipientContact,
                                String title, String message) {

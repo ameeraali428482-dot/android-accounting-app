@@ -3,6 +3,7 @@ package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 import com.example.androidapp.data.DateConverter;
@@ -75,6 +76,7 @@ public class SmartNotification {
         this.updatedAt = new Date();
     }
 
+    @Ignore
     public SmartNotification(@NonNull String id, String userId, String notificationType, 
                            String title, String message) {
         this.id = id;

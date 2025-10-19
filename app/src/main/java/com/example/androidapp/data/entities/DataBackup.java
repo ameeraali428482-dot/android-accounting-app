@@ -3,6 +3,7 @@ package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 import com.example.androidapp.data.DateConverter;
@@ -130,6 +131,7 @@ public class DataBackup {
         this.restoreCount = 0;
     }
 
+    @Ignore
     public DataBackup(@NonNull String id, String userId, String backupName, String backupType) {
         this.id = id;
         this.userId = userId;

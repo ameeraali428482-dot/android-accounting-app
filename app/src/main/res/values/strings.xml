@@ -8,4 +8,5 @@
     <string name="trophy_description">Trophy Description</string>
     <string name="trophy_image_url">Trophy Image URL</string>
     <string name="points_required">Points Required</string>
-</resources>
+    
+    <!-- Order and Product strings -->\n    <string name="quantity_format">الكمية: %.2f</string>\n    <string name="price_format">%s ر.س</string>\n    <string name="total_amount">المبلغ الإجمالي</string>\n    <string name="unit_price">سعر الوحدة</string>\n    <string name="product_details">تفاصيل المنتج</string>\n    \n</resources>

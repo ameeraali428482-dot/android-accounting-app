@@ -31,7 +31,9 @@ import com.example.androidapp.data.entities.*;
     // New enhanced entities
     SmartNotification.class, PeriodicReminder.class, InstitutionProfile.class,
     AIConversation.class, BarcodeData.class, ExternalNotification.class,
-    DataBackup.class, OfflineTransaction.class, UserPoints.class
+    DataBackup.class, OfflineTransaction.class, UserPoints.class,
+    // Additional entities for enhanced functionality
+    Transaction.class, Category.class, OrderItem.class
 }, version = 3, exportSchema = false)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -103,6 +105,11 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract DataBackupDao dataBackupDao();
     public abstract OfflineTransactionDao offlineTransactionDao();
     public abstract UserPointsDao userPointsDao();
+    
+    // Additional DAOs for enhanced functionality
+    public abstract TransactionDao transactionDao();
+    public abstract CategoryDao categoryDao();
+    public abstract OrderItemDao orderItemDao();
 
     private static volatile AppDatabase INSTANCE;
     private static final String DATABASE_NAME = "business_database";

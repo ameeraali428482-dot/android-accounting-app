@@ -3,6 +3,7 @@ package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 import com.example.androidapp.data.DateConverter;
@@ -129,6 +130,7 @@ public class UserPoints {
         this.isRedeemable = true;
     }
 
+    @Ignore
     public UserPoints(@NonNull String id, String userId, String transactionType, 
                      int pointsAmount, int balanceBefore, int balanceAfter) {
         this.id = id;

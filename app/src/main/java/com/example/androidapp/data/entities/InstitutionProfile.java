@@ -3,6 +3,7 @@ package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 import com.example.androidapp.data.DateConverter;
@@ -173,6 +174,7 @@ public class InstitutionProfile {
         this.pointsBalance = 0;
     }
 
+    @Ignore
     public InstitutionProfile(@NonNull String id, String name, String institutionType) {
         this.id = id;
         this.name = name;

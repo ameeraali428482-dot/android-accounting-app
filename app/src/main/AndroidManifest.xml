@@ -192,6 +192,13 @@
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
             
         <activity
+            android:name=".ui.invoice.ModernInvoiceDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الفاتورة الحديثة"
+            android:parentActivityName=".ui.invoice.InvoiceListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
             android:name=".ui.invoice.InvoiceListActivity"
             android:exported="false"
             android:label="قائمة الفواتير"
@@ -207,6 +214,13 @@
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
             
         <activity
+            android:name=".ui.product.ModernProductDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل المنتج الحديثة"
+            android:parentActivityName=".ui.product.ProductListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
             android:name=".ui.product.ProductListActivity"
             android:exported="false"
             android:label="قائمة المنتجات"
@@ -218,6 +232,13 @@
             android:name=".ui.customer.CustomerDetailActivity"
             android:exported="false"
             android:label="تفاصيل العميل"
+            android:parentActivityName=".ui.customer.CustomerListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.customer.ModernCustomerDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل العميل الحديثة"
             android:parentActivityName=".ui.customer.CustomerListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
             
@@ -243,11 +264,26 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
         
+        <!-- Bank Reconciliation Activity -->
+        <activity
+            android:name=".ui.bankreconciliation.BankReconciliationActivity"
+            android:exported="false"
+            android:label="مطابقة كشف الحساب المصرفي"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+        
         <!-- Order Activities -->
         <activity
             android:name=".ui.order.OrderDetailActivity"
             android:exported="false"
             android:label="تفاصيل الطلب"
+            android:parentActivityName=".ui.order.OrderListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.order.ModernOrderDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الطلب الحديثة"
             android:parentActivityName=".ui.order.OrderListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
             
@@ -294,6 +330,13 @@
             android:exported="false"
             android:label="تفاصيل التقرير"
             android:parentActivityName=".ui.report.ReportListActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+            
+        <activity
+            android:name=".ui.reports.ModernReportsActivity"
+            android:exported="false"
+            android:label="التقارير الحديثة"
+            android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
             
         <activity

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="VoiceInputEditText">
+        <attr name="hint" format="string" />
+        <attr name="voiceEnabled" format="boolean" />
+        <attr name="suggestionsEnabled" format="boolean" />
+        <attr name="suggestionType" format="enum">
+            <enum name="customer_name" value="0" />
+            <enum name="customer_phone" value="1" />
+            <enum name="customer_email" value="2" />
+            <enum name="product_name" value="3" />
+            <enum name="product_category" value="4" />
+            <enum name="product_barcode" value="5" />
+            <enum name="supplier_name" value="6" />
+            <enum name="supplier_phone" value="7" />
+            <enum name="account_name" value="8" />
+            <enum name="invoice_number" value="9" />
+            <enum name="description" value="10" />
+            <enum name="amount" value="11" />
+            <enum name="payment_method" value="12" />
+            <enum name="currency" value="13" />
+            <enum name="location" value="14" />
+            <enum name="general_text" value="15" />
+        </attr>
+    </declare-styleable>
+</resources>

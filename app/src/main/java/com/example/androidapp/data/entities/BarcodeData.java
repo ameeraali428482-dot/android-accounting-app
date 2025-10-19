@@ -3,6 +3,7 @@ package com.example.androidapp.data.entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 import com.example.androidapp.data.DateConverter;
@@ -99,6 +100,7 @@ public class BarcodeData {
         this.version = 1;
     }
 
+    @Ignore
     public BarcodeData(@NonNull String id, String barcodeValue, String barcodeType, String contentType) {
         this.id = id;
         this.barcodeValue = barcodeValue;

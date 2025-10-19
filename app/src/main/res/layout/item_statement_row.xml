@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:background="?attr/selectableItemBackground"
+    android:minHeight="48dp">
+
+    <!-- Date Column -->
+    <TextView
+        android:id="@+id/statementDateText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:text="2024-10-15"
+        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+        android:textColor="?attr/colorOnSurface"
+        android:gravity="center"
+        android:padding="4dp" />
+
+    <!-- Description Column -->
+    <TextView
+        android:id="@+id/statementDescriptionText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="فاتورة مبيعات #INV-001"
+        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+        android:textColor="?attr/colorOnSurface"
+        android:gravity="start|center_vertical"
+        android:padding="4dp"
+        android:maxLines="2"
+        android:ellipsize="end" />
+
+    <!-- Debit Column -->
+    <TextView
+        android:id="@+id/statementDebitText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="1,250.50"
+        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+        android:textColor="?attr/colorError"
+        android:gravity="center"
+        android:padding="4dp" />
+
+    <!-- Credit Column -->
+    <TextView
+        android:id="@+id/statementCreditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="---"
+        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+        android:textColor="?attr/colorTertiary"
+        android:gravity="center"
+        android:padding="4dp" />
+
+    <!-- Balance Column -->
+    <TextView
+        android:id="@+id/statementBalanceText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="15,750.50"
+        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+        android:textColor="?attr/colorPrimary"
+        android:gravity="center"
+        android:padding="4dp"
+        android:textStyle="bold" />
+
+</LinearLayout>
