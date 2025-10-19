@@ -1,53 +1,43 @@
 package com.example.androidapp.data.dao;
 
-import com.example.androidapp.data.entities.Account;
-import com.example.androidapp.data.entities.Item;
-import com.example.androidapp.data.entities.InvoiceItem;
-import com.example.androidapp.data.entities.Employee;
-import com.example.androidapp.data.entities.Voucher;
-import com.example.androidapp.data.entities.Company;
-import com.example.androidapp.data.entities.Doctor;
-import com.example.androidapp.data.entities.User;
-import com.example.androidapp.data.entities.Supplier;
-import com.example.androidapp.data.entities.Customer;
-import com.example.androidapp.data.entities.Trophy;
-import com.example.androidapp.data.entities.Order;
-import com.example.androidapp.data.entities.Repair;
-import com.example.androidapp.data.entities.Chat;
-import com.example.androidapp.data.entities.UserReward;
-import com.example.androidapp.data.entities.Reward;
-import com.example.androidapp.data.entities.PointTransaction;
-import com.example.androidapp.data.entities.Campaign;
-import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Update;
-import androidx.room.Delete;
+import androidx.room.*;
 import com.example.androidapp.data.entities.Warehouse;
+
 import java.util.List;
 
-
-
-
-
 @Dao
-public interface WarehouseDao {
-    @Insert
-    void insert(Warehouse warehouse);
+public interface WarehouseDao extends BaseDao<Warehouse> {
+    
+    @Query("SELECT * FROM warehouses WHERE id = :id")
+    Warehouse getById(long id);
 
-    @Update
-    void update(Warehouse warehouse);
+    @Query("SELECT * FROM warehouses WHERE name = :name LIMIT 1")
+    Warehouse getByName(String name);
 
-    @Delete
-    void delete(Warehouse warehouse);
+    @Query("SELECT * FROM warehouses ORDER BY name ASC")
+    List<Warehouse> getAll();
 
-    @Query("SELECT * FROM warehouses WHERE companyId = :companyId")
-    List<Warehouse> getAllWarehouses(String companyId);
+    @Query("SELECT * FROM warehouses WHERE company_id = :companyId ORDER BY name ASC")
+    List<Warehouse> getByCompanyId(String companyId);
 
-    @Query("SELECT * FROM warehouses WHERE id = :id AND companyId = :companyId LIMIT 1")
-    Warehouse getWarehouseById(String id, String companyId);
+    @Query("SELECT * FROM warehouses WHERE is_active = 1 ORDER BY name ASC")
+    List<Warehouse> getActiveWarehouses();
 
-    @Query("SELECT COUNT(*) FROM warehouses WHERE name = :name AND companyId = :companyId")
-    int countWarehouseByName(String name, String companyId);
+    @Query("SELECT * FROM warehouses WHERE name LIKE '%' || :searchTerm || '%' ORDER BY name ASC")
+    List<Warehouse> searchByName(String searchTerm);
+
+    @Query("UPDATE warehouses SET is_active = 0 WHERE id = :warehouseId")
+    void deactivateWarehouse(long warehouseId);
+
+    @Query("UPDATE warehouses SET is_active = 1 WHERE id = :warehouseId")
+    void activateWarehouse(long warehouseId);
+
+    @Query("SELECT COUNT(*) FROM warehouses WHERE company_id = :companyId")
+    int getCountByCompanyId(String companyId);
+
+    @Query("SELECT SUM(capacity) FROM warehouses WHERE company_id = :companyId AND is_active = 1")
+    double getTotalCapacityByCompanyId(String companyId);
+
+    @Query("SELECT SUM(current_usage) FROM warehouses WHERE company_id = :companyId AND is_active = 1")
+    double getTotalUsageByCompanyId(String companyId);
 }
-

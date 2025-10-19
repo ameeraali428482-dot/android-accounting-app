@@ -1,85 +1,66 @@
 package com.example.androidapp.data.dao;
 
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
-import androidx.room.Query;
-import androidx.room.Update;
-
+import androidx.room.*;
 import com.example.androidapp.data.entities.Transaction;
 
-import java.util.Date;
 import java.util.List;
 
 @Dao
-public interface TransactionDao {
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Transaction transaction);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<Transaction> transactions);
-
-    @Update
-    void update(Transaction transaction);
-
-    @Delete
-    void delete(Transaction transaction);
-
+public interface TransactionDao extends BaseDao<Transaction> {
+    
     @Query("SELECT * FROM transactions WHERE id = :id")
-    Transaction getById(String id);
+    Transaction getById(long id);
 
-    @Query("SELECT * FROM transactions")
+    @Query("SELECT * FROM transactions ORDER BY date DESC")
     List<Transaction> getAll();
 
-    @Query("SELECT * FROM transactions WHERE from_account_id = :accountId OR to_account_id = :accountId")
-    List<Transaction> getByAccountId(String accountId);
+    @Query("SELECT * FROM transactions WHERE from_account_id = :accountId OR to_account_id = :accountId ORDER BY date DESC")
+    List<Transaction> getByAccountId(long accountId);
 
-    @Query("SELECT * FROM transactions WHERE from_account_id = :fromAccountId")
-    List<Transaction> getByFromAccountId(String fromAccountId);
+    @Query("SELECT * FROM transactions WHERE from_account_id = :fromAccountId ORDER BY date DESC")
+    List<Transaction> getByFromAccountId(long fromAccountId);
 
-    @Query("SELECT * FROM transactions WHERE to_account_id = :toAccountId")
-    List<Transaction> getByToAccountId(String toAccountId);
+    @Query("SELECT * FROM transactions WHERE to_account_id = :toAccountId ORDER BY date DESC")
+    List<Transaction> getByToAccountId(long toAccountId);
 
-    @Query("SELECT * FROM transactions WHERE transaction_type = :transactionType")
+    @Query("SELECT * FROM transactions WHERE transaction_type = :transactionType ORDER BY date DESC")
     List<Transaction> getByTransactionType(String transactionType);
 
-    @Query("SELECT * FROM transactions WHERE status = :status")
+    @Query("SELECT * FROM transactions WHERE status = :status ORDER BY date DESC")
     List<Transaction> getByStatus(String status);
 
-    @Query("SELECT * FROM transactions WHERE user_id = :userId")
+    @Query("SELECT * FROM transactions WHERE user_id = :userId ORDER BY date DESC")
     List<Transaction> getByUserId(String userId);
 
-    @Query("SELECT * FROM transactions WHERE company_id = :companyId")
+    @Query("SELECT * FROM transactions WHERE company_id = :companyId ORDER BY date DESC")
     List<Transaction> getByCompanyId(String companyId);
 
-    @Query("SELECT * FROM transactions WHERE category_id = :categoryId")
-    List<Transaction> getByCategoryId(String categoryId);
+    @Query("SELECT * FROM transactions WHERE category_id = :categoryId ORDER BY date DESC")
+    List<Transaction> getByCategoryId(long categoryId);
 
-    @Query("SELECT * FROM transactions WHERE transaction_date BETWEEN :startDate AND :endDate")
-    List<Transaction> getByDateRange(Date startDate, Date endDate);
+    @Query("SELECT * FROM transactions WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC")
+    List<Transaction> getByDateRange(long startDate, long endDate);
 
-    @Query("SELECT * FROM transactions WHERE transaction_date >= :startDate")
-    List<Transaction> getFromDate(Date startDate);
+    @Query("SELECT * FROM transactions WHERE date >= :startDate ORDER BY date DESC")
+    List<Transaction> getFromDate(long startDate);
 
-    @Query("SELECT * FROM transactions WHERE transaction_date <= :endDate")
-    List<Transaction> getUntilDate(Date endDate);
+    @Query("SELECT * FROM transactions WHERE date <= :endDate ORDER BY date DESC")
+    List<Transaction> getUntilDate(long endDate);
 
-    @Query("SELECT * FROM transactions WHERE amount >= :minAmount AND amount <= :maxAmount")
+    @Query("SELECT * FROM transactions WHERE amount BETWEEN :minAmount AND :maxAmount ORDER BY date DESC")
     List<Transaction> getByAmountRange(double minAmount, double maxAmount);
 
     @Query("SELECT * FROM transactions WHERE reference_number = :referenceNumber")
     Transaction getByReferenceNumber(String referenceNumber);
 
-    @Query("SELECT * FROM transactions WHERE description LIKE '%' || :searchTerm || '%'")
+    @Query("SELECT * FROM transactions WHERE description LIKE '%' || :searchTerm || '%' ORDER BY date DESC")
     List<Transaction> searchByDescription(String searchTerm);
 
-    @Query("SELECT SUM(amount) FROM transactions WHERE from_account_id = :accountId AND status = 'COMPLETED'")
-    double getTotalDebitAmount(String accountId);
+    @Query("SELECT SUM(amount) FROM transactions WHERE to_account_id = :accountId AND amount > 0")
+    double getTotalDebitAmount(long accountId);
 
-    @Query("SELECT SUM(amount) FROM transactions WHERE to_account_id = :accountId AND status = 'COMPLETED'")
-    double getTotalCreditAmount(String accountId);
+    @Query("SELECT SUM(amount) FROM transactions WHERE from_account_id = :accountId AND amount < 0")
+    double getTotalCreditAmount(long accountId);
 
     @Query("SELECT COUNT(*) FROM transactions WHERE user_id = :userId")
     int getCountByUserId(String userId);
@@ -90,9 +71,12 @@ public interface TransactionDao {
     @Query("DELETE FROM transactions WHERE status = 'CANCELLED'")
     void deleteCancelledTransactions();
 
-    @Query("DELETE FROM transactions WHERE company_id = :companyId")
-    void deleteByCompanyId(String companyId);
-
-    @Query("SELECT * FROM transactions ORDER BY transaction_date DESC LIMIT :limit")
+    @Query("SELECT * FROM transactions ORDER BY date DESC LIMIT :limit")
     List<Transaction> getRecentTransactions(int limit);
+
+    @Query("SELECT COUNT(*) FROM transactions WHERE date BETWEEN :startDate AND :endDate")
+    int getTransactionsCountByDate(long startDate, long endDate);
+
+    @Query("SELECT * FROM transactions WHERE from_account_id = :fromAccountId AND to_account_id = :toAccountId ORDER BY date DESC")
+    List<Transaction> getTransactionsBetweenAccounts(long fromAccountId, long toAccountId);
 }

@@ -1,74 +1,54 @@
 package com.example.androidapp.data.entities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
-
+import androidx.room.ColumnInfo;
+import androidx.room.Index;
 
 @Entity(tableName = "warehouses",
-        foreignKeys = @ForeignKey(entity = Company.class,
-                                  parentColumns = "id",
-                                  childColumns = "companyId",
-                                  onDelete = ForeignKey.CASCADE),
-        indices = {@Index(value = "companyId")})
+        indices = {
+            @Index(value = {"name"}, unique = true),
+            @Index(value = {"company_id"})
+        })
 public class Warehouse {
-    @PrimaryKey
-    public @NonNull String id;
-    public @NonNull String companyId;
+    @PrimaryKey(autoGenerate = true)
+    public long id;
+
+    @ColumnInfo(name = "name")
     public String name;
-    public String location;
-    public String description;
 
-    public Warehouse(String id, String companyId, String name, String location, String description) {
-        this.id = id;
-        this.companyId = companyId;
-        this.name = name;
-        this.location = location;
-        this.description = description;
-    }
+    @ColumnInfo(name = "address")
+    public String address;
 
-    public String getId() {
-        return id;
-    }
+    @ColumnInfo(name = "phone")
+    public String phone;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @ColumnInfo(name = "email")
+    public String email;
 
-    public String getCompanyId() {
-        return companyId;
-    }
+    @ColumnInfo(name = "manager_name")
+    public String managerName;
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
+    @ColumnInfo(name = "capacity")
+    public double capacity;
 
-    public String getName() {
-        return name;
-    }
+    @ColumnInfo(name = "current_usage")
+    public double currentUsage;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @ColumnInfo(name = "is_active")
+    public boolean isActive = true;
 
-    public String getLocation() {
-        return location;
-    }
+    @ColumnInfo(name = "company_id")
+    public String companyId;
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    @ColumnInfo(name = "created_at")
+    public long createdAt;
 
-    public String getDescription() {
-        return description;
-    }
+    @ColumnInfo(name = "updated_at")
+    public long updatedAt;
 
-    public void setDescription(String description) {
-        this.description = description;
+    public Warehouse() {
+        this.createdAt = System.currentTimeMillis();
+        this.updatedAt = System.currentTimeMillis();
     }
 }
-
