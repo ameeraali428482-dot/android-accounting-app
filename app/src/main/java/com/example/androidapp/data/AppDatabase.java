@@ -10,24 +10,60 @@ import com.example.androidapp.data.entities.*;
 @Database(entities = {
     Account.class,
     Transaction.class,
-    Category.class,
-    User.class,
-    Company.class,
     Invoice.class,
     InvoiceItem.class,
     Item.class,
-    Order.class,
-    OrderItem.class,
+    Category.class,
+    User.class,
+    Company.class,
+    CompanySettings.class,
+    Role.class,
+    Permission.class,
+    UserRole.class,
+    UserPermission.class,
+    RolePermission.class,
+    JournalEntry.class,
+    JournalEntryItem.class,
+    AccountStatement.class,
+    Customer.class,
+    Supplier.class,
+    Employee.class,
     Payment.class,
     Receipt.class,
+    Purchase.class,
+    Order.class,
+    OrderItem.class,
     Warehouse.class,
     Inventory.class,
+    AuditLog.class,
+    Notification.class,
+    Reminder.class,
+    Campaign.class,
+    DeliveryReceipt.class,
+    Connection.class,
+    SharedLink.class,
+    PointTransaction.class,
+    Reward.class,
+    UserReward.class,
+    Trophy.class,
+    UserTrophy.class,
+    Service.class,
+    Doctor.class,
+    Voucher.class,
+    FinancialTransfer.class,
+    CurrencyExchange.class,
+    JoinRequest.class,
+    Chat.class,
+    ChatMessage.class,
+    Repair.class,
     Post.class,
     Comment.class,
     Like.class,
     Share.class,
-    Chat.class,
-    ChatMessage.class,
+    ContactSync.class,
+    Friend.class,
+    ProfitLossStatement.class,
+    BalanceSheet.class,
     AIConversation.class,
     BarcodeData.class,
     DataBackup.class,
@@ -36,63 +72,66 @@ import com.example.androidapp.data.entities.*;
     OfflineTransaction.class,
     PeriodicReminder.class,
     SmartNotification.class,
-    UserPoints.class,
-    Role.class,
-    Permission.class,
-    UserPermission.class,
-    UserRole.class,
-    RolePermission.class,
-    AuditLog.class,
-    AccountStatement.class,
-    BalanceSheet.class,
-    ProfitLossStatement.class,
-    Campaign.class,
-    DeliveryReceipt.class,
-    Connection.class,
-    SharedLink.class,
-    CompanySettings.class,
-    PointTransaction.class,
-    Reward.class,
-    UserReward.class,
-    Employee.class,
-    Payroll.class,
-    PayrollItem.class,
-    Service.class,
-    Doctor.class,
-    Voucher.class,
-    FinancialTransfer.class,
-    CurrencyExchange.class,
-    JoinRequest.class,
-    Repair.class,
-    Trophy.class,
-    UserTrophy.class,
-    Friend.class,
-    ContactSync.class,
-    Purchase.class
-}, version = 2, exportSchema = false)
+    UserPoints.class
+}, version = 1, exportSchema = false)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     
+    // DAO declarations
     public abstract AccountDao accountDao();
     public abstract TransactionDao transactionDao();
-    public abstract CategoryDao categoryDao();
-    public abstract UserDao userDao();
-    public abstract CompanyDao companyDao();
     public abstract InvoiceDao invoiceDao();
     public abstract InvoiceItemDao invoiceItemDao();
     public abstract ItemDao itemDao();
-    public abstract OrderDao orderDao();
-    public abstract OrderItemDao orderItemDao();
+    public abstract CategoryDao categoryDao();
+    public abstract UserDao userDao();
+    public abstract CompanyDao companyDao();
+    public abstract CompanySettingsDao companySettingsDao();
+    public abstract RoleDao roleDao();
+    public abstract PermissionDao permissionDao();
+    public abstract UserRoleDao userRoleDao();
+    public abstract UserPermissionDao userPermissionDao();
+    public abstract RolePermissionDao rolePermissionDao();
+    public abstract JournalEntryDao journalEntryDao();
+    public abstract JournalEntryItemDao journalEntryItemDao();
+    public abstract AccountStatementDao accountStatementDao();
+    public abstract CustomerDao customerDao();
+    public abstract SupplierDao supplierDao();
+    public abstract EmployeeDao employeeDao();
     public abstract PaymentDao paymentDao();
     public abstract ReceiptDao receiptDao();
+    public abstract PurchaseDao purchaseDao();
+    public abstract OrderDao orderDao();
+    public abstract OrderItemDao orderItemDao();
     public abstract WarehouseDao warehouseDao();
     public abstract InventoryDao inventoryDao();
+    public abstract AuditLogDao auditLogDao();
+    public abstract NotificationDao notificationDao();
+    public abstract ReminderDao reminderDao();
+    public abstract CampaignDao campaignDao();
+    public abstract DeliveryReceiptDao deliveryReceiptDao();
+    public abstract ConnectionDao connectionDao();
+    public abstract SharedLinkDao sharedLinkDao();
+    public abstract PointTransactionDao pointTransactionDao();
+    public abstract RewardDao rewardDao();
+    public abstract UserRewardDao userRewardDao();
+    public abstract TrophyDao trophyDao();
+    public abstract UserTrophyDao userTrophyDao();
+    public abstract ServiceDao serviceDao();
+    public abstract DoctorDao doctorDao();
+    public abstract VoucherDao voucherDao();
+    public abstract FinancialTransferDao financialTransferDao();
+    public abstract CurrencyExchangeDao currencyExchangeDao();
+    public abstract JoinRequestDao joinRequestDao();
+    public abstract ChatDao chatDao();
+    public abstract ChatMessageDao chatMessageDao();
+    public abstract RepairDao repairDao();
     public abstract PostDao postDao();
     public abstract CommentDao commentDao();
     public abstract LikeDao likeDao();
     public abstract ShareDao shareDao();
-    public abstract ChatDao chatDao();
-    public abstract ChatMessageDao chatMessageDao();
+    public abstract ContactSyncDao contactSyncDao();
+    public abstract FriendDao friendDao();
     public abstract AIConversationDao aiConversationDao();
     public abstract BarcodeDataDao barcodeDataDao();
     public abstract DataBackupDao dataBackupDao();
@@ -102,40 +141,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PeriodicReminderDao periodicReminderDao();
     public abstract SmartNotificationDao smartNotificationDao();
     public abstract UserPointsDao userPointsDao();
-    public abstract RoleDao roleDao();
-    public abstract PermissionDao permissionDao();
-    public abstract UserPermissionDao userPermissionDao();
-    public abstract UserRoleDao userRoleDao();
-    public abstract RolePermissionDao rolePermissionDao();
-    public abstract AuditLogDao auditLogDao();
-    public abstract AccountStatementDao accountStatementDao();
-    public abstract CampaignDao campaignDao();
-    public abstract DeliveryReceiptDao deliveryReceiptDao();
-    public abstract ConnectionDao connectionDao();
-    public abstract SharedLinkDao sharedLinkDao();
-    public abstract CompanySettingsDao companySettingsDao();
-    public abstract PointTransactionDao pointTransactionDao();
-    public abstract RewardDao rewardDao();
-    public abstract UserRewardDao userRewardDao();
-    public abstract EmployeeDao employeeDao();
-    public abstract PayrollDao payrollDao();
-    public abstract PayrollItemDao payrollItemDao();
-    public abstract ServiceDao serviceDao();
-    public abstract DoctorDao doctorDao();
-    public abstract VoucherDao voucherDao();
-    public abstract FinancialTransferDao financialTransferDao();
-    public abstract CurrencyExchangeDao currencyExchangeDao();
-    public abstract JoinRequestDao joinRequestDao();
-    public abstract RepairDao repairDao();
-    public abstract TrophyDao trophyDao();
-    public abstract UserTrophyDao userTrophyDao();
-    public abstract FriendDao friendDao();
-    public abstract ContactSyncDao contactSyncDao();
-    public abstract PurchaseDao purchaseDao();
-    
-    private static volatile AppDatabase INSTANCE;
-    
-    public static AppDatabase getDatabase() {
-        return INSTANCE;
-    }
+
+    // Database executor for background tasks
+    public static final java.util.concurrent.ExecutorService databaseWriteExecutor = 
+        java.util.concurrent.Executors.newFixedThreadPool(4);
 }
