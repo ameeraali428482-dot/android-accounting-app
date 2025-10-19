@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">Accounting App</string>
     <string name="default_notification_channel_id">accounting_app_channel</string>
@@ -9,32 +10,82 @@
     <string name="trophy_image_url">Trophy Image URL</string>
     <string name="points_required">Points Required</string>
 
-    <!-- Order and Product strings -->
+    
     <string name="quantity_format">الكمية: %.2f</string>
     <string name="price_format">%s ر.س</string>
     <string name="total_amount">المبلغ الإجمالي</string>
     <string name="unit_price">سعر الوحدة</string>
     <string name="product_details">تفاصيل المنتج</string>
 
-    <!-- Firebase and Authentication strings -->
+    
     <string name="firebase_auth_error">خطأ في المصادقة</string>
     <string name="firebase_network_error">خطأ في الشبكة</string>
     <string name="login_success">تم تسجيل الدخول بنجاح</string>
     <string name="logout_success">تم تسجيل الخروج بنجاح</string>
 
-    <!-- Database strings -->
+    
     <string name="database_error">خطأ في قاعدة البيانات</string>
     <string name="sync_in_progress">جارٍ المزامنة...</string>
     <string name="sync_completed">تمت المزامنة بنجاح</string>
 
-    <!-- Permissions strings -->
+    
     <string name="permission_camera">إذن الكاميرا مطلوب لمسح الباركود</string>
     <string name="permission_storage">إذن التخزين مطلوب للنسخ الاحتياطي</string>
     <string name="permission_location">إذن الموقع مطلوب للميزات المتقدمة</string>
 
-    <!-- Backup and Restore strings -->
+    
     <string name="backup_in_progress">جارٍ إنشاء النسخة الاحتياطية...</string>
     <string name="backup_completed">تم إنشاء النسخة الاحتياطية بنجاح</string>
     <string name="restore_in_progress">جارٍ الاستعادة...</string>
     <string name="restore_completed">تمت الاستعادة بنجاح</string>
+<string name="title_activity_forgot_password">استعادة كلمة المرور</string>
+    <string name="title_activity_splash">شاشة البدء</string>
+    <string name="title_activity_company_list">قائمة الشركات</string>
+    <string name="title_activity_company_detail">تفاصيل الشركة</string>
+    <string name="title_activity_transaction_list">قائمة المعاملات</string>
+    <string name="title_activity_transaction_detail">تفاصيل المعاملة</string>
+    <string name="title_activity_category_list">قائمة الفئات</string>
+    <string name="title_activity_category_detail">تفاصيل الفئة</string>
+    <string name="title_activity_product_list">قائمة المنتجات</string>
+    <string name="title_activity_user_list">قائمة المستخدمين</string>
+    <string name="title_activity_user_detail">تفاصيل المستخدم</string>
+    <string name="title_activity_settings">الإعدادات</string>
+    <string name="title_activity_profile">الملف الشخصي</string>
+    <string name="title_activity_about">حول التطبيق</string>
+    
+    
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_accounts">الحسابات</string>
+    <string name="nav_transactions">المعاملات</string>
+    <string name="nav_reports">التقارير</string>
+    <string name="nav_settings">الإعدادات</string>
+    
+    
+    <string name="action_add">إضافة</string>
+    <string name="action_edit">تعديل</string>
+    <string name="action_delete">حذف</string>
+    <string name="action_save">حفظ</string>
+    <string name="action_cancel">إلغاء</string>
+    <string name="action_search">بحث</string>
+    <string name="action_filter">تصفية</string>
+    <string name="action_export">تصدير</string>
+    <string name="action_import">استيراد</string>
+    <string name="action_backup">نسخ احتياطي</string>
+    <string name="action_restore">استعادة</string>
+    
+    
+    <string name="status_loading">جارٍ التحميل...</string>
+    <string name="status_saving">جارٍ الحفظ...</string>
+    <string name="status_success">تم بنجاح</string>
+    <string name="status_error">حدث خطأ</string>
+    <string name="status_no_data">لا توجد بيانات</string>
+    <string name="status_network_error">خطأ في الاتصال</string>
+    
+    
+    <string name="error_field_required">هذا الحقل مطلوب</string>
+    <string name="error_invalid_email">بريد إلكتروني غير صحيح</string>
+    <string name="error_invalid_phone">رقم هاتف غير صحيح</string>
+    <string name="error_password_mismatch">كلمات المرور غير متطابقة</string>
+    <string name="error_weak_password">كلمة المرور ضعيفة</string>
+    
 </resources>
