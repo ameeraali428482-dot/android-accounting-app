@@ -99,7 +99,6 @@
     <color name="scrim">#80000000</color>
     <color name="overlay_light">#1AFFFFFF</color>
     <color name="overlay_dark">#1A000000</color>
-</resources>
 
     <!-- Material Colors المفقودة -->
     <color name="material_surface">@color/surface</color>
