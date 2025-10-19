@@ -1,6 +1,9 @@
+<resources>
 
-    <!-- Rounded Corners Style -->
+    <!-- Rounded Corners Style using drawable background -->
     <style name="RoundedCorners">
-        <item name="cornerRadius">16dp</item>
+        <item name="android:background">@drawable/rounded_corners_bg</item>
         <item name="android:layout_margin">8dp</item>
     </style>
+
+</resources>
