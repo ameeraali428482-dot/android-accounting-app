@@ -10,3 +10,26 @@
     <string name="points_required">Points Required</string>
     
     <!-- Order and Product strings -->\n    <string name="quantity_format">الكمية: %.2f</string>\n    <string name="price_format">%s ر.س</string>\n    <string name="total_amount">المبلغ الإجمالي</string>\n    <string name="unit_price">سعر الوحدة</string>\n    <string name="product_details">تفاصيل المنتج</string>\n    \n</resources>
+
+    <!-- Firebase and Authentication strings -->
+    <string name="firebase_auth_error">خطأ في المصادقة</string>
+    <string name="firebase_network_error">خطأ في الشبكة</string>
+    <string name="login_success">تم تسجيل الدخول بنجاح</string>
+    <string name="logout_success">تم تسجيل الخروج بنجاح</string>
+    
+    <!-- Database strings -->
+    <string name="database_error">خطأ في قاعدة البيانات</string>
+    <string name="sync_in_progress">جارٍ المزامنة...</string>
+    <string name="sync_completed">تمت المزامنة بنجاح</string>
+    
+    <!-- Permissions strings -->
+    <string name="permission_camera">إذن الكاميرا مطلوب لمسح الباركود</string>
+    <string name="permission_storage">إذن التخزين مطلوب للنسخ الاحتياطي</string>
+    <string name="permission_location">إذن الموقع مطلوب للميزات المتقدمة</string>
+    
+    <!-- Backup and Restore strings -->
+    <string name="backup_in_progress">جارٍ إنشاء النسخة الاحتياطية...</string>
+    <string name="backup_completed">تم إنشاء النسخة الاحتياطية بنجاح</string>
+    <string name="restore_in_progress">جارٍ الاستعادة...</string>
+    <string name="restore_completed">تمت الاستعادة بنجاح</string>
+    

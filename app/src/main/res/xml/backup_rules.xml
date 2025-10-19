@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<backup-rules>
-    <!-- قواعد النسخ الاحتياطي -->
-</backup-rules>
+<full-backup-content>
+    <exclude domain="sharedpref" path="secure_prefs.xml"/>
+    <exclude domain="database" path="cache.db"/>
+    <exclude domain="file" path="temp/"/>
+</full-backup-content>

@@ -23,4 +23,10 @@
             <enum name="general_text" value="15" />
         </attr>
     </declare-styleable>
+    
+    <!-- إضافة السمات المفقودة -->
+    <attr name="windowSplashScreenBackground" format="reference|color" />
+    <attr name="splashScreenIconSize" format="dimension" />
+    <attr name="splashScreenAnimationDuration" format="integer" />
+    <attr name="materialThemeOverlay" format="reference" />
 </resources>
