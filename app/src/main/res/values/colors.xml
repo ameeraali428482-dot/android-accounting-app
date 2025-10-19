@@ -114,10 +114,10 @@
     <color name="material_error_container">@color/error_container</color>
     <color name="material_on_surface">@color/on_surface</color>
     <color name="material_outline">@color/outline</color>
-</resources>
 
 <!-- Background Colors -->
 <color name="background_light">#F8F9FA</color>
 <color name="header_background">#1E3A8A</color>
 <color name="total_background">#F3F4F6</color>
 <color name="danger">#DC2626</color>
+</resources>
