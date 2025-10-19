@@ -8,75 +8,64 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    
+
     <!-- Storage Permissions -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" 
-        android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
-        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
-    
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
+
     <!-- Camera and Gallery Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-    
+
     <!-- Communication Permissions -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
-    
+
     <!-- Location Permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    
+
     <!-- Notification Permissions -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    
+
     <!-- Background and Foreground Service Permissions -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    
+
     <!-- Bluetooth Permissions -->
-    <uses-permission android:name="android.permission.BLUETOOTH" 
-        android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" 
-        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    
+
     <!-- Biometric Authentication -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-    
+
     <!-- Calendar Permissions -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    
+
     <!-- System and Security Permissions -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    
+
     <!-- Features declarations -->
-    <uses-feature android:name="android.hardware.camera" 
-        android:required="false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" 
-        android:required="false" />
-    <uses-feature android:name="android.hardware.location" 
-        android:required="false" />
-    <uses-feature android:name="android.hardware.location.gps" 
-        android:required="false" />
-    <uses-feature android:name="android.hardware.fingerprint" 
-        android:required="false" />
-    <uses-feature android:name="android.hardware.bluetooth" 
-        android:required="false" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-feature android:name="android.hardware.location" android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
+    <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
 
     <application
         android:name=".App"
@@ -91,7 +80,7 @@
         android:requestLegacyExternalStorage="true"
         android:preserveLegacyExternalStorage="true"
         tools:targetApi="33">
-        
+
         <!-- Authentication Activities -->
         <activity
             android:name=".ui.auth.LoginActivity"
@@ -105,7 +94,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <activity
             android:name=".ui.auth.RegisterActivity"
             android:exported="false"
@@ -113,7 +102,7 @@
             android:theme="@style/Theme.AndroidApp.NoActionBar"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-            
+
         <activity
             android:name=".ui.auth.ForgotPasswordActivity"
             android:exported="false"
@@ -121,7 +110,7 @@
             android:theme="@style/Theme.AndroidApp.NoActionBar"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        
+
         <!-- Main Activities -->
         <activity
             android:name=".ui.main.MainActivity"
@@ -130,14 +119,14 @@
             android:theme="@style/Theme.AndroidApp.NoActionBar"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-            
+
         <activity
             android:name=".ui.main.SplashActivity"
             android:exported="false"
             android:label="شاشة البدء"
             android:theme="@style/Theme.AndroidApp.Splash"
             android:screenOrientation="portrait" />
-        
+
         <!-- Company Management Activities -->
         <activity
             android:name=".ui.company.CompanyDetailActivity"
@@ -145,14 +134,14 @@
             android:label="تفاصيل الشركة"
             android:parentActivityName=".ui.company.CompanyListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.company.CompanyListActivity"
             android:exported="false"
             android:label="قائمة الشركات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Account Management Activities -->
         <activity
             android:name=".ui.account.AccountDetailActivity"
@@ -160,14 +149,14 @@
             android:label="تفاصيل الحساب"
             android:parentActivityName=".ui.account.AccountListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.account.AccountListActivity"
             android:exported="false"
             android:label="قائمة الحسابات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Transaction Activities -->
         <activity
             android:name=".ui.transaction.TransactionDetailActivity"
@@ -175,14 +164,14 @@
             android:label="تفاصيل المعاملة"
             android:parentActivityName=".ui.transaction.TransactionListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.transaction.TransactionListActivity"
             android:exported="false"
             android:label="قائمة المعاملات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Invoice Activities -->
         <activity
             android:name=".ui.invoice.InvoiceDetailActivity"
@@ -190,21 +179,21 @@
             android:label="تفاصيل الفاتورة"
             android:parentActivityName=".ui.invoice.InvoiceListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.invoice.ModernInvoiceDetailActivity"
             android:exported="false"
             android:label="تفاصيل الفاتورة الحديثة"
             android:parentActivityName=".ui.invoice.InvoiceListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.invoice.InvoiceListActivity"
             android:exported="false"
             android:label="قائمة الفواتير"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Product Activities -->
         <activity
             android:name=".ui.product.ProductDetailActivity"
@@ -212,21 +201,21 @@
             android:label="تفاصيل المنتج"
             android:parentActivityName=".ui.product.ProductListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.product.ModernProductDetailActivity"
             android:exported="false"
             android:label="تفاصيل المنتج الحديثة"
             android:parentActivityName=".ui.product.ProductListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.product.ProductListActivity"
             android:exported="false"
             android:label="قائمة المنتجات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Customer Activities -->
         <activity
             android:name=".ui.customer.CustomerDetailActivity"
@@ -234,21 +223,21 @@
             android:label="تفاصيل العميل"
             android:parentActivityName=".ui.customer.CustomerListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.customer.ModernCustomerDetailActivity"
             android:exported="false"
             android:label="تفاصيل العميل الحديثة"
             android:parentActivityName=".ui.customer.CustomerListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.customer.CustomerListActivity"
             android:exported="false"
             android:label="قائمة العملاء"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Supplier Activities -->
         <activity
             android:name=".ui.supplier.SupplierDetailActivity"
@@ -256,14 +245,14 @@
             android:label="تفاصيل المورد"
             android:parentActivityName=".ui.supplier.SupplierListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.supplier.SupplierListActivity"
             android:exported="false"
             android:label="قائمة الموردين"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Bank Reconciliation Activity -->
         <activity
             android:name=".ui.bankreconciliation.BankReconciliationActivity"
@@ -271,7 +260,7 @@
             android:label="مطابقة كشف الحساب المصرفي"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Order Activities -->
         <activity
             android:name=".ui.order.OrderDetailActivity"
@@ -279,21 +268,21 @@
             android:label="تفاصيل الطلب"
             android:parentActivityName=".ui.order.OrderListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.order.ModernOrderDetailActivity"
             android:exported="false"
             android:label="تفاصيل الطلب الحديثة"
             android:parentActivityName=".ui.order.OrderListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.order.OrderListActivity"
             android:exported="false"
             android:label="قائمة الطلبات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Category Activities -->
         <activity
             android:name=".ui.category.CategoryDetailActivity"
@@ -301,14 +290,14 @@
             android:label="تفاصيل الفئة"
             android:parentActivityName=".ui.category.CategoryListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.category.CategoryListActivity"
             android:exported="false"
             android:label="قائمة الفئات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Payment Activities -->
         <activity
             android:name=".ui.payment.PaymentDetailActivity"
@@ -316,14 +305,14 @@
             android:label="تفاصيل الدفع"
             android:parentActivityName=".ui.payment.PaymentListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.payment.PaymentListActivity"
             android:exported="false"
             android:label="قائمة المدفوعات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Report Activities -->
         <activity
             android:name=".ui.report.ReportDetailActivity"
@@ -331,21 +320,21 @@
             android:label="تفاصيل التقرير"
             android:parentActivityName=".ui.report.ReportListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.reports.ModernReportsActivity"
             android:exported="false"
             android:label="التقارير الحديثة"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.report.ReportListActivity"
             android:exported="false"
             android:label="قائمة التقارير"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- User Management Activities -->
         <activity
             android:name=".ui.user.UserDetailActivity"
@@ -353,14 +342,14 @@
             android:label="تفاصيل المستخدم"
             android:parentActivityName=".ui.user.UserListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.user.UserListActivity"
             android:exported="false"
             android:label="قائمة المستخدمين"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Permission and Role Activities -->
         <activity
             android:name=".ui.permission.PermissionDetailActivity"
@@ -368,28 +357,28 @@
             android:label="تفاصيل الصلاحية"
             android:parentActivityName=".ui.permission.PermissionListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.permission.PermissionListActivity"
             android:exported="false"
             android:label="قائمة الصلاحيات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.role.RoleDetailActivity"
             android:exported="false"
             android:label="تفاصيل الدور"
             android:parentActivityName=".ui.role.RoleListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.role.RoleListActivity"
             android:exported="false"
             android:label="قائمة الأدوار"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Financial Activities -->
         <activity
             android:name=".ui.accountstatement.AccountStatementDetailActivity"
@@ -397,14 +386,14 @@
             android:label="تفاصيل كشف الحساب"
             android:parentActivityName=".ui.accountstatement.AccountStatementListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.accountstatement.AccountStatementListActivity"
             android:exported="false"
             android:label="قائمة كشوف الحسابات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Notification Activities -->
         <activity
             android:name=".ui.notification.NotificationDetailActivity"
@@ -412,14 +401,14 @@
             android:label="تفاصيل الإشعار"
             android:parentActivityName=".ui.notification.NotificationListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.notification.NotificationListActivity"
             android:exported="false"
             android:label="قائمة الإشعارات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Audit and Admin Activities -->
         <activity
             android:name=".ui.audit.AuditDetailActivity"
@@ -427,28 +416,28 @@
             android:label="تفاصيل المراجعة"
             android:parentActivityName=".ui.audit.AuditListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.audit.AuditListActivity"
             android:exported="false"
             android:label="قائمة المراجعات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.admin.AdminUserDetailActivity"
             android:exported="false"
             android:label="تفاصيل المشرف"
             android:parentActivityName=".ui.admin.AdminUserListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.admin.AdminUserListActivity"
             android:exported="false"
             android:label="قائمة المشرفين"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
         <!-- Additional Activities -->
         <activity
             android:name=".ui.blog.BlogDetailActivity"
@@ -456,502 +445,333 @@
             android:label="تفاصيل المقال"
             android:parentActivityName=".ui.blog.BlogListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.blog.BlogListActivity"
             android:exported="false"
             android:label="قائمة المقالات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.coupon.CouponDetailActivity"
             android:exported="false"
             android:label="تفاصيل الكوبون"
             android:parentActivityName=".ui.coupon.CouponListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.coupon.CouponListActivity"
             android:exported="false"
             android:label="قائمة الكوبونات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.sharedlink.SharedLinkDetailActivity"
             android:exported="false"
             android:label="تفاصيل الرابط المشترك"
             android:parentActivityName=".ui.sharedlink.SharedLinkListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.sharedlink.SharedLinkListActivity"
             android:exported="false"
             android:label="قائمة الروابط المشتركة"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.voucher.VoucherDetailActivity"
             android:exported="false"
             android:label="تفاصيل القسيمة"
             android:parentActivityName=".ui.voucher.VoucherListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.voucher.VoucherListActivity"
             android:exported="false"
             android:label="قائمة القسائم"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.reward.RewardDetailActivity"
             android:exported="false"
             android:label="تفاصيل المكافأة"
             android:parentActivityName=".ui.reward.RewardListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.reward.RewardListActivity"
             android:exported="false"
             android:label="قائمة المكافآت"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.trophy.TrophyDetailActivity"
             android:exported="false"
             android:label="تفاصيل الجائزة"
             android:parentActivityName=".ui.trophy.TrophyListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.trophy.TrophyListActivity"
             android:exported="false"
             android:label="قائمة الجوائز"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.userreward.UserRewardDetailActivity"
             android:exported="false"
             android:label="تفاصيل مكافأة المستخدم"
             android:parentActivityName=".ui.userreward.UserRewardListActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.userreward.UserRewardListActivity"
             android:exported="false"
             android:label="قائمة مكافآت المستخدمين"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
-        <!-- Missing Activities - Enhanced Features -->\
-        <activity\
-            android:name=".ui.auth.ForgotPasswordActivity"\
-            android:exported="false"\
-            android:label="استعادة كلمة المرور"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.main.SplashActivity"\
-            android:exported="false"\
-            android:label="شاشة البدء"\
-            android:theme="@style/Theme.AndroidApp.Splash" />\
-            \
-        <activity\
-            android:name=".ui.account.EnhancedAccountListActivity"\
-            android:exported="false"\
-            android:label="قائمة الحسابات المحسنة"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.barcode.BarcodeScannerActivity"\
-            android:exported="false"\
-            android:label="ماسح الباركود"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.base.PermissionCheckActivity"\
-            android:exported="false"\
-            android:label="فحص الصلاحيات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.campaign.CampaignDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل الحملة"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.campaign.CampaignListActivity"\
-            android:exported="false"\
-            android:label="قائمة الحملات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.chat.ChatDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل المحادثة"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.chat.ChatListActivity"\
-            android:exported="false"\
-            android:label="قائمة المحادثات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.chat.NewChatActivity"\
-            android:exported="false"\
-            android:label="محادثة جديدة"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.common.BaseListActivity"\
-            android:exported="false"\
-            android:label="القائمة الأساسية"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.common.EnhancedBaseActivity"\
-            android:exported="false"\
-            android:label="النشاط الأساسي المحسن"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.common.ImportExportActivity"\
-            android:exported="false"\
-            android:label="الاستيراد والتصدير"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.companysettings.CompanySettingsActivity"\
-            android:exported="false"\
-            android:label="إعدادات الشركة"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.connection.ConnectionDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل الاتصال"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.connection.ConnectionListActivity"\
-            android:exported="false"\
-            android:label="قائمة الاتصالات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.employee.EmployeeDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل الموظف"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.employee.EmployeeListActivity"\
-            android:exported="false"\
-            android:label="قائمة الموظفين"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.invoice.EnhancedInvoiceDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل الفاتورة المحسنة"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.item.ItemDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل العنصر"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.item.ItemListActivity"\
-            android:exported="false"\
-            android:label="قائمة العناصر"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.journalentry.JournalEntryDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل قيد اليومية"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.journalentry.JournalEntryListActivity"\
-            android:exported="false"\
-            android:label="قائمة قيود اليومية"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.payroll.PayrollDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل كشف الراتب"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.payroll.PayrollListActivity"\
-            android:exported="false"\
-            android:label="قائمة كشوف الرواتب"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.pointtransaction.PointTransactionDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل معاملة النقاط"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.pointtransaction.PointTransactionListActivity"\
-            android:exported="false"\
-            android:label="قائمة معاملات النقاط"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.product.ProductEditActivity"\
-            android:exported="false"\
-            android:label="تحرير المنتج"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.receipt.ReceiptDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل الإيصال"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.receipt.ReceiptListActivity"\
-            android:exported="false"\
-            android:label="قائمة الإيصالات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.reminder.ReminderDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل التذكير"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.reminder.ReminderListActivity"\
-            android:exported="false"\
-            android:label="قائمة التذكيرات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.repair.RepairDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل الإصلاح"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.repair.RepairListActivity"\
-            android:exported="false"\
-            android:label="قائمة الإصلاحات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.reports.CustomerReportActivity"\
-            android:exported="false"\
-            android:label="تقرير العملاء"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.reports.ProfitLossReportActivity"\
-            android:exported="false"\
-            android:label="تقرير الأرباح والخسائر"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.reports.ReportsActivity"\
-            android:exported="false"\
-            android:label="التقارير"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.reports.SalesReportActivity"\
-            android:exported="false"\
-            android:label="تقرير المبيعات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.reports.SupplierReportActivity"\
-            android:exported="false"\
-            android:label="تقرير الموردين"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.settings.DetailedSettingsActivity"\
-            android:exported="false"\
-            android:label="الإعدادات التفصيلية"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.supplier.ModernSupplierDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل المورد الحديثة"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-        \
-        <!-- Missing Category Activities -->\
-        <activity\
-            android:name=".ui.category.CategoryDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل الفئة"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.category.CategoryListActivity"\
-            android:exported="false"\
-            android:label="قائمة الفئات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <!-- Missing Product List Activity -->\
-        <activity\
-            android:name=".ui.product.ProductListActivity"\
-            android:exported="false"\
-            android:label="قائمة المنتجات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <!-- Missing Company Activities -->\
-        <activity\
-            android:name=".ui.company.CompanyDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل الشركة"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.company.CompanyListActivity"\
-            android:exported="false"\
-            android:label="قائمة الشركات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <!-- Missing Transaction Activities -->\
-        <activity\
-            android:name=".ui.transaction.TransactionDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل المعاملة"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.transaction.TransactionListActivity"\
-            android:exported="false"\
-            android:label="قائمة المعاملات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <!-- Missing Settings and Profile Activities -->\
-        <activity\
-            android:name=".ui.settings.SettingsActivity"\
-            android:exported="false"\
-            android:label="الإعدادات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.profile.ProfileActivity"\
-            android:exported="false"\
-            android:label="الملف الشخصي"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.about.AboutActivity"\
-            android:exported="false"\
-            android:label="حول التطبيق"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <!-- Missing Report Activities -->\
-        <activity\
-            android:name=".ui.report.ReportDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل التقرير"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.report.ReportListActivity"\
-            android:exported="false"\
-            android:label="قائمة التقارير"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <!-- Missing Permission Activities -->\
-        <activity\
-            android:name=".ui.permission.PermissionDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل الصلاحية"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.permission.PermissionListActivity"\
-            android:exported="false"\
-            android:label="قائمة الصلاحيات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <!-- Missing User Activities -->\
-        <activity\
-            android:name=".ui.user.UserDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل المستخدم"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.user.UserListActivity"\
-            android:exported="false"\
-            android:label="قائمة المستخدمين"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <!-- Missing Audit Activities -->\
-        <activity\
-            android:name=".ui.audit.AuditDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل المراجعة"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.audit.AuditListActivity"\
-            android:exported="false"\
-            android:label="قائمة المراجعات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <!-- Missing Blog Activities -->\
-        <activity\
-            android:name=".ui.blog.BlogDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل المقال"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.blog.BlogListActivity"\
-            android:exported="false"\
-            android:label="قائمة المقالات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <!-- Missing Coupon Activities -->\
-        <activity\
-            android:name=".ui.coupon.CouponDetailActivity"\
-            android:exported="false"\
-            android:label="تفاصيل الكوبون"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />\
-            \
-        <activity\
-            android:name=".ui.coupon.CouponListActivity"\
-            android:exported="false"\
-            android:label="قائمة الكوبونات"\
-            android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        <!-- Special Activities from accountingapp package -->
+
+        <!-- Enhanced Features Activities -->
         <activity
-            android:name="com.example.accountingapp.ActivityLogActivity"
+            android:name=".ui.account.EnhancedAccountListActivity"
             android:exported="false"
-            android:label="سجل الأنشطة"
-            android:parentActivityName=".ui.main.MainActivity"
+            android:label="قائمة الحسابات المحسنة"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
-            android:name="com.example.accountingapp.BackupRestoreActivity"
+            android:name=".ui.barcode.BarcodeScannerActivity"
             android:exported="false"
-            android:label="النسخ الاحتياطي والاستعادة"
-            android:parentActivityName=".ui.main.MainActivity"
+            android:label="ماسح الباركود"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-        
+
+        <activity
+            android:name=".ui.base.PermissionCheckActivity"
+            android:exported="false"
+            android:label="فحص الصلاحيات"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.campaign.CampaignDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الحملة"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.campaign.CampaignListActivity"
+            android:exported="false"
+            android:label="قائمة الحملات"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.chat.ChatDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل المحادثة"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.chat.ChatListActivity"
+            android:exported="false"
+            android:label="قائمة المحادثات"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.chat.NewChatActivity"
+            android:exported="false"
+            android:label="محادثة جديدة"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.common.BaseListActivity"
+            android:exported="false"
+            android:label="القائمة الأساسية"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.common.EnhancedBaseActivity"
+            android:exported="false"
+            android:label="النشاط الأساسي المحسن"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.common.ImportExportActivity"
+            android:exported="false"
+            android:label="الاستيراد والتصدير"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.companysettings.CompanySettingsActivity"
+            android:exported="false"
+            android:label="إعدادات الشركة"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.connection.ConnectionDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الاتصال"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.connection.ConnectionListActivity"
+            android:exported="false"
+            android:label="قائمة الاتصالات"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.employee.EmployeeDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الموظف"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.employee.EmployeeListActivity"
+            android:exported="false"
+            android:label="قائمة الموظفين"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.invoice.EnhancedInvoiceDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الفاتورة المحسنة"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.item.ItemDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل العنصر"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.item.ItemListActivity"
+            android:exported="false"
+            android:label="قائمة العناصر"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.journalentry.JournalEntryDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل قيد اليومية"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.journalentry.JournalEntryListActivity"
+            android:exported="false"
+            android:label="قائمة قيود اليومية"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.payroll.PayrollDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل كشف الراتب"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.payroll.PayrollListActivity"
+            android:exported="false"
+            android:label="قائمة كشوف الرواتب"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.pointtransaction.PointTransactionDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل معاملة النقاط"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.pointtransaction.PointTransactionListActivity"
+            android:exported="false"
+            android:label="قائمة معاملات النقاط"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.product.ProductEditActivity"
+            android:exported="false"
+            android:label="تحرير المنتج"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.receipt.ReceiptDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الإيصال"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.receipt.ReceiptListActivity"
+            android:exported="false"
+            android:label="قائمة الإيصالات"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.reminder.ReminderDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل التذكير"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.reminder.ReminderListActivity"
+            android:exported="false"
+            android:label="قائمة التذكيرات"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.repair.RepairDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل الإصلاح"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.repair.RepairListActivity"
+            android:exported="false"
+            android:label="قائمة الإصلاحات"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.reports.CustomerReportActivity"
+            android:exported="false"
+            android:label="تقرير العملاء"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.reports.ProfitLossReportActivity"
+            android:exported="false"
+            android:label="تقرير الأرباح والخسائر"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.reports.ReportsActivity"
+            android:exported="false"
+            android:label="التقارير"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.reports.SalesReportActivity"
+            android:exported="false"
+            android:label="تقرير المبيعات"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.reports.SupplierReportActivity"
+            android:exported="false"
+            android:label="تقرير الموردين"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.settings.DetailedSettingsActivity"
+            android:exported="false"
+            android:label="الإعدادات التفصيلية"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.supplier.ModernSupplierDetailActivity"
+            android:exported="false"
+            android:label="تفاصيل المورد الحديثة"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
         <!-- Settings and Profile Activities -->
         <activity
             android:name=".ui.settings.SettingsActivity"
@@ -959,14 +779,14 @@
             android:label="الإعدادات"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.profile.ProfileActivity"
             android:exported="false"
             android:label="الملف الشخصي"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
-            
+
         <activity
             android:name=".ui.about.AboutActivity"
             android:exported="false"
@@ -974,7 +794,21 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.AndroidApp.NoActionBar" />
 
-        
+        <!-- Special Activities from accountingapp package -->
+        <activity
+            android:name="com.example.accountingapp.ActivityLogActivity"
+            android:exported="false"
+            android:label="سجل الأنشطة"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
+        <activity
+            android:name="com.example.accountingapp.BackupRestoreActivity"
+            android:exported="false"
+            android:label="النسخ الاحتياطي والاستعادة"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Theme.AndroidApp.NoActionBar" />
+
         <!-- Services -->
         <service
             android:name=".sync.SyncService"
@@ -989,17 +823,17 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        
+
         <service
             android:name=".services.BackgroundSyncService"
             android:exported="false"
             android:foregroundServiceType="dataSync"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-            
+
         <service
             android:name=".services.NotificationService"
             android:exported="false" />
-        
+
         <!-- Broadcast Receivers -->
         <receiver
             android:name=".receivers.BootReceiver"
@@ -1012,7 +846,7 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-        
+
         <receiver
             android:name=".receivers.NetworkChangeReceiver"
             android:exported="false">
@@ -1020,7 +854,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        
+
         <!-- File Provider for sharing files -->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -1031,7 +865,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        
+
         <!-- Content Provider for database access -->
         <provider
             android:name=".data.provider.DatabaseContentProvider"
