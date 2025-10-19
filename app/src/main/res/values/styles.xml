@@ -1,0 +1,6 @@
+
+    <!-- Rounded Corners Style -->
+    <style name="RoundedCorners">
+        <item name="cornerRadius">16dp</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>

@@ -121,3 +121,6 @@
 <color name="total_background">#F3F4F6</color>
 <color name="danger">#DC2626</color>
 </resources>
+
+    <!-- Material Design Colors -->
+    <color name="material_on_surface_variant">#49454F</color>
