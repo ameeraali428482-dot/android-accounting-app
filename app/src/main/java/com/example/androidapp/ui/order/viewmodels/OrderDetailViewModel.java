@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.androidapp.data.entities.OrderItem;
 import com.example.androidapp.data.entities.Item;
-import com.example.androidapp.data.database.AppDatabase;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.OrderItemDao;
 import com.example.androidapp.data.dao.ItemDao;
 

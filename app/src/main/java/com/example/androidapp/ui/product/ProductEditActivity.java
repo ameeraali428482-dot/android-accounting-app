@@ -12,7 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.androidapp.R;
 import com.example.androidapp.data.entities.Item;
-import com.example.androidapp.data.database.AppDatabase;
+import com.example.androidapp.data.AppDatabase;
 import com.example.androidapp.data.dao.ItemDao;
 
 import java.util.Date;
