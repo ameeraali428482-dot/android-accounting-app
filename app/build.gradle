@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.androidapp"
-        minSdk 24
+        minSdk 21
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -78,9 +78,8 @@ dependencies {
     // JSON
     implementation 'com.google.code.gson:gson:2.10.1'
     
-    // Apache POI for Excel (use lightweight version)
-    implementation 'org.apache.poi:poi:5.2.3'
-    implementation 'org.apache.poi:poi-ooxml:5.2.3'
+    // CSV Parser (بديل خفيف لـ Apache POI)
+    implementation 'com.opencsv:opencsv:5.7.1'
     
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
