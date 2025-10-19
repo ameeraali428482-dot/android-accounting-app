@@ -9,6 +9,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+
 import com.example.androidapp.R;
 import com.example.androidapp.ui.common.EnhancedBaseActivity;
 
@@ -17,7 +19,7 @@ import com.example.androidapp.ui.common.EnhancedBaseActivity;
  * يحتوي على جميع إعدادات الفواتير والميزات الجديدة
  */
 public class DetailedSettingsActivity extends EnhancedBaseActivity {
-    
+
     // إعدادات الفواتير
     private CheckBox cbShowCustomerDetails;
     private CheckBox cbShowItemCodes;
@@ -37,5 +39,332 @@ public class DetailedSettingsActivity extends EnhancedBaseActivity {
     private CheckBox cbAutoCalculateTax;
     private CheckBox cbAutoSaveInvoices;
     private CheckBox cbPrintAfterSave;
+
+    // إعدادات الميزات الصوتية والذكية
+    private CheckBox cbVoiceInputEnabled;
+    private CheckBox cbTTSEnabled;
+    private CheckBox cbSuggestionsEnabled;
+    private CheckBox cbAutoReadEnabled;
+    private CheckBox cbVoiceInSearch;
+    private CheckBox cbVoiceInForms;
+    private CheckBox cbVoiceInInvoices;
     
-    // إعدادات الميزات الصوتية والذكية\n    private CheckBox cbVoiceInputEnabled;\n    private CheckBox cbTTSEnabled;\n    private CheckBox cbSuggestionsEnabled;\n    private CheckBox cbAutoReadEnabled;\n    private CheckBox cbVoiceInSearch;\n    private CheckBox cbVoiceInForms;\n    private CheckBox cbVoiceInInvoices;\n    \n    // إعدادات السرعة والجودة\n    private SeekBar sbTTSSpeed;\n    private TextView tvTTSSpeedValue;\n    private SeekBar sbVoiceTimeout;\n    private TextView tvVoiceTimeoutValue;\n    \n    // إعدادات التخصيص\n    private CheckBox cbDarkTheme;\n    private CheckBox cbLargeText;\n    private CheckBox cbHighContrast;\n    private CheckBox cbShowTooltips;\n    \n    // إعدادات الأمان\n    private CheckBox cbRequirePasswordForReports;\n    private CheckBox cbRequirePasswordForSettings;\n    private CheckBox cbRequirePasswordForBackup;\n    private CheckBox cbLogUserActions;\n    \n    private SharedPreferences preferences;\n    \n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_detailed_settings);\n        \n        preferences = getSharedPreferences(\"AppSettings\", Context.MODE_PRIVATE);\n        \n        initializeViews();\n        loadCurrentSettings();\n        setupListeners();\n        \n        // إعداد شريط الأدوات\n        if (getSupportActionBar() != null) {\n            getSupportActionBar().setTitle(\"الإعدادات المفصلة\");\n            getSupportActionBar().setDisplayHomeAsUpEnabled(true);\n        }\n    }\n    \n    private void initializeViews() {\n        // إعدادات الفواتير\n        cbShowCustomerDetails = findViewById(R.id.cb_show_customer_details);\n        cbShowItemCodes = findViewById(R.id.cb_show_item_codes);\n        cbShowItemDescriptions = findViewById(R.id.cb_show_item_descriptions);\n        cbShowUnitPrices = findViewById(R.id.cb_show_unit_prices);\n        cbShowQuantities = findViewById(R.id.cb_show_quantities);\n        cbShowTotalPrices = findViewById(R.id.cb_show_total_prices);\n        cbShowTaxes = findViewById(R.id.cb_show_taxes);\n        cbShowDiscount = findViewById(R.id.cb_show_discount);\n        cbShowNotes = findViewById(R.id.cb_show_notes);\n        cbShowCompanyLogo = findViewById(R.id.cb_show_company_logo);\n        cbShowCompanyStamp = findViewById(R.id.cb_show_company_stamp);\n        cbShowBarcode = findViewById(R.id.cb_show_barcode);\n        cbShowQRCode = findViewById(R.id.cb_show_qr_code);\n        cbShowPaymentTerms = findViewById(R.id.cb_show_payment_terms);\n        cbShowDueDate = findViewById(R.id.cb_show_due_date);\n        cbAutoCalculateTax = findViewById(R.id.cb_auto_calculate_tax);\n        cbAutoSaveInvoices = findViewById(R.id.cb_auto_save_invoices);\n        cbPrintAfterSave = findViewById(R.id.cb_print_after_save);\n        \n        // إعدادات الميزات الصوتية\n        cbVoiceInputEnabled = findViewById(R.id.cb_voice_input_enabled);\n        cbTTSEnabled = findViewById(R.id.cb_tts_enabled);\n        cbSuggestionsEnabled = findViewById(R.id.cb_suggestions_enabled);\n        cbAutoReadEnabled = findViewById(R.id.cb_auto_read_enabled);\n        cbVoiceInSearch = findViewById(R.id.cb_voice_in_search);\n        cbVoiceInForms = findViewById(R.id.cb_voice_in_forms);\n        cbVoiceInInvoices = findViewById(R.id.cb_voice_in_invoices);\n        \n        // إعدادات السرعة\n        sbTTSSpeed = findViewById(R.id.sb_tts_speed);\n        tvTTSSpeedValue = findViewById(R.id.tv_tts_speed_value);\n        sbVoiceTimeout = findViewById(R.id.sb_voice_timeout);\n        tvVoiceTimeoutValue = findViewById(R.id.tv_voice_timeout_value);\n        \n        // إعدادات التخصيص\n        cbDarkTheme = findViewById(R.id.cb_dark_theme);\n        cbLargeText = findViewById(R.id.cb_large_text);\n        cbHighContrast = findViewById(R.id.cb_high_contrast);\n        cbShowTooltips = findViewById(R.id.cb_show_tooltips);\n        \n        // إعدادات الأمان\n        cbRequirePasswordForReports = findViewById(R.id.cb_require_password_reports);\n        cbRequirePasswordForSettings = findViewById(R.id.cb_require_password_settings);\n        cbRequirePasswordForBackup = findViewById(R.id.cb_require_password_backup);\n        cbLogUserActions = findViewById(R.id.cb_log_user_actions);\n    }\n    \n    private void loadCurrentSettings() {\n        // تحميل إعدادات الفواتير\n        cbShowCustomerDetails.setChecked(preferences.getBoolean(\"show_customer_details\", true));\n        cbShowItemCodes.setChecked(preferences.getBoolean(\"show_item_codes\", true));\n        cbShowItemDescriptions.setChecked(preferences.getBoolean(\"show_item_descriptions\", true));\n        cbShowUnitPrices.setChecked(preferences.getBoolean(\"show_unit_prices\", true));\n        cbShowQuantities.setChecked(preferences.getBoolean(\"show_quantities\", true));\n        cbShowTotalPrices.setChecked(preferences.getBoolean(\"show_total_prices\", true));\n        cbShowTaxes.setChecked(preferences.getBoolean(\"show_taxes\", true));\n        cbShowDiscount.setChecked(preferences.getBoolean(\"show_discount\", true));\n        cbShowNotes.setChecked(preferences.getBoolean(\"show_notes\", true));\n        cbShowCompanyLogo.setChecked(preferences.getBoolean(\"show_company_logo\", true));\n        cbShowCompanyStamp.setChecked(preferences.getBoolean(\"show_company_stamp\", false));\n        cbShowBarcode.setChecked(preferences.getBoolean(\"show_barcode\", false));\n        cbShowQRCode.setChecked(preferences.getBoolean(\"show_qr_code\", true));\n        cbShowPaymentTerms.setChecked(preferences.getBoolean(\"show_payment_terms\", true));\n        cbShowDueDate.setChecked(preferences.getBoolean(\"show_due_date\", true));\n        cbAutoCalculateTax.setChecked(preferences.getBoolean(\"auto_calculate_tax\", true));\n        cbAutoSaveInvoices.setChecked(preferences.getBoolean(\"auto_save_invoices\", false));\n        cbPrintAfterSave.setChecked(preferences.getBoolean(\"print_after_save\", false));\n        \n        // تحميل إعدادات الميزات الصوتية\n        cbVoiceInputEnabled.setChecked(preferences.getBoolean(\"voice_input_enabled\", true));\n        cbTTSEnabled.setChecked(preferences.getBoolean(\"tts_enabled\", true));\n        cbSuggestionsEnabled.setChecked(preferences.getBoolean(\"suggestions_enabled\", true));\n        cbAutoReadEnabled.setChecked(preferences.getBoolean(\"auto_read_enabled\", false));\n        cbVoiceInSearch.setChecked(preferences.getBoolean(\"voice_in_search\", true));\n        cbVoiceInForms.setChecked(preferences.getBoolean(\"voice_in_forms\", true));\n        cbVoiceInInvoices.setChecked(preferences.getBoolean(\"voice_in_invoices\", true));\n        \n        // تحميل إعدادات السرعة\n        float ttsSpeed = preferences.getFloat(\"tts_speed\", 0.8f);\n        sbTTSSpeed.setProgress((int) (ttsSpeed * 100));\n        tvTTSSpeedValue.setText(String.format(\"%.1f\", ttsSpeed));\n        \n        int voiceTimeout = preferences.getInt(\"voice_timeout\", 5);\n        sbVoiceTimeout.setProgress(voiceTimeout);\n        tvVoiceTimeoutValue.setText(voiceTimeout + \" ثواني\");\n        \n        // تحميل إعدادات التخصيص\n        cbDarkTheme.setChecked(preferences.getBoolean(\"dark_theme\", false));\n        cbLargeText.setChecked(preferences.getBoolean(\"large_text\", false));\n        cbHighContrast.setChecked(preferences.getBoolean(\"high_contrast\", false));\n        cbShowTooltips.setChecked(preferences.getBoolean(\"show_tooltips\", true));\n        \n        // تحميل إعدادات الأمان\n        cbRequirePasswordForReports.setChecked(preferences.getBoolean(\"require_password_reports\", false));\n        cbRequirePasswordForSettings.setChecked(preferences.getBoolean(\"require_password_settings\", false));\n        cbRequirePasswordForBackup.setChecked(preferences.getBoolean(\"require_password_backup\", true));\n        cbLogUserActions.setChecked(preferences.getBoolean(\"log_user_actions\", true));\n    }\n    \n    private void setupListeners() {\n        // مستمعات إعدادات الفواتير\n        cbShowCustomerDetails.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_customer_details\", checked));\n        cbShowItemCodes.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_item_codes\", checked));\n        cbShowItemDescriptions.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_item_descriptions\", checked));\n        cbShowUnitPrices.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_unit_prices\", checked));\n        cbShowQuantities.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_quantities\", checked));\n        cbShowTotalPrices.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_total_prices\", checked));\n        cbShowTaxes.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_taxes\", checked));\n        cbShowDiscount.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_discount\", checked));\n        cbShowNotes.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_notes\", checked));\n        cbShowCompanyLogo.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_company_logo\", checked));\n        cbShowCompanyStamp.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_company_stamp\", checked));\n        cbShowBarcode.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_barcode\", checked));\n        cbShowQRCode.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_qr_code\", checked));\n        cbShowPaymentTerms.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_payment_terms\", checked));\n        cbShowDueDate.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_due_date\", checked));\n        cbAutoCalculateTax.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"auto_calculate_tax\", checked));\n        cbAutoSaveInvoices.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"auto_save_invoices\", checked));\n        cbPrintAfterSave.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"print_after_save\", checked));\n        \n        // مستمعات الميزات الصوتية\n        cbVoiceInputEnabled.setOnCheckedChangeListener((v, checked) -> {\n            savePreference(\"voice_input_enabled\", checked);\n            setVoiceInputEnabled(checked);\n            if (checked) {\n                Toast.makeText(this, \"تم تفعيل الإدخال الصوتي\", Toast.LENGTH_SHORT).show();\n            }\n        });\n        \n        cbTTSEnabled.setOnCheckedChangeListener((v, checked) -> {\n            savePreference(\"tts_enabled\", checked);\n            setTTSEnabled(checked);\n            if (checked) {\n                speakText(\"تم تفعيل تحويل النص إلى كلام\");\n            }\n        });\n        \n        cbSuggestionsEnabled.setOnCheckedChangeListener((v, checked) -> {\n            savePreference(\"suggestions_enabled\", checked);\n            setSuggestionsEnabled(checked);\n        });\n        \n        cbAutoReadEnabled.setOnCheckedChangeListener((v, checked) -> {\n            savePreference(\"auto_read_enabled\", checked);\n            setAutoReadEnabled(checked);\n        });\n        \n        cbVoiceInSearch.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"voice_in_search\", checked));\n        cbVoiceInForms.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"voice_in_forms\", checked));\n        cbVoiceInInvoices.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"voice_in_invoices\", checked));\n        \n        // مستمعات إعدادات السرعة\n        sbTTSSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {\n            @Override\n            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {\n                float speed = progress / 100.0f;\n                if (speed < 0.1f) speed = 0.1f;\n                if (speed > 2.0f) speed = 2.0f;\n                \n                tvTTSSpeedValue.setText(String.format(\"%.1f\", speed));\n                \n                if (fromUser) {\n                    setTTSSpeed(speed);\n                    savePreference(\"tts_speed\", speed);\n                }\n            }\n            \n            @Override\n            public void onStartTrackingTouch(SeekBar seekBar) {}\n            \n            @Override\n            public void onStopTrackingTouch(SeekBar seekBar) {\n                if (isTTSEnabled()) {\n                    speakText(\"سرعة الكلام الجديدة\");\n                }\n            }\n        });\n        \n        sbVoiceTimeout.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {\n            @Override\n            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {\n                if (progress < 3) progress = 3;\n                if (progress > 15) progress = 15;\n                \n                tvVoiceTimeoutValue.setText(progress + \" ثواني\");\n                \n                if (fromUser) {\n                    savePreference(\"voice_timeout\", progress);\n                }\n            }\n            \n            @Override\n            public void onStartTrackingTouch(SeekBar seekBar) {}\n            \n            @Override\n            public void onStopTrackingTouch(SeekBar seekBar) {}\n        });\n        \n        // مستمعات إعدادات التخصيص\n        cbDarkTheme.setOnCheckedChangeListener((v, checked) -> {\n            savePreference(\"dark_theme\", checked);\n            Toast.makeText(this, \"سيتم تطبيق الثيم عند إعادة تشغيل التطبيق\", Toast.LENGTH_LONG).show();\n        });\n        \n        cbLargeText.setOnCheckedChangeListener((v, checked) -> {\n            savePreference(\"large_text\", checked);\n            Toast.makeText(this, \"سيتم تطبيق حجم النص عند إعادة تشغيل التطبيق\", Toast.LENGTH_LONG).show();\n        });\n        \n        cbHighContrast.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"high_contrast\", checked));\n        cbShowTooltips.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"show_tooltips\", checked));\n        \n        // مستمعات إعدادات الأمان\n        cbRequirePasswordForReports.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"require_password_reports\", checked));\n        cbRequirePasswordForSettings.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"require_password_settings\", checked));\n        cbRequirePasswordForBackup.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"require_password_backup\", checked));\n        cbLogUserActions.setOnCheckedChangeListener((v, checked) -> \n            savePreference(\"log_user_actions\", checked));\n    }\n    \n    private void savePreference(String key, boolean value) {\n        preferences.edit().putBoolean(key, value).apply();\n    }\n    \n    private void savePreference(String key, float value) {\n        preferences.edit().putFloat(key, value).apply();\n    }\n    \n    private void savePreference(String key, int value) {\n        preferences.edit().putInt(key, value).apply();\n    }\n    \n    @Override\n    public boolean onOptionsItemSelected(MenuItem item) {\n        if (item.getItemId() == android.R.id.home) {\n            onBackPressed();\n            return true;\n        }\n        return super.onOptionsItemSelected(item);\n    }\n    \n    @Override\n    protected void performSearch(String query) {\n        // البحث في الإعدادات - يمكن تنفيذه لاحقاً\n    }\n    \n    @Override\n    protected String getAutoReadContent() {\n        return \"صفحة الإعدادات المفصلة للتطبيق\";\n    }\n}\n
+    // إعدادات السرعة والجودة
+    private SeekBar sbTTSSpeed;
+    private TextView tvTTSSpeedValue;
+    private SeekBar sbVoiceTimeout;
+    private TextView tvVoiceTimeoutValue;
+    
+    // إعدادات التخصيص
+    private CheckBox cbDarkTheme;
+    private CheckBox cbLargeText;
+    private CheckBox cbHighContrast;
+    private CheckBox cbShowTooltips;
+    
+    // إعدادات الأمان
+    private CheckBox cbRequirePasswordForReports;
+    private CheckBox cbRequirePasswordForSettings;
+    private CheckBox cbRequirePasswordForBackup;
+    private CheckBox cbLogUserActions;
+    
+    private SharedPreferences preferences;
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_detailed_settings);
+        
+        preferences = getSharedPreferences("AppSettings", Context.MODE_PRIVATE);
+        
+        initializeViews();
+        loadCurrentSettings();
+        setupListeners();
+        
+        // إعداد شريط الأدوات
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("الإعدادات المفصلة");
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+    
+    private void initializeViews() {
+        // إعدادات الفواتير
+        cbShowCustomerDetails = findViewById(R.id.cb_show_customer_details);
+        cbShowItemCodes = findViewById(R.id.cb_show_item_codes);
+        cbShowItemDescriptions = findViewById(R.id.cb_show_item_descriptions);
+        cbShowUnitPrices = findViewById(R.id.cb_show_unit_prices);
+        cbShowQuantities = findViewById(R.id.cb_show_quantities);
+        cbShowTotalPrices = findViewById(R.id.cb_show_total_prices);
+        cbShowTaxes = findViewById(R.id.cb_show_taxes);
+        cbShowDiscount = findViewById(R.id.cb_show_discount);
+        cbShowNotes = findViewById(R.id.cb_show_notes);
+        cbShowCompanyLogo = findViewById(R.id.cb_show_company_logo);
+        cbShowCompanyStamp = findViewById(R.id.cb_show_company_stamp);
+        cbShowBarcode = findViewById(R.id.cb_show_barcode);
+        cbShowQRCode = findViewById(R.id.cb_show_qr_code);
+        cbShowPaymentTerms = findViewById(R.id.cb_show_payment_terms);
+        cbShowDueDate = findViewById(R.id.cb_show_due_date);
+        cbAutoCalculateTax = findViewById(R.id.cb_auto_calculate_tax);
+        cbAutoSaveInvoices = findViewById(R.id.cb_auto_save_invoices);
+        cbPrintAfterSave = findViewById(R.id.cb_print_after_save);
+        
+        // إعدادات الميزات الصوتية
+        cbVoiceInputEnabled = findViewById(R.id.cb_voice_input_enabled);
+        cbTTSEnabled = findViewById(R.id.cb_tts_enabled);
+        cbSuggestionsEnabled = findViewById(R.id.cb_suggestions_enabled);
+        cbAutoReadEnabled = findViewById(R.id.cb_auto_read_enabled);
+        cbVoiceInSearch = findViewById(R.id.cb_voice_in_search);
+        cbVoiceInForms = findViewById(R.id.cb_voice_in_forms);
+        cbVoiceInInvoices = findViewById(R.id.cb_voice_in_invoices);
+        
+        // إعدادات السرعة
+        sbTTSSpeed = findViewById(R.id.sb_tts_speed);
+        tvTTSSpeedValue = findViewById(R.id.tv_tts_speed_value);
+        sbVoiceTimeout = findViewById(R.id.sb_voice_timeout);
+        tvVoiceTimeoutValue = findViewById(R.id.tv_voice_timeout_value);
+        
+        // إعدادات التخصيص
+        cbDarkTheme = findViewById(R.id.cb_dark_theme);
+        cbLargeText = findViewById(R.id.cb_large_text);
+        cbHighContrast = findViewById(R.id.cb_high_contrast);
+        cbShowTooltips = findViewById(R.id.cb_show_tooltips);
+        
+        // إعدادات الأمان
+        cbRequirePasswordForReports = findViewById(R.id.cb_require_password_reports);
+        cbRequirePasswordForSettings = findViewById(R.id.cb_require_password_settings);
+        cbRequirePasswordForBackup = findViewById(R.id.cb_require_password_backup);
+        cbLogUserActions = findViewById(R.id.cb_log_user_actions);
+    }
+    
+    private void loadCurrentSettings() {
+        // تحميل إعدادات الفواتير
+        cbShowCustomerDetails.setChecked(preferences.getBoolean("show_customer_details", true));
+        cbShowItemCodes.setChecked(preferences.getBoolean("show_item_codes", true));
+        cbShowItemDescriptions.setChecked(preferences.getBoolean("show_item_descriptions", true));
+        cbShowUnitPrices.setChecked(preferences.getBoolean("show_unit_prices", true));
+        cbShowQuantities.setChecked(preferences.getBoolean("show_quantities", true));
+        cbShowTotalPrices.setChecked(preferences.getBoolean("show_total_prices", true));
+        cbShowTaxes.setChecked(preferences.getBoolean("show_taxes", true));
+        cbShowDiscount.setChecked(preferences.getBoolean("show_discount", true));
+        cbShowNotes.setChecked(preferences.getBoolean("show_notes", true));
+        cbShowCompanyLogo.setChecked(preferences.getBoolean("show_company_logo", true));
+        cbShowCompanyStamp.setChecked(preferences.getBoolean("show_company_stamp", false));
+        cbShowBarcode.setChecked(preferences.getBoolean("show_barcode", false));
+        cbShowQRCode.setChecked(preferences.getBoolean("show_qr_code", true));
+        cbShowPaymentTerms.setChecked(preferences.getBoolean("show_payment_terms", true));
+        cbShowDueDate.setChecked(preferences.getBoolean("show_due_date", true));
+        cbAutoCalculateTax.setChecked(preferences.getBoolean("auto_calculate_tax", true));
+        cbAutoSaveInvoices.setChecked(preferences.getBoolean("auto_save_invoices", false));
+        cbPrintAfterSave.setChecked(preferences.getBoolean("print_after_save", false));
+        
+        // تحميل إعدادات الميزات الصوتية
+        cbVoiceInputEnabled.setChecked(preferences.getBoolean("voice_input_enabled", true));
+        cbTTSEnabled.setChecked(preferences.getBoolean("tts_enabled", true));
+        cbSuggestionsEnabled.setChecked(preferences.getBoolean("suggestions_enabled", true));
+        cbAutoReadEnabled.setChecked(preferences.getBoolean("auto_read_enabled", false));
+        cbVoiceInSearch.setChecked(preferences.getBoolean("voice_in_search", true));
+        cbVoiceInForms.setChecked(preferences.getBoolean("voice_in_forms", true));
+        cbVoiceInInvoices.setChecked(preferences.getBoolean("voice_in_invoices", true));
+        
+        // تحميل إعدادات السرعة
+        float ttsSpeed = preferences.getFloat("tts_speed", 0.8f);
+        sbTTSSpeed.setProgress((int) (ttsSpeed * 100));
+        tvTTSSpeedValue.setText(String.format("%.1f", ttsSpeed));
+        
+        int voiceTimeout = preferences.getInt("voice_timeout", 5);
+        sbVoiceTimeout.setProgress(voiceTimeout);
+        tvVoiceTimeoutValue.setText(voiceTimeout + " ثواني");
+        
+        // تحميل إعدادات التخصيص
+        cbDarkTheme.setChecked(preferences.getBoolean("dark_theme", false));
+        cbLargeText.setChecked(preferences.getBoolean("large_text", false));
+        cbHighContrast.setChecked(preferences.getBoolean("high_contrast", false));
+        cbShowTooltips.setChecked(preferences.getBoolean("show_tooltips", true));
+        
+        // تحميل إعدادات الأمان
+        cbRequirePasswordForReports.setChecked(preferences.getBoolean("require_password_reports", false));
+        cbRequirePasswordForSettings.setChecked(preferences.getBoolean("require_password_settings", false));
+        cbRequirePasswordForBackup.setChecked(preferences.getBoolean("require_password_backup", true));
+        cbLogUserActions.setChecked(preferences.getBoolean("log_user_actions", true));
+    }
+    
+    private void setupListeners() {
+        // مستمعات إعدادات الفواتير
+        cbShowCustomerDetails.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_customer_details", checked));
+        cbShowItemCodes.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_item_codes", checked));
+        cbShowItemDescriptions.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_item_descriptions", checked));
+        cbShowUnitPrices.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_unit_prices", checked));
+        cbShowQuantities.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_quantities", checked));
+        cbShowTotalPrices.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_total_prices", checked));
+        cbShowTaxes.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_taxes", checked));
+        cbShowDiscount.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_discount", checked));
+        cbShowNotes.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_notes", checked));
+        cbShowCompanyLogo.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_company_logo", checked));
+        cbShowCompanyStamp.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_company_stamp", checked));
+        cbShowBarcode.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_barcode", checked));
+        cbShowQRCode.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_qr_code", checked));
+        cbShowPaymentTerms.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_payment_terms", checked));
+        cbShowDueDate.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_due_date", checked));
+        cbAutoCalculateTax.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("auto_calculate_tax", checked));
+        cbAutoSaveInvoices.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("auto_save_invoices", checked));
+        cbPrintAfterSave.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("print_after_save", checked));
+        
+        // مستمعات الميزات الصوتية
+        cbVoiceInputEnabled.setOnCheckedChangeListener((v, checked) -> {
+            savePreference("voice_input_enabled", checked);
+            setVoiceInputEnabled(checked);
+            if (checked) {
+                Toast.makeText(this, "تم تفعيل الإدخال الصوتي", Toast.LENGTH_SHORT).show();
+            }
+        });
+        
+        cbTTSEnabled.setOnCheckedChangeListener((v, checked) -> {
+            savePreference("tts_enabled", checked);
+            setTTSEnabled(checked);
+            if (checked) {
+                speakText("تم تفعيل تحويل النص إلى كلام");
+            }
+        });
+        
+        cbSuggestionsEnabled.setOnCheckedChangeListener((v, checked) -> {
+            savePreference("suggestions_enabled", checked);
+            setSuggestionsEnabled(checked);
+        });
+        
+        cbAutoReadEnabled.setOnCheckedChangeListener((v, checked) -> {
+            savePreference("auto_read_enabled", checked);
+            setAutoReadEnabled(checked);
+        });
+        
+        cbVoiceInSearch.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("voice_in_search", checked));
+        cbVoiceInForms.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("voice_in_forms", checked));
+        cbVoiceInInvoices.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("voice_in_invoices", checked));
+        
+        // مستمعات إعدادات السرعة
+        sbTTSSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float speed = progress / 100.0f;
+                if (speed < 0.1f) speed = 0.1f;
+                if (speed > 2.0f) speed = 2.0f;
+                
+                tvTTSSpeedValue.setText(String.format("%.1f", speed));
+                
+                if (fromUser) {
+                    setTTSSpeed(speed);
+                    savePreference("tts_speed", speed);
+                }
+            }
+            
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (isTTSEnabled()) {
+                    speakText("سرعة الكلام الجديدة");
+                }
+            }
+        });
+        
+        sbVoiceTimeout.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (progress < 3) progress = 3;
+                if (progress > 15) progress = 15;
+                
+                tvVoiceTimeoutValue.setText(progress + " ثواني");
+                
+                if (fromUser) {
+                    savePreference("voice_timeout", progress);
+                }
+            }
+            
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        
+        // مستمعات إعدادات التخصيص
+        cbDarkTheme.setOnCheckedChangeListener((v, checked) -> {
+            savePreference("dark_theme", checked);
+            Toast.makeText(this, "سيتم تطبيق الثيم عند إعادة تشغيل التطبيق", Toast.LENGTH_LONG).show();
+        });
+        
+        cbLargeText.setOnCheckedChangeListener((v, checked) -> {
+            savePreference("large_text", checked);
+            Toast.makeText(this, "سيتم تطبيق حجم النص عند إعادة تشغيل التطبيق", Toast.LENGTH_LONG).show();
+        });
+        
+        cbHighContrast.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("high_contrast", checked));
+        cbShowTooltips.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("show_tooltips", checked));
+        
+        // مستمعات إعدادات الأمان
+        cbRequirePasswordForReports.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("require_password_reports", checked));
+        cbRequirePasswordForSettings.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("require_password_settings", checked));
+        cbRequirePasswordForBackup.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("require_password_backup", checked));
+        cbLogUserActions.setOnCheckedChangeListener((v, checked) -> 
+            savePreference("log_user_actions", checked));
+    }
+    
+    private void savePreference(String key, boolean value) {
+        preferences.edit().putBoolean(key, value).apply();
+    }
+    
+    private void savePreference(String key, float value) {
+        preferences.edit().putFloat(key, value).apply();
+    }
+    
+    private void savePreference(String key, int value) {
+        preferences.edit().putInt(key, value).apply();
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    protected void performSearch(String query) {
+        // البحث في الإعدادات - يمكن تنفيذه لاحقاً
+        Toast.makeText(this, "البحث في الإعدادات: " + query, Toast.LENGTH_SHORT).show();
+    }
+    
+    @Override
+    protected String getAutoReadContent() {
+        return "صفحة الإعدادات المفصلة للتطبيق. تحتوي على إعدادات الفواتير والميزات الصوتية والتخصيص والأمان";
+    }
+}
