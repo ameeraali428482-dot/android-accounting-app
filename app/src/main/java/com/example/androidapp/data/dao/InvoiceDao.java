@@ -1,53 +1,43 @@
 package com.example.androidapp.data.dao;
 
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Update;
+import androidx.room.*;
 import com.example.androidapp.data.entities.Invoice;
+
 import java.util.List;
 
 @Dao
 public interface InvoiceDao extends BaseDao<Invoice> {
     
-    @Query("SELECT * FROM invoices")
-    List<Invoice> getAllInvoices();
-
-    @Query("SELECT * FROM invoices WHERE companyId = :companyId")
-    List<Invoice> getInvoicesByCompany(int companyId);
-
     @Query("SELECT * FROM invoices WHERE id = :id")
-    Invoice getInvoiceById(int id);
+    Invoice getById(long id);
 
-    @Query("SELECT * FROM invoices WHERE customerId = :customerId")
-    List<Invoice> getInvoicesByCustomer(int customerId);
+    @Query("SELECT * FROM invoices ORDER BY created_at DESC")
+    List<Invoice> getAll();
 
-    @Query("SELECT * FROM invoices WHERE status = :status")
-    List<Invoice> getInvoicesByStatus(String status);
-
-    @Query("SELECT * FROM invoices WHERE date BETWEEN :startDate AND :endDate")
+    @Query("SELECT * FROM invoices WHERE created_at BETWEEN :startDate AND :endDate ORDER BY created_at DESC")
     List<Invoice> getInvoicesByDateRange(long startDate, long endDate);
 
-    @Query("SELECT SUM(total) FROM invoices WHERE companyId = :companyId AND status = 'paid'")
-    double getTotalPaidAmount(int companyId);
+    @Query("SELECT SUM(total_amount) FROM invoices WHERE status = 'PAID' AND company_id = :companyId")
+    double getTotalPaidAmount(String companyId);
 
-    @Query("SELECT SUM(total) FROM invoices WHERE companyId = :companyId AND status = 'pending'")
-    double getTotalPendingAmount(int companyId);
+    @Query("SELECT SUM(total_amount) FROM invoices WHERE status = 'PENDING' AND company_id = :companyId")
+    double getTotalPendingAmount(String companyId);
 
-    @Query("SELECT COUNT(*) FROM invoices WHERE companyId = :companyId")
-    int getInvoiceCount(int companyId);
+    @Query("SELECT * FROM invoices WHERE customer_id = :customerId ORDER BY created_at DESC")
+    List<Invoice> getByCustomerId(long customerId);
 
-    @Query("SELECT * FROM invoices WHERE invoiceNumber LIKE '%' || :query || '%'")
-    List<Invoice> searchInvoices(String query);
+    @Query("SELECT * FROM invoices WHERE company_id = :companyId ORDER BY created_at DESC")
+    List<Invoice> getByCompanyId(String companyId);
 
-    // طرق مطلوبة للـ MainActivity
-    @Query("SELECT * FROM invoices WHERE companyId = :companyId")
-    List<Invoice> getAllInvoices(int companyId);
+    @Query("SELECT * FROM invoices WHERE status = :status ORDER BY created_at DESC")
+    List<Invoice> getByStatus(String status);
 
-    @Query("SELECT * FROM invoices WHERE status = 'paid'")
-    List<Invoice> getPaidInvoices();
+    @Query("SELECT COUNT(*) FROM invoices WHERE company_id = :companyId")
+    int getCountByCompany(String companyId);
 
-    @Query("SELECT * FROM invoices WHERE status = 'pending'")
-    List<Invoice> getPendingInvoices();
+    @Query("UPDATE invoices SET status = :status WHERE id = :id")
+    void updateStatus(long id, String status);
+
+    @Query("DELETE FROM invoices WHERE company_id = :companyId")
+    void deleteByCompanyId(String companyId);
 }

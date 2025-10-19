@@ -55,6 +55,7 @@ public class Category {
         this.updatedAt = System.currentTimeMillis();
     }
 
+    @Ignore
     public Category(String name, String categoryType) {
         this();
         this.name = name;
