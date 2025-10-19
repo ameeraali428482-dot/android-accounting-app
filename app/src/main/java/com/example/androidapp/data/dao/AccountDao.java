@@ -1,34 +1,30 @@
 package com.example.androidapp.data.dao;
 
-import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Update;
+import androidx.room.*;
 import com.example.androidapp.data.entities.Account;
 import java.util.List;
 
 @Dao
-public interface AccountDao {
-    @Query("SELECT * FROM accounts WHERE companyId = :companyId")
-    LiveData<List<Account>> getAllAccounts(String companyId);
-
-    @Query("SELECT * FROM accounts WHERE id = :accountId AND companyId = :companyId")
-    LiveData<Account> getAccountById(String accountId, String companyId);
-
-    @Query("SELECT * FROM accounts WHERE id = :accountId AND companyId = :companyId")
-    LiveData<Account> getAccountByIdLiveData(String accountId, String companyId);
+public interface AccountDao extends BaseDao<Account> {
     
-    @Query("SELECT * FROM accounts WHERE name = :accountName AND companyId = :companyId")
-    Account getAccountByNameAndCompanyId(String accountName, String companyId);
-
-    @Insert
-    void insert(Account account);
-
-    @Update
-    void update(Account account);
-
-    @Delete
-    void delete(Account account);
+    @Query("SELECT * FROM accounts ORDER BY name")
+    List<Account> getAllAccounts();
+    
+    @Query("SELECT * FROM accounts WHERE id = :id")
+    Account getAccountById(long id);
+    
+    @Query("SELECT * FROM accounts WHERE type = :type ORDER BY name")
+    List<Account> getAccountsByType(String type);
+    
+    @Query("SELECT * FROM accounts WHERE name LIKE '%' || :searchQuery || '%' ORDER BY name")
+    List<Account> searchAccounts(String searchQuery);
+    
+    @Query("SELECT COUNT(*) FROM accounts")
+    int getAccountsCount();
+    
+    @Query("SELECT COALESCE(SUM(balance), 0) FROM accounts")
+    double getTotalBalance();
+    
+    @Query("DELETE FROM accounts WHERE id = :id")
+    void deleteAccount(long id);
 }
