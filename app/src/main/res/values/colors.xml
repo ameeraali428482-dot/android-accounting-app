@@ -114,7 +114,7 @@
     <color name="material_error_container">@color/error_container</color>
     <color name="material_on_surface">@color/on_surface</color>
     <color name="material_outline">@color/outline</color>
-
+<color name="material_on_surface_variant">#49454F</color>
 <!-- Background Colors -->
 <color name="background_light">#F8F9FA</color>
 <color name="header_background">#1E3A8A</color>
@@ -122,5 +122,3 @@
 <color name="danger">#DC2626</color>
 </resources>
 
-    <!-- Material Design Colors -->
-    <color name="material_on_surface_variant">#49454F</color>
