@@ -34,6 +34,7 @@ public class User {
     }
     
     // Constructor without phone for compatibility
+    @Ignore
     public User(String name, String email, long createdAt, long updatedAt) {
         this.name = name;
         this.email = email;

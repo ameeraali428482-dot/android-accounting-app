@@ -73,6 +73,7 @@ public class ContactSync {
     }
     
     // Constructor with display name
+    @Ignore
     public ContactSync(int userId, String contactIdentifier, String displayName) {
         this(userId, contactIdentifier, "", true, System.currentTimeMillis());
         this.displayName = displayName;
