@@ -2,25 +2,34 @@ package com.example.accountingapp.advanced;
 
 import android.content.Context;
 import android.content.Intent;
+
 import com.example.accountingapp.BackupRestoreActivity;
 
 public class NotificationManager {
-    
+
+    private static NotificationManager instance;
     private Context context;
 
-    public NotificationManager(Context context) {
-        this.context = context;
+    private NotificationManager(Context context) {
+        this.context = context.getApplicationContext();
     }
 
-    public void showRestoreNotification() {
-        Intent restoreIntent = new Intent(context, BackupRestoreActivity.class);
-        restoreIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(restoreIntent);
+    public static synchronized NotificationManager getInstance(Context context) {
+        if (instance == null) {
+            instance = new NotificationManager(context);
+        }
+        return instance;
     }
 
-    public void showMergeNotification() {
-        Intent mergeIntent = new Intent(context, BackupRestoreActivity.class);
-        mergeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(mergeIntent);
+    public void showAdminNotification(String title, String message, int notificationId) {
+        // مثال على تنفيذ إشعار (يمكن استبداله بالتنفيذ الفعلي حسب النظام)
+        // هنا يمكنك إضافة كود إرسال الإشعار لنظام أندرويد ...
+    }
+
+    public void showBackupRestoreNotification(Object backup, String message) {
+        Intent intent = new Intent(context, BackupRestoreActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        // يمكن إضافة عرض إعلام للإشعارات أو تحديث الحالة حسب الحاجة
     }
 }

@@ -1,66 +1,106 @@
 package com.example.androidapp.data.entities;
 
-import androidx.annotation.NonNull;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
-
-@Entity(tableName = "products")
 public class Product {
-    @PrimaryKey
-    @NonNull
+
     private String id;
-    private String companyId;
     private String name;
     private String description;
     private double price;
-    private String category;
+    private double quantity;
+    private String categoryId;
+    private String companyId;
     private String barcode;
-    private Integer quantity;
-    private Float minStockLevel;
-    private float cost;
+    private double minStockLevel;
+    private String unit;
+    private String createdAt;
+    private String updatedAt;
 
-    public Product(@NonNull String id, String companyId, String name, String description, double price, String category, String barcode, Integer quantity, Float minStockLevel, float cost) {
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
         this.id = id;
-        this.companyId = companyId;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.category = category;
-        this.barcode = barcode;
-        this.quantity = quantity;
-        this.minStockLevel = minStockLevel;
-        this.cost = cost;
     }
 
-    @Ignore
-    public Product() {}
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    // Getters
-    @NonNull
-    public String getId() { return id; }
-    public String getCompanyId() { return companyId; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public double getPrice() { return price; }
-    public String getCategory() { return category; }
-    public String getBarcode() { return barcode; }
-    public Integer getQuantity() { return quantity; }
-    public Float getMinStockLevel() { return minStockLevel; }
-    public float getCost() { return cost; }
-    public String getProductName() { return name; } // Alias for compatibility
-    public Float getReorderLevel() { return minStockLevel; }
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    // Setters
-    public void setId(@NonNull String id) { this.id = id; }
-    public void setCompanyId(String companyId) { this.companyId = companyId; }
-    public void setName(String name) { this.name = name; }
-    public void setDescription(String description) { this.description = description; }
-    public void setPrice(double price) { this.price = price; }
-    public void setCategory(String category) { this.category = category; }
-    public void setBarcode(String barcode) { this.barcode = barcode; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
-    public void setMinStockLevel(Float minStockLevel) { this.minStockLevel = minStockLevel; }
-    public void setCost(float cost) { this.cost = cost; }
-    public void setProductName(String name) { this.name = name; } // Alias for compatibility
+    public double getPrice() {
+        return price;
+    }
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getBarcode() {
+        return barcode;
+    }
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+
+    public double getMinStockLevel() {
+        return minStockLevel;
+    }
+    public void setMinStockLevel(double minStockLevel) {
+        this.minStockLevel = minStockLevel;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

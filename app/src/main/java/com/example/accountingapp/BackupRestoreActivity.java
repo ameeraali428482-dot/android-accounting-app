@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.accountingapp.R;
+
 public class BackupRestoreActivity extends AppCompatActivity {
 
     private RecyclerView backupsRecyclerView;
@@ -26,7 +28,6 @@ public class BackupRestoreActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         statusText = findViewById(R.id.statusText);
 
-        // TODO: Initialize recycler view adapter and item list
-        // TODO: implement createBackupButton and importBackupButton click listeners for backup and restore functionality
+        // TODO: تكملة التهيئة وتشغيل التابع الخاص بالنسخ والاستعادة
     }
 }
