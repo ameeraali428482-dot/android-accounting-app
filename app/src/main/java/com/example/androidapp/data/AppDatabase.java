@@ -48,7 +48,7 @@ import com.example.androidapp.data.entities.UserRole;
         Employee.class,
         Notification.class
     },
-    version = 8,  // رفع الإصدار مرة أخرى
+    version = 2,  // رفع الإصدار مرة أخرى
     exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {

@@ -8,7 +8,7 @@ import java.util.List;
 @Dao
 public interface PermissionDao extends BaseDao<Permission> {
     
-    @Query("SELECT * FROM permissions WHERE permissionId = :id")
+    @Query("SELECT * FROM permissions WHERE permission_id = :id")
     Permission getById(String id);
 
     @Query("SELECT * FROM permissions ORDER BY name")
@@ -17,6 +17,6 @@ public interface PermissionDao extends BaseDao<Permission> {
     @Query("SELECT * FROM permissions WHERE category = :category ORDER BY name")
     List<Permission> getByCategory(String category);
 
-    @Query("DELETE FROM permissions WHERE permissionId = :id")
+    @Query("DELETE FROM permissions WHERE permission_id = :id")
     void deleteById(String id);
 }

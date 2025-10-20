@@ -1,31 +1,31 @@
-package com.example.androidapp.data.dao;
+package com.example.androitemIdapp.data.dao;
 
-import androidx.room.Dao;
-import androidx.room.Query;
-import com.example.androidapp.data.entities.Item;
+import androitemIdx.room.Dao;
+import androitemIdx.room.Query;
+import com.example.androitemIdapp.data.entities.Item;
 import java.util.List;
 
 @Dao
 public interface ItemDao extends BaseDao<Item> {
     
-    @Query("SELECT * FROM items WHERE id = :id")
-    Item getById(int id);
+    @Query("SELECT * FROM items WHERE itemId = :itemId")
+    Item getById(int itemId);
 
-    @Query("SELECT * FROM items ORDER BY name")
+    @Query("SELECT * FROM items ORDER BY itemName")
     List<Item> getAll();
     
-    @Query("SELECT * FROM items ORDER BY name")
+    @Query("SELECT * FROM items ORDER BY itemName")
     List<Item> getAllItems();
 
-    @Query("SELECT * FROM items WHERE category = :category ORDER BY name")
+    @Query("SELECT * FROM items WHERE category = :category ORDER BY itemName")
     List<Item> getByCategory(String category);
 
-    @Query("SELECT * FROM items WHERE name LIKE '%' || :searchTerm || '%' OR code LIKE '%' || :searchTerm || '%' ORDER BY name")
+    @Query("SELECT * FROM items WHERE itemName LIKE '%' || :searchTerm || '%' OR code LIKE '%' || :searchTerm || '%' ORDER BY itemName")
     List<Item> searchItems(String searchTerm);
 
     @Query("SELECT COUNT(*) FROM items")
     int getCount();
 
-    @Query("DELETE FROM items WHERE id = :id")
-    void deleteById(int id);
+    @Query("DELETE FROM items WHERE itemId = :itemId")
+    voitemId deleteById(int itemId);
 }

@@ -1,23 +1,23 @@
-package com.example.androidapp.data.dao;
+package com.example.androcustomerIdapp.data.dao;
 
-import androidx.room.Dao;
-import androidx.room.Query;
-import com.example.androidapp.data.entities.Customer;
+import androcustomerIdx.room.Dao;
+import androcustomerIdx.room.Query;
+import com.example.androcustomerIdapp.data.entities.Customer;
 import java.util.List;
 
 @Dao
 public interface CustomerDao extends BaseDao<Customer> {
     
-    @Query("SELECT * FROM customers WHERE id = :id")
-    Customer getById(int id);
+    @Query("SELECT * FROM customers WHERE customerId = :customerId")
+    Customer getById(int customerId);
 
-    @Query("SELECT * FROM customers ORDER BY name")
+    @Query("SELECT * FROM customers ORDER BY customerName")
     List<Customer> getAll();
     
-    @Query("SELECT * FROM customers ORDER BY name")
+    @Query("SELECT * FROM customers ORDER BY customerName")
     List<Customer> getAllCustomers();
 
-    @Query("SELECT * FROM customers WHERE name LIKE '%' || :searchTerm || '%' OR email LIKE '%' || :searchTerm || '%' ORDER BY name")
+    @Query("SELECT * FROM customers WHERE customerName LIKE '%' || :searchTerm || '%' OR email LIKE '%' || :searchTerm || '%' ORDER BY customerName")
     List<Customer> searchCustomers(String searchTerm);
 
     @Query("SELECT * FROM customers WHERE email = :email")
@@ -29,6 +29,6 @@ public interface CustomerDao extends BaseDao<Customer> {
     @Query("SELECT COUNT(*) FROM customers")
     int getCount();
 
-    @Query("DELETE FROM customers WHERE id = :id")
-    void deleteById(int id);
+    @Query("DELETE FROM customers WHERE customerId = :customerId")
+    vocustomerId deleteById(int customerId);
 }
