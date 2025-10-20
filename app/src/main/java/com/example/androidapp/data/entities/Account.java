@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "accounts")
 public class Account {
     @PrimaryKey(autoGenerate = true)
-    public int accountId;
-    public String accountName;
-    public String accountType;
+    public int id;                    // مطابق للاستعلامات التي تستخدم 'id'
+    public String name;               // مطابق للاستعلامات التي تستخدم 'name'
+    public String type;               // مطابق للاستعلامات التي تستخدم 'type'
     public double balance;
     public String description;
     public boolean isActive;
@@ -21,27 +21,13 @@ public class Account {
 
     // Constructor for creating new accounts
     @Ignore
-    public Account(String accountName, String accountType, double balance, String description) {
-        this.accountName = accountName;
-        this.accountType = accountType;
+    public Account(String name, String type, double balance, String description) {
+        this.name = name;
+        this.type = type;
         this.balance = balance;
         this.description = description;
         this.isActive = true;
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = System.currentTimeMillis();
-    }
-
-    // Full constructor
-    @Ignore
-    public Account(int accountId, String accountName, String accountType, double balance, String description,
-                  boolean isActive, long createdAt, long updatedAt) {
-        this.accountId = accountId;
-        this.accountName = accountName;
-        this.accountType = accountType;
-        this.balance = balance;
-        this.description = description;
-        this.isActive = isActive;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 }

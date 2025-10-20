@@ -9,8 +9,8 @@ import androidx.room.PrimaryKey;
 public class Permission {
     @PrimaryKey
     @NonNull
-    public String permission_id;      // مطابق للاستعلامات التي تستخدم 'permission_id'
-    public String name;               // مطابق للاستعلامات التي تستخدم 'name'
+    public String permissionId;
+    public String permissionName;
     public String description;
     public String category;
     public long createdAt;
@@ -21,12 +21,23 @@ public class Permission {
 
     // Constructor for creating new permissions
     @Ignore
-    public Permission(@NonNull String permission_id, String name, String description, String category) {
-        this.permission_id = permission_id;
-        this.name = name;
+    public Permission(@NonNull String permissionId, String permissionName, String description, String category) {
+        this.permissionId = permissionId;
+        this.permissionName = permissionName;
         this.description = description;
         this.category = category;
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = System.currentTimeMillis();
+    }
+
+    // Full constructor
+    @Ignore
+    public Permission(@NonNull String permissionId, String permissionName, String description, String category, long createdAt, long updatedAt) {
+        this.permissionId = permissionId;
+        this.permissionName = permissionName;
+        this.description = description;
+        this.category = category;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }

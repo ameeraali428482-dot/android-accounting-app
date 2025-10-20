@@ -9,8 +9,8 @@ import androidx.room.PrimaryKey;
 public class Role {
     @PrimaryKey
     @NonNull
-    public String role_id;            // مطابق للاستعلامات التي تستخدم 'role_id'
-    public String name;               // مطابق للاستعلامات التي تستخدم 'name'
+    public String roleId;
+    public String roleName;
     public String description;
     public long createdAt;
     public long updatedAt;
@@ -20,11 +20,21 @@ public class Role {
 
     // Constructor for creating new roles
     @Ignore
-    public Role(@NonNull String role_id, String name, String description) {
-        this.role_id = role_id;
-        this.name = name;
+    public Role(@NonNull String roleId, String roleName, String description) {
+        this.roleId = roleId;
+        this.roleName = roleName;
         this.description = description;
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = System.currentTimeMillis();
+    }
+
+    // Full constructor
+    @Ignore
+    public Role(@NonNull String roleId, String roleName, String description, long createdAt, long updatedAt) {
+        this.roleId = roleId;
+        this.roleName = roleName;
+        this.description = description;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }

@@ -7,11 +7,14 @@ import java.util.List;
 @Dao
 public interface AccountDao extends BaseDao<Account> {
     
-    @Query("SELECT * FROM accounts ORDER BY name ASC")
+    @Query("SELECT * FROM accounts ORDER BY name")
     List<Account> getAllAccounts();
     
     @Query("SELECT * FROM accounts WHERE id = :id")
     Account getAccountById(long id);
+    
+    @Query("SELECT * FROM accounts WHERE id = :id")
+    Account getAccountById(int id);
     
     @Query("SELECT * FROM accounts WHERE id = :id")
     Account getAccountByIdSync(long id);
@@ -22,33 +25,18 @@ public interface AccountDao extends BaseDao<Account> {
     @Query("SELECT * FROM accounts WHERE id = :id")
     Account getAccountByIdSync(Integer id);
     
-    @Query("SELECT * FROM accounts WHERE type = :type ORDER BY name ASC")
+    @Query("SELECT * FROM accounts WHERE type = :type ORDER BY name")
     List<Account> getAccountsByType(String type);
     
-    @Query("SELECT * FROM accounts WHERE name LIKE '%' || :searchQuery || '%' ORDER BY name ASC")
+    @Query("SELECT * FROM accounts WHERE name LIKE '%' || :searchQuery || '%' OR code LIKE '%' || :searchQuery || '%' ORDER BY name")
     List<Account> searchAccounts(String searchQuery);
-    
-    @Query("SELECT * FROM accounts WHERE id IN (:ids)")
-    List<Account> getAccountsByIds(List<Long> ids);
-    
-    @Query("SELECT * FROM accounts WHERE isActive = 1 ORDER BY name ASC")
-    List<Account> getActiveAccounts();
-    
-    @Query("SELECT * FROM accounts WHERE isActive = 0 ORDER BY name ASC")
-    List<Account> getInactiveAccounts();
     
     @Query("SELECT COUNT(*) FROM accounts")
     int getAccountsCount();
     
-    @Query("SELECT COUNT(*) FROM accounts WHERE type = :type")
-    int getAccountsCountByType(String type);
-    
-    @Query("UPDATE accounts SET balance = balance + :amount WHERE id = :accountId")
-    void updateBalance(long accountId, double amount);
+    @Query("SELECT COALESCE(SUM(balance), 0) FROM accounts")
+    double getTotalBalance();
     
     @Query("DELETE FROM accounts WHERE id = :id")
     void deleteAccount(long id);
-    
-    @Query("DELETE FROM accounts")
-    void deleteAll();
 }

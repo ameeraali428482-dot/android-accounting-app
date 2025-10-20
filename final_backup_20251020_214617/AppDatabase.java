@@ -5,9 +5,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import android.content.Context;
 
-// استيراد جميع الـ DAOs
 import com.example.androidapp.data.dao.AccountDao;
-import com.example.androidapp.data.dao.ContactSyncDao;
 import com.example.androidapp.data.dao.CustomerDao;
 import com.example.androidapp.data.dao.EmployeeDao;
 import com.example.androidapp.data.dao.ItemDao;
@@ -18,8 +16,8 @@ import com.example.androidapp.data.dao.TransactionDao;
 import com.example.androidapp.data.dao.UserDao;
 import com.example.androidapp.data.dao.UserPermissionDao;
 import com.example.androidapp.data.dao.UserRoleDao;
+import com.example.androidapp.data.dao.ContactSyncDao;
 
-// استيراد جميع الكيانات
 import com.example.androidapp.data.entities.Account;
 import com.example.androidapp.data.entities.ContactSync;
 import com.example.androidapp.data.entities.Customer;
@@ -48,12 +46,11 @@ import com.example.androidapp.data.entities.UserRole;
         Employee.class,
         Notification.class
     },
-    version = 8,  // رفع الإصدار مرة أخرى
+    version = 7,
     exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
 
-    // Abstract methods for all DAOs
     public abstract UserDao userDao();
     public abstract AccountDao accountDao();
     public abstract TransactionDao transactionDao();
@@ -73,13 +70,10 @@ public abstract class AppDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(
-                        context.getApplicationContext(),
-                        AppDatabase.class,
-                        "business_database"
-                    )
-                    .fallbackToDestructiveMigration()
-                    .build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                            AppDatabase.class, "accounting_database")
+                            .fallbackToDestructiveMigration()
+                            .build();
                 }
             }
         }

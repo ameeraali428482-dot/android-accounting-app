@@ -7,14 +7,18 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "transactions")
 public class Transaction {
     @PrimaryKey(autoGenerate = true)
-    public int transactionId;
-    public int accountId;
+    public int id;                    // مطابق للاستعلامات التي تستخدم 'id'
+    public int from_account_id;       // مطابق للاستعلامات التي تستخدم 'from_account_id'
+    public int to_account_id;         // مطابق للاستعلامات التي تستخدم 'to_account_id'
     public double amount;
     public String type;
     public String description;
-    public String status;
-    public String referenceNumber;
-    public String companyId;
+    public String status;             // مطابق للاستعلامات التي تستخدم 'status'
+    public String reference_number;   // مطابق للاستعلامات التي تستخدم 'reference_number'
+    public String company_id;         // مطابق للاستعلامات التي تستخدم 'company_id'
+    public int userId;                // مطابق للاستعلامات التي تستخدم 'userId'
+    public int category_id;           // مطابق للاستعلامات التي تستخدم 'category_id'
+    public long date;                 // مطابق للاستعلامات التي تستخدم 'date'
     public long createdAt;
     public long updatedAt;
 
@@ -23,31 +27,17 @@ public class Transaction {
 
     // Constructor for creating new transactions
     @Ignore
-    public Transaction(int accountId, double amount, String type, String description) {
-        this.accountId = accountId;
+    public Transaction(int from_account_id, int to_account_id, double amount, String type, String description) {
+        this.from_account_id = from_account_id;
+        this.to_account_id = to_account_id;
         this.amount = amount;
         this.type = type;
         this.description = description;
         this.status = "PENDING";
-        this.referenceNumber = generateReferenceNumber();
+        this.reference_number = generateReferenceNumber();
+        this.date = System.currentTimeMillis();
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = System.currentTimeMillis();
-    }
-
-    // Full constructor
-    @Ignore
-    public Transaction(int transactionId, int accountId, double amount, String type, String description, 
-                      String status, String referenceNumber, String companyId, long createdAt, long updatedAt) {
-        this.transactionId = transactionId;
-        this.accountId = accountId;
-        this.amount = amount;
-        this.type = type;
-        this.description = description;
-        this.status = status;
-        this.referenceNumber = referenceNumber;
-        this.companyId = companyId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     @Ignore
