@@ -1,53 +1,55 @@
 package com.example.androidapp.data.entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "customers")
 public class Customer {
     @PrimaryKey(autoGenerate = true)
-    public int id;
-    
-    public String name;
+    public int customerId;
+    public String customerName;
     public String email;
     public String phone;
     public String address;
-    public String companyName;
-    public String taxNumber;
-    public double totalPurchases;
+    public String company;
+    public boolean isActive;
+    public double creditLimit;
+    public double currentBalance;
     public long createdAt;
+    public long updatedAt;
 
-    public Customer() {
-        this.createdAt = System.currentTimeMillis();
-        this.totalPurchases = 0.0;
-    }
+    // Default constructor for Room
+    public Customer() {}
 
-    public Customer(String name, String email, String phone) {
-        this();
-        this.name = name;
+    // Constructor for creating new customers
+    @Ignore
+    public Customer(String customerName, String email, String phone, String address) {
+        this.customerName = customerName;
         this.email = email;
         this.phone = phone;
+        this.address = address;
+        this.isActive = true;
+        this.creditLimit = 0.0;
+        this.currentBalance = 0.0;
+        this.createdAt = System.currentTimeMillis();
+        this.updatedAt = System.currentTimeMillis();
     }
 
-    // Getters
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
-    public String getPhone() { return phone; }
-    public String getAddress() { return address; }
-    public String getCompanyName() { return companyName; }
-    public String getTaxNumber() { return taxNumber; }
-    public double getTotalPurchases() { return totalPurchases; }
-    public long getCreatedAt() { return createdAt; }
-
-    // Setters
-    public void setId(int id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
-    public void setEmail(String email) { this.email = email; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public void setAddress(String address) { this.address = address; }
-    public void setCompanyName(String companyName) { this.companyName = companyName; }
-    public void setTaxNumber(String taxNumber) { this.taxNumber = taxNumber; }
-    public void setTotalPurchases(double totalPurchases) { this.totalPurchases = totalPurchases; }
-    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+    // Full constructor
+    @Ignore
+    public Customer(int customerId, String customerName, String email, String phone, String address, String company,
+                   boolean isActive, double creditLimit, double currentBalance, long createdAt, long updatedAt) {
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.company = company;
+        this.isActive = isActive;
+        this.creditLimit = creditLimit;
+        this.currentBalance = currentBalance;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

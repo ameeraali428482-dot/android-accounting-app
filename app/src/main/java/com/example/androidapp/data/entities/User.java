@@ -1,6 +1,6 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.ColumnInfo;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -8,68 +8,55 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "users")
 public class User {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    public int id;
-
-    @ColumnInfo(name = "name")
-    public String name;
-
-    @ColumnInfo(name = "email")
+    public int userId;
+    @NonNull
+    public String username;
+    @NonNull
     public String email;
-
-    @ColumnInfo(name = "phone")
+    @NonNull
+    public String password;
+    public String firstName;
+    public String lastName;
     public String phone;
-    
-    // Additional field for compatibility
-    @ColumnInfo(name = "phone_number")
-    public String phoneNumber;
-
-    @ColumnInfo(name = "created_at")
+    public boolean isActive;
+    public String companyId;
+    public long lastLogin;
     public long createdAt;
-
-    @ColumnInfo(name = "updated_at")
     public long updatedAt;
 
     // Default constructor for Room
     public User() {}
 
-    // Primary constructor for Room
+    // Constructor for creating new users
     @Ignore
-    public User(String name, String email, String phone, long createdAt, long updatedAt) {
-        this.name = name;
+    public User(@NonNull String username, @NonNull String email, @NonNull String password, String firstName, String lastName) {
+        this.username = username;
         this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.isActive = true;
+        this.createdAt = System.currentTimeMillis();
+        this.updatedAt = System.currentTimeMillis();
+        this.lastLogin = 0;
+    }
+
+    // Full constructor
+    @Ignore
+    public User(int userId, @NonNull String username, @NonNull String email, @NonNull String password, 
+                String firstName, String lastName, String phone, boolean isActive, String companyId, 
+                long lastLogin, long createdAt, long updatedAt) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phone = phone;
-        this.phoneNumber = phone; // Sync both fields
+        this.isActive = isActive;
+        this.companyId = companyId;
+        this.lastLogin = lastLogin;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-
-    @Ignore
-    public User(String name, String email, long createdAt, long updatedAt) {
-        this(name, email, null, createdAt, updatedAt);
-    }
-
-    // Getters
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
-    public String getPhone() { return phone != null ? phone : phoneNumber; }
-    public String getPhoneNumber() { return phoneNumber != null ? phoneNumber : phone; }
-    public long getCreatedAt() { return createdAt; }
-    public long getUpdatedAt() { return updatedAt; }
-
-    // Setters
-    public void setId(int id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
-    public void setEmail(String email) { this.email = email; }
-    public void setPhone(String phone) { 
-        this.phone = phone;
-        this.phoneNumber = phone; // Keep in sync
-    }
-    public void setPhoneNumber(String phoneNumber) { 
-        this.phoneNumber = phoneNumber;
-        this.phone = phoneNumber; // Keep in sync
-    }
-    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
-    public void setUpdatedAt(long updatedAt) { this.updatedAt = updatedAt; }
 }

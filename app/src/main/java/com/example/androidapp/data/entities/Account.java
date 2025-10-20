@@ -1,65 +1,47 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.*;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 @Entity(tableName = "accounts")
 public class Account {
     @PrimaryKey(autoGenerate = true)
-    public int id;
-    
-    public String name;
-    public String code;
-    public String type;
+    public int accountId;
+    public String accountName;
+    public String accountType;
     public double balance;
-    public String currency;
     public String description;
-    
-    @ColumnInfo(name = "created_at")
+    public boolean isActive;
     public long createdAt;
-    
-    @ColumnInfo(name = "last_modified")
-    public long lastModified;
-    
-    public String userId;
-    
-    public Account() {
-        this.createdAt = System.currentTimeMillis();
-        this.lastModified = System.currentTimeMillis();
-        this.currency = "SAR";
-        this.balance = 0.0;
-    }
+    public long updatedAt;
 
-    public Account(String name, String code, double balance, String type, long createdAt) {
-        this.name = name;
-        this.code = code;
+    // Default constructor for Room
+    public Account() {}
+
+    // Constructor for creating new accounts
+    @Ignore
+    public Account(String accountName, String accountType, double balance, String description) {
+        this.accountName = accountName;
+        this.accountType = accountType;
         this.balance = balance;
-        this.type = type;
-        this.createdAt = createdAt;
-        this.lastModified = System.currentTimeMillis();
-        this.currency = "SAR";
+        this.description = description;
+        this.isActive = true;
+        this.createdAt = System.currentTimeMillis();
+        this.updatedAt = System.currentTimeMillis();
     }
 
-    // Getters
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getCode() { return code; }
-    public String getType() { return type; }
-    public double getBalance() { return balance; }
-    public String getCurrency() { return currency; }
-    public String getDescription() { return description; }
-    public long getCreatedAt() { return createdAt; }
-    public long getLastModified() { return lastModified; }
-    public String getUserId() { return userId; }
-
-    // Setters
-    public void setId(int id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
-    public void setCode(String code) { this.code = code; }
-    public void setType(String type) { this.type = type; }
-    public void setBalance(double balance) { this.balance = balance; }
-    public void setCurrency(String currency) { this.currency = currency; }
-    public void setDescription(String description) { this.description = description; }
-    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
-    public void setLastModified(long lastModified) { this.lastModified = lastModified; }
-    public void setUserId(String userId) { this.userId = userId; }
+    // Full constructor
+    @Ignore
+    public Account(int accountId, String accountName, String accountType, double balance, String description,
+                  boolean isActive, long createdAt, long updatedAt) {
+        this.accountId = accountId;
+        this.accountName = accountName;
+        this.accountType = accountType;
+        this.balance = balance;
+        this.description = description;
+        this.isActive = isActive;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

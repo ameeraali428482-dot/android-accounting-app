@@ -1,66 +1,52 @@
 package com.example.androidapp.data.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-import androidx.room.ColumnInfo;
 import androidx.room.ForeignKey;
-import androidx.room.Index;
 import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-@Entity(tableName = "user_roles",
-        foreignKeys = @ForeignKey(entity = User.class,
-                                  parentColumns = "id",
-                                  childColumns = "user_id",
-                                  onDelete = ForeignKey.CASCADE),
-        indices = {@Index("user_id")})
+@Entity(
+    tableName = "user_roles",
+    foreignKeys = {
+        @ForeignKey(entity = User.class, parentColumns = "userId", childColumns = "userId", onDelete = ForeignKey.CASCADE),
+        @ForeignKey(entity = Role.class, parentColumns = "roleId", childColumns = "roleId", onDelete = ForeignKey.CASCADE)
+    },
+    indices = {
+        @Index(value = "userId"),
+        @Index(value = "roleId")
+    }
+)
 public class UserRole {
     @PrimaryKey(autoGenerate = true)
-    private int id;
-    
-    @ColumnInfo(name = "user_id")
-    private int userId;
-    
-    @ColumnInfo(name = "role_name")
-    private String roleName;
-    
-    @ColumnInfo(name = "permissions")
-    private String permissions;
+    public int id;
+    @NonNull
+    public String userId;
+    @NonNull
+    public String roleId;
+    public long assignedAt;
+    public String assignedBy;
 
-    // Empty constructor (ignored by Room)
-    @Ignore
+    // Default constructor for Room
     public UserRole() {}
 
-    // Constructor for Room - handles both int and String userId
-    public UserRole(int userId, String roleName, String permissions) {
-        this.userId = userId;
-        this.roleName = roleName;
-        this.permissions = permissions;
-    }
-    
-    // Constructor for compatibility with String userId
+    // Constructor for creating new user roles
     @Ignore
-    public UserRole(String userId, String roleName, long timestamp) {
-        try {
-            this.userId = Integer.parseInt(userId);
-        } catch (NumberFormatException e) {
-            this.userId = 0; // default value
-        }
-        this.roleName = roleName;
-        this.permissions = "";
+    public UserRole(@NonNull String userId, @NonNull String roleId, String assignedBy) {
+        this.userId = userId;
+        this.roleId = roleId;
+        this.assignedAt = System.currentTimeMillis();
+        this.assignedBy = assignedBy;
     }
 
-    // Getters and Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
-    
-    public String getRoleName() { return roleName; }
-    public void setRoleName(String roleName) { this.roleName = roleName; }
-    
-    public String getRoleId() { return roleName; } // للتوافق مع الكود القديم
-    
-    public String getPermissions() { return permissions; }
-    public void setPermissions(String permissions) { this.permissions = permissions; }
+    // Full constructor
+    @Ignore
+    public UserRole(int id, @NonNull String userId, @NonNull String roleId, long assignedAt, String assignedBy) {
+        this.id = id;
+        this.userId = userId;
+        this.roleId = roleId;
+        this.assignedAt = assignedAt;
+        this.assignedBy = assignedBy;
+    }
 }

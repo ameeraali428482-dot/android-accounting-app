@@ -1,55 +1,52 @@
 package com.example.androidapp.data.entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "items")
 public class Item {
     @PrimaryKey(autoGenerate = true)
-    public int id;
-    
-    public String name;
-    public String code;
+    public int itemId;
+    public String itemName;
     public String description;
     public double price;
-    public String category;
     public int quantity;
-    public String unit;
+    public String category;
+    public String barcode;
+    public boolean isActive;
     public long createdAt;
+    public long updatedAt;
 
-    public Item() {
-        this.createdAt = System.currentTimeMillis();
-        this.quantity = 0;
-        this.price = 0.0;
-    }
+    // Default constructor for Room
+    public Item() {}
 
-    public Item(String name, String code, double price, String category) {
-        this();
-        this.name = name;
-        this.code = code;
+    // Constructor for creating new items
+    @Ignore
+    public Item(String itemName, String description, double price, int quantity, String category) {
+        this.itemName = itemName;
+        this.description = description;
         this.price = price;
+        this.quantity = quantity;
         this.category = category;
+        this.isActive = true;
+        this.createdAt = System.currentTimeMillis();
+        this.updatedAt = System.currentTimeMillis();
     }
 
-    // Getters
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getCode() { return code; }
-    public String getDescription() { return description; }
-    public double getPrice() { return price; }
-    public String getCategory() { return category; }
-    public int getQuantity() { return quantity; }
-    public String getUnit() { return unit; }
-    public long getCreatedAt() { return createdAt; }
-
-    // Setters
-    public void setId(int id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
-    public void setCode(String code) { this.code = code; }
-    public void setDescription(String description) { this.description = description; }
-    public void setPrice(double price) { this.price = price; }
-    public void setCategory(String category) { this.category = category; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
-    public void setUnit(String unit) { this.unit = unit; }
-    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+    // Full constructor
+    @Ignore
+    public Item(int itemId, String itemName, String description, double price, int quantity, String category,
+               String barcode, boolean isActive, long createdAt, long updatedAt) {
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.category = category;
+        this.barcode = barcode;
+        this.isActive = isActive;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

@@ -1,41 +1,43 @@
 package com.example.androidapp.data.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "permissions")
 public class Permission {
     @PrimaryKey
+    @NonNull
     public String permissionId;
-    
-    public String name;
+    public String permissionName;
     public String description;
     public String category;
     public long createdAt;
+    public long updatedAt;
 
-    public Permission() {
-        this.createdAt = System.currentTimeMillis();
-    }
+    // Default constructor for Room
+    public Permission() {}
 
-    public Permission(String permissionId, String name, String description, String category) {
+    // Constructor for creating new permissions
+    @Ignore
+    public Permission(@NonNull String permissionId, String permissionName, String description, String category) {
         this.permissionId = permissionId;
-        this.name = name;
+        this.permissionName = permissionName;
         this.description = description;
         this.category = category;
         this.createdAt = System.currentTimeMillis();
+        this.updatedAt = System.currentTimeMillis();
     }
 
-    // Getters
-    public String getPermissionId() { return permissionId; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public String getCategory() { return category; }
-    public long getCreatedAt() { return createdAt; }
-
-    // Setters
-    public void setPermissionId(String permissionId) { this.permissionId = permissionId; }
-    public void setName(String name) { this.name = name; }
-    public void setDescription(String description) { this.description = description; }
-    public void setCategory(String category) { this.category = category; }
-    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+    // Full constructor
+    @Ignore
+    public Permission(@NonNull String permissionId, String permissionName, String description, String category, long createdAt, long updatedAt) {
+        this.permissionId = permissionId;
+        this.permissionName = permissionName;
+        this.description = description;
+        this.category = category;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

@@ -1,62 +1,56 @@
 package com.example.androidapp.data.entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "employees")
 public class Employee {
     @PrimaryKey(autoGenerate = true)
-    public int id;
-    
-    public String employeeId;
-    public String name;
+    public int employeeId;
+    public String employeeName;
     public String email;
     public String phone;
-    public String department;
     public String position;
+    public String department;
     public double salary;
-    public long hireDate;
     public boolean isActive;
+    public long hireDate;
     public long createdAt;
+    public long updatedAt;
 
-    public Employee() {
-        this.createdAt = System.currentTimeMillis();
-        this.hireDate = System.currentTimeMillis();
-        this.isActive = true;
-        this.salary = 0.0;
-    }
+    // Default constructor for Room
+    public Employee() {}
 
-    public Employee(String employeeId, String name, String department, String position) {
-        this();
-        this.employeeId = employeeId;
-        this.name = name;
-        this.department = department;
+    // Constructor for creating new employees
+    @Ignore
+    public Employee(String employeeName, String email, String phone, String position, String department, double salary) {
+        this.employeeName = employeeName;
+        this.email = email;
+        this.phone = phone;
         this.position = position;
+        this.department = department;
+        this.salary = salary;
+        this.isActive = true;
+        this.hireDate = System.currentTimeMillis();
+        this.createdAt = System.currentTimeMillis();
+        this.updatedAt = System.currentTimeMillis();
     }
 
-    // Getters
-    public int getId() { return id; }
-    public String getEmployeeId() { return employeeId; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
-    public String getPhone() { return phone; }
-    public String getDepartment() { return department; }
-    public String getPosition() { return position; }
-    public double getSalary() { return salary; }
-    public long getHireDate() { return hireDate; }
-    public boolean isActive() { return isActive; }
-    public long getCreatedAt() { return createdAt; }
-
-    // Setters
-    public void setId(int id) { this.id = id; }
-    public void setEmployeeId(String employeeId) { this.employeeId = employeeId; }
-    public void setName(String name) { this.name = name; }
-    public void setEmail(String email) { this.email = email; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public void setDepartment(String department) { this.department = department; }
-    public void setPosition(String position) { this.position = position; }
-    public void setSalary(double salary) { this.salary = salary; }
-    public void setHireDate(long hireDate) { this.hireDate = hireDate; }
-    public void setActive(boolean active) { isActive = active; }
-    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+    // Full constructor
+    @Ignore
+    public Employee(int employeeId, String employeeName, String email, String phone, String position, String department,
+                   double salary, boolean isActive, long hireDate, long createdAt, long updatedAt) {
+        this.employeeId = employeeId;
+        this.employeeName = employeeName;
+        this.email = email;
+        this.phone = phone;
+        this.position = position;
+        this.department = department;
+        this.salary = salary;
+        this.isActive = isActive;
+        this.hireDate = hireDate;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }
