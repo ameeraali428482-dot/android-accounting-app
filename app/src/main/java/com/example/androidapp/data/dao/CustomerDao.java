@@ -1,8 +1,8 @@
 package com.example.androcustomerIdapp.data.dao;
 
-import androcustomerIdx.room.Dao;
-import androcustomerIdx.room.Query;
-import com.example.androcustomerIdapp.data.entities.Customer;
+import androidx.room.Dao;
+import androidx.room.Query;
+import com.example.androidapp.data.entities.Customer;
 import java.util.List;
 
 @Dao
@@ -30,5 +30,5 @@ public interface CustomerDao extends BaseDao<Customer> {
     int getCount();
 
     @Query("DELETE FROM customers WHERE customerId = :customerId")
-    vocustomerId deleteById(int customerId);
+    void deleteById(int customerId);
 }

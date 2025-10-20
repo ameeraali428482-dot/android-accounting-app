@@ -1,8 +1,8 @@
 package com.example.androemployeeIdapp.data.dao;
 
-import androemployeeIdx.room.Dao;
-import androemployeeIdx.room.Query;
-import com.example.androemployeeIdapp.data.entities.Employee;
+import androidx.room.Dao;
+import androidx.room.Query;
+import com.example.androidapp.data.entities.Employee;
 import java.util.List;
 
 @Dao
@@ -33,5 +33,5 @@ public interface EmployeeDao extends BaseDao<Employee> {
     int getActiveCount();
 
     @Query("DELETE FROM employees WHERE employeeId = :employeeId")
-    voemployeeId deleteById(int employeeId);
+    void deleteById(int employeeId);
 }

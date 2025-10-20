@@ -1,8 +1,8 @@
 package com.example.androitemIdapp.data.dao;
 
-import androitemIdx.room.Dao;
-import androitemIdx.room.Query;
-import com.example.androitemIdapp.data.entities.Item;
+import androidx.room.Dao;
+import androidx.room.Query;
+import com.example.androidapp.data.entities.Item;
 import java.util.List;
 
 @Dao
@@ -27,5 +27,5 @@ public interface ItemDao extends BaseDao<Item> {
     int getCount();
 
     @Query("DELETE FROM items WHERE itemId = :itemId")
-    voitemId deleteById(int itemId);
+    void deleteById(int itemId);
 }
