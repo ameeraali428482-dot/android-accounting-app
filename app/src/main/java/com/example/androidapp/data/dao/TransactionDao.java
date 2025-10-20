@@ -10,6 +10,18 @@ import java.util.List;
 
 @Dao
 public interface TransactionDao {
+
+    @Query("SELECT * FROM transactions WHERE id = :transactionId")
+    Transaction getTransactionByIdSync(long transactionId);
+
+    @Query("SELECT * FROM transactions WHERE id = :transactionId")
+    Transaction getTransactionByIdSync(Long transactionId);
+
+    @Insert
+    void insert(Transaction transaction);
+
+    @Update
+    void update(Transaction transaction);
     @Query("SELECT * FROM transactions ORDER BY transaction_date DESC")
     List<Transaction> getAllTransactions();
     

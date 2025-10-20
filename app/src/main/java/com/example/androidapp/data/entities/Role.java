@@ -42,7 +42,6 @@ public class Role {
     
     // Constructor for compatibility with old code
     @Ignore
-    @Ignore
     public Role(String roleId, String name, String description, long createdAt) {
         this.roleId = roleId;
         this.name = name;

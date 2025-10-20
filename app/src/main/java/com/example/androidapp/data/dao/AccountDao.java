@@ -10,6 +10,12 @@ import java.util.List;
 
 @Dao
 public interface AccountDao {
+
+    @Query("SELECT * FROM accounts WHERE name LIKE :searchTerm OR code LIKE :searchTerm")
+    List<Account> searchAccounts(String searchTerm);
+
+    @Update
+    void update(Account account);
     @Query("SELECT * FROM accounts")
     List<Account> getAllAccounts();
     

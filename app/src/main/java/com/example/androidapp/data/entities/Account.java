@@ -2,73 +2,34 @@ package com.example.androidapp.data.entities;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.ColumnInfo;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
 
-@Entity(tableName = "accounts",
-        foreignKeys = @ForeignKey(entity = User.class,
-                                  parentColumns = "id",
-                                  childColumns = "user_id",
-                                  onDelete = ForeignKey.CASCADE),
-        indices = {@Index("user_id")})
+@Entity(tableName = "accounts")
 public class Account {
     @PrimaryKey(autoGenerate = true)
-    private int id;
-    
-    @ColumnInfo(name = "user_id")
-    private int userId;
-    
-    @ColumnInfo(name = "account_name")
-    private String accountName;
-    
-    @ColumnInfo(name = "account_type")
-    private String accountType;
-    
-    @ColumnInfo(name = "balance")
-    private double balance;
-    
-    @ColumnInfo(name = "created_at")
-    private long createdAt;
-    
-    // For compatibility with existing code
+    public int id;
+
     public String name;
+    public String code;
+    public double balance;
+    public String type;
+    public long createdAt;
+    public long lastModified;
 
-    // Constructor
-    public Account(int userId, String accountName, String accountType, double balance, long createdAt) {
-        this.userId = userId;
-        this.accountName = accountName;
-        this.accountType = accountType;
-        this.balance = balance;
-        this.createdAt = createdAt;
-        this.name = accountName; // for compatibility
-    }
+    // Default constructor for Room
+    public Account() {}
 
-    // Getters and Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
-    
-    public String getAccountName() { return accountName; }
-    public void setAccountName(String accountName) { 
-        this.accountName = accountName;
-        this.name = accountName; // for compatibility
-    }
-    
-    public String getAccountType() { return accountType; }
-    public void setAccountType(String accountType) { this.accountType = accountType; }
-    
-    public double getBalance() { return balance; }
-    public void setBalance(double balance) { this.balance = balance; }
-    
-    public long getCreatedAt() { return createdAt; }
-    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
-    
-    public String getName() { return name; }
-    public void setName(String name) { 
+    // Main constructor
+    public Account(String name, String code, double balance, String type, long createdAt) {
         this.name = name;
-        this.accountName = name;
+        this.code = code;
+        this.balance = balance;
+        this.type = type;
+        this.createdAt = createdAt;
+        this.lastModified = System.currentTimeMillis();
     }
+
+    // Getters for compatibility
+    public String getName() { return name; }
+    public String getCode() { return code; }
+    public double getBalance() { return balance; }
 }

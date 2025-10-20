@@ -7,6 +7,16 @@ import android.content.SharedPreferences;
  * مدير الجلسة
  */
 public class SessionManager {
+
+    public String getCurrentUserId() {
+        SharedPreferences prefs = context.getSharedPreferences("user_session", Context.MODE_PRIVATE);
+        return prefs.getString("user_id", null);
+    }
+
+    public int getCurrentUserIdInt() {
+        String userId = getCurrentUserId();
+        return userId != null ? Integer.parseInt(userId) : 0;
+    }
     
     private SharedPreferences preferences;
     private static final String PREF_NAME = "AppSession";
