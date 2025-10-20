@@ -15,13 +15,12 @@ public class Item {
     public String category;
     public String barcode;
     public boolean isActive;
+    public String companyId;
     public long createdAt;
     public long updatedAt;
 
-    // Default constructor for Room
     public Item() {}
 
-    // Constructor for creating new items
     @Ignore
     public Item(String itemName, String description, double price, int quantity, String category) {
         this.itemName = itemName;
@@ -32,21 +31,5 @@ public class Item {
         this.isActive = true;
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = System.currentTimeMillis();
-    }
-
-    // Full constructor
-    @Ignore
-    public Item(int itemId, String itemName, String description, double price, int quantity, String category,
-               String barcode, boolean isActive, long createdAt, long updatedAt) {
-        this.itemId = itemId;
-        this.itemName = itemName;
-        this.description = description;
-        this.price = price;
-        this.quantity = quantity;
-        this.category = category;
-        this.barcode = barcode;
-        this.isActive = isActive;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 }

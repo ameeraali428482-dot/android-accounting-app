@@ -19,10 +19,8 @@ public class Customer {
     public long createdAt;
     public long updatedAt;
 
-    // Default constructor for Room
     public Customer() {}
 
-    // Constructor for creating new customers
     @Ignore
     public Customer(String customerName, String email, String phone, String address) {
         this.customerName = customerName;
@@ -36,10 +34,8 @@ public class Customer {
         this.updatedAt = System.currentTimeMillis();
     }
 
-    // Full constructor
     @Ignore
-    public Customer(int customerId, String customerName, String email, String phone, String address, String company,
-                   boolean isActive, double creditLimit, double currentBalance, long createdAt, long updatedAt) {
+    public Customer(int customerId, String customerName, String email, String phone, String address, String company, boolean isActive, double creditLimit, double currentBalance, long createdAt, long updatedAt) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.email = email;

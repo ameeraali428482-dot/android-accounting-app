@@ -9,16 +9,14 @@ import androidx.room.PrimaryKey;
 public class Role {
     @PrimaryKey
     @NonNull
-    public String role_id;            // مطابق للاستعلامات التي تستخدم 'role_id'
-    public String name;               // مطابق للاستعلامات التي تستخدم 'name'
+    public String role_id;
+    public String name;
     public String description;
     public long createdAt;
     public long updatedAt;
 
-    // Default constructor for Room
     public Role() {}
 
-    // Constructor for creating new roles
     @Ignore
     public Role(@NonNull String role_id, String name, String description) {
         this.role_id = role_id;

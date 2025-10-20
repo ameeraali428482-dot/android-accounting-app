@@ -9,17 +9,15 @@ import androidx.room.PrimaryKey;
 public class Permission {
     @PrimaryKey
     @NonNull
-    public String permission_id;      // مطابق للاستعلامات التي تستخدم 'permission_id'
-    public String name;               // مطابق للاستعلامات التي تستخدم 'name'
+    public String permission_id;
+    public String name;
     public String description;
     public String category;
     public long createdAt;
     public long updatedAt;
 
-    // Default constructor for Room
     public Permission() {}
 
-    // Constructor for creating new permissions
     @Ignore
     public Permission(@NonNull String permission_id, String name, String description, String category) {
         this.permission_id = permission_id;
