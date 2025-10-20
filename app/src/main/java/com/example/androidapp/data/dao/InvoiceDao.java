@@ -1,36 +1,36 @@
 package com.example.androidapp.data.dao;
 
-import androidx.room.*;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
 import com.example.androidapp.data.entities.Invoice;
 import java.util.List;
 
 @Dao
-public interface InvoiceDao extends BaseDao<Invoice> {
-    
-    @Query("SELECT * FROM invoices ORDER BY created_date DESC")
+public interface InvoiceDao {
+    @Query("SELECT * FROM invoices ORDER BY issue_date DESC")
     List<Invoice> getAllInvoices();
     
     @Query("SELECT * FROM invoices WHERE id = :id")
-    Invoice getInvoiceById(long id);
+    Invoice getInvoiceById(int id);
     
-    @Query("SELECT * FROM invoices WHERE created_date BETWEEN :startDate AND :endDate ORDER BY created_date DESC")
-    List<Invoice> getInvoicesByDateRange(long startDate, long endDate);
+    @Query("SELECT * FROM invoices WHERE customer_id = :customerId")
+    List<Invoice> getInvoicesByCustomerId(int customerId);
     
-    @Query("SELECT COALESCE(SUM(totalAmount), 0) FROM invoices WHERE status = 'PAID'")
-    double getTotalPaidAmount();
-    
-    @Query("SELECT COALESCE(SUM(totalAmount), 0) FROM invoices WHERE status = 'PENDING'")
-    double getTotalPendingAmount();
-    
-    @Query("SELECT * FROM invoices WHERE customerId = :customerId ORDER BY created_date DESC")
-    List<Invoice> getInvoicesByCustomer(long customerId);
-    
-    @Query("SELECT * FROM invoices WHERE status = :status ORDER BY created_date DESC")
+    @Query("SELECT * FROM invoices WHERE status = :status")
     List<Invoice> getInvoicesByStatus(String status);
     
-    @Query("UPDATE invoices SET status = :status WHERE id = :id")
-    void updateInvoiceStatus(long id, String status);
+    @Query("SELECT SUM(total_amount) FROM invoices WHERE customer_id = :customerId")
+    double getTotalAmountByCustomer(int customerId);
     
-    @Query("DELETE FROM invoices WHERE id = :id")
-    void deleteInvoice(long id);
+    @Insert
+    void insertInvoice(Invoice invoice);
+    
+    @Update
+    void updateInvoice(Invoice invoice);
+    
+    @Delete
+    void deleteInvoice(Invoice invoice);
 }

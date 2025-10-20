@@ -1,7 +1,10 @@
 package com.example.androidapp.data.entities;
 
-import androidx.annotation.NonNull;
-import androidx.room.*;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.ColumnInfo;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
 
 @Entity(tableName = "accounts",
         foreignKeys = @ForeignKey(entity = User.class,
@@ -11,92 +14,48 @@ import androidx.room.*;
         indices = {@Index("user_id")})
 public class Account {
     @PrimaryKey(autoGenerate = true)
-    public long id;
-    
-    public String name;
-    public String type;
-    public double balance;
-    public String currency;
-    public String description;
+    private int id;
     
     @ColumnInfo(name = "user_id")
-    public String userId;
+    private int userId;
+    
+    @ColumnInfo(name = "account_name")
+    private String accountName;
+    
+    @ColumnInfo(name = "account_type")
+    private String accountType;
+    
+    @ColumnInfo(name = "balance")
+    private double balance;
     
     @ColumnInfo(name = "created_at")
-    public long createdAt;
-    
-    @ColumnInfo(name = "last_modified")
-    public long lastModified;
-    
-    @ColumnInfo(name = "is_active", defaultValue = "1")
-    public boolean isActive;
+    private long createdAt;
 
-    // Constructor الرئيسي لـ Room
-    public Account(long id, String name, String type, double balance, String currency, 
-                   String description, String userId, long createdAt, long lastModified, boolean isActive) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
+    // Constructor
+    public Account(int userId, String accountName, String accountType, double balance, long createdAt) {
+        this.userId = userId;
+        this.accountName = accountName;
+        this.accountType = accountType;
         this.balance = balance;
-        this.currency = currency;
-        this.description = description;
-        this.userId = userId;
         this.createdAt = createdAt;
-        this.lastModified = lastModified;
-        this.isActive = isActive;
     }
 
-    // Constructor مبسط
-    @Ignore
-    public Account(String name, String type, String userId) {
-        this.name = name;
-        this.type = type;
-        this.userId = userId;
-        this.createdAt = System.currentTimeMillis();
-        this.lastModified = System.currentTimeMillis();
-        this.currency = "SAR";
-        this.balance = 0.0;
-        this.isActive = true;
-    }
-
-    // Constructor فارغ
-    @Ignore
-    public Account() {
-        this.createdAt = System.currentTimeMillis();
-        this.lastModified = System.currentTimeMillis();
-        this.currency = "SAR";
-        this.balance = 0.0;
-        this.isActive = true;
-    }
-
-    // Getters & Setters
-    public long getId() { return id; }
-    public void setId(long id) { this.id = id; }
+    // Getters and Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
     
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
     
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public String getAccountName() { return accountName; }
+    public void setAccountName(String accountName) { this.accountName = accountName; }
+    
+    public String getAccountType() { return accountType; }
+    public void setAccountType(String accountType) { this.accountType = accountType; }
     
     public double getBalance() { return balance; }
     public void setBalance(double balance) { this.balance = balance; }
     
-    public String getCurrency() { return currency; }
-    public void setCurrency(String currency) { this.currency = currency; }
-    
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    
-    public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
-    
     public long getCreatedAt() { return createdAt; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
-    
-    public long getLastModified() { return lastModified; }
-    public void setLastModified(long lastModified) { this.lastModified = lastModified; }
-    
-    public boolean isActive() { return isActive; }
-    public void setActive(boolean active) { isActive = active; }
 }
