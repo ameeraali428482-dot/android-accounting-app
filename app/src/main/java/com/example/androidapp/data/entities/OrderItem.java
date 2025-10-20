@@ -1,27 +1,23 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
+import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 @Entity(tableName = "order_items",
         foreignKeys = {
-            @ForeignKey(entity = Order.class,
+                @ForeignKey(entity = Order.class,
                         parentColumns = "id",
                         childColumns = "order_id",
                         onDelete = ForeignKey.CASCADE),
-            @ForeignKey(entity = Item.class,
-                        parentColumns = "id",
+                @ForeignKey(entity = Item.class,
+                        parentColumns = "itemId",
                         childColumns = "item_id",
                         onDelete = ForeignKey.RESTRICT)
         },
-        indices = {
-            @Index(value = {"order_id"}),
-            @Index(value = {"item_id"}),
-            @Index(value = {"order_id", "item_id"}, unique = true)
-        })
+        indices = {@Index(value = "order_id"), @Index(value = "item_id"), @Index(value = {"order_id", "item_id"}, unique = true)})
 public class OrderItem {
     @PrimaryKey(autoGenerate = true)
     public long id;

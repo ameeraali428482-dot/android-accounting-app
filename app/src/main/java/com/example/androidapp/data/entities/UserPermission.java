@@ -7,17 +7,18 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(
-    tableName = "user_permissions",
-    foreignKeys = {
-        @ForeignKey(entity = User.class, parentColumns = "userId", childColumns = "userId", onDelete = ForeignKey.CASCADE),
-        @ForeignKey(entity = Permission.class, parentColumns = "permissionId", childColumns = "permissionId", onDelete = ForeignKey.CASCADE)
-    },
-    indices = {
-        @Index(value = "userId"),
-        @Index(value = "permissionId")
-    }
-)
+@Entity(tableName = "user_permissions",
+        foreignKeys = {
+                @ForeignKey(entity = User.class,
+                        parentColumns = "id",
+                        childColumns = "userId",
+                        onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Permission.class,
+                        parentColumns = "permission_id",
+                        childColumns = "permissionId",
+                        onDelete = ForeignKey.CASCADE)
+        },
+        indices = {@Index(value = "userId"), @Index(value = "permissionId")})
 public class UserPermission {
     @PrimaryKey
     @NonNull
@@ -28,10 +29,8 @@ public class UserPermission {
     public long grantedAt;
     public String grantedBy;
 
-    // Default constructor for Room
     public UserPermission() {}
 
-    // Constructor for creating new user permissions
     @Ignore
     public UserPermission(@NonNull String permissionId, @NonNull String userId, boolean isGranted, String grantedBy) {
         this.permissionId = permissionId;
@@ -41,7 +40,6 @@ public class UserPermission {
         this.grantedBy = grantedBy;
     }
 
-    // Full constructor
     @Ignore
     public UserPermission(@NonNull String permissionId, @NonNull String userId, boolean isGranted, long grantedAt, String grantedBy) {
         this.permissionId = permissionId;

@@ -7,17 +7,18 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(
-    tableName = "user_roles",
-    foreignKeys = {
-        @ForeignKey(entity = User.class, parentColumns = "userId", childColumns = "userId", onDelete = ForeignKey.CASCADE),
-        @ForeignKey(entity = Role.class, parentColumns = "roleId", childColumns = "roleId", onDelete = ForeignKey.CASCADE)
-    },
-    indices = {
-        @Index(value = "userId"),
-        @Index(value = "roleId")
-    }
-)
+@Entity(tableName = "user_roles",
+        foreignKeys = {
+                @ForeignKey(entity = User.class,
+                        parentColumns = "id",
+                        childColumns = "userId",
+                        onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Role.class,
+                        parentColumns = "role_id",
+                        childColumns = "roleId",
+                        onDelete = ForeignKey.CASCADE)
+        },
+        indices = {@Index(value = "userId"), @Index(value = "roleId")})
 public class UserRole {
     @PrimaryKey(autoGenerate = true)
     public int id;
@@ -28,10 +29,8 @@ public class UserRole {
     public long assignedAt;
     public String assignedBy;
 
-    // Default constructor for Room
     public UserRole() {}
 
-    // Constructor for creating new user roles
     @Ignore
     public UserRole(@NonNull String userId, @NonNull String roleId, String assignedBy) {
         this.userId = userId;
@@ -40,7 +39,6 @@ public class UserRole {
         this.assignedBy = assignedBy;
     }
 
-    // Full constructor
     @Ignore
     public UserRole(int id, @NonNull String userId, @NonNull String roleId, long assignedAt, String assignedBy) {
         this.id = id;
