@@ -30,6 +30,9 @@ public class Account {
     
     @ColumnInfo(name = "created_at")
     private long createdAt;
+    
+    // For compatibility with existing code
+    public String name;
 
     // Constructor
     public Account(int userId, String accountName, String accountType, double balance, long createdAt) {
@@ -38,6 +41,7 @@ public class Account {
         this.accountType = accountType;
         this.balance = balance;
         this.createdAt = createdAt;
+        this.name = accountName; // for compatibility
     }
 
     // Getters and Setters
@@ -48,7 +52,10 @@ public class Account {
     public void setUserId(int userId) { this.userId = userId; }
     
     public String getAccountName() { return accountName; }
-    public void setAccountName(String accountName) { this.accountName = accountName; }
+    public void setAccountName(String accountName) { 
+        this.accountName = accountName;
+        this.name = accountName; // for compatibility
+    }
     
     public String getAccountType() { return accountType; }
     public void setAccountType(String accountType) { this.accountType = accountType; }
@@ -58,4 +65,10 @@ public class Account {
     
     public long getCreatedAt() { return createdAt; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+    
+    public String getName() { return name; }
+    public void setName(String name) { 
+        this.name = name;
+        this.accountName = name;
+    }
 }

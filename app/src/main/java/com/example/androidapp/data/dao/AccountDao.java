@@ -13,6 +13,9 @@ public interface AccountDao {
     @Query("SELECT * FROM accounts")
     List<Account> getAllAccounts();
     
+    @Query("SELECT * FROM accounts")
+    List<Account> getAllAccountsSync();
+    
     @Query("SELECT * FROM accounts WHERE id = :id")
     Account getAccountById(int id);
     

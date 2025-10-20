@@ -1,60 +1,65 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.*;
-import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.ColumnInfo;
+import androidx.room.Index;
 
-@Entity(tableName = "roles")
+@Entity(tableName = "roles",
+        indices = {@Index("role_id")})
 public class Role {
-    @PrimaryKey
-    @NonNull
-    private String id;
-    private String companyId;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    
+    @ColumnInfo(name = "role_id")
+    private String roleId;
+    
+    @ColumnInfo(name = "name")
     private String name;
+    
+    @ColumnInfo(name = "description")
     private String description;
+    
+    @ColumnInfo(name = "permissions")
     private String permissions;
-    private String createdDate;
-    private String updatedDate;
+    
+    @ColumnInfo(name = "created_at")
+    private long createdAt;
 
-    public Role() {}
-
-    @Ignore
-    public Role(String name, String description, String companyId) {
-        this.name = name;
-        this.description = description;
-        this.companyId = companyId;
-    }
-
-    @Ignore
-    public Role(@NonNull String id, String companyId, String name, String description, 
-                String permissions, String createdDate, String updatedDate) {
-        this.id = id;
-        this.companyId = companyId;
+    // Constructor for Role with all parameters
+    public Role(String roleId, String name, String description, String permissions, long createdAt) {
+        this.roleId = roleId;
         this.name = name;
         this.description = description;
         this.permissions = permissions;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
+        this.createdAt = createdAt;
+    }
+    
+    // Constructor for compatibility with old code
+    public Role(String roleId, String name, String description, long createdAt) {
+        this.roleId = roleId;
+        this.name = name;
+        this.description = description;
+        this.permissions = "";
+        this.createdAt = createdAt;
     }
 
-    @NonNull
-    public String getId() { return id; }
-    public void setId(@NonNull String id) { this.id = id; }
-
-    public String getCompanyId() { return companyId; }
-    public void setCompanyId(String companyId) { this.companyId = companyId; }
-
+    // Getters and Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    
+    public String getRoleId() { return roleId; }
+    public void setRoleId(String roleId) { this.roleId = roleId; }
+    
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-
+    
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-
+    
     public String getPermissions() { return permissions; }
     public void setPermissions(String permissions) { this.permissions = permissions; }
-
-    public String getCreatedDate() { return createdDate; }
-    public void setCreatedDate(String createdDate) { this.createdDate = createdDate; }
-
-    public String getUpdatedDate() { return updatedDate; }
-    public void setUpdatedDate(String updatedDate) { this.updatedDate = updatedDate; }
+    
+    public long getCreatedAt() { return createdAt; }
+    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
 }

@@ -1,61 +1,86 @@
 package com.example.androidapp.data.entities;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.ColumnInfo;
+import androidx.room.Index;
+import androidx.room.Ignore;
 
 @Entity(tableName = "notifications",
-        foreignKeys = @ForeignKey(entity = User.class,
-                                  parentColumns = "id",
-                                  childColumns = "userId",
-                                  onDelete = ForeignKey.CASCADE),
-        indices = {@Index(value = "userId")})
+        indices = {@Index("user_id")})
 public class Notification {
-    @PrimaryKey
-    @NonNull
-    private String id;
-    private String userId;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    
+    @ColumnInfo(name = "type")
     private String type;
-    private String title; // Added title
-    private String message;
+    
+    @ColumnInfo(name = "title")
+    private String title;
+    
+    @ColumnInfo(name = "content")
+    private String content;
+    
+    @ColumnInfo(name = "user_id")
+    private String userId;
+    
+    @ColumnInfo(name = "reference_id")
+    private String referenceId;
+    
+    @ColumnInfo(name = "is_read")
     private boolean isRead;
-    private String entityId;
+    
+    @ColumnInfo(name = "created_at")
     private String createdAt;
+    
+    @ColumnInfo(name = "updated_at")
+    private String updatedAt;
 
-    public Notification(@NonNull String id, String userId, String type, String title, String message, boolean isRead, String entityId, String createdAt) {
-        this.id = id;
-        this.userId = userId;
-        this.type = type;
-        this.title = title;
-        this.message = message;
-        this.isRead = isRead;
-        this.entityId = entityId;
-        this.createdAt = createdAt;
+    // Empty constructor for compatibility
+    @Ignore
+    public Notification() {
+        this.isRead = false;
+        this.createdAt = String.valueOf(System.currentTimeMillis());
+        this.updatedAt = String.valueOf(System.currentTimeMillis());
     }
 
-    // Getters
-    @NonNull
-    public String getId() { return id; }
-    public String getUserId() { return userId; }
+    // Constructor for Room
+    public Notification(String type, String title, String content, String userId, String referenceId, boolean isRead, String createdAt, String updatedAt) {
+        this.type = type;
+        this.title = title;
+        this.content = content;
+        this.userId = userId;
+        this.referenceId = referenceId;
+        this.isRead = isRead;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    // Getters and Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    
     public String getType() { return type; }
-    public String getTitle() { return title; }
-    public String getMessage() { return message; }
-    public boolean isRead() { return isRead; }
-    public String getEntityId() { return entityId; }
-    public String getCreatedAt() { return createdAt; }
-    public String getTimestamp() { return createdAt; }
-    public String getNotificationType() { return type; }
-
-
-    // Setters
-    public void setId(@NonNull String id) { this.id = id; }
-    public void setUserId(String userId) { this.userId = userId; }
     public void setType(String type) { this.type = type; }
+    
+    public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
-    public void setMessage(String message) { this.message = message; }
+    
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
+    
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
+    
+    public String getReferenceId() { return referenceId; }
+    public void setReferenceId(String referenceId) { this.referenceId = referenceId; }
+    
+    public boolean isRead() { return isRead; }
     public void setRead(boolean read) { isRead = read; }
-    public void setEntityId(String entityId) { this.entityId = entityId; }
+    
+    public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    
+    public String getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
 }

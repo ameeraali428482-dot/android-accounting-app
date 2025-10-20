@@ -39,6 +39,10 @@ public class Transaction {
     
     @ColumnInfo(name = "type")
     private String type;
+    
+    // For compatibility with existing code
+    public long date;
+    public String userId;
 
     // Constructor
     public Transaction(int accountId, Integer categoryId, double amount, String description, long transactionDate, String type) {
@@ -48,6 +52,7 @@ public class Transaction {
         this.description = description;
         this.transactionDate = transactionDate;
         this.type = type;
+        this.date = transactionDate; // for compatibility
     }
 
     // Getters and Setters
@@ -61,14 +66,30 @@ public class Transaction {
     public void setCategoryId(Integer categoryId) { this.categoryId = categoryId; }
     
     public double getAmount() { return amount; }
-    public void setAmount(double amount) { this.amount = amount; }
+    public void setAmount(double amount) { 
+        this.amount = amount;
+    }
     
     public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) { 
+        this.description = description;
+    }
     
     public long getTransactionDate() { return transactionDate; }
-    public void setTransactionDate(long transactionDate) { this.transactionDate = transactionDate; }
+    public void setTransactionDate(long transactionDate) { 
+        this.transactionDate = transactionDate;
+        this.date = transactionDate; // for compatibility
+    }
     
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+    
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
+    
+    public long getDate() { return date; }
+    public void setDate(long date) { 
+        this.date = date;
+        this.transactionDate = date;
+    }
 }

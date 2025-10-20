@@ -19,11 +19,20 @@ public interface UserRoleDao {
     @Query("SELECT * FROM user_roles WHERE user_id = :userId")
     List<UserRole> getUserRolesByUserId(int userId);
     
+    @Query("SELECT * FROM user_roles WHERE user_id = :userId")
+    List<UserRole> getByUserId(int userId);
+    
+    @Query("SELECT * FROM user_roles WHERE user_id = :userId")
+    List<UserRole> getByUserId(String userId);
+    
     @Query("SELECT * FROM user_roles WHERE role_name = :roleName")
     List<UserRole> getUserRolesByRoleName(String roleName);
     
     @Insert
     void insertUserRole(UserRole userRole);
+    
+    @Insert
+    void insert(UserRole userRole);
     
     @Update
     void updateUserRole(UserRole userRole);

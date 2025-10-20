@@ -30,11 +30,23 @@ public class UserRole {
     @Ignore
     public UserRole() {}
 
-    // Constructor for Room
+    // Constructor for Room - handles both int and String userId
     public UserRole(int userId, String roleName, String permissions) {
         this.userId = userId;
         this.roleName = roleName;
         this.permissions = permissions;
+    }
+    
+    // Constructor for compatibility with String userId
+    @Ignore
+    public UserRole(String userId, String roleName, long timestamp) {
+        try {
+            this.userId = Integer.parseInt(userId);
+        } catch (NumberFormatException e) {
+            this.userId = 0; // default value
+        }
+        this.roleName = roleName;
+        this.permissions = "";
     }
 
     // Getters and Setters
@@ -46,6 +58,8 @@ public class UserRole {
     
     public String getRoleName() { return roleName; }
     public void setRoleName(String roleName) { this.roleName = roleName; }
+    
+    public String getRoleId() { return roleName; } // للتوافق مع الكود القديم
     
     public String getPermissions() { return permissions; }
     public void setPermissions(String permissions) { this.permissions = permissions; }

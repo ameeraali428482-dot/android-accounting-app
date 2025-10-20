@@ -15,6 +15,9 @@ public class User {
     @ColumnInfo(name = "email")
     private String email;
     
+    @ColumnInfo(name = "phone")
+    private String phone;
+    
     @ColumnInfo(name = "created_at")
     private long createdAt;
     
@@ -22,9 +25,19 @@ public class User {
     private long updatedAt;
 
     // Constructor
+    public User(String name, String email, String phone, long createdAt, long updatedAt) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+    
+    // Constructor without phone for compatibility
     public User(String name, String email, long createdAt, long updatedAt) {
         this.name = name;
         this.email = email;
+        this.phone = "";
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -38,6 +51,9 @@ public class User {
     
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+    
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
     
     public long getCreatedAt() { return createdAt; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
