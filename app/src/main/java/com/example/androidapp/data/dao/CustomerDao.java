@@ -1,4 +1,4 @@
-package com.example.androcustomerIdapp.data.dao;
+package com.example.androidapp.data.dao;
 
 import androidx.room.Dao;
 import androidx.room.Query;
@@ -8,8 +8,8 @@ import java.util.List;
 @Dao
 public interface CustomerDao extends BaseDao<Customer> {
     
-    @Query("SELECT * FROM customers WHERE customerId = :customerId")
-    Customer getById(int customerId);
+    @Query("SELECT * FROM customers WHERE id = :customerId")
+    Customer getById(String customerId);
 
     @Query("SELECT * FROM customers ORDER BY customerName")
     List<Customer> getAll();
@@ -29,6 +29,6 @@ public interface CustomerDao extends BaseDao<Customer> {
     @Query("SELECT COUNT(*) FROM customers")
     int getCount();
 
-    @Query("DELETE FROM customers WHERE customerId = :customerId")
-    void deleteById(int customerId);
+    @Query("DELETE FROM customers WHERE id = :customerId")
+    void deleteById(String customerId);
 }

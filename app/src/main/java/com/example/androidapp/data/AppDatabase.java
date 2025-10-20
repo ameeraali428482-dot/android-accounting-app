@@ -3,80 +3,48 @@ package com.example.androidapp.data;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import android.content.Context;
-
-// استيراد جميع الـ DAOs
-import com.example.androidapp.data.dao.AccountDao;
-import com.example.androidapp.data.dao.ContactSyncDao;
-import com.example.androidapp.data.dao.CustomerDao;
-import com.example.androidapp.data.dao.EmployeeDao;
-import com.example.androidapp.data.dao.ItemDao;
-import com.example.androidapp.data.dao.NotificationDao;
-import com.example.androidapp.data.dao.PermissionDao;
-import com.example.androidapp.data.dao.RoleDao;
-import com.example.androidapp.data.dao.TransactionDao;
-import com.example.androidapp.data.dao.UserDao;
-import com.example.androidapp.data.dao.UserPermissionDao;
-import com.example.androidapp.data.dao.UserRoleDao;
-
-// استيراد جميع الكيانات
-import com.example.androidapp.data.entities.Account;
-import com.example.androidapp.data.entities.ContactSync;
-import com.example.androidapp.data.entities.Customer;
-import com.example.androidapp.data.entities.Employee;
-import com.example.androidapp.data.entities.Item;
-import com.example.androidapp.data.entities.Notification;
-import com.example.androidapp.data.entities.Permission;
-import com.example.androidapp.data.entities.Role;
-import com.example.androidapp.data.entities.Transaction;
-import com.example.androidapp.data.entities.User;
-import com.example.androidapp.data.entities.UserPermission;
-import com.example.androidapp.data.entities.UserRole;
+import com.example.androidapp.data.dao.*;
+import com.example.androidapp.data.entities.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Database(
     entities = {
-        User.class,
-        Account.class,
-        Transaction.class,
-        Role.class,
-        Permission.class,
-        UserPermission.class,
-        UserRole.class,
-        ContactSync.class,
-        Item.class,
-        Customer.class,
-        Employee.class,
-        Notification.class
+        Account.class, Transaction.class, Customer.class, Supplier.class,
+        Item.class, Invoice.class, Employee.class, Category.class,
+        Notification.class, // Add all other entities here
     },
-    version = 2,  // رفع الإصدار مرة أخرى
+    version = 1,
     exportSchema = false
 )
+@TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
-
-    // Abstract methods for all DAOs
-    public abstract UserDao userDao();
+    
     public abstract AccountDao accountDao();
     public abstract TransactionDao transactionDao();
-    public abstract RoleDao roleDao();
-    public abstract PermissionDao permissionDao();
-    public abstract UserPermissionDao userPermissionDao();
-    public abstract UserRoleDao userRoleDao();
-    public abstract ContactSyncDao contactSyncDao();
-    public abstract ItemDao itemDao();
     public abstract CustomerDao customerDao();
+    public abstract SupplierDao supplierDao();
+    public abstract ItemDao itemDao();
+    public abstract InvoiceDao invoiceDao();
     public abstract EmployeeDao employeeDao();
+    public abstract CategoryDao categoryDao();
     public abstract NotificationDao notificationDao();
-
+    // Add other DAOs as needed
+    
     private static volatile AppDatabase INSTANCE;
-
+    private static final int NUMBER_OF_THREADS = 4;
+    public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(
                         context.getApplicationContext(),
-                        AppDatabase.class,
-                        "business_database"
+                        AppDatabase.class, 
+                        "accounting_database"
                     )
                     .fallbackToDestructiveMigration()
                     .build();

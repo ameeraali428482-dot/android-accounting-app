@@ -3,17 +3,24 @@ package com.example.androidapp.data.dao;
 import androidx.room.*;
 import java.util.List;
 
+/**
+ * Base DAO interface providing common CRUD operations
+ * @param <T> Entity type
+ */
 public interface BaseDao<T> {
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(T entity);
+    long insert(T entity);
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<T> entities);
     
     @Update
-    void update(T entity);
+    int update(T entity);
     
     @Delete
-    void delete(T entity);
+    int delete(T entity);
+    
+    @Delete
+    int deleteAll(List<T> entities);
 }
