@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.accountingapp.R;
+import com.example.androidaccountingapp.R; // غيّر اسم الحزمة حسب اسم مشروعك الفعلي في build.gradle و AndroidManifest.xml
 
 public class BackupRestoreActivity extends AppCompatActivity {
 
@@ -28,6 +28,6 @@ public class BackupRestoreActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         statusText = findViewById(R.id.statusText);
 
-        // TODO: تكملة التهيئة وتشغيل التابع الخاص بالنسخ والاستعادة
+        // باقي تهيئه الوظائف هنا
     }
 }

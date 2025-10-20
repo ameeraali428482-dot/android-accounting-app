@@ -1,8 +1,14 @@
 package com.example.androidapp.data.entities;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "products")
 public class Product {
 
-    private String id;
+    @PrimaryKey(autoGenerate = true)
+    private long id;
+
     private String name;
     private String description;
     private double price;
@@ -15,10 +21,10 @@ public class Product {
     private String createdAt;
     private String updatedAt;
 
-    public String getId() {
+    public long getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
