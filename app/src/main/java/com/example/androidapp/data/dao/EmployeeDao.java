@@ -1,37 +1,37 @@
 package com.example.androidapp.data.dao;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Update;
 import com.example.androidapp.data.entities.Employee;
 import java.util.List;
 
 @Dao
-public interface EmployeeDao {
-    @Query("SELECT * FROM employees WHERE companyId = :companyId")
-    LiveData<List<Employee>> getAllEmployees(String companyId);
-
-    @Query("SELECT * FROM employees WHERE id = :employeeId AND companyId = :companyId")
-    Employee getEmployeeById(String employeeId, String companyId);
+public interface EmployeeDao extends BaseDao<Employee> {
     
-    @Query("SELECT * FROM employees WHERE companyId = :companyId")
-    List<Employee> getEmployeesByCompanyId(String companyId);
-
     @Query("SELECT * FROM employees WHERE id = :id")
-    Employee getById(String id);
+    Employee getById(int id);
 
-    @Insert
-    void insert(Employee employee);
-
-    @Update
-    void update(Employee employee);
-
-    @Delete
-    void delete(Employee employee);
+    @Query("SELECT * FROM employees ORDER BY name")
+    List<Employee> getAll();
     
-    @Query("DELETE FROM employees WHERE id = :employeeId")
-    void delete(String employeeId);
+    @Query("SELECT * FROM employees ORDER BY name")
+    List<Employee> getAllEmployees();
+
+    @Query("SELECT * FROM employees WHERE employeeId = :employeeId")
+    Employee getByEmployeeId(String employeeId);
+
+    @Query("SELECT * FROM employees WHERE department = :department ORDER BY name")
+    List<Employee> getByDepartment(String department);
+
+    @Query("SELECT * FROM employees WHERE isActive = 1 ORDER BY name")
+    List<Employee> getActiveEmployees();
+
+    @Query("SELECT * FROM employees WHERE name LIKE '%' || :searchTerm || '%' OR employeeId LIKE '%' || :searchTerm || '%' ORDER BY name")
+    List<Employee> searchEmployees(String searchTerm);
+
+    @Query("SELECT COUNT(*) FROM employees WHERE isActive = 1")
+    int getActiveCount();
+
+    @Query("DELETE FROM employees WHERE id = :id")
+    void deleteById(int id);
 }

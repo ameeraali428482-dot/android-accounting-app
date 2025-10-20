@@ -1,42 +1,25 @@
 package com.example.androidapp.data.dao;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Update;
 import com.example.androidapp.data.entities.UserRole;
 import java.util.List;
 
 @Dao
-public interface UserRoleDao {
-    @Query("SELECT * FROM user_roles")
-    List<UserRole> getAllUserRoles();
+public interface UserRoleDao extends BaseDao<UserRole> {
     
-    @Query("SELECT * FROM user_roles WHERE id = :id")
-    UserRole getUserRoleById(int id);
-    
-    @Query("SELECT * FROM user_roles WHERE user_id = :userId")
-    List<UserRole> getUserRolesByUserId(int userId);
-    
-    @Query("SELECT * FROM user_roles WHERE user_id = :userId")
-    List<UserRole> getByUserId(int userId);
-    
-    @Query("SELECT * FROM user_roles WHERE user_id = :userId")
+    @Query("SELECT * FROM user_roles WHERE userId = :userId")
     List<UserRole> getByUserId(String userId);
-    
-    @Query("SELECT * FROM user_roles WHERE role_name = :roleName")
-    List<UserRole> getUserRolesByRoleName(String roleName);
-    
-    @Insert
-    void insertUserRole(UserRole userRole);
-    
-    @Insert
-    void insert(UserRole userRole);
-    
-    @Update
-    void updateUserRole(UserRole userRole);
-    
-    @Delete
-    void deleteUserRole(UserRole userRole);
+
+    @Query("SELECT * FROM user_roles WHERE roleId = :roleId")
+    List<UserRole> getByRoleId(String roleId);
+
+    @Query("SELECT * FROM user_roles WHERE userId = :userId AND roleId = :roleId")
+    UserRole getUserRole(String userId, String roleId);
+
+    @Query("DELETE FROM user_roles WHERE userId = :userId AND roleId = :roleId")
+    void deleteByUserAndRole(String userId, String roleId);
+
+    @Query("DELETE FROM user_roles WHERE userId = :userId")
+    void deleteByUserId(String userId);
 }

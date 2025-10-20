@@ -1,37 +1,41 @@
 package com.example.androidapp.data.entities;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "permissions")
 public class Permission {
     @PrimaryKey
-    @NonNull
-    private String id;
-    private String action;
-    private String description;
-    private String group;
+    public String permissionId;
+    
+    public String name;
+    public String description;
+    public String category;
+    public long createdAt;
 
-    public Permission(@NonNull String id, String action, String description, String group) {
-        this.id = id;
-        this.action = action;
+    public Permission() {
+        this.createdAt = System.currentTimeMillis();
+    }
+
+    public Permission(String permissionId, String name, String description, String category) {
+        this.permissionId = permissionId;
+        this.name = name;
         this.description = description;
-        this.group = group;
+        this.category = category;
+        this.createdAt = System.currentTimeMillis();
     }
 
     // Getters
-    @NonNull
-    public String getId() { return id; }
-    public String getAction() { return action; }
+    public String getPermissionId() { return permissionId; }
+    public String getName() { return name; }
     public String getDescription() { return description; }
-    public String getGroup() { return group; }
-    public String getName() { return action; } // Alias for action
+    public String getCategory() { return category; }
+    public long getCreatedAt() { return createdAt; }
 
     // Setters
-    public void setId(@NonNull String id) { this.id = id; }
-    public void setAction(String action) { this.action = action; }
+    public void setPermissionId(String permissionId) { this.permissionId = permissionId; }
+    public void setName(String name) { this.name = name; }
     public void setDescription(String description) { this.description = description; }
-    public void setGroup(String group) { this.group = group; }
+    public void setCategory(String category) { this.category = category; }
+    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
 }

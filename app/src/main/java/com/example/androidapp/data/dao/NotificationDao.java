@@ -9,15 +9,10 @@ import com.example.androidapp.data.entities.Notification;
 import java.util.List;
 
 @Dao
-public interface NotificationDao {
+public interface NotificationDao extends BaseDao<Notification> {
+    
     @Insert
     long insert(Notification notification);
-
-    @Update
-    void update(Notification notification);
-
-    @Delete
-    void delete(Notification notification);
 
     @Query("SELECT * FROM notifications WHERE userId = :userId ORDER BY timestamp DESC")
     List<Notification> getAllForUser(int userId);
@@ -30,4 +25,13 @@ public interface NotificationDao {
 
     @Query("SELECT COUNT(*) FROM notifications WHERE userId = :userId AND isRead = 0")
     int getUnreadCount(int userId);
+
+    @Query("SELECT * FROM notifications WHERE id = :id")
+    Notification getById(int id);
+
+    @Query("SELECT * FROM notifications ORDER BY timestamp DESC")
+    List<Notification> getAll();
+
+    @Query("DELETE FROM notifications WHERE userId = :userId")
+    void deleteByUserId(int userId);
 }

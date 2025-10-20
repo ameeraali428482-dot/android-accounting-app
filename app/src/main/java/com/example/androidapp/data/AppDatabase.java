@@ -1,38 +1,19 @@
 package com.example.androidapp.data;
 
+import android.content.Context;
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
-import android.content.Context;
 
-import com.example.androidapp.data.entities.User;
-import com.example.androidapp.data.entities.Account;
-import com.example.androidapp.data.entities.Transaction;
-import com.example.androidapp.data.entities.Company;
-import com.example.androidapp.data.entities.Category;
-import com.example.androidapp.data.entities.Invoice;
-import com.example.androidapp.data.entities.ContactSync;
-import com.example.androidapp.data.entities.Friend;
-import com.example.androidapp.data.entities.UserRole;
-import com.example.androidapp.data.entities.Role;
-import com.example.androidapp.data.entities.Notification;
+// Import all entity classes
+import com.example.androidapp.data.entities.*;
 
-import com.example.androidapp.data.dao.UserDao;
-import com.example.androidapp.data.dao.AccountDao;
-import com.example.androidapp.data.dao.TransactionDao;
-import com.example.androidapp.data.dao.CompanyDao;
-import com.example.androidapp.data.dao.CategoryDao;
-import com.example.androidapp.data.dao.InvoiceDao;
-import com.example.androidapp.data.dao.ContactSyncDao;
-import com.example.androidapp.data.dao.FriendDao;
-import com.example.androidapp.data.dao.UserRoleDao;
-import com.example.androidapp.data.dao.RoleDao;
-import com.example.androidapp.data.dao.NotificationDao;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+// Import all DAO interfaces
+import com.example.androidapp.data.dao.*;
 
 @Database(
     entities = {
@@ -46,19 +27,20 @@ import java.util.concurrent.Executors;
         Friend.class,
         UserRole.class,
         Role.class,
-        Notification.class
+        Notification.class,
+        Permission.class,
+        UserPermission.class,
+        Item.class,
+        Customer.class,
+        Employee.class
     },
     version = 6,
-    exportSchema = false
+    exportSchema = true
 )
+@TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
-    
-    private static volatile AppDatabase INSTANCE;
-    
-    // إضافة ExecutorService للعمليات غير المتزامنة
-    public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(4);
-    
-    // DAOs
+
+    // Abstract methods for DAOs
     public abstract UserDao userDao();
     public abstract AccountDao accountDao();
     public abstract TransactionDao transactionDao();
@@ -70,152 +52,206 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract UserRoleDao userRoleDao();
     public abstract RoleDao roleDao();
     public abstract NotificationDao notificationDao();
-    
-    // Migration from version 1 to 2
-    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE users ADD COLUMN created_at INTEGER DEFAULT 0");
-            database.execSQL("ALTER TABLE users ADD COLUMN updated_at INTEGER DEFAULT 0");
-            
-            database.execSQL("CREATE TABLE IF NOT EXISTS companies (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "name TEXT, " +
-                    "address TEXT, " +
-                    "phone TEXT, " +
-                    "email TEXT)");
-            
-            database.execSQL("CREATE TABLE IF NOT EXISTS categories (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "name TEXT, " +
-                    "description TEXT, " +
-                    "color TEXT)");
-        }
-    };
-    
-    // Migration from version 2 to 3
-    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS invoices (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "customer_id INTEGER NOT NULL, " +
-                    "invoice_number TEXT, " +
-                    "total_amount REAL NOT NULL, " +
-                    "issue_date INTEGER NOT NULL, " +
-                    "due_date INTEGER NOT NULL, " +
-                    "status TEXT, " +
-                    "FOREIGN KEY(customer_id) REFERENCES companies(id) ON DELETE CASCADE)");
-            
-            database.execSQL("CREATE INDEX IF NOT EXISTS index_invoices_customer_id ON invoices(customer_id)");
-            
-            database.execSQL("CREATE TABLE IF NOT EXISTS contact_syncs (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "user_id INTEGER NOT NULL, " +
-                    "contact_identifier TEXT, " +
-                    "phone_number TEXT, " +
-                    "allow_sync INTEGER NOT NULL, " +
-                    "last_sync_date INTEGER NOT NULL, " +
-                    "FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE)");
-            
-            database.execSQL("CREATE INDEX IF NOT EXISTS index_contact_syncs_user_id ON contact_syncs(user_id)");
-        }
-    };
-    
-    // Migration from version 3 to 4
-    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS friends (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "user_id INTEGER NOT NULL, " +
-                    "friend_id INTEGER NOT NULL, " +
-                    "created_at INTEGER NOT NULL, " +
-                    "FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE, " +
-                    "FOREIGN KEY(friend_id) REFERENCES users(id) ON DELETE CASCADE)");
-            
-            database.execSQL("CREATE INDEX IF NOT EXISTS index_friends_user_id ON friends(user_id)");
-            database.execSQL("CREATE INDEX IF NOT EXISTS index_friends_friend_id ON friends(friend_id)");
-            
-            database.execSQL("CREATE TABLE IF NOT EXISTS user_roles (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "user_id INTEGER NOT NULL, " +
-                    "role_name TEXT, " +
-                    "permissions TEXT, " +
-                    "FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE)");
-            
-            database.execSQL("CREATE INDEX IF NOT EXISTS index_user_roles_user_id ON user_roles(user_id)");
-        }
-    };
-    
-    // Migration from version 4 to 5
-    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS roles (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "role_id TEXT, " +
-                    "name TEXT, " +
-                    "description TEXT, " +
-                    "permissions TEXT, " +
-                    "created_at INTEGER NOT NULL)");
-            
-            database.execSQL("CREATE INDEX IF NOT EXISTS index_roles_role_id ON roles(role_id)");
-            
-            database.execSQL("CREATE TABLE IF NOT EXISTS notifications (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "type TEXT, " +
-                    "title TEXT, " +
-                    "content TEXT, " +
-                    "user_id TEXT, " +
-                    "reference_id TEXT, " +
-                    "is_read INTEGER NOT NULL, " +
-                    "created_at TEXT, " +
-                    "updated_at TEXT)");
-            
-            database.execSQL("CREATE INDEX IF NOT EXISTS index_notifications_user_id ON notifications(user_id)");
-            
-            database.execSQL("ALTER TABLE contact_syncs ADD COLUMN display_name TEXT");
-            database.execSQL("ALTER TABLE contact_syncs ADD COLUMN email TEXT");
-            database.execSQL("ALTER TABLE contact_syncs ADD COLUMN photo_uri TEXT");
-            database.execSQL("ALTER TABLE contact_syncs ADD COLUMN is_registered_user INTEGER DEFAULT 0");
-            database.execSQL("ALTER TABLE contact_syncs ADD COLUMN registered_user_id INTEGER");
-            database.execSQL("ALTER TABLE contact_syncs ADD COLUMN sync_status TEXT DEFAULT 'PENDING'");
-            database.execSQL("ALTER TABLE contact_syncs ADD COLUMN created_date INTEGER DEFAULT 0");
-            database.execSQL("ALTER TABLE contact_syncs ADD COLUMN updated_date INTEGER DEFAULT 0");
-            
-            database.execSQL("ALTER TABLE users ADD COLUMN phone TEXT");
-        }
-    };
-    
-    // Migration from version 5 to 6
-    static final Migration MIGRATION_5_6 = new Migration(5, 6) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            // تحديث Transaction table structure
-            database.execSQL("ALTER TABLE transactions ADD COLUMN account_id INTEGER");
-            database.execSQL("ALTER TABLE transactions ADD COLUMN category_id INTEGER");
-            database.execSQL("ALTER TABLE transactions ADD COLUMN transaction_date INTEGER");
-            
-            // تحديث Account table structure
-            database.execSQL("ALTER TABLE accounts ADD COLUMN account_name TEXT");
-            database.execSQL("ALTER TABLE accounts ADD COLUMN account_type TEXT");
-            database.execSQL("ALTER TABLE accounts ADD COLUMN balance REAL DEFAULT 0");
-            database.execSQL("ALTER TABLE accounts ADD COLUMN created_at INTEGER DEFAULT 0");
-        }
-    };
-    
+    public abstract PermissionDao permissionDao();
+    public abstract UserPermissionDao userPermissionDao();
+    public abstract ItemDao itemDao();
+    public abstract CustomerDao customerDao();
+    public abstract EmployeeDao employeeDao();
+
+    private static volatile AppDatabase INSTANCE;
+
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "app_database")
+                            AppDatabase.class, "accounting_database")
                             .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
         }
         return INSTANCE;
+    }
+
+    // For compatibility
+    public static AppDatabase getInstance(Context context) {
+        return getDatabase(context);
+    }
+
+    // Migration from version 1 to 2
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            // Previous migration code...
+            database.execSQL("ALTER TABLE users ADD COLUMN company_id TEXT");
+            database.execSQL("ALTER TABLE accounts ADD COLUMN user_id INTEGER");
+            database.execSQL("ALTER TABLE accounts ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1");
+        }
+    };
+
+    // Migration from version 2 to 3
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            // Previous migration code...
+            database.execSQL("CREATE TABLE IF NOT EXISTS contact_sync (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "user_id INTEGER, " +
+                    "contact_identifier TEXT, " +
+                    "phone_number TEXT, " +
+                    "display_name TEXT, " +
+                    "email TEXT, " +
+                    "photo_uri TEXT, " +
+                    "is_registered_user INTEGER NOT NULL DEFAULT 0, " +
+                    "allow_sync INTEGER NOT NULL DEFAULT 1, " +
+                    "last_sync_date INTEGER, " +
+                    "status TEXT, " +
+                    "updated_date INTEGER)");
+        }
+    };
+
+    // Migration from version 3 to 4
+    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS roles (" +
+                    "role_id TEXT PRIMARY KEY NOT NULL, " +
+                    "name TEXT, " +
+                    "description TEXT, " +
+                    "permissions TEXT, " +
+                    "created_at INTEGER, " +
+                    "updated_at INTEGER)");
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS notifications (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "userId INTEGER, " +
+                    "type TEXT, " +
+                    "title TEXT, " +
+                    "content TEXT, " +
+                    "message TEXT, " +
+                    "relatedId INTEGER, " +
+                    "timestamp INTEGER, " +
+                    "isRead INTEGER NOT NULL DEFAULT 0, " +
+                    "entityId TEXT)");
+        }
+    };
+
+    // Migration from version 4 to 5
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS permissions (" +
+                    "permissionId TEXT PRIMARY KEY NOT NULL, " +
+                    "name TEXT, " +
+                    "description TEXT, " +
+                    "category TEXT, " +
+                    "createdAt INTEGER)");
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS user_permissions (" +
+                    "userId INTEGER NOT NULL, " +
+                    "permissionId TEXT NOT NULL, " +
+                    "grantedAt INTEGER, " +
+                    "grantedBy TEXT, " +
+                    "PRIMARY KEY(userId, permissionId))");
+        }
+    };
+
+    // Migration from version 5 to 6
+    static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS items (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "name TEXT, " +
+                    "code TEXT, " +
+                    "description TEXT, " +
+                    "price REAL, " +
+                    "category TEXT, " +
+                    "quantity INTEGER, " +
+                    "unit TEXT, " +
+                    "createdAt INTEGER)");
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS customers (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "name TEXT, " +
+                    "email TEXT, " +
+                    "phone TEXT, " +
+                    "address TEXT, " +
+                    "companyName TEXT, " +
+                    "taxNumber TEXT, " +
+                    "totalPurchases REAL, " +
+                    "createdAt INTEGER)");
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS employees (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "employeeId TEXT, " +
+                    "name TEXT, " +
+                    "email TEXT, " +
+                    "phone TEXT, " +
+                    "department TEXT, " +
+                    "position TEXT, " +
+                    "salary REAL, " +
+                    "hireDate INTEGER, " +
+                    "isActive INTEGER NOT NULL DEFAULT 1, " +
+                    "createdAt INTEGER)");
+
+            // Add missing fields to existing tables
+            database.execSQL("ALTER TABLE accounts ADD COLUMN code TEXT");
+            database.execSQL("ALTER TABLE users ADD COLUMN phone_number TEXT");
+            database.execSQL("ALTER TABLE transactions ADD COLUMN date INTEGER");
+        }
+    };
+
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+            // يمكن إضافة بيانات أولية هنا
+        }
+    };
+
+    public static void populateInitialData(AppDatabase db) {
+        // إدراج الفئات الافتراضية
+        CategoryDao categoryDao = db.categoryDao();
+        
+        // فئات الإيرادات
+        Category incomeGeneral = new Category();
+        incomeGeneral.name = "إيرادات عامة";
+        incomeGeneral.type = "INCOME";
+        incomeGeneral.color = "#4CAF50";
+        incomeGeneral.icon = "money";
+        incomeGeneral.isDefault = true;
+        incomeGeneral.isActive = true;
+        categoryDao.insert(incomeGeneral);
+
+        Category incomeSales = new Category();
+        incomeSales.name = "مبيعات";
+        incomeSales.type = "INCOME";
+        incomeSales.color = "#2196F3";
+        incomeSales.icon = "shopping_cart";
+        incomeSales.isDefault = true;
+        incomeSales.isActive = true;
+        categoryDao.insert(incomeSales);
+
+        // فئات المصروفات
+        Category expenseOffice = new Category();
+        expenseOffice.name = "مصاريف مكتبية";
+        expenseOffice.type = "EXPENSE";
+        expenseOffice.color = "#FF9800";
+        expenseOffice.icon = "business";
+        expenseOffice.isDefault = true;
+        expenseOffice.isActive = true;
+        categoryDao.insert(expenseOffice);
+
+        Category expenseTravel = new Category();
+        expenseTravel.name = "مصاريف سفر";
+        expenseTravel.type = "EXPENSE";
+        expenseTravel.color = "#9C27B0";
+        expenseTravel.icon = "flight";
+        expenseTravel.isDefault = true;
+        expenseTravel.isActive = true;
+        categoryDao.insert(expenseTravel);
     }
 }

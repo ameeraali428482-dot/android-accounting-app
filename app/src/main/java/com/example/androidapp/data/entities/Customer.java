@@ -1,59 +1,53 @@
 package com.example.androidapp.data.entities;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Ignore;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "customers",
-        foreignKeys = @ForeignKey(entity = Company.class,
-                                  parentColumns = "id",
-                                  childColumns = "companyId",
-                                  onDelete = ForeignKey.CASCADE),
-        indices = {@Index("companyId")})
+@Entity(tableName = "customers")
 public class Customer {
-    @PrimaryKey
-    @NonNull
-    private String id;
-    private String name;
-    private String email;
-    private String phone;
-    private String address;
-    private String companyId;
+    @PrimaryKey(autoGenerate = true)
+    public int id;
+    
+    public String name;
+    public String email;
+    public String phone;
+    public String address;
+    public String companyName;
+    public String taxNumber;
+    public double totalPurchases;
+    public long createdAt;
 
-    public Customer(@NonNull String id, String companyId, String name, String email, String phone, String address) {
-        this.id = id;
-        this.companyId = companyId;
+    public Customer() {
+        this.createdAt = System.currentTimeMillis();
+        this.totalPurchases = 0.0;
+    }
+
+    public Customer(String name, String email, String phone) {
+        this();
         this.name = name;
         this.email = email;
         this.phone = phone;
-        this.address = address;
-    }
-
-    @Ignore
-    public Customer(String id, String name, String email, String companyId) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.companyId = companyId;
     }
 
     // Getters
-    @NonNull
-    public String getId() { return id; }
+    public int getId() { return id; }
     public String getName() { return name; }
     public String getEmail() { return email; }
     public String getPhone() { return phone; }
     public String getAddress() { return address; }
-    public String getCompanyId() { return companyId; }
+    public String getCompanyName() { return companyName; }
+    public String getTaxNumber() { return taxNumber; }
+    public double getTotalPurchases() { return totalPurchases; }
+    public long getCreatedAt() { return createdAt; }
 
     // Setters
-    public void setId(@NonNull String id) { this.id = id; }
+    public void setId(int id) { this.id = id; }
     public void setName(String name) { this.name = name; }
     public void setEmail(String email) { this.email = email; }
     public void setPhone(String phone) { this.phone = phone; }
     public void setAddress(String address) { this.address = address; }
-    public void setCompanyId(String companyId) { this.companyId = companyId; }
+    public void setCompanyName(String companyName) { this.companyName = companyName; }
+    public void setTaxNumber(String taxNumber) { this.taxNumber = taxNumber; }
+    public void setTotalPurchases(double totalPurchases) { this.totalPurchases = totalPurchases; }
+    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
 }

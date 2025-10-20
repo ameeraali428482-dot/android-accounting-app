@@ -463,13 +463,13 @@ public class NotificationHelper {
      */
     private void saveNotificationToDatabase(int type, String title, String content, long relatedId) {
         Notification notification = new Notification();
-        notification.type = type;
+        notification.type = String.valueOf(type);
         notification.title = title;
         notification.content = content;
         notification.relatedId = relatedId;
         notification.timestamp = System.currentTimeMillis();
         notification.isRead = false;
-        notification.userId = getCurrentUserId();
+        notification.userId = sessionManager.getCurrentUserIdInt();
         
         database.notificationDao().insert(notification);
     }
