@@ -1,9 +1,7 @@
-import androidx.room.Ignore;
-import androidx.annotation.NonNull;
 package com.example.androidapp.data.entities;
-
+import androidx.room.Ignore;
 import androidx.room.*;
-
+import androidx.annotation.NonNull;
 @Entity(tableName = "user_roles", primaryKeys = {"userId", "roleId"})
 public class UserRole {
     @NonNull

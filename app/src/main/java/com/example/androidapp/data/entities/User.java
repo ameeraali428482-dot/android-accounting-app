@@ -1,6 +1,5 @@
-import androidx.annotation.NonNull;
 package com.example.androidapp.data.entities;
-
+import androidx.annotation.NonNull;
 import androidx.room.*;
 
 @Entity(tableName = "users")
