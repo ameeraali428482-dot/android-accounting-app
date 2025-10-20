@@ -1,9 +1,13 @@
 package com.example.androidapp.data.entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.Ignore;
 import androidx.room.ColumnInfo;
+import androidx.room.Ignore;
 import androidx.room.Index;
+import androidx.room.Ignore;
 
 @Entity(tableName = "roles",
         indices = {@Index("role_id")})
@@ -27,6 +31,7 @@ public class Role {
     private long createdAt;
 
     // Constructor for Role with all parameters
+    @Ignore
     public Role(String roleId, String name, String description, String permissions, long createdAt) {
         this.roleId = roleId;
         this.name = name;
@@ -36,6 +41,7 @@ public class Role {
     }
     
     // Constructor for compatibility with old code
+    @Ignore
     @Ignore
     public Role(String roleId, String name, String description, long createdAt) {
         this.roleId = roleId;

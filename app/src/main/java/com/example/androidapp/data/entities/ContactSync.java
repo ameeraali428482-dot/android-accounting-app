@@ -1,10 +1,15 @@
 package com.example.androidapp.data.entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.Ignore;
 import androidx.room.ColumnInfo;
+import androidx.room.Ignore;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
+import androidx.room.Ignore;
 
 @Entity(tableName = "contact_syncs",
         foreignKeys = @ForeignKey(entity = User.class,
@@ -60,6 +65,7 @@ public class ContactSync {
     private long updatedDate;
 
     // Constructor for Room
+    @Ignore
     public ContactSync(int userId, String contactIdentifier, String phoneNumber, boolean allowSync, long lastSyncDate) {
         this.userId = userId;
         this.contactIdentifier = contactIdentifier;
@@ -73,6 +79,7 @@ public class ContactSync {
     }
     
     // Constructor with display name
+    @Ignore
     @Ignore
     public ContactSync(int userId, String contactIdentifier, String displayName) {
         this(userId, contactIdentifier, "", true, System.currentTimeMillis());

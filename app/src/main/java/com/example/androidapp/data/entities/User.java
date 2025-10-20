@@ -1,8 +1,11 @@
 package com.example.androidapp.data.entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.Ignore;
 import androidx.room.ColumnInfo;
+import androidx.room.Ignore;
 
 @Entity(tableName = "users")
 public class User {
@@ -25,6 +28,7 @@ public class User {
     private long updatedAt;
 
     // Constructor
+    @Ignore
     public User(String name, String email, String phone, long createdAt, long updatedAt) {
         this.name = name;
         this.email = email;
@@ -34,6 +38,7 @@ public class User {
     }
     
     // Constructor without phone for compatibility
+    @Ignore
     @Ignore
     public User(String name, String email, long createdAt, long updatedAt) {
         this.name = name;
