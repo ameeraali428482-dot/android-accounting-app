@@ -9,12 +9,14 @@ import java.util.List;
 @Dao
 public interface ItemDao extends BaseDao<Item> {
     
-    @Query("SELECT * FROM items WHERE id = :itemId")
+    // تم تغيير 'id' إلى 'itemId'
+    @Query("SELECT * FROM items WHERE itemId = :itemId")
     Item getById(String itemId);
 
     @Query("SELECT * FROM items ORDER BY name")
     List<Item> getAll();
     
+    // تم افتراض أن المفتاح الخارجي هو 'companyId' وهو ما يسبب المشكلة
     @Query("SELECT * FROM items WHERE companyId = :companyId ORDER BY name")
     LiveData<List<Item>> getAllItems(String companyId);
 
@@ -27,6 +29,7 @@ public interface ItemDao extends BaseDao<Item> {
     @Query("SELECT COUNT(*) FROM items")
     int getCount();
 
-    @Query("DELETE FROM items WHERE id = :itemId")
+    // تم تغيير 'id' إلى 'itemId'
+    @Query("DELETE FROM items WHERE itemId = :itemId")
     void deleteById(String itemId);
 }

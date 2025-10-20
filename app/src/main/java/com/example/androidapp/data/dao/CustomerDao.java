@@ -8,7 +8,8 @@ import java.util.List;
 @Dao
 public interface CustomerDao extends BaseDao<Customer> {
     
-    @Query("SELECT * FROM customers WHERE id = :customerId")
+    // تم تغيير 'id' إلى 'customerId'
+    @Query("SELECT * FROM customers WHERE customerId = :customerId")
     Customer getById(String customerId);
 
     @Query("SELECT * FROM customers ORDER BY customerName")
@@ -29,6 +30,7 @@ public interface CustomerDao extends BaseDao<Customer> {
     @Query("SELECT COUNT(*) FROM customers")
     int getCount();
 
-    @Query("DELETE FROM customers WHERE id = :customerId")
+    // تم تغيير 'id' إلى 'customerId'
+    @Query("DELETE FROM customers WHERE customerId = :customerId")
     void deleteById(String customerId);
 }

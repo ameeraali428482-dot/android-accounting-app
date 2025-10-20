@@ -9,7 +9,8 @@ import java.util.List;
 @Dao
 public interface EmployeeDao extends BaseDao<Employee> {
     
-    @Query("SELECT * FROM employees WHERE id = :employeeId")
+    // تم تغيير 'id' إلى 'employeeId'
+    @Query("SELECT * FROM employees WHERE employeeId = :employeeId")
     Employee getById(String employeeId);
 
     @Query("SELECT * FROM employees ORDER BY name")
@@ -18,7 +19,8 @@ public interface EmployeeDao extends BaseDao<Employee> {
     @Query("SELECT * FROM employees WHERE companyId = :companyId ORDER BY name")
     LiveData<List<Employee>> getAllEmployees(String companyId);
 
-    @Query("SELECT * FROM employees WHERE id = :employeeId")
+    // تم تغيير 'id' إلى 'employeeId' هنا أيضاً (لأن getByEmployeeId كانت تستخدم id)
+    @Query("SELECT * FROM employees WHERE employeeId = :employeeId")
     Employee getByEmployeeId(String employeeId);
 
     @Query("SELECT * FROM employees WHERE position = :position ORDER BY name")
@@ -27,12 +29,13 @@ public interface EmployeeDao extends BaseDao<Employee> {
     @Query("SELECT * FROM employees WHERE isActive = 1 ORDER BY name")
     List<Employee> getActiveEmployees();
 
-    @Query("SELECT * FROM employees WHERE name LIKE '%' || :searchTerm || '%' OR id LIKE '%' || :searchTerm || '%' ORDER BY name")
+    @Query("SELECT * FROM employees WHERE name LIKE '%' || :searchTerm || '%' OR employeeId LIKE '%' || :searchTerm || '%' ORDER BY name")
     List<Employee> searchEmployees(String searchTerm);
 
     @Query("SELECT COUNT(*) FROM employees WHERE isActive = 1")
     int getActiveCount();
 
-    @Query("DELETE FROM employees WHERE id = :employeeId")
+    // تم تغيير 'id' إلى 'employeeId'
+    @Query("DELETE FROM employees WHERE employeeId = :employeeId")
     void deleteById(String employeeId);
 }
