@@ -1,68 +1,104 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.ColumnInfo;
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+
+
 @Entity(tableName = "inventory",
         foreignKeys = {
+                @ForeignKey(entity = Company.class,
+                           parentColumns = "id",
+                           childColumns = "companyId",
+                           onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Item.class,
-                        parentColumns = "itemId",
-                        childColumns = "item_id",
-                        onDelete = ForeignKey.CASCADE),
+                           parentColumns = "id",
+                           childColumns = "itemId",
+                           onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Warehouse.class,
-                        parentColumns = "id",
-                        childColumns = "warehouse_id",
-                        onDelete = ForeignKey.CASCADE)
+                           parentColumns = "id",
+                           childColumns = "warehouseId",
+                           onDelete = ForeignKey.CASCADE)
         },
-        indices = {@Index(value = "item_id"), @Index(value = "warehouse_id"), @Index(value = {"item_id", "warehouse_id"}, unique = true)})
+        indices = {@Index(value = "companyId"), @Index(value = "itemId"), @Index(value = "warehouseId")})
 public class Inventory {
-    @PrimaryKey(autoGenerate = true)
-    public long id;
+    @PrimaryKey
+    private @NonNull String id;
+    private String companyId;
+    private String itemId;
+    private String warehouseId;
+    private float quantity;
+    private float costPrice; // Cost price at the time of inventory entry
+    private String lastUpdated;
 
-    @ColumnInfo(name = "item_id")
-    public long itemId;
+    public Inventory(String id, String companyId, String itemId, String warehouseId, float quantity, float costPrice, String lastUpdated) {
+        this.id = id;
+        this.companyId = companyId;
+        this.itemId = itemId;
+        this.warehouseId = warehouseId;
+        this.quantity = quantity;
+        this.costPrice = costPrice;
+        this.lastUpdated = lastUpdated;
+    }
 
-    @ColumnInfo(name = "warehouse_id")
-    public long warehouseId;
+    public String getId() {
+        return id;
+    }
 
-    @ColumnInfo(name = "quantity")
-    public double quantity;
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    @ColumnInfo(name = "minimum_stock")
-    public double minimumStock;
+    public String getCompanyId() {
+        return companyId;
+    }
 
-    @ColumnInfo(name = "maximum_stock")
-    public double maximumStock;
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
-    @ColumnInfo(name = "reorder_point")
-    public double reorderPoint;
+    public String getItemId() {
+        return itemId;
+    }
 
-    @ColumnInfo(name = "last_restocked")
-    public long lastRestocked;
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
 
-    @ColumnInfo(name = "unit_cost")
-    public double unitCost;
+    public String getWarehouseId() {
+        return warehouseId;
+    }
 
-    @ColumnInfo(name = "total_value")
-    public double totalValue;
+    public void setWarehouseId(String warehouseId) {
+        this.warehouseId = warehouseId;
+    }
 
-    @ColumnInfo(name = "location")
-    public String location;
+    public float getQuantity() {
+        return quantity;
+    }
 
-    @ColumnInfo(name = "notes")
-    public String notes;
+    public void setQuantity(float quantity) {
+        this.quantity = quantity;
+    }
 
-    @ColumnInfo(name = "created_at")
-    public long createdAt;
+    public float getCostPrice() {
+        return costPrice;
+    }
 
-    @ColumnInfo(name = "updated_at")
-    public long updatedAt;
+    public void setCostPrice(float costPrice) {
+        this.costPrice = costPrice;
+    }
 
-    public Inventory() {
-        this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
+    public String getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 }
+

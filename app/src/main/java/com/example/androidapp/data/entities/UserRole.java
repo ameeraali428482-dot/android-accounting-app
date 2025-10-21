@@ -1,50 +1,65 @@
 package com.example.androidapp.data.entities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.Ignore;
 import androidx.room.Index;
-import androidx.room.PrimaryKey;
+
+
 
 @Entity(tableName = "user_roles",
+        primaryKeys = {"userId", "roleId", "companyId"},
         foreignKeys = {
                 @ForeignKey(entity = User.class,
-                        parentColumns = "id",
-                        childColumns = "userId",
-                        onDelete = ForeignKey.CASCADE),
+                            parentColumns = "id",
+                            childColumns = "userId",
+                            onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Role.class,
-                        parentColumns = "role_id",
-                        childColumns = "roleId",
-                        onDelete = ForeignKey.CASCADE)
+                            parentColumns = "id",
+                            childColumns = "roleId",
+                            onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Company.class,
+                            parentColumns = "id",
+                            childColumns = "companyId",
+                            onDelete = ForeignKey.CASCADE)
         },
-        indices = {@Index(value = "userId"), @Index(value = "roleId")})
+        indices = {@Index(value = "userId"), @Index(value = "roleId"), @Index(value = "companyId")})
 public class UserRole {
-    @PrimaryKey(autoGenerate = true)
-    public int id;
-    @NonNull
-    public String userId;
-    @NonNull
-    public String roleId;
-    public long assignedAt;
-    public String assignedBy;
+    public @NonNull String userId;
+    public @NonNull String roleId;
+    public @NonNull String companyId;
 
-    public UserRole() {}
-
-    @Ignore
-    public UserRole(@NonNull String userId, @NonNull String roleId, String assignedBy) {
+    public UserRole(String userId, String roleId, String companyId) {
         this.userId = userId;
         this.roleId = roleId;
-        this.assignedAt = System.currentTimeMillis();
-        this.assignedBy = assignedBy;
+        this.companyId = companyId;
     }
 
-    @Ignore
-    public UserRole(int id, @NonNull String userId, @NonNull String roleId, long assignedAt, String assignedBy) {
-        this.id = id;
+    // Getters
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    // Setters
+    public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public void setRoleId(String roleId) {
         this.roleId = roleId;
-        this.assignedAt = assignedAt;
-        this.assignedBy = assignedBy;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 }
+

@@ -1,51 +1,65 @@
 package com.example.androidapp.data.entities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.Ignore;
 import androidx.room.Index;
-import androidx.room.PrimaryKey;
+
+
 
 @Entity(tableName = "user_permissions",
+        primaryKeys = {"userId", "permissionId", "companyId"},
         foreignKeys = {
                 @ForeignKey(entity = User.class,
-                        parentColumns = "id",
-                        childColumns = "userId",
-                        onDelete = ForeignKey.CASCADE),
+                            parentColumns = "id",
+                            childColumns = "userId",
+                            onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Permission.class,
-                        parentColumns = "permission_id",
-                        childColumns = "permissionId",
-                        onDelete = ForeignKey.CASCADE)
+                            parentColumns = "id",
+                            childColumns = "permissionId",
+                            onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Company.class,
+                            parentColumns = "id",
+                            childColumns = "companyId",
+                            onDelete = ForeignKey.CASCADE)
         },
-        indices = {@Index(value = "userId"), @Index(value = "permissionId")})
+        indices = {@Index(value = "userId"), @Index(value = "permissionId"), @Index(value = "companyId")})
 public class UserPermission {
-    @PrimaryKey
-    @NonNull
-    public String permissionId;
-    @NonNull
-    public String userId;
-    public boolean isGranted;
-    public long grantedAt;
-    public String grantedBy;
+    public @NonNull String userId;
+    public @NonNull String permissionId;
+    public @NonNull String companyId;
 
-    public UserPermission() {}
-
-    @Ignore
-    public UserPermission(@NonNull String permissionId, @NonNull String userId, boolean isGranted, String grantedBy) {
-        this.permissionId = permissionId;
+    public UserPermission(String userId, String permissionId, String companyId) {
         this.userId = userId;
-        this.isGranted = isGranted;
-        this.grantedAt = System.currentTimeMillis();
-        this.grantedBy = grantedBy;
+        this.permissionId = permissionId;
+        this.companyId = companyId;
     }
 
-    @Ignore
-    public UserPermission(@NonNull String permissionId, @NonNull String userId, boolean isGranted, long grantedAt, String grantedBy) {
-        this.permissionId = permissionId;
+    // Getters
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getPermissionId() {
+        return permissionId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    // Setters
+    public void setUserId(String userId) {
         this.userId = userId;
-        this.isGranted = isGranted;
-        this.grantedAt = grantedAt;
-        this.grantedBy = grantedBy;
+    }
+
+    public void setPermissionId(String permissionId) {
+        this.permissionId = permissionId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 }
+

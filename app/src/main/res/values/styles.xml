@@ -1,9 +1,277 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Text Appearance Styles -->
+    <style name="TextAppearance.OnSale.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="fontFamily">@font/cairo_bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
 
-    
+    <style name="TextAppearance.OnSale.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="fontFamily">@font/cairo_bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
 
-<style name="RoundedCorners">
-        <item name="android:layout_margin">8dp</item>
+    <style name="TextAppearance.OnSale.DisplaySmall" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="fontFamily">@font/cairo_bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="fontFamily">@font/cairo_bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">@font/cairo_bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/cairo_bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/cairo_bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/cairo_regular</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/cairo_regular</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/cairo_regular</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/cairo_regular</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/cairo_regular</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/cairo_regular</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/cairo_regular</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/cairo_regular</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <!-- Button Styles -->
+    <style name="Widget.OnSale.Button" parent="Widget.Material3.Button">
+        <item name="android:textAppearance">@style/TextAppearance.OnSale.LabelLarge</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingRight">24dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <style name="Widget.OnSale.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textAppearance">@style/TextAppearance.OnSale.LabelLarge</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingRight">24dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <style name="Widget.OnSale.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textAppearance">@style/TextAppearance.OnSale.LabelLarge</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <style name="Widget.OnSale.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:textAppearance">@style/TextAppearance.OnSale.LabelLarge</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingRight">24dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <!-- FAB Styles -->
+    <style name="Widget.OnSale.FloatingActionButton" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="shapeAppearance">@style/ShapeAppearance.OnSale.SmallComponent</item>
+        <item name="elevation">6dp</item>
+    </style>
+
+    <style name="Widget.OnSale.FloatingActionButton.Large" parent="Widget.Material3.FloatingActionButton.Large.Primary">
+        <item name="shapeAppearance">@style/ShapeAppearance.OnSale.LargeComponent</item>
+        <item name="elevation">6dp</item>
+    </style>
+
+    <!-- Card Styles -->
+    <style name="Widget.OnSale.CardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="cardBackgroundColor">?attr/colorSurface</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+    <style name="Widget.OnSale.CardView.Filled" parent="Widget.Material3.CardView.Filled">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+    <style name="Widget.OnSale.CardView.Outlined" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="strokeColor">?attr/colorOutline</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+    <!-- TextField Styles -->
+    <style name="Widget.OnSale.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="android:textColorHint">?attr/colorOnSurfaceVariant</item>
+        <item name="hintTextAppearance">@style/TextAppearance.OnSale.BodyMedium</item>
+    </style>
+
+    <style name="Widget.OnSale.TextInputLayout.Filled" parent="Widget.Material3.TextInputLayout.FilledBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="android:textColorHint">?attr/colorOnSurfaceVariant</item>
+        <item name="hintTextAppearance">@style/TextAppearance.OnSale.BodyMedium</item>
+    </style>
+
+    <!-- AppBar Styles -->
+    <style name="Widget.OnSale.AppBarLayout" parent="Widget.Material3.AppBarLayout">
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="Widget.OnSale.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="titleTextAppearance">@style/TextAppearance.OnSale.TitleLarge</item>
+        <item name="subtitleTextAppearance">@style/TextAppearance.OnSale.BodyMedium</item>
+        <item name="android:minHeight">64dp</item>
+    </style>
+
+    <!-- Tab Layout -->
+    <style name="Widget.OnSale.TabLayout" parent="Widget.Material3.TabLayout">
+        <item name="tabTextAppearance">@style/TextAppearance.OnSale.TitleSmall</item>
+        <item name="tabSelectedTextAppearance">@style/TextAppearance.OnSale.TitleSmall</item>
+        <item name="tabIndicatorColor">?attr/colorPrimary</item>
+        <item name="tabTextColor">?attr/colorOnSurfaceVariant</item>
+        <item name="tabSelectedTextColor">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Bottom Navigation -->
+    <style name="Widget.OnSale.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="itemTextAppearanceActive">@style/TextAppearance.OnSale.LabelMedium</item>
+        <item name="itemTextAppearanceInactive">@style/TextAppearance.OnSale.LabelMedium</item>
+        <item name="elevation">8dp</item>
+    </style>
+
+    <!-- Chip Styles -->
+    <style name="Widget.OnSale.Chip" parent="Widget.Material3.Chip.Assist">
+        <item name="android:textAppearance">@style/TextAppearance.OnSale.LabelMedium</item>
+        <item name="chipCornerRadius">8dp</item>
+        <item name="chipMinHeight">32dp</item>
+    </style>
+
+    <style name="Widget.OnSale.Chip.Filter" parent="Widget.Material3.Chip.Filter">
+        <item name="android:textAppearance">@style/TextAppearance.OnSale.LabelMedium</item>
+        <item name="chipCornerRadius">8dp</item>
+        <item name="chipMinHeight">32dp</item>
+    </style>
+
+    <style name="Widget.OnSale.Chip.Input" parent="Widget.Material3.Chip.Input">
+        <item name="android:textAppearance">@style/TextAppearance.OnSale.LabelMedium</item>
+        <item name="chipCornerRadius">8dp</item>
+        <item name="chipMinHeight">32dp</item>
+    </style>
+
+    <!-- Shape Appearances -->
+    <style name="ShapeAppearance.OnSale.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="ShapeAppearance.OnSale.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="ShapeAppearance.OnSale.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <!-- Progress Indicator -->
+    <style name="Widget.OnSale.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator">
+        <item name="indicatorColor">?attr/colorPrimary</item>
+        <item name="trackColor">?attr/colorSurfaceVariant</item>
+        <item name="indicatorSize">48dp</item>
+        <item name="trackThickness">4dp</item>
+    </style>
+
+    <style name="Widget.OnSale.LinearProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="indicatorColor">?attr/colorPrimary</item>
+        <item name="trackColor">?attr/colorSurfaceVariant</item>
+        <item name="trackThickness">4dp</item>
+    </style>
+
+    <!-- Switch Style -->
+    <style name="Widget.OnSale.Switch" parent="Widget.Material3.CompoundButton.Switch">
+        <item name="thumbTint">?attr/colorOnPrimary</item>
+        <item name="trackTint">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Slider Style -->
+    <style name="Widget.OnSale.Slider" parent="Widget.Material3.Slider">
+        <item name="activeTrackColor">?attr/colorPrimary</item>
+        <item name="inactiveTrackColor">?attr/colorSurfaceVariant</item>
+        <item name="thumbColor">?attr/colorPrimary</item>
+        <item name="tickColorActive">?attr/colorOnPrimary</item>
+        <item name="tickColorInactive">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <!-- Dialog Styles -->
+    <style name="FullScreenDialogTheme" parent="ThemeOverlay.Material3.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">?attr/colorSurface</item>
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+
+    <style name="DialogSlideAnimation" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
 </resources>

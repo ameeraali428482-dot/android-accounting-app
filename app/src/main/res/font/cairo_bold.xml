@@ -3,5 +3,5 @@
     <font
         android:fontStyle="normal"
         android:fontWeight="700"
-        android:font="@font/cairo_bold" />
+        android:font="sans-serif-medium" />
 </font-family>

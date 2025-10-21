@@ -1,54 +1,74 @@
 package com.example.androidapp.data.entities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-import androidx.room.ColumnInfo;
+import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
+
+
 
 @Entity(tableName = "warehouses",
-        indices = {
-            @Index(value = {"name"}, unique = true),
-            @Index(value = {"company_id"})
-        })
+        foreignKeys = @ForeignKey(entity = Company.class,
+                                  parentColumns = "id",
+                                  childColumns = "companyId",
+                                  onDelete = ForeignKey.CASCADE),
+        indices = {@Index(value = "companyId")})
 public class Warehouse {
-    @PrimaryKey(autoGenerate = true)
-    public long id;
-
-    @ColumnInfo(name = "name")
+    @PrimaryKey
+    public @NonNull String id;
+    public @NonNull String companyId;
     public String name;
+    public String location;
+    public String description;
 
-    @ColumnInfo(name = "address")
-    public String address;
+    public Warehouse(String id, String companyId, String name, String location, String description) {
+        this.id = id;
+        this.companyId = companyId;
+        this.name = name;
+        this.location = location;
+        this.description = description;
+    }
 
-    @ColumnInfo(name = "phone")
-    public String phone;
+    public String getId() {
+        return id;
+    }
 
-    @ColumnInfo(name = "email")
-    public String email;
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    @ColumnInfo(name = "manager_name")
-    public String managerName;
+    public String getCompanyId() {
+        return companyId;
+    }
 
-    @ColumnInfo(name = "capacity")
-    public double capacity;
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
-    @ColumnInfo(name = "current_usage")
-    public double currentUsage;
+    public String getName() {
+        return name;
+    }
 
-    @ColumnInfo(name = "is_active")
-    public boolean isActive = true;
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    @ColumnInfo(name = "company_id")
-    public String companyId;
+    public String getLocation() {
+        return location;
+    }
 
-    @ColumnInfo(name = "created_at")
-    public long createdAt;
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
-    @ColumnInfo(name = "updated_at")
-    public long updatedAt;
+    public String getDescription() {
+        return description;
+    }
 
-    public Warehouse() {
-        this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
+

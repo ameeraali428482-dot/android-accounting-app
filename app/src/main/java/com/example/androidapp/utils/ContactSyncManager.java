@@ -57,7 +57,7 @@ public class ContactSyncManager {
                     
                     if (existingContact == null) {
                         contact.setSyncStatus(ContactSync.STATUS_SYNCED);
-                        contact.setLastSyncDate(System.currentTimeMillis());
+                        contact.setLastSyncDate(new Date());
                         newContacts.add(contact);
                     } else {
                         if (hasContactChanged(existingContact, contact)) {
@@ -65,8 +65,8 @@ public class ContactSyncManager {
                             existingContact.setEmail(contact.getEmail());
                             existingContact.setPhoneNumber(contact.getPhoneNumber());
                             existingContact.setPhotoUri(contact.getPhotoUri());
-                            existingContact.setLastSyncDate(System.currentTimeMillis());
-                            existingContact.setUpdatedDate(System.currentTimeMillis());
+                            existingContact.setLastSyncDate(new Date());
+                            existingContact.setUpdatedDate(new Date());
                             existingContact.setSyncStatus(ContactSync.STATUS_SYNCED);
                             updatedContacts.add(existingContact);
                         }
@@ -217,8 +217,8 @@ public class ContactSyncManager {
                 contact.setRegisteredUser(true);
                 contact.setRegisteredUserId(matchedUser.getId());
                 contact.setSyncStatus(ContactSync.STATUS_SYNCED);
-                contact.setLastSyncDate(System.currentTimeMillis());
-                contact.setUpdatedDate(System.currentTimeMillis());
+                contact.setLastSyncDate(new Date());
+                contact.setUpdatedDate(new Date());
                 
                 database.contactSyncDao().update(contact);
                 matchedCount++;

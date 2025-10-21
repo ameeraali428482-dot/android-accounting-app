@@ -9,22 +9,29 @@ import androidx.room.PrimaryKey;
 public class Permission {
     @PrimaryKey
     @NonNull
-    public String permission_id;
-    public String name;
-    public String description;
-    public String category;
-    public long createdAt;
-    public long updatedAt;
+    private String id;
+    private String action;
+    private String description;
+    private String group;
 
-    public Permission() {}
-
-    @Ignore
-    public Permission(@NonNull String permission_id, String name, String description, String category) {
-        this.permission_id = permission_id;
-        this.name = name;
+    public Permission(@NonNull String id, String action, String description, String group) {
+        this.id = id;
+        this.action = action;
         this.description = description;
-        this.category = category;
-        this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
+        this.group = group;
     }
+
+    // Getters
+    @NonNull
+    public String getId() { return id; }
+    public String getAction() { return action; }
+    public String getDescription() { return description; }
+    public String getGroup() { return group; }
+    public String getName() { return action; } // Alias for action
+
+    // Setters
+    public void setId(@NonNull String id) { this.id = id; }
+    public void setAction(String action) { this.action = action; }
+    public void setDescription(String description) { this.description = description; }
+    public void setGroup(String group) { this.group = group; }
 }

@@ -1,51 +1,59 @@
 package com.example.androidapp.data.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "customers")
+@Entity(tableName = "customers",
+        foreignKeys = @ForeignKey(entity = Company.class,
+                                  parentColumns = "id",
+                                  childColumns = "companyId",
+                                  onDelete = ForeignKey.CASCADE),
+        indices = {@Index("companyId")})
 public class Customer {
-    @PrimaryKey(autoGenerate = true)
-    public int customerId;
-    public String customerName;
-    public String email;
-    public String phone;
-    public String address;
-    public String company;
-    public boolean isActive;
-    public double creditLimit;
-    public double currentBalance;
-    public long createdAt;
-    public long updatedAt;
+    @PrimaryKey
+    @NonNull
+    private String id;
+    private String name;
+    private String email;
+    private String phone;
+    private String address;
+    private String companyId;
 
-    public Customer() {}
-
-    @Ignore
-    public Customer(String customerName, String email, String phone, String address) {
-        this.customerName = customerName;
+    public Customer(@NonNull String id, String companyId, String name, String email, String phone, String address) {
+        this.id = id;
+        this.companyId = companyId;
+        this.name = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
-        this.isActive = true;
-        this.creditLimit = 0.0;
-        this.currentBalance = 0.0;
-        this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
     }
 
     @Ignore
-    public Customer(int customerId, String customerName, String email, String phone, String address, String company, boolean isActive, double creditLimit, double currentBalance, long createdAt, long updatedAt) {
-        this.customerId = customerId;
-        this.customerName = customerName;
+    public Customer(String id, String name, String email, String companyId) {
+        this.id = id;
+        this.name = name;
         this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.company = company;
-        this.isActive = isActive;
-        this.creditLimit = creditLimit;
-        this.currentBalance = currentBalance;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.companyId = companyId;
     }
+
+    // Getters
+    @NonNull
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+    public String getPhone() { return phone; }
+    public String getAddress() { return address; }
+    public String getCompanyId() { return companyId; }
+
+    // Setters
+    public void setId(@NonNull String id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public void setAddress(String address) { this.address = address; }
+    public void setCompanyId(String companyId) { this.companyId = companyId; }
 }

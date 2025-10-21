@@ -13,14 +13,8 @@ import java.util.UUID;
 
 @Entity(tableName = "repairs",
         foreignKeys = {
-                @ForeignKey(entity = Company.class,
-                        parentColumns = "id",
-                        childColumns = "companyId",
-                        onDelete = ForeignKey.CASCADE),
-                @ForeignKey(entity = Customer.class,
-                        parentColumns = "customerId",
-                        childColumns = "customerId",
-                        onDelete = ForeignKey.SET_NULL)
+                @ForeignKey(entity = Company.class, parentColumns = "id", childColumns = "companyId", onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = Customer.class, parentColumns = "id", childColumns = "customerId", onDelete = ForeignKey.SET_NULL)
         },
         indices = {@Index(value = "companyId"), @Index(value = "customerId")})
 public class Repair {
@@ -67,6 +61,7 @@ public class Repair {
         this.totalCost = (float) totalCost;
     }
 
+    // Getters
     @NonNull
     public String getId() { return id; }
     @NonNull
@@ -81,8 +76,18 @@ public class Repair {
     public float getTotalCost() { return totalCost; }
     public String getAssignedTo() { return assignedTo; }
     public String getTitle() { return title; }
+    public String getRepairDate() { return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(requestDate); }
 
-    public String getRepairDate() {
-        return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(requestDate);
-    }
+    // Setters
+    public void setId(@NonNull String id) { this.id = id; }
+    public void setCompanyId(@NonNull String companyId) { this.companyId = companyId; }
+    public void setCustomerId(String customerId) { this.customerId = customerId; }
+    public void setDeviceName(String deviceName) { this.deviceName = deviceName; }
+    public void setIssueDescription(String issueDescription) { this.issueDescription = issueDescription; }
+    public void setStatus(String status) { this.status = status; }
+    public void setRequestDate(@NonNull Date requestDate) { this.requestDate = requestDate; }
+    public void setCompletionDate(Date completionDate) { this.completionDate = completionDate; }
+    public void setTotalCost(float totalCost) { this.totalCost = totalCost; }
+    public void setAssignedTo(String assignedTo) { this.assignedTo = assignedTo; }
+    public void setTitle(String title) { this.title = title; }
 }

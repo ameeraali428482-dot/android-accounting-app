@@ -91,7 +91,7 @@
                         app:indicatorColor="@android:color/white"
                         app:trackColor="#33FFFFFF"
                         app:trackThickness="4dp"
-                        
+                        app:indicatorCornerRadius="2dp"
                         android:progress="40" />
 
                     <TextView
@@ -174,7 +174,7 @@
                         app:indicatorColor="?attr/colorPrimary"
                         app:trackColor="?attr/colorSurfaceVariant"
                         app:trackThickness="6dp"
-                        
+                        app:indicatorCornerRadius="3dp"
                         android:progress="40" />
 
                     <com.google.android.material.chip.ChipGroup

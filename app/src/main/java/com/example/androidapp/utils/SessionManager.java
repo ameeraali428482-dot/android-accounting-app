@@ -2,76 +2,77 @@ package com.example.androidapp.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import java.util.HashMap;
 
 /**
- * مدير الجلسة
+ * مدير الجلسات للتطبيق
+ * يدير تسجيل الدخول وحفظ بيانات المستخدم
  */
 public class SessionManager {
-    
-    private Context context;
-    private SharedPreferences preferences;
-    private static final String PREF_NAME = "AppSession";
-    private static final String KEY_COMPANY_ID = "company_id";
-    private static final String KEY_USER_ID = "user_id";
-    private static final String KEY_IS_LOGGED_IN = "is_logged_in";
-    
+    private static final String PREF_NAME = "AndroidAppPref";
+    private static final String IS_LOGIN = "IsLoggedIn";
+    public static final String KEY_USER_ID = "userId";
+    public static final String KEY_CURRENT_ORG_ID = "currentOrgId";
+    public static final String KEY_COMPANY_ID = KEY_CURRENT_ORG_ID; // Alias for KEY_CURRENT_ORG_ID
+
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+    private Context _context;
+
     public SessionManager(Context context) {
-        this.context = context;
-        preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        this._context = context;
+        pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        editor = pref.edit();
     }
-    
-    public String getCompanyId() {
-        return preferences.getString(KEY_COMPANY_ID, "default_company");
+
+    public void createLoginSession(String userId, String currentOrgId) {
+        editor.putBoolean(IS_LOGIN, true);
+        editor.putString(KEY_USER_ID, userId);
+        editor.putString(KEY_CURRENT_ORG_ID, currentOrgId);
+        editor.apply(); // استخدام apply بدلاً من commit للأداء الأفضل
     }
-    
-    public void setCompanyId(String companyId) {
-        preferences.edit().putString(KEY_COMPANY_ID, companyId).apply();
+
+    public HashMap<String, String> getUserDetails() {
+        HashMap<String, String> user = new HashMap<>();
+        user.put(KEY_USER_ID, pref.getString(KEY_USER_ID, null));
+        user.put(KEY_CURRENT_ORG_ID, pref.getString(KEY_CURRENT_ORG_ID, null));
+        return user;
     }
 
     public String getCurrentUserId() {
-        return preferences.getString(KEY_USER_ID, null);
+        return pref.getString(KEY_USER_ID, null);
     }
 
-    public int getCurrentUserIdInt() {
-        String userId = getCurrentUserId();
-        try {
-            return userId != null ? Integer.parseInt(userId) : 0;
-        } catch (NumberFormatException e) {
-            return 0;
-        }
+    public String getCurrentCompanyId() {
+        return pref.getString(KEY_CURRENT_ORG_ID, null);
     }
 
-    public void setCurrentUserId(String userId) {
-        preferences.edit().putString(KEY_USER_ID, userId).apply();
-    }
-
-    public void setCurrentUserId(int userId) {
-        preferences.edit().putString(KEY_USER_ID, String.valueOf(userId)).apply();
+    public String getCompanyId() {
+        return getCurrentCompanyId(); // Alias for getCurrentCompanyId()
     }
 
     public boolean isLoggedIn() {
-        return preferences.getBoolean(KEY_IS_LOGGED_IN, false);
+        return pref.getBoolean(IS_LOGIN, false);
     }
 
-    public void setLoggedIn(boolean isLoggedIn) {
-        preferences.edit().putBoolean(KEY_IS_LOGGED_IN, isLoggedIn).apply();
+    public void logoutUser() {
+        editor.clear();
+        editor.apply();
     }
-
-    public void logout() {
-        preferences.edit()
-                .remove(KEY_USER_ID)
-                .putBoolean(KEY_IS_LOGGED_IN, false)
-                .apply();
+    
+    /**
+     * تحديث معرف الشركة الحالية
+     */
+    public void updateCurrentCompanyId(String companyId) {
+        editor.putString(KEY_CURRENT_ORG_ID, companyId);
+        editor.apply();
     }
-
-    public void login(String userId) {
-        preferences.edit()
-                .putString(KEY_USER_ID, userId)
-                .putBoolean(KEY_IS_LOGGED_IN, true)
-                .apply();
-    }
-
-    public void login(int userId) {
-        login(String.valueOf(userId));
+    
+    /**
+     * تحديث معرف المستخدم
+     */
+    public void updateUserId(String userId) {
+        editor.putString(KEY_USER_ID, userId);
+        editor.apply();
     }
 }

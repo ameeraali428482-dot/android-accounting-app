@@ -1,47 +1,197 @@
 package com.example.androidapp.data.entities;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "transactions")
+import java.util.Date;
+
+@Entity(tableName = "transactions",
+        foreignKeys = {
+                @ForeignKey(entity = Account.class,
+                        parentColumns = "id",
+                        childColumns = "from_account_id",
+                        onDelete = ForeignKey.SET_NULL),
+                @ForeignKey(entity = Account.class,
+                        parentColumns = "id",
+                        childColumns = "to_account_id",
+                        onDelete = ForeignKey.SET_NULL)
+        })
 public class Transaction {
     @PrimaryKey(autoGenerate = true)
-    public int id;                    // مطابق للاستعلامات التي تستخدم 'id'
-    public int from_account_id;       // مطابق للاستعلامات التي تستخدم 'from_account_id'
-    public int to_account_id;         // مطابق للاستعلامات التي تستخدم 'to_account_id'
-    public double amount;
-    public String type;
-    public String description;
-    public String status;             // مطابق للاستعلامات التي تستخدم 'status'
-    public String reference_number;   // مطابق للاستعلامات التي تستخدم 'reference_number'
-    public String company_id;         // مطابق للاستعلامات التي تستخدم 'company_id'
-    public int userId;                // مطابق للاستعلامات التي تستخدم 'userId'
-    public int category_id;           // مطابق للاستعلامات التي تستخدم 'category_id'
-    public long date;                 // مطابق للاستعلامات التي تستخدم 'date'
-    public long createdAt;
-    public long updatedAt;
+    private long id;
+
+    @ColumnInfo(name = "from_account_id")
+    private String fromAccountId;
+
+    @ColumnInfo(name = "to_account_id")
+    private String toAccountId;
+
+    @ColumnInfo(name = "amount")
+    private double amount;
+
+    @ColumnInfo(name = "description")
+    private String description;
+
+    @ColumnInfo(name = "transaction_date")
+    private Date transactionDate;
+
+    @ColumnInfo(name = "transaction_type")
+    private String transactionType; // DEBIT, CREDIT, TRANSFER
+
+    @ColumnInfo(name = "reference_number")
+    private String referenceNumber;
+
+    @ColumnInfo(name = "category_id")
+    private String categoryId;
+
+    @ColumnInfo(name = "created_date")
+    private Date createdDate;
+
+    @ColumnInfo(name = "updated_date")
+    private Date updatedDate;
+
+    @ColumnInfo(name = "status")
+    private String status; // PENDING, COMPLETED, CANCELLED
+
+    @ColumnInfo(name = "user_id")
+    private String userId;
+
+    @ColumnInfo(name = "company_id")
+    private String companyId;
 
     // Default constructor for Room
-    public Transaction() {}
-
-    // Constructor for creating new transactions
-    @Ignore
-    public Transaction(int from_account_id, int to_account_id, double amount, String type, String description) {
-        this.from_account_id = from_account_id;
-        this.to_account_id = to_account_id;
-        this.amount = amount;
-        this.type = type;
-        this.description = description;
+    public Transaction() {
+        this.createdDate = new Date();
+        this.updatedDate = new Date();
         this.status = "PENDING";
-        this.reference_number = generateReferenceNumber();
-        this.date = System.currentTimeMillis();
-        this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
     }
 
+    // Constructor with essential fields
     @Ignore
-    private String generateReferenceNumber() {
-        return "TXN" + System.currentTimeMillis();
+    public Transaction(String fromAccountId, String toAccountId, double amount, String description, String transactionType) {
+        this();
+        this.fromAccountId = fromAccountId;
+        this.toAccountId = toAccountId;
+        this.amount = amount;
+        this.description = description;
+        this.transactionType = transactionType;
+        this.transactionDate = new Date();
+    }
+
+    // Getters and Setters
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getFromAccountId() {
+        return fromAccountId;
+    }
+
+    public void setFromAccountId(String fromAccountId) {
+        this.fromAccountId = fromAccountId;
+    }
+
+    public String getToAccountId() {
+        return toAccountId;
+    }
+
+    public void setToAccountId(String toAccountId) {
+        this.toAccountId = toAccountId;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(Date transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    public String getReferenceNumber() {
+        return referenceNumber;
+    }
+
+    public void setReferenceNumber(String referenceNumber) {
+        this.referenceNumber = referenceNumber;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 }

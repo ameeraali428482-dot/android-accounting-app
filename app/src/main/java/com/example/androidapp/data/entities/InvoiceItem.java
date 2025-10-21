@@ -1,6 +1,6 @@
 package com.example.androidapp.data.entities;
 
-import androidx.room.ColumnInfo;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
@@ -9,57 +9,127 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "invoice_items",
         foreignKeys = {
                 @ForeignKey(entity = Invoice.class,
-                        parentColumns = "id",
-                        childColumns = "invoice_id",
-                        onDelete = ForeignKey.CASCADE),
+                           parentColumns = "id",
+                           childColumns = "invoiceId",
+                           onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Item.class,
-                        parentColumns = "itemId",
-                        childColumns = "item_id",
-                        onDelete = ForeignKey.RESTRICT)
+                           parentColumns = "id",
+                           childColumns = "itemId",
+                           onDelete = ForeignKey.SET_NULL)
         },
-        indices = {@Index(value = "invoice_id"), @Index(value = "item_id")})
+        indices = {@Index(value = "invoiceId"), @Index(value = "itemId")})
 public class InvoiceItem {
-    @PrimaryKey(autoGenerate = true)
-    public long id;
+    @PrimaryKey
+    @NonNull
+    private String id;
+    private String invoiceId;
+    private String itemId;
+    private float quantity;
+    private String unit;
+    private float price; // سعر الوحدة
+    private float cost;
+    private float discount;
+    private float tax;
 
-    @ColumnInfo(name = "invoice_id")
-    public String invoiceId;
+    public InvoiceItem(@NonNull String id, String invoiceId, String itemId, float quantity, String unit, float price, float cost, float discount, float tax) {
+        this.id = id;
+        this.invoiceId = invoiceId;
+        this.itemId = itemId;
+        this.quantity = quantity;
+        this.unit = unit;
+        this.price = price;
+        this.cost = cost;
+        this.discount = discount;
+        this.tax = tax;
+    }
 
-    @ColumnInfo(name = "item_id")
-    public String itemId;
+    // Getters
+    @NonNull
+    public String getId() {
+        return id;
+    }
 
-    @ColumnInfo(name = "quantity")
-    public int quantity;
+    public String getInvoiceId() {
+        return invoiceId;
+    }
 
-    @ColumnInfo(name = "unit_price")
-    public double unitPrice;
+    public String getItemId() {
+        return itemId;
+    }
 
-    @ColumnInfo(name = "discount")
-    public double discount;
+    public float getQuantity() {
+        return quantity;
+    }
 
-    @ColumnInfo(name = "tax_rate")
-    public double taxRate;
+    public String getUnit() {
+        return unit;
+    }
 
-    @ColumnInfo(name = "tax_amount")
-    public double taxAmount;
+    public float getPrice() {
+        return price;
+    }
 
-    @ColumnInfo(name = "subtotal")
-    public double subtotal;
+    public float getCost() {
+        return cost;
+    }
 
-    @ColumnInfo(name = "total")
-    public double total;
+    public float getDiscount() {
+        return discount;
+    }
 
-    @ColumnInfo(name = "notes")
-    public String notes;
+    public float getTax() {
+        return tax;
+    }
 
-    @ColumnInfo(name = "created_at")
-    public long createdAt;
+    // Setters
+    public void setId(@NonNull String id) {
+        this.id = id;
+    }
 
-    @ColumnInfo(name = "updated_at")
-    public long updatedAt;
+    public void setInvoiceId(String invoiceId) {
+        this.invoiceId = invoiceId;
+    }
 
-    public InvoiceItem() {
-        this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    public void setQuantity(float quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public void setCost(float cost) {
+        this.cost = cost;
+    }
+
+    public void setDiscount(float discount) {
+        this.discount = discount;
+    }
+
+    public void setTax(float tax) {
+        this.tax = tax;
+    }
+
+    // الدالة التي كانت تسبب الخطأ، تم تغييرها لتعيد قيمة price
+    public float getUnitPrice() {
+        return price;
+    }
+    
+    // دالة لحساب الإجمالي
+    public float getTotal() {
+        return (quantity * price) - discount + tax;
+    }
+    
+    // دالة وهمية لاسم الصنف (يجب جلب الاسم الحقيقي من جدول الأصناف)
+    public String getItemName() {
+        return "Item " + itemId;
     }
 }

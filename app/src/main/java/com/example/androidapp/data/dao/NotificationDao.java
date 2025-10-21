@@ -6,33 +6,26 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 import androidx.room.Delete;
-import com.example.androidapp.data.entities.Notification;
 import java.util.List;
+import com.example.androidapp.data.entities.Notification;
 
 @Dao
-public interface NotificationDao extends BaseDao<Notification> {
-    
+public interface NotificationDao {
     @Insert
-    long insertNotification(Notification notification);
+    void insert(Notification notification);
 
-    @Query("SELECT * FROM notifications WHERE userId = :userId ORDER BY createdAt DESC")
-    LiveData<List<Notification>> getAllForUser(int userId);
+    @Update
+    void update(Notification notification);
 
-    @Query("DELETE FROM notifications WHERE createdAt < :cutoffTime")
-    void deleteOldNotifications(long cutoffTime);
+    @Delete
+    void delete(Notification notification);
 
-    @Query("UPDATE notifications SET isRead = 1 WHERE notificationId = :notificationId")
-    void markAsRead(long notificationId);
-
-    @Query("SELECT COUNT(*) FROM notifications WHERE userId = :userId AND isRead = 0")
-    int getUnreadCount(int userId);
-
-    @Query("SELECT * FROM notifications WHERE notificationId = :notificationId")
-    LiveData<Notification> getById(long notificationId);
-
-    @Query("SELECT * FROM notifications ORDER BY createdAt DESC")
+    @Query("SELECT * FROM notifications")
     LiveData<List<Notification>> getAllNotifications();
 
-    @Query("DELETE FROM notifications WHERE userId = :userId")
-    void deleteByUserId(int userId);
+    @Query("SELECT * FROM notifications WHERE id = :id LIMIT 1")
+    LiveData<Notification> getNotificationById(String id);
+
+    @Query("SELECT * FROM notifications WHERE id = :id LIMIT 1")
+    Notification getNotificationByIdSync(String id);
 }
