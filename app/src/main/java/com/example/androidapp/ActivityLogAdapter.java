@@ -1,4 +1,4 @@
-package com.example.accountingapp;
+package com.example.androidapp;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;

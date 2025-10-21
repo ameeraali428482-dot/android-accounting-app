@@ -1,4 +1,4 @@
-package com.example.accountingapp;
+package com.example.androidapp;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.accountingapp.R;
+import com.example.androidapp.R;
 
 public class BackupRestoreActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.accountingapp;
+package com.example.androidapp;
 
 import android.app.DatePickerDialog;
 import android.os.AsyncTask;
