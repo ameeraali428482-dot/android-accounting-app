@@ -1,9 +1,9 @@
-package com.example.accountingapp.advanced;
+package com.example.androidapp.advanced;
 
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.accountingapp.BackupRestoreActivity;
+import com.example.androidapp.BackupRestoreActivity;
 
 public class NotificationManager {
 
