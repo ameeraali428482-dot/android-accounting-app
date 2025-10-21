@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="تاريخ المعاملة (YYYY-MM-DD)"
-        android:inputType="date" />
+        android:inputType="date"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/et_description"
@@ -23,35 +22,40 @@
         android:hint="الوصف"
         android:inputType="textMultiLine"
         android:minLines="3"
-        android:maxLines="5" />
+        android:maxLines="5"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/et_debit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="مدين"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/et_credit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="دائن"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/et_reference_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="نوع المرجع (مثال: فاتورة، دفع)"
-        android:inputType="textCapWords" />
+        android:inputType="textCapWords"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/et_reference_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="معرف المرجع"
-        android:inputType="text" />
+        android:inputType="text"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/btn_save_statement"
