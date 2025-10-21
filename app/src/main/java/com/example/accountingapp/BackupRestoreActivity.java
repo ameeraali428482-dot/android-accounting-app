@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.androidaccountingapp.R; // غيّر اسم الحزمة حسب اسم مشروعك الفعلي في build.gradle و AndroidManifest.xml
+import com.example.accountingapp.R;
 
 public class BackupRestoreActivity extends AppCompatActivity {
 
