@@ -1,0 +1,30 @@
+name: Build and Notify Telegram on Failure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run build (example: gradle)
+        id: build
+        run: |
+          ./gradlew assembleDebug --stacktrace --info > build_log.txt 2>&1 || true
+
+      - name: Check build result and notify Telegram if failed
+        if: failure()
+        run: |
+          TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+          AI_API_URL=${{ secrets.AI_API_URL }}
+
+          curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument \
+            -F chat_id=$TELEGRAM_CHAT_ID -F document=@build_log.txt -F caption="❌ Build failed in commit $GITHUB_SHA"
+
+          curl -s -X POST $AI_API_URL/receive-error -H "Content-Type: text/plain" --data-binary @build_log.txt
