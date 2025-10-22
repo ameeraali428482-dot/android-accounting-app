@@ -1,0 +1,48 @@
+name: Automated Build Monitor and Fixer
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Save backup before build
+        run: |
+          mkdir -p ~/backup
+          cp -r ~/android-accounting-app/* ~/backup/
+      
+      - name: Run Build (Gradle example)
+        id: build
+        run: |
+          cd ~/android-accounting-app
+          ./gradlew build || echo "BUILD_FAILED" > build_status.txt
+
+      - name: Check build status
+        if: steps.build.outputs.result == 'failure' || contains(steps.build.outputs.stdout, 'BUILD_FAILED')
+        run: |
+          echo "Build failed, collecting logs..."
+          # Collect build logs
+          cat ~/android-accounting-app/build.log > build_error.log
+          # Send error logs and files info to your AI bot API
+          curl -X POST -H "Content-Type: application/json" -d '{"error":"$(cat build_error.log)"}' https://your-bot-api/receive-error
+
+      - name: Apply corrections (from AI suggestions)
+        if: success()
+        run: |
+          echo "Applying AI suggested corrections..."
+          # مثال أمر التصحيح - استبدل بأوامر تصحيحك
+          cat ~/android-accounting-app/patches/correction1.sh >> ~/android-accounting-app/correction.sh
+          bash ~/android-accounting-app/correction.sh
+
+      - name: Error recovery
+        if: steps.build.outputs.result == 'failure'
+        run: |
+          echo "Restoring from backup..."
+          rm -rf ~/android-accounting-app/*
+          cp -r ~/backup/* ~/android-accounting-app/
