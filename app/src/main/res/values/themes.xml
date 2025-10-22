@@ -64,7 +64,48 @@
         <item name="elevationOverlayEnabled">true</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
     </style>
+<!-- Base application theme. -->  
+<style name="Theme.AndroidApp" parent="Theme.Material3.DayNight.NoActionBar">  
+    <!-- Primary brand color -->  
+    <item name="colorPrimary">@color/primary</item>  
+    <item name="colorOnPrimary">@color/onPrimary</item>  
 
+    <!-- Secondary colors -->  
+    <item name="colorSecondary">@color/secondary</item>  
+    <item name="colorOnSecondary">@color/onSecondary</item>  
+
+    <!-- Surface colors -->  
+    <item name="colorSurface">@color/surface</item>  
+    <item name="colorOnSurface">@color/onSurface</item>  
+
+    <!-- Background -->  
+    <item name="android:windowBackground">@color/background</item>  
+
+    <!-- Material3 elevations -->  
+    <item name="elevationOverlayEnabled">true</item>  
+
+    <!-- Splash Screen theme -->  
+    <item name="windowSplashScreenBackground">@color/primary</item>  
+    <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>  
+    <item name="windowSplashScreenAnimationDuration">1000</item>  
+    <item name="postSplashScreenTheme">@style/Theme.AndroidApp</item>  
+</style>  
+
+<!-- No Action Bar variant -->  
+<style name="Theme.AndroidApp.NoActionBar" parent="Theme.AndroidApp">  
+    <item name="windowActionBar">false</item>  
+    <item name="windowNoTitle">true</item>  
+</style>  
+
+<!-- Dialog theme -->  
+<style name="Theme.AndroidApp.Dialog" parent="ThemeOverlay.Material3.Dialog">  
+    <!-- Customize dialog colors if needed -->  
+</style>  
+
+<!-- Authentication theme -->  
+<style name="Theme.AndroidApp.Authentication" parent="Theme.AndroidApp">  
+    <item name="android:windowBackground">@color/primaryContainer</item>  
+</style>
     <!-- No Action Bar variant -->
     <style name="Theme.OnSale.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -78,7 +119,11 @@
         <item name="windowSplashScreenAnimationDuration">1000</item>
         <item name="postSplashScreenTheme">@style/Theme.OnSale</item>
     </style>
-
+<style name="Theme.SplashScreen" parent="Theme.Material3.DayNight.NoActionBar">
+    <item name="windowSplashScreenBackground">@color/white</item>
+    <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+    <item name="postSplashScreenTheme">@style/Theme.MyApp</item>
+</style>
     <!-- Authentication Theme -->
     <style name="Theme.OnSale.Authentication" parent="Theme.OnSale.NoActionBar">
         <item name="android:windowBackground">@color/primary_container</item>
