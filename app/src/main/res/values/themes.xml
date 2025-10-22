@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme with Material Design 3 -->
+
+    <!-- Base theme -->
     <style name="Theme.OnSale" parent="Theme.Material3.DayNight">
         <!-- Primary Colors -->
         <item name="colorPrimary">@color/primary</item>
@@ -64,53 +65,33 @@
         <item name="elevationOverlayEnabled">true</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
     </style>
-<!-- Base application theme. -->  
 
-<!-- No Action Bar variant -->  
-<style name="Theme.AndroidApp.NoActionBar" parent="Theme.AndroidApp">  
-    <item name="windowActionBar">false</item>  
-    <item name="windowNoTitle">true</item>  
-</style>  
-
-<!-- Dialog theme -->  
-<style name="Theme.AndroidApp.Dialog" parent="ThemeOverlay.Material3.Dialog">  
-    <!-- Customize dialog colors if needed -->  
-</style>  
-
-<!-- Authentication theme -->  
-<style name="Theme.AndroidApp.Authentication" parent="Theme.AndroidApp">  
-    <item name="android:windowBackground">@color/primaryContainer</item>  
-</style>
-    <!-- No Action Bar variant -->
-    <style name="Theme.OnSale.NoActionBar">
+    <!-- No Action Bar -->
+    <style name="Theme.OnSale.NoActionBar" parent="Theme.OnSale">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!-- Splash Screen Theme -->
-    <style name="Theme.OnSale.SplashScreen" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/primary</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-        <item name="windowSplashScreenAnimationDuration">1000</item>
-        <item name="postSplashScreenTheme">@style/Theme.OnSale</item>
-    </style>
-<style name="Theme.SplashScreen" parent="Theme.Material3.DayNight.NoActionBar">
-    <item name="windowSplashScreenBackground">@color/white</item>
-    <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
-    <item name="postSplashScreenTheme">@style/Theme.MyApp</item>
-</style>
-    <!-- Authentication Theme -->
-    <style name="Theme.OnSale.Authentication" parent="Theme.OnSale.NoActionBar">
-        <item name="android:windowBackground">@color/primary_container</item>
-    </style>
-
-    <!-- Dialog Theme -->
+    <!-- Dialog -->
     <style name="Theme.OnSale.Dialog" parent="ThemeOverlay.Material3.Dialog">
         <item name="colorSurface">@color/surface_container_high</item>
         <item name="android:windowBackground">@drawable/dialog_background</item>
     </style>
 
-    <!-- Bottom Sheet Theme -->
+    <!-- Splash Screen -->
+    <style name="Theme.OnSale.SplashScreen" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="windowSplashScreenBackground">@color/primary</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.OnSale</item>
+    </style>
+
+    <!-- Authentication -->
+    <style name="Theme.OnSale.Authentication" parent="Theme.OnSale.NoActionBar">
+        <item name="android:windowBackground">@color/primary_container</item>
+    </style>
+
+    <!-- Bottom Sheet -->
     <style name="Theme.OnSale.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="colorSurface">@color/surface_container_low</item>
         <item name="android:windowIsFloating">false</item>
@@ -125,9 +106,4 @@
         <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
     </style>
 
-    <!-- Legacy compatibility -->
-    <style name="Theme.AndroidApp" parent="Theme.OnSale" />
-    <style name="Theme.AndroidApp.NoActionBar" parent="Theme.OnSale.NoActionBar" />
-    <style name="Theme.AndroidApp.AppBarOverlay" parent="ThemeOverlay.Material3.ActionBar" />
-    <style name="Theme.AndroidApp.PopupOverlay" parent="ThemeOverlay.Material3.Light" />
 </resources>
