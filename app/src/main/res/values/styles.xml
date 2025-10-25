@@ -253,8 +253,6 @@
 
     <!-- Slider Style -->
     <style name="Widget.OnSale.Slider" parent="Widget.Material3.Slider">
-        <item name="activeTrackColor">?attr/colorPrimary</item>
-        <item name="inactiveTrackColor">?attr/colorSurfaceVariant</item>
         <item name="thumbColor">?attr/colorPrimary</item>
         <item name="tickColorActive">?attr/colorOnPrimary</item>
         <item name="tickColorInactive">?attr/colorOnSurfaceVariant</item>

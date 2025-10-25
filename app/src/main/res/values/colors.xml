@@ -157,6 +157,4 @@
     <color name="status_duplicate">#9C27B0</color>
 
     <!-- Switch/Slider Colors -->
-    <color name="activeTrackColor">@color/primary</color>
-    <color name="inactiveTrackColor">@color/outline_variant</color>
 </resources>
