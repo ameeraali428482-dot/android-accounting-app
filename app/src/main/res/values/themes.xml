@@ -52,7 +52,9 @@
         <!-- Custom theme attributes -->
         <item name="elevationOverlayEnabled">true</item>
     </style>
-
+    <style name="Theme.OnSale.Splash" parent="Theme.OnSale.NoActionBar">
+        <item name="android:windowBackground">@color/primary</item>
+    </style>
     <!-- No Action Bar -->
     <style name="Theme.OnSale.NoActionBar" parent="Theme.OnSale">
         <item name="windowActionBar">false</item>
