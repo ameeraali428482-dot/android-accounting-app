@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_refresh"
+        android:title="تحديث"
+        android:icon="@drawable/ic_refresh"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_import_statement"
+        android:title="استيراد كشف حساب"
+        android:icon="@drawable/ic_import" />
+
+    <item
+        android:id="@+id/action_export_reconciliation"
+        android:title="تصدير المطابقة"
+        android:icon="@drawable/ic_export" />
+
+    <item
+        android:id="@+id/action_print_reconciliation"
+        android:title="طباعة المطابقة"
+        android:icon="@drawable/ic_print" />
+
+    <item
+        android:id="@+id/action_reconciliation_history"
+        android:title="تاريخ المطابقات"
+        android:icon="@drawable/ic_history" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="إعدادات المطابقة"
+        android:icon="@drawable/ic_settings" />
+
+    <item
+        android:id="@+id/action_help"
+        android:title="مساعدة"
+        android:icon="@drawable/ic_help" />
+
+</menu>

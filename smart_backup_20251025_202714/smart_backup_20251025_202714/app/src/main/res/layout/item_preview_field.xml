@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:gravity="center">
+
+    <!-- Field Name -->
+    <TextView
+        android:id="@+id/tv_field_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="الاسم"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:gravity="center"
+        android:layout_marginBottom="4dp"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <!-- Field Value -->
+    <TextView
+        android:id="@+id/tv_field_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="أحمد محمد"
+        android:textSize="12sp"
+        android:textColor="?attr/colorOnSurface"
+        android:gravity="center"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:background="@drawable/bg_field_value"
+        android:padding="6dp" />
+
+</LinearLayout>

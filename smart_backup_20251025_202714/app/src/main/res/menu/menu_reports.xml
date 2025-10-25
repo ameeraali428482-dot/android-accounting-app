@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Refresh -->
+    <item
+        android:id="@+id/action_refresh"
+        android:title="تحديث"
+        android:icon="@drawable/ic_refresh_24"
+        app:showAsAction="ifRoom" />
+
+    <!-- Export to Excel -->
+    <item
+        android:id="@+id/action_export_excel"
+        android:title="تصدير Excel"
+        android:icon="@drawable/ic_table_view_24"
+        app:showAsAction="ifRoom" />
+
+    <!-- More Options -->
+    <item
+        android:id="@+id/action_more"
+        android:title="المزيد"
+        android:icon="@drawable/ic_more_vert_24"
+        app:showAsAction="always">
+        
+        <menu>
+            <!-- Settings -->
+            <item
+                android:id="@+id/action_settings"
+                android:title="إعدادات التقارير"
+                android:icon="@drawable/ic_settings_24" />
+
+            <!-- Save as Template -->
+            <item
+                android:id="@+id/action_save_template"
+                android:title="حفظ كقالب"
+                android:icon="@drawable/ic_save_24" />
+
+            <!-- Load Template -->
+            <item
+                android:id="@+id/action_load_template"
+                android:title="تحميل قالب"
+                android:icon="@drawable/ic_folder_open_24" />
+
+            <!-- Email Report -->
+            <item
+                android:id="@+id/action_email"
+                android:title="إرسال بالبريد"
+                android:icon="@drawable/ic_email_24" />
+
+            <!-- Schedule Report -->
+            <item
+                android:id="@+id/action_schedule"
+                android:title="جدولة التقرير"
+                android:icon="@drawable/ic_schedule_24" />
+        </menu>
+    </item>
+
+</menu>

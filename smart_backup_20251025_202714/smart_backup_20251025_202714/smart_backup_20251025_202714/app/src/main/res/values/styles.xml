@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Text Appearance Styles for Material Components -->
+    <style name="TextAppearance.OnSale.HeadlineLarge" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.HeadlineMedium" parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.HeadlineSmall" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.TitleLarge" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.TitleMedium" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.TitleSmall" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.BodyLarge" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.BodyMedium" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.BodySmall" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.LabelLarge" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.LabelMedium" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.LabelSmall" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <!-- Button Styles -->
+    <style name="Button.OnSale" parent="Widget.MaterialComponents.Button">
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="Button.OnSale.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="Button.OnSale.Text" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <!-- Card Styles -->
+    <style name="CardView.OnSale" parent="CardView">
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+    </style>
+
+    <!-- Progress Bar Styles -->
+    <style name="ProgressBar.OnSale" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorColor">@color/primary</item>
+    </style>
+
+    <!-- Status Indicator Styles -->
+    <style name="StatusIndicator.Active">
+        <item name="android:background">@drawable/bg_status_active</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="StatusIndicator.Inactive">
+        <item name="android:background">@drawable/bg_status_error</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="StatusIndicator.Pending">
+        <item name="android:background">@drawable/bg_status_pending</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Simple StatusIndicator as fallback -->
+    <style name="StatusIndicator">
+        <item name="android:background">@drawable/bg_status_pill</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+</resources>

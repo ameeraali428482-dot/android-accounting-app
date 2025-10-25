@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Save Item (Visible in edit mode) -->
+    <item
+        android:id="@+id/action_save"
+        android:title="حفظ"
+        android:icon="@drawable/ic_save_24"
+        app:showAsAction="ifRoom"
+        android:visible="false" />
+
+    <!-- Cancel Item (Visible in edit mode) -->
+    <item
+        android:id="@+id/action_cancel"
+        android:title="إلغاء"
+        android:icon="@drawable/ic_close_24"
+        app:showAsAction="ifRoom"
+        android:visible="false" />
+
+    <!-- Quick Actions (Always visible) -->
+    <item
+        android:id="@+id/action_preview"
+        android:title="معاينة"
+        android:icon="@drawable/ic_preview_24"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_share"
+        android:title="مشاركة"
+        android:icon="@drawable/ic_share_24"
+        app:showAsAction="ifRoom" />
+
+    <!-- More Actions -->
+    <item
+        android:id="@+id/action_more"
+        android:title="المزيد"
+        android:icon="@drawable/ic_more_vert_24"
+        app:showAsAction="always">
+        
+        <menu>
+            <!-- Duplicate Invoice -->
+            <item
+                android:id="@+id/action_duplicate"
+                android:title="إنشاء نسخة"
+                android:icon="@drawable/ic_content_copy_24" />
+
+            <!-- Convert to Different Type -->
+            <item
+                android:id="@+id/action_convert"
+                android:title="تحويل النوع"
+                android:icon="@drawable/ic_transform_24">
+                <menu>
+                    <item
+                        android:id="@+id/action_convert_to_quote"
+                        android:title="تحويل لعرض سعر" />
+                    <item
+                        android:id="@+id/action_convert_to_order"
+                        android:title="تحويل لطلب" />
+                    <item
+                        android:id="@+id/action_convert_to_receipt"
+                        android:title="تحويل لإيصال" />
+                </menu>
+            </item>
+
+            <!-- Export Options -->
+            <item
+                android:id="@+id/action_export"
+                android:title="تصدير"
+                android:icon="@drawable/ic_upload_24">
+                <menu>
+                    <item
+                        android:id="@+id/action_export_pdf"
+                        android:title="تصدير PDF"
+                        android:icon="@drawable/ic_picture_as_pdf_24" />
+                    <item
+                        android:id="@+id/action_export_excel"
+                        android:title="تصدير Excel"
+                        android:icon="@drawable/ic_table_chart_24" />
+                    <item
+                        android:id="@+id/action_export_word"
+                        android:title="تصدير Word"
+                        android:icon="@drawable/ic_description_24" />
+                </menu>
+            </item>
+
+            <!-- Print Options -->
+            <item
+                android:id="@+id/action_print"
+                android:title="طباعة"
+                android:icon="@drawable/ic_print_24">
+                <menu>
+                    <item
+                        android:id="@+id/action_print_invoice"
+                        android:title="طباعة الفاتورة" />
+                    <item
+                        android:id="@+id/action_print_receipt"
+                        android:title="طباعة إيصال" />
+                    <item
+                        android:id="@+id/action_print_delivery_note"
+                        android:title="طباعة إشعار تسليم" />
+                </menu>
+            </item>
+
+            <!-- Send Options -->
+            <item
+                android:id="@+id/action_send"
+                android:title="إرسال"
+                android:icon="@drawable/ic_send_24">
+                <menu>
+                    <item
+                        android:id="@+id/action_send_email"
+                        android:title="إرسال بالبريد"
+                        android:icon="@drawable/ic_email_24" />
+                    <item
+                        android:id="@+id/action_send_whatsapp"
+                        android:title="إرسال واتساب"
+                        android:icon="@drawable/ic_whatsapp_24" />
+                    <item
+                        android:id="@+id/action_send_sms"
+                        android:title="إرسال رسالة نصية"
+                        android:icon="@drawable/ic_sms_24" />
+                </menu>
+            </item>
+
+            <!-- Invoice Status -->
+            <item
+                android:id="@+id/action_status"
+                android:title="حالة الفاتورة"
+                android:icon="@drawable/ic_assignment_24">
+                <menu>
+                    <item
+                        android:id="@+id/action_mark_paid"
+                        android:title="تحديد كمدفوعة" />
+                    <item
+                        android:id="@+id/action_mark_partial"
+                        android:title="تحديد مدفوعة جزئياً" />
+                    <item
+                        android:id="@+id/action_mark_overdue"
+                        android:title="تحديد متأخرة" />
+                    <item
+                        android:id="@+id/action_mark_cancelled"
+                        android:title="إلغاء الفاتورة" />
+                </menu>
+            </item>
+
+            <!-- Advanced Options -->
+            <item
+                android:id="@+id/action_advanced"
+                android:title="خيارات متقدمة"
+                android:icon="@drawable/ic_settings_24">
+                <menu>
+                    <item
+                        android:id="@+id/action_add_attachment"
+                        android:title="إضافة مرفق" />
+                    <item
+                        android:id="@+id/action_add_signature"
+                        android:title="إضافة توقيع" />
+                    <item
+                        android:id="@+id/action_add_stamp"
+                        android:title="إضافة ختم" />
+                    <item
+                        android:id="@+id/action_schedule_send"
+                        android:title="جدولة الإرسال" />
+                </menu>
+            </item>
+
+            <!-- Archive/Delete -->
+            <item
+                android:id="@+id/action_archive"
+                android:title="أرشفة"
+                android:icon="@drawable/ic_archive_24" />
+
+            <item
+                android:id="@+id/action_delete"
+                android:title="حذف"
+                android:icon="@drawable/ic_delete_24" />
+        </menu>
+    </item>
+
+</menu>

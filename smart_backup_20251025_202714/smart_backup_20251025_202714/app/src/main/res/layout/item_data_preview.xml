@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardElevation="3dp"
+    app:cardCornerRadius="12dp"
+    app:cardBackgroundColor="@color/surface_color"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- رأس البطاقة -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <!-- رقم الصف -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvRowNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="الصف 1"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_text" />
+
+            <!-- chip الحالة -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="صحيح"
+                android:textSize="12sp"
+                android:chipMinHeight="24dp"
+                app:chipBackgroundColor="@color/success_color"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+        <!-- قائمة الحقول -->
+        <LinearLayout
+            android:id="@+id/layoutFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_field_container"
+            android:padding="12dp"
+            android:layout_marginBottom="8dp">
+
+            <!-- سيتم إضافة الحقول ديناميكياً هنا -->
+
+        </LinearLayout>
+
+        <!-- رسالة الخطأ أو التحذير -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvErrorMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="رسالة الخطأ أو التحذير"
+            android:textSize="12sp"
+            android:textColor="@color/error_color"
+            android:background="@drawable/bg_error_message"
+            android:padding="8dp"
+            android:visibility="gone"
+            app:drawableStartCompat="@drawable/ic_warning"
+            android:drawablePadding="8dp" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

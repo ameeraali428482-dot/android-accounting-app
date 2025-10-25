@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="أدخل رصيد كشف الحساب المصرفي"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"
+        android:gravity="center" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="الرصيد (ريال سعودي)"
+        app:boxStrokeColor="@color/material_primary"
+        app:hintTextColor="@color/material_primary"
+        app:prefixText="ر.س "
+        app:helperText="أدخل الرصيد كما يظهر في كشف الحساب">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/balanceEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal|numberSigned"
+            android:textSize="18sp"
+            android:gravity="center" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="• تأكد من إدخال الرصيد الصحيح كما يظهر في كشف الحساب\n• استخدم الإشارة السالبة (-) للرصيد المدين\n• لا تستخدم فواصل الآلاف"
+        android:textSize="12sp"
+        android:textColor="@color/material_on_surface_variant"
+        android:lineSpacingExtra="2dp" />
+
+</LinearLayout>
