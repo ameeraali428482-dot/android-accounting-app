@@ -9,19 +9,4 @@
     <attr name="colorSecondaryVariant" format="color|reference" />
     <attr name="colorError" format="color|reference" />
     <attr name="colorOnError" format="color|reference" />
-    <attr name="android:colorBackground" format="color|reference" />
-    
-    <!-- Additional colors for compatibility -->
-    <attr name="colorBackground" format="color|reference" />
-    <attr name="colorOnBackground" format="color|reference" />
-    <attr name="colorSurface" format="color|reference" />
-    <attr name="colorOnSurface" format="color|reference" />
-    <attr name="colorSurfaceVariant" format="color|reference" />
-    <attr name="colorOnSurfaceVariant" format="color|reference" />
-    <attr name="colorOutline" format="color|reference" />
-    
-    <!-- Splash screen attributes -->
-    <attr name="windowSplashScreenBackground" format="color|reference" />
-    <attr name="windowSplashScreenAnimatedIcon" format="reference" />
-    <attr name="postSplashScreenTheme" format="reference" />
 </resources>
