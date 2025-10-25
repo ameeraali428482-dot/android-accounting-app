@@ -48,3 +48,9 @@
     </style>
 
 </resources>
+
+    <!-- ThemeOverlay للـ Toolbar -->
+    <style name="ThemeOverlay.Material3.Toolbar.Primary" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/onPrimary</item>
+    </style>

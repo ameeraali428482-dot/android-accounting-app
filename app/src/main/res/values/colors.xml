@@ -19,6 +19,7 @@
     <color name="primary">#6750A4</color>
     <color name="onPrimary">#FFFFFF</color>
     <color name="primaryContainer">#EADDFF</color>
+    <color name="primary_container">#EADDFF</color>
     <color name="onPrimaryContainer">#21005D</color>
     <color name="secondary">#625B71</color>
     <color name="onSecondary">#FFFFFF</color>
@@ -31,6 +32,7 @@
     <color name="error">#B3261E</color>
     <color name="onError">#FFFFFF</color>
     <color name="errorContainer">#F9DEDC</color>
+    <color name="error_container">#F9DEDC</color>
     <color name="onErrorContainer">#410E0B</color>
     <color name="background">#FFFBFE</color>
     <color name="onBackground">#1C1B1F</color>
@@ -38,9 +40,26 @@
     <color name="onSurface">#1C1B1F</color>
     <color name="surfaceVariant">#E7E0EC</color>
     <color name="onSurfaceVariant">#49454F</color>
+    <color name="on_surface_variant">#49454F</color>
     <color name="outline">#79747E</color>
     <color name="outlineVariant">#CAC4D0</color>
+    <color name="outline_variant">#CAC4D0</color>
     <color name="scrim">#000000</color>
+
+    <!-- Material Design 3 Surface Container Colors -->
+    <color name="surfaceContainerLowest">#FFFFFF</color>
+    <color name="surfaceContainerLow">#F7F2FA</color>
+    <color name="surface_container_low">#F7F2FA</color>
+    <color name="surfaceContainer">#F3EDF7</color>
+    <color name="surfaceContainerHigh">#ECE6F0</color>
+    <color name="surfaceContainerHighest">#E6E0E9</color>
+
+    <!-- Success Colors (Custom for Android) -->
+    <color name="success">#4CAF50</color>
+    <color name="successContainer">#C8E6C9</color>
+    <color name="success_container">#C8E6C9</color>
+    <color name="onSuccess">#FFFFFF</color>
+    <color name="onSuccessContainer">#1B5E20</color>
 
     <!-- ألوان Material Design 3 الإضافية -->
     <color name="material_primary_container">#EADDFF</color>
@@ -48,6 +67,7 @@
     <color name="material_tertiary_container">#FFD8E4</color>
     <color name="material_error_container">#F9DEDC</color>
     <color name="material_outline">#79747E</color>
+    <color name="material_surface">#FFFBFE</color>
     <color name="background_light">#FEF7FF</color>
 
     <!-- ألوان للتطبيق -->
@@ -67,4 +87,22 @@
     <!-- Aliases للتوافق مع themes.xml -->
     <color name="primary_dark">#6750A4</color>
     <color name="secondary_dark">#625B71</color>
+
+    <!-- ألوان مخصصة للتطبيق -->
+    <color name="accent">#6750A4</color>
+    <color name="accent_light">#EADDFF</color>
+    
+    <!-- ألوان الخلفية المخصصة -->
+    <color name="background_chat">#F5F5F5</color>
+    
+    <!-- ألوان الرسائل والفقاعات -->
+    <color name="message_bubble_color">#E8DEF8</color>
+    
+    <!-- ألوان الرمادي المخصصة -->
+    <color name="gray_light">#F5F5F5</color>
+    <color name="gray_medium">#BDBDBD</color>
+    
+    <!-- ألوان التدرجات Gradient -->
+    <color name="gradient_start">#6750A4</color>
+    <color name="gradient_end">#9C27B0</color>
 </resources>
