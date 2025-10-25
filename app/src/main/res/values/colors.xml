@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Legacy Colors -->
+    <!-- الألوان الأساسية -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -8,159 +8,59 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="selected_item_background">#E0E0E0</color>
-<!-- أضف هذه الألوان -->
-<color name="material_primary_container">#EADDFF</color>
-<color name="material_secondary_container">#E8DEF8</color>
-<color name="material_tertiary_container">#FFD8E4</color>
-<color name="material_error_container">#F9DEDC</color>
-<color name="material_outline">#79747E</color>
-<color name="background_light">#FEF7FF</color>
-    <!-- الألوان المضافة لإصلاح أخطاء البناء -->
-    <color name="colorPrimary">#FF6200EE</color>
-    <color name="light_gray">#D3D3D3</color>
-    <color name="message_bubble_color">#E0E0E0</color>
-    <color name="red">#FF0000</color>
-    <color name="green">#00FF00</color>
-    <color name="light_yellow">#FFFFE0</color>
-    <color name="light_green">#90EE90</color>
-    <color name="gray">#808080</color>
+    <color name="red">#FFFF0000</color>
+    <color name="light_gray">#FFD3D3D3</color>
+    <color name="gray">#FF808080</color>
+    <color name="green">#FF00FF00</color>
+    <color name="light_green">#FF90EE90</color>
+    <color name="light_yellow">#FFFFFFE0</color>
 
-    <!-- Material Design 3 Colors -->
-    <!-- Primary Colors -->
+    <!-- ألوان Material Design 3 الأساسية -->
     <color name="primary">#6750A4</color>
-    <color name="on_primary">#FFFFFF</color>
-    <color name="primary_container">#EADDFF</color>
-    <color name="on_primary_container">#21005D</color>
-
-    <!-- Secondary Colors -->
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="primaryContainer">#EADDFF</color>
+    <color name="onPrimaryContainer">#21005D</color>
     <color name="secondary">#625B71</color>
-    <color name="on_secondary">#FFFFFF</color>
-    <color name="secondary_container">#E8DEF8</color>
-    <color name="on_secondary_container">#1D192B</color>
-
-    <!-- Tertiary Colors -->
+    <color name="onSecondary">#FFFFFF</color>
+    <color name="secondaryContainer">#E8DEF8</color>
+    <color name="onSecondaryContainer">#1D192B</color>
     <color name="tertiary">#7D5260</color>
-    <color name="on_tertiary">#FFFFFF</color>
-    <color name="tertiary_container">#FFD8E4</color>
-    <color name="on_tertiary_container">#31111D</color>
-
-    <!-- Error Colors -->
-    <color name="error">#BA1A1A</color>
-    <color name="on_error">#FFFFFF</color>
-    <color name="error_container">#FFDAD6</color>
-    <color name="on_error_container">#410002</color>
-
-    <!-- Surface Colors -->
-    <color name="surface">#FFFBFE</color>
-    <color name="on_surface">#1C1B1F</color>
-    <color name="surface_variant">#E7E0EC</color>
-    <color name="on_surface_variant">#49454F</color>
-
-    <!-- Surface Container Colors -->
-    <color name="surface_container_lowest">#FFFFFF</color>
-    <color name="surface_container_low">#F7F2FA</color>
-    <color name="surface_container">#F3EDF7</color>
-    <color name="surface_container_high">#ECE6F0</color>
-    <color name="surface_container_highest">#E6E0E9</color>
-
-    <!-- Outline Colors -->
-    <color name="outline">#79747E</color>
-    <color name="outline_variant">#CAC4D0</color>
-
-    <!-- Other Colors -->
-    <color name="shadow">#000000</color>
-    <color name="surface_tint">#6750A4</color>
-    <color name="inverse_surface">#313033</color>
-    <color name="inverse_on_surface">#F4EFF4</color>
-    <color name="inverse_primary">#D0BCFF</color>
-
-    <!-- Background Colors -->
+    <color name="onTertiary">#FFFFFF</color>
+    <color name="tertiaryContainer">#FFD8E4</color>
+    <color name="onTertiaryContainer">#31111D</color>
+    <color name="error">#B3261E</color>
+    <color name="onError">#FFFFFF</color>
+    <color name="errorContainer">#F9DEDC</color>
+    <color name="onErrorContainer">#410E0B</color>
     <color name="background">#FFFBFE</color>
-    <color name="on_background">#1C1B1F</color>
+    <color name="onBackground">#1C1B1F</color>
+    <color name="surface">#FFFBFE</color>
+    <color name="onSurface">#1C1B1F</color>
+    <color name="surfaceVariant">#E7E0EC</color>
+    <color name="onSurfaceVariant">#49454F</color>
+    <color name="outline">#79747E</color>
+    <color name="outlineVariant">#CAC4D0</color>
+    <color name="scrim">#000000</color>
 
-    <!-- Success Colors -->
-    <color name="success">#4CAF50</color>
-    <color name="on_success">#FFFFFF</color>
-    <color name="success_container">#C8E6C9</color>
-    <color name="on_success_container">#1B5E20</color>
-
-    <!-- Warning Colors -->
-    <color name="warning">#FF9800</color>
-    <color name="on_warning">#FFFFFF</color>
-    <color name="warning_container">#FFE0B2</color>
-    <color name="on_warning_container">#E65100</color>
-
-    <!-- Info Colors -->
-    <color name="info">#2196F3</color>
-    <color name="on_info">#FFFFFF</color>
-    <color name="info_container">#BBDEFB</color>
-    <color name="on_info_container">#0D47A1</color>
-
-    <!-- Custom Gradient Colors -->
-    <color name="gradient_start">#6750A4</color>
-    <color name="gradient_end">#7D5260</color>
-
-    <!-- Semi-transparent Colors -->
-    <color name="scrim">#80000000</color>
-    <color name="overlay_light">#1AFFFFFF</color>
-    <color name="overlay_dark">#1A000000</color>
-
-    <!-- Legacy Material Colors for compatibility -->
-    <color name="material_primary">@color/primary</color>
-    <color name="material_surface">@color/surface</color>
-    <color name="material_surface_variant">@color/surface_variant</color>
-    <color name="material_on_surface">@color/on_surface</color>
-    <color name="material_on_primary">@color/on_primary</color>
-    <color name="material_secondary">@color/secondary</color>
-    <color name="material_error">@color/error</color>
-
-    <!-- AI Chat Colors -->
-    <color name="background_chat">#F5F5F5</color>
-    <color name="primary_dark">#5A4A78</color>
-    <color name="accent">#4CAF50</color>
-    <color name="accent_light">#E8F5E8</color>
-
-    <!-- Message Colors -->
-    <color name="user_message_background">#6750A4</color>
-    <color name="user_message_text">#FFFFFF</color>
-    <color name="ai_message_background">#FFFFFF</color>
-    <color name="ai_message_text">#1C1B1F</color>
-
-    <!-- Avatar Colors -->
-    <color name="user_avatar_background">#6750A4</color>
-    <color name="ai_avatar_background">#4CAF50</color>
-
-    <!-- Gray Variations -->
-    <color name="gray_light">#9E9E9E</color>
-    <color name="gray_medium">#757575</color>
-    <color name="gray_dark">#424242</color>
-
-    <!-- Import Status Colors -->
-    <color name="success_color">@color/success</color>
-    <color name="error_color">@color/error</color>
-    <color name="warning_color">@color/warning</color>
-    <color name="duplicate_color">#9C27B0</color>
-
-    <!-- Import UI Colors -->
-    <color name="primary_color">@color/primary</color>
-    <color name="primary_text">@color/on_surface</color>
-    <color name="secondary_text">@color/on_surface_variant</color>
-    <color name="background_color">@color/background</color>
-    <color name="surface_color">@color/surface</color>
-    <color name="accent_color">@color/tertiary</color>
-    <color name="progress_background">@color/outline_variant</color>
-
-    <!-- Field Background Colors -->
-    <color name="required_field_bg">#FFEBEE</color>
-    <color name="normal_field_bg">@color/surface_container_low</color>
-    <color name="modified_field_bg">#FFF3E0</color>
-
-    <!-- Status Colors -->
-    <color name="status_valid">#4CAF50</color>
-    <color name="status_warning">#FF9800</color>
-    <color name="status_error">#F44336</color>
-    <color name="status_duplicate">#9C27B0</color>
-
-    <!-- Switch/Slider Colors -->
+    <!-- ألوان Material Design 3 الإضافية -->
+    <color name="material_primary_container">#EADDFF</color>
+    <color name="material_secondary_container">#E8DEF8</color>
+    <color name="material_tertiary_container">#FFD8E4</color>
+    <color name="material_error_container">#F9DEDC</color>
+    <color name="material_outline">#79747E</color>
+    <color name="background_light">#FEF7FF</color>
+    
+    <!-- ألوان للتطبيق -->
+    <color name="colorPrimary">#6750A4</color>
+    <color name="colorPrimaryVariant">#6750A4</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#625B71</color>
+    <color name="colorSecondaryVariant">#625B71</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="colorBackground">#FFFBFE</color>
+    <color name="colorOnBackground">#1C1B1F</color>
+    <color name="colorSurface">#FFFBFE</color>
+    <color name="colorOnSurface">#1C1B1F</color>
+    <color name="colorError">#B3261E</color>
+    <color name="colorOnError">#FFFFFF</color>
 </resources>
