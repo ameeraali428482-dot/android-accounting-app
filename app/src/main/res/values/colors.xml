@@ -49,7 +49,7 @@
     <color name="material_error_container">#F9DEDC</color>
     <color name="material_outline">#79747E</color>
     <color name="background_light">#FEF7FF</color>
-    
+
     <!-- ألوان للتطبيق -->
     <color name="colorPrimary">#6750A4</color>
     <color name="colorPrimaryVariant">#6750A4</color>
@@ -63,8 +63,8 @@
     <color name="colorOnSurface">#1C1B1F</color>
     <color name="colorError">#B3261E</color>
     <color name="colorOnError">#FFFFFF</color>
-</resources>
 
     <!-- Aliases للتوافق مع themes.xml -->
-    <color name="primary_dark">@color/colorPrimaryVariant</color>
-    <color name="secondary_dark">@color/colorSecondaryVariant</color>
+    <color name="primary_dark">#6750A4</color>
+    <color name="secondary_dark">#625B71</color>
+</resources>
