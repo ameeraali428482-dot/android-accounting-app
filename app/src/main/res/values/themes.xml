@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base theme -->
@@ -61,6 +62,16 @@
         <item name="android:navigationBarColor">@color/surface</item>
         <item name="android:windowLightNavigationBar">true</item>
 
+        <!-- Splash screen attributes -->
+        <item name="windowSplashScreenBackground">@color/primary</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.OnSale.NoActionBar</item>
+
+        <!-- Switch/Slider attributes -->
+        <item name="activeTrackColor">@color/primary</item>
+        <item name="inactiveTrackColor">@color/outline_variant</item>
+
         <!-- Custom theme attributes -->
         <item name="elevationOverlayEnabled">true</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
@@ -79,11 +90,11 @@
     </style>
 
     <!-- Splash Screen -->
-    <style name="Theme.OnSale.SplashScreen" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.OnSale.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/primary</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
         <item name="windowSplashScreenAnimationDuration">1000</item>
-        <item name="postSplashScreenTheme">@style/Theme.OnSale</item>
+        <item name="postSplashScreenTheme">@style/Theme.OnSale.NoActionBar</item>
     </style>
 
     <!-- Authentication -->
@@ -105,5 +116,4 @@
         <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
     </style>
-
 </resources>
