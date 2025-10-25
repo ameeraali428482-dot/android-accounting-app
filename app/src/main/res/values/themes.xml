@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base theme -->
+    <!-- Base theme - بدون السمات المسببة للمشاكل -->
     <style name="Theme.OnSale" parent="Theme.Material3.DayNight">
         <!-- Primary Colors -->
         <item name="colorPrimary">@color/primary</item>
@@ -51,7 +51,6 @@
 
         <!-- Custom theme attributes -->
         <item name="elevationOverlayEnabled">true</item>
-        <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
     </style>
 
     <!-- No Action Bar -->
@@ -60,7 +59,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!-- Splash Screen - باستخدام السمة الأساسية -->
+    <!-- Splash Screen -->
     <style name="Theme.OnSale.SplashScreen" parent="Theme.OnSale.NoActionBar">
         <item name="android:windowBackground">@color/primary</item>
     </style>
@@ -68,13 +67,5 @@
     <!-- Authentication -->
     <style name="Theme.OnSale.Authentication" parent="Theme.OnSale.NoActionBar">
         <item name="android:windowBackground">@color/primary_container</item>
-    </style>
-
-    <!-- Window Animations -->
-    <style name="WindowAnimation" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
-        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
-        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
     </style>
 </resources>
