@@ -65,7 +65,10 @@
     <style name="Theme.OnSale.SplashScreen" parent="Theme.OnSale.NoActionBar">
         <item name="android:windowBackground">@color/primary</item>
     </style>
-
+<style name="ThemeOverlay.Material3.Toolbar.Primary" parent="ThemeOverlay.Material3.Toolbar">
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorOnPrimary">@color/onPrimary</item>
+</style>
     <!-- Authentication -->
     <style name="Theme.OnSale.Authentication" parent="Theme.OnSale.NoActionBar">
         <item name="android:windowBackground">@color/primary_container</item>

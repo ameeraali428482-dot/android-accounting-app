@@ -9,7 +9,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="selected_item_background">#E0E0E0</color>
-
+<!-- أضف هذه الألوان -->
+<color name="material_primary_container">#EADDFF</color>
+<color name="material_secondary_container">#E8DEF8</color>
+<color name="material_tertiary_container">#FFD8E4</color>
+<color name="material_error_container">#F9DEDC</color>
+<color name="material_outline">#79747E</color>
+<color name="background_light">#FEF7FF</color>
     <!-- الألوان المضافة لإصلاح أخطاء البناء -->
     <color name="colorPrimary">#FF6200EE</color>
     <color name="light_gray">#D3D3D3</color>
