@@ -1,0 +1,581 @@
+🎯 مهمة: تصحيح أخطاء بناء تطبيق Android - الإصدار الآمن
+
+📋 سياق المشروع المتقدم:
+🗺️ خريطة هيكل المشروع - Sat Oct 25 20:27:15 +03 2025
+
+📁 الهيكل الرئيسي:
+.
+./.backups
+./.git
+./.github
+./.github/workflows
+./.gradle
+./.gradle/8.3
+./.gradle/8.3/checksums
+./.gradle/8.3/dependencies-accessors
+./.gradle/8.3/executionHistory
+./.gradle/8.3/fileChanges
+./.gradle/8.3/fileHashes
+./.gradle/8.3/vcsMetadata
+./.gradle/buildOutputCleanup
+./.gradle/vcs-1
+./.phoenix_logs
+./app
+./app/src
+./app/src/main
+./firebase-functions
+./fix_logs
+./gradle
+./gradle/wrapper
+./patches
+
+📊 الملفات المهمة:
+./build.gradle
+./settings.gradle
+./app/src/main/java/com/example/androidapp/utils/SessionManager.java
+./app/src/main/java/com/example/androidapp/utils/ExcelUtil.java
+./app/src/main/java/com/example/androidapp/utils/PermissionManager.java
+./app/src/main/java/com/example/androidapp/utils/ContactSyncManager.java
+./app/src/main/java/com/example/androidapp/utils/NotificationHelper.java
+./app/src/main/java/com/example/androidapp/utils/BarcodeGenerator.java
+./app/src/main/java/com/example/androidapp/utils/BackupManager.java
+./app/src/main/java/com/example/androidapp/utils/GoogleDriveService.java
+./app/src/main/java/com/example/androidapp/utils/AIManager.java
+./app/src/main/java/com/example/androidapp/utils/AIHelper.java
+./app/src/main/java/com/example/androidapp/utils/AdvancedBarcodeGenerator.java
+./app/src/main/java/com/example/androidapp/utils/BarcodeHelper.java
+./app/src/main/java/com/example/androidapp/utils/CurrencyUtils.java
+./app/src/main/java/com/example/androidapp/utils/DateTimeUtils.java
+./app/src/main/java/com/example/androidapp/utils/ExcelHelper.java
+./app/src/main/java/com/example/androidapp/utils/ExternalNotificationManager.java
+./app/src/main/java/com/example/androidapp/utils/NetworkUtils.java
+./app/src/main/java/com/example/androidapp/utils/OfflineManager.java
+
+🔧 إعدادات البيئة:
+- ANDROID_HOME: /data/data/com.termux/files/home/android-sdk
+- JAVA_HOME: /data/data/com.termux/files/usr
+- GEMINI_API_KEY: AIzaSyD0Ni...
+- BOT_TOKEN: 8310914786...
+
+🔍 التحليل الذكي للأخطاء:
+🔍 التحليل الذكي للأخطاء - Sat Oct 25 20:29:59 +03 2025
+
+📋 ملخص الأخطاء:
+0
+0 أخطاء
+2 تحذيرات
+
+🎯 الأخطاء الحرجة:
+
+
+📁 أخطاء الموارد:
+
+
+🎨 أخطاء الستايلات:
+
+
+🔗 أخطاء الربط:
+
+📁 الملفات المتعلقة بالمشكلة:
+[0;34m[SMART-FIX][0m البحث الذكي عن الملفات المتعلقة... app/build.gradle app/src/main/res/values/attrs.xml app/src/main/res/values/colors.xml app/src/main/res/values/strings.xml app/src/main/res/values/styles.xml app/src/main/res/values/themes.xml gradle.properties 
+
+📝 محتوى الملفات المتعلقة:
+
+=== ملف: app/build.gradle ===
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.example.androidapp'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.example.androidapp"
+        minSdk 26
+        targetSdk 34
+        versionCode System.getenv("GITHUB_RUN_NUMBER")?.toInteger() ?: 1
+        versionName "1.0.${System.getenv("GITHUB_RUN_NUMBER") ?: '0'}"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.6'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.6'
+    
+    // Splash Screen API - مهم جداً
+    implementation 'androidx.core:core-splashscreen:1.0.1'
+    
+    // Room Database
+    implementation 'androidx.room:room-runtime:2.6.1'
+    implementation 'androidx.room:room-ktx:2.6.1'
+    annotationProcessor 'androidx.room:room-compiler:2.6.1'
+    
+    // Google APIs
+    implementation 'com.google.api-client:google-api-client-android:2.2.0'
+    implementation 'com.google.http-client:google-http-client-gson:1.42.3'
+    implementation 'com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0'
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+    
+    // PDF Libraries
+    implementation('com.itextpdf:itext7-core:7.2.5') {
+        exclude group: 'org.bouncycastle'
+    }
+    implementation 'org.bouncycastle:bcprov-jdk15to18:1.72'
+    implementation 'com.tom-roush:pdfbox-android:2.0.27.0'
+    
+    // UI Libraries
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'com.github.ismaeldivita:chip-navigation-bar:1.4.0'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+    
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+=== ملف: app/src/main/res/values/attrs.xml ===
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Custom attributes for Material Components -->
+    <attr name="colorPrimary" format="color|reference" />
+    <attr name="colorOnPrimary" format="color|reference" />
+    <attr name="colorPrimaryVariant" format="color|reference" />
+    <attr name="colorSecondary" format="color|reference" />
+    <attr name="colorOnSecondary" format="color|reference" />
+    <attr name="colorSecondaryVariant" format="color|reference" />
+    <attr name="colorError" format="color|reference" />
+    <attr name="colorOnError" format="color|reference" />
+</resources>
+
+=== ملف: app/src/main/res/values/colors.xml ===
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- الألوان الأساسية -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="red">#FFFF0000</color>
+    <color name="light_gray">#FFD3D3D3</color>
+    <color name="gray">#FF808080</color>
+    <color name="green">#FF00FF00</color>
+    <color name="light_green">#FF90EE90</color>
+    <color name="light_yellow">#FFFFFFE0</color>
+
+    <!-- ألوان Material Design 3 الأساسية -->
+    <color name="primary">#6750A4</color>
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="primaryContainer">#EADDFF</color>
+    <color name="onPrimaryContainer">#21005D</color>
+    <color name="secondary">#625B71</color>
+    <color name="onSecondary">#FFFFFF</color>
+    <color name="secondaryContainer">#E8DEF8</color>
+    <color name="onSecondaryContainer">#1D192B</color>
+    <color name="tertiary">#7D5260</color>
+    <color name="onTertiary">#FFFFFF</color>
+    <color name="tertiaryContainer">#FFD8E4</color>
+    <color name="onTertiaryContainer">#31111D</color>
+    <color name="error">#B3261E</color>
+    <color name="onError">#FFFFFF</color>
+    <color name="errorContainer">#F9DEDC</color>
+    <color name="onErrorContainer">#410E0B</color>
+    <color name="background">#FFFBFE</color>
+    <color name="onBackground">#1C1B1F</color>
+    <color name="surface">#FFFBFE</color>
+    <color name="onSurface">#1C1B1F</color>
+    <color name="surfaceVariant">#E7E0EC</color>
+    <color name="onSurfaceVariant">#49454F</color>
+    <color name="outline">#79747E</color>
+    <color name="outlineVariant">#CAC4D0</color>
+    <color name="scrim">#000000</color>
+
+    <!-- ألوان Material Design 3 الإضافية -->
+    <color name="material_primary_container">#EADDFF</color>
+    <color name="material_secondary_container">#E8DEF8</color>
+    <color name="material_tertiary_container">#FFD8E4</color>
+    <color name="material_error_container">#F9DEDC</color>
+    <color name="material_outline">#79747E</color>
+    <color name="background_light">#FEF7FF</color>
+    
+    <!-- ألوان للتطبيق -->
+    <color name="colorPrimary">#6750A4</color>
+    <color name="colorPrimaryVariant">#6750A4</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#625B71</color>
+    <color name="colorSecondaryVariant">#625B71</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="colorBackground">#FFFBFE</color>
+    <color name="colorOnBackground">#1C1B1F</color>
+    <color name="colorSurface">#FFFBFE</color>
+    <color name="colorOnSurface">#1C1B1F</color>
+    <color name="colorError">#B3261E</color>
+    <color name="colorOnError">#FFFFFF</color>
+</resources>
+
+=== ملف: app/src/main/res/values/strings.xml ===
+<resources>
+    <string name="app_name">OnSale - نظام المبيعات</string>
+    <string name="default_notification_channel_id">accounting_app_channel</string>
+    <string name="title_activity_register">Register</string>
+    <string name="title_activity_main">Main</string>
+    <string name="trophy_preview">Trophy Preview</string>
+    <string name="trophy_name">Trophy Name</string>
+    <string name="trophy_description">Trophy Description</string>
+    <string name="trophy_image_url">Trophy Image URL</string>
+    <string name="points_required">Points Required</string>
+    
+    <!-- Main Activity -->
+    <string name="welcome_message">مرحباً بك في OnSale</string>
+    <string name="dashboard_subtitle">إدارة متقدمة لأعمالك التجارية</string>
+    
+    <!-- Stats -->
+    <string name="total_sales">إجمالي المبيعات</string>
+    <string name="total_orders">إجمالي الطلبات</string>
+    <string name="total_customers">إجمالي العملاء</string>
+    <string name="total_products">إجمالي المنتجات</string>
+    
+    <!-- Quick Actions -->
+    <string name="quick_actions">إجراءات سريعة</string>
+    <string name="new_sale">بيع جديد</string>
+    <string name="new_customer">عميل جديد</string>
+    <string name="reports">التقارير</string>
+    
+    <!-- Recent Activity -->
+    <string name="recent_activity">النشاط الأخير</string>
+    <string name="view_all">عرض الكل</string>
+    
+    <!-- Sample Data -->
+    <string name="sample_activity_title">بيع جديد</string>
+    <string name="sample_activity_description">طلب رقم #12345 للعميل أحمد الراشد</string>
+    <string name="sample_activity_time">منذ ساعتين</string>
+    <string name="sample_amount">+2,450 ر.س</string>
+    <string name="sample_status">مكتمل</string>
+    
+    <!-- Icons Content Descriptions -->
+    <string name="analytics_icon">رمز التحليلات</string>
+    <string name="sales_icon">رمز المبيعات</string>
+    <string name="orders_icon">رمز الطلبات</string>
+    <string name="customers_icon">رمز العملاء</string>
+    <string name="products_icon">رمز المنتجات</string>
+    <string name="activity_icon">رمز النشاط</string>
+    <string name="add_new_transaction">إضافة معاملة جديدة</string>
+    
+    <!-- Order and Product strings -->
+    <string name="quantity_format">الكمية: %.2f</string>
+    <string name="price_format">%s ر.س</string>
+    <string name="total_amount">المبلغ الإجمالي</string>
+    <string name="unit_price">سعر الوحدة</string>
+    <string name="product_details">تفاصيل المنتج</string>
+    
+    <!-- Navigation -->
+    <string name="home">الرئيسية</string>
+    <string name="sales">المبيعات</string>
+    <string name="customers">العملاء</string>
+    <string name="inventory">المخزون</string>
+    <string name="more">المزيد</string>
+    
+    <!-- Common -->
+    <string name="save">حفظ</string>
+    <string name="cancel">إلغاء</string>
+    <string name="edit">تعديل</string>
+    <string name="delete">حذف</string>
+    <string name="confirm">تأكيد</string>
+    <string name="loading">جاري التحميل...</string>
+    <string name="error">خطأ</string>
+    <string name="success">نجح</string>
+    <string name="warning">تحذير</string>
+    <string name="info">معلومات</string>
+    
+    <!-- Version -->
+    <string name="version_info">الإصدار 1.0.0</string>
+    
+    <!-- Authentication -->
+    <string name="login_welcome_title">مرحباً بعودتك</string>
+    <string name="login_welcome_subtitle">سجل دخولك للوصول لحسابك</string>
+    <string name="email_hint">البريد الإلكتروني</string>
+    <string name="password_hint">كلمة المرور</string>
+    <string name="remember_me">تذكرني</string>
+    <string name="forgot_password">نسيت كلمة المرور؟</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="or">أو</string>
+    <string name="google_login">Google</string>
+    <string name="apple_login">Apple</string>
+    <string name="no_account">ليس لديك حساب؟</string>
+    <string name="sign_up">إنشاء حساب</string>
+    
+</resources>
+
+=== ملف: app/src/main/res/values/styles.xml ===
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Text Appearance Styles for Material Components -->
+    <style name="TextAppearance.OnSale.HeadlineLarge" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.HeadlineMedium" parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.HeadlineSmall" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.TitleLarge" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.TitleMedium" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.TitleSmall" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.BodyLarge" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.BodyMedium" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.BodySmall" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.LabelLarge" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.LabelMedium" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <style name="TextAppearance.OnSale.LabelSmall" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/cairo_regular</item>
+    </style>
+
+    <!-- Button Styles -->
+    <style name="Button.OnSale" parent="Widget.MaterialComponents.Button">
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="Button.OnSale.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="Button.OnSale.Text" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <!-- Card Styles -->
+    <style name="CardView.OnSale" parent="CardView">
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+    </style>
+
+    <!-- Progress Bar Styles -->
+    <style name="ProgressBar.OnSale" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorColor">@color/primary</item>
+    </style>
+
+    <!-- Status Indicator Styles -->
+    <style name="StatusIndicator.Active">
+        <item name="android:background">@drawable/bg_status_active</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="StatusIndicator.Inactive">
+        <item name="android:background">@drawable/bg_status_error</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="StatusIndicator.Pending">
+        <item name="android:background">@drawable/bg_status_pending</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Simple StatusIndicator as fallback -->
+    <style name="StatusIndicator">
+        <item name="android:background">@drawable/bg_status_pill</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+=== ملف: app/src/main/res/values/themes.xml ===
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.OnSale" parent="Theme.MaterialComponents.DayNight">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/onPrimary</item>
+        <item name="colorPrimaryVariant">@color/primaryContainer</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/onSecondary</item>
+        <item name="colorSecondaryVariant">@color/secondaryContainer</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/onError</item>
+        
+        <!-- Status bar and navigation bar -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:navigationBarColor" tools:targetApi="o">@color/background</item>
+        
+        <!-- Splash screen theme -->
+        <item name="android:windowSplashScreenBackground">@color/primary</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+    </style>
+
+    <style name="Theme.OnSale" parent="Base.Theme.OnSale" />
+
+    <style name="Theme.OnSale.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- Widget styles compatible with Material Components -->
+    <style name="Widget.OnSale.CardView" parent="CardView">
+        <item name="cardCornerRadius">8dp</item>
+        <item name="cardElevation">4dp</item>
+    </style>
+
+    <style name="Widget.OnSale.CardView.Outlined" parent="Widget.OnSale.CardView">
+        <item name="strokeColor">@color/outline</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="Widget.OnSale.CardView.Filled" parent="Widget.OnSale.CardView">
+        <item name="cardBackgroundColor">@color/surface</item>
+    </style>
+
+    <style name="Widget.OnSale.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <style name="Widget.OnSale.Button.Text" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="Widget.OnSale.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="Widget.OnSale.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/outline</item>
+    </style>
+
+    <style name="Widget.OnSale.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout">
+        <item name="android:background">@color/primary</item>
+    </style>
+
+    <style name="Widget.OnSale.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="titleTextColor">@color/onPrimary</item>
+        <item name="subtitleTextColor">@color/onPrimary</item>
+    </style>
+
+    <style name="Widget.OnSale.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemBackground">@color/surface</item>
+    </style>
+
+    <style name="Widget.OnSale.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/primary</item>
+        <item name="tint">@color/onPrimary</item>
+    </style>
+
+    <style name="Widget.OnSale.CircularProgressIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorColor">@color/primary</item>
+    </style>
+</resources>
+
+=== ملف: gradle.properties ===
+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+android.useAndroidX=true
+android.enableJetifier=true
+kotlin.code.style=official
+
+
+🎯 المتغيرات البيئية المعرفة:
+- ANDROID_HOME: /data/data/com.termux/files/home/android-sdk
+- JAVA_HOME: /data/data/com.termux/files/usr  
+- استخدام Material Components (ليس Material 3)
+- compileSdk 34, minSdk 26
+- Gradle 8.3
+
+🚨 الشروط الآمنة المطلوبة:
+1. السلامة أولاً: لا تحذف أو تعدل ملفات بشكل عشوائي
+2. التوافق: تأكد من توافق الحلول مع البيئة الحالية
+3. الترابط: راعي العلاقات بين الملفات المختلفة
+4. التدرج: قدم حلولاً تدريجية وليست جذرية
+5. الاحتياط: تضمين أوامر النسخ الاحتياطي والاستعادة
+
+📋 تنسيق الحل المطلوب:
+```bash
+# أولاً: نسخ احتياطي آمن
+mkdir -p safe_backup && cp [الملفات_المتعلقة] safe_backup/
+
+# ثانياً: التصحيحات التدريجية
+cat > [الملف_1] << 'SAFE_EOF'
+[المحتوى_المصحح_1]
+SAFE_EOF
+
+cat > [الملف_2] << 'SAFE_EOF'  
+[المحتوى_المصحح_2]
+SAFE_EOF
+
+# ثالثاً: التحقق والبناء
+git add . && git commit -m "🛠️ تصحيح آمن: [وصف_مختصر]" && git push origin main
+./gradlew clean && ./gradlew assembleDebug
+
+# رابعاً: استعادة إذا فشل
+[أوامر_استعادة_إذا_فشل_البناء]
+```
+
+💡 نصائح ذكية:
+- استخدم ألوان Material Components مباشرة (ليس ?attr/)
+- تجنب الـ Material 3 styles غير المدعومة
+- تأكد من توافق إصدارات dependencies
+- احفظ العلاقات بين colors.xml, themes.xml, styles.xml
+- استخدم أوامر تحقق قبل وبعد التطبيق
+
