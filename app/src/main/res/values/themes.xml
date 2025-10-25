@@ -33,13 +33,6 @@
         <item name="colorSurfaceVariant">@color/surface_variant</item>
         <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
 
-        <!-- Surface Container Colors -->
-        <item name="colorSurfaceContainer">@color/surface_container</item>
-        <item name="colorSurfaceContainerHigh">@color/surface_container_high</item>
-        <item name="colorSurfaceContainerHighest">@color/surface_container_highest</item>
-        <item name="colorSurfaceContainerLow">@color/surface_container_low</item>
-        <item name="colorSurfaceContainerLowest">@color/surface_container_lowest</item>
-
         <!-- Background Colors -->
         <item name="android:colorBackground">@color/background</item>
         <item name="colorOnBackground">@color/on_background</item>
@@ -48,12 +41,6 @@
         <item name="colorOutline">@color/outline</item>
         <item name="colorOutlineVariant">@color/outline_variant</item>
 
-        <!-- Other Colors -->
-        <item name="colorSurfaceTint">@color/surface_tint</item>
-        <item name="colorInverseSurface">@color/inverse_surface</item>
-        <item name="colorInverseOnSurface">@color/inverse_on_surface</item>
-        <item name="colorInversePrimary">@color/inverse_primary</item>
-
         <!-- Status bar color -->
         <item name="android:statusBarColor">@color/surface</item>
         <item name="android:windowLightStatusBar">true</item>
@@ -61,16 +48,6 @@
         <!-- Navigation bar color -->
         <item name="android:navigationBarColor">@color/surface</item>
         <item name="android:windowLightNavigationBar">true</item>
-
-        <!-- Splash screen attributes -->
-        <item name="windowSplashScreenBackground">@color/primary</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-        <item name="windowSplashScreenAnimationDuration">1000</item>
-        <item name="postSplashScreenTheme">@style/Theme.OnSale.NoActionBar</item>
-
-        <!-- Switch/Slider attributes -->
-        <item name="activeTrackColor">@color/primary</item>
-        <item name="inactiveTrackColor">@color/outline_variant</item>
 
         <!-- Custom theme attributes -->
         <item name="elevationOverlayEnabled">true</item>
@@ -83,30 +60,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!-- Dialog -->
-    <style name="Theme.OnSale.Dialog" parent="ThemeOverlay.Material3.Dialog">
-        <item name="colorSurface">@color/surface_container_high</item>
-        <item name="android:windowBackground">@drawable/dialog_background</item>
-    </style>
-
-    <!-- Splash Screen -->
-    <style name="Theme.OnSale.SplashScreen" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/primary</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-        <item name="windowSplashScreenAnimationDuration">1000</item>
-        <item name="postSplashScreenTheme">@style/Theme.OnSale.NoActionBar</item>
+    <!-- Splash Screen - باستخدام السمة الأساسية -->
+    <style name="Theme.OnSale.SplashScreen" parent="Theme.OnSale.NoActionBar">
+        <item name="android:windowBackground">@color/primary</item>
     </style>
 
     <!-- Authentication -->
     <style name="Theme.OnSale.Authentication" parent="Theme.OnSale.NoActionBar">
         <item name="android:windowBackground">@color/primary_container</item>
-    </style>
-
-    <!-- Bottom Sheet -->
-    <style name="Theme.OnSale.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="colorSurface">@color/surface_container_low</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
     <!-- Window Animations -->
