@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Custom attributes for Material 3 -->
+    <!-- Custom attributes for Material Components -->
+    <attr name="colorPrimary" format="color|reference" />
+    <attr name="colorOnPrimary" format="color|reference" />
+    <attr name="colorPrimaryVariant" format="color|reference" />
+    <attr name="colorSecondary" format="color|reference" />
+    <attr name="colorOnSecondary" format="color|reference" />
+    <attr name="colorSecondaryVariant" format="color|reference" />
+    <attr name="colorError" format="color|reference" />
+    <attr name="colorOnError" format="color|reference" />
+    <attr name="android:colorBackground" format="color|reference" />
+    
+    <!-- Additional colors for compatibility -->
     <attr name="colorBackground" format="color|reference" />
     <attr name="colorOnBackground" format="color|reference" />
     <attr name="colorSurface" format="color|reference" />
@@ -8,23 +19,6 @@
     <attr name="colorSurfaceVariant" format="color|reference" />
     <attr name="colorOnSurfaceVariant" format="color|reference" />
     <attr name="colorOutline" format="color|reference" />
-    <attr name="colorOutlineVariant" format="color|reference" />
-    <attr name="colorPrimary" format="color|reference" />
-    <attr name="colorOnPrimary" format="color|reference" />
-    <attr name="colorPrimaryContainer" format="color|reference" />
-    <attr name="colorOnPrimaryContainer" format="color|reference" />
-    <attr name="colorSecondary" format="color|reference" />
-    <attr name="colorOnSecondary" format="color|reference" />
-    <attr name="colorSecondaryContainer" format="color|reference" />
-    <attr name="colorOnSecondaryContainer" format="color|reference" />
-    <attr name="colorTertiary" format="color|reference" />
-    <attr name="colorOnTertiary" format="color|reference" />
-    <attr name="colorTertiaryContainer" format="color|reference" />
-    <attr name="colorOnTertiaryContainer" format="color|reference" />
-    <attr name="colorError" format="color|reference" />
-    <attr name="colorOnError" format="color|reference" />
-    <attr name="colorErrorContainer" format="color|reference" />
-    <attr name="colorOnErrorContainer" format="color|reference" />
     
     <!-- Splash screen attributes -->
     <attr name="windowSplashScreenBackground" format="color|reference" />

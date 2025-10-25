@@ -1,35 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.OnSale" parent="Theme.Material3.DayNight">
+    <style name="Base.Theme.OnSale" parent="Theme.MaterialComponents.DayNight">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/onPrimary</item>
-        <item name="colorPrimaryContainer">@color/primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/onPrimaryContainer</item>
+        <item name="colorPrimaryVariant">@color/primaryContainer</item>
         <item name="colorSecondary">@color/secondary</item>
         <item name="colorOnSecondary">@color/onSecondary</item>
-        <item name="colorSecondaryContainer">@color/secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/onSecondaryContainer</item>
-        <item name="colorTertiary">@color/tertiary</item>
-        <item name="colorOnTertiary">@color/onTertiary</item>
-        <item name="colorTertiaryContainer">@color/tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/onTertiaryContainer</item>
+        <item name="colorSecondaryVariant">@color/secondaryContainer</item>
         <item name="colorError">@color/error</item>
         <item name="colorOnError">@color/onError</item>
-        <item name="colorErrorContainer">@color/errorContainer</item>
-        <item name="colorOnErrorContainer">@color/onErrorContainer</item>
-        <item name="colorBackground">@color/background</item>
-        <item name="colorOnBackground">@color/onBackground</item>
-        <item name="colorSurface">@color/surface</item>
-        <item name="colorOnSurface">@color/onSurface</item>
-        <item name="colorSurfaceVariant">@color/surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/onSurfaceVariant</item>
-        <item name="colorOutline">@color/outline</item>
-        <item name="colorOutlineVariant">@color/outlineVariant</item>
+        <item name="android:colorBackground">@color/background</item>
         
-        <!-- Material 3 specific attributes -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryContainer</item>
+        <!-- Material Components attributes -->
+        <item name="materialButtonStyle">@style/Widget.OnSale.Button</item>
+        <item name="textInputStyle">@style/Widget.OnSale.TextInputLayout</item>
+        
+        <!-- Status bar and navigation bar -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:navigationBarColor" tools:targetApi="o">?attr/colorBackground</item>
         
         <!-- Splash screen theme -->
@@ -49,73 +38,70 @@
     <style name="Theme.OnSale.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- ThemeOverlay styles -->
-    <style name="ThemeOverlay.OnSale.Toolbar" parent="">
+    <style name="ThemeOverlay.OnSale.Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/onPrimary</item>
     </style>
 
-    <style name="ThemeOverlay.OnSale.Toolbar.Primary" parent="ThemeOverlay.OnSale.Toolbar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorOnPrimary">@color/onPrimary</item>
-    </style>
-
-    <!-- Widget styles compatible with Material 1.11.0 -->
+    <!-- Widget styles compatible with Material Components -->
     <style name="Widget.OnSale.CardView" parent="CardView">
         <item name="cardCornerRadius">8dp</item>
         <item name="cardElevation">4dp</item>
     </style>
 
     <style name="Widget.OnSale.CardView.Outlined" parent="Widget.OnSale.CardView">
-        <item name="strokeColor">?attr/colorOutline</item>
+        <item name="strokeColor">@color/outline</item>
         <item name="strokeWidth">1dp</item>
     </style>
 
     <style name="Widget.OnSale.CardView.Filled" parent="Widget.OnSale.CardView">
-        <item name="cardBackgroundColor">?attr/colorSurface</item>
+        <item name="cardBackgroundColor">@color/surface</item>
     </style>
 
-    <style name="Widget.OnSale.Button" parent="Widget.Material3.Button">
+    <style name="Widget.OnSale.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="android:textColor">@color/onPrimary</item>
     </style>
 
-    <style name="Widget.OnSale.Button.Text" parent="Widget.Material3.Button.TextButton">
+    <style name="Widget.OnSale.Button.Text" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:minHeight">48dp</item>
+        <item name="android:textColor">@color/primary</item>
     </style>
 
-    <style name="Widget.OnSale.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+    <style name="Widget.OnSale.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:minHeight">48dp</item>
+        <item name="strokeColor">@color/outline</item>
+        <item name="android:textColor">@color/primary</item>
     </style>
 
-    <style name="Widget.OnSale.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
-        <item name="android:minHeight">48dp</item>
+    <style name="Widget.OnSale.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/outline</item>
+        <item name="hintTextColor">@color/onSurfaceVariant</item>
     </style>
 
-    <style name="Widget.OnSale.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-        <item name="boxStrokeColor">?attr/colorOutline</item>
+    <style name="Widget.OnSale.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout">
+        <item name="android:background">@color/primary</item>
     </style>
 
-    <style name="Widget.OnSale.AppBarLayout" parent="Widget.Material3.AppBarLayout">
-        <item name="android:background">?attr/colorPrimary</item>
+    <style name="Widget.OnSale.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="titleTextColor">@color/onPrimary</item>
+        <item name="subtitleTextColor">@color/onPrimary</item>
     </style>
 
-    <style name="Widget.OnSale.Toolbar" parent="Widget.Material3.Toolbar">
-        <item name="titleTextColor">?attr/colorOnPrimary</item>
-        <item name="subtitleTextColor">?attr/colorOnPrimary</item>
+    <style name="Widget.OnSale.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemBackground">@color/surface</item>
+        <item name="itemTextColor">@color/onSurfaceVariant</item>
+        <item name="itemIconTint">@color/onSurfaceVariant</item>
     </style>
 
-    <style name="Widget.OnSale.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <item name="itemBackground">?attr/colorSurface</item>
-        <item name="itemTextColor">?attr/colorOnSurfaceVariant</item>
-        <item name="itemIconTint">?attr/colorOnSurfaceVariant</item>
+    <style name="Widget.OnSale.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/primary</item>
+        <item name="tint">@color/onPrimary</item>
     </style>
 
-    <style name="Widget.OnSale.FloatingActionButton" parent="Widget.Material3.FloatingActionButton">
-        <item name="backgroundTint">?attr/colorPrimary</item>
-        <item name="tint">?attr/colorOnPrimary</item>
-    </style>
-
-    <style name="Widget.OnSale.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator.Indeterminate">
-        <item name="indicatorColor">?attr/colorPrimary</item>
+    <style name="Widget.OnSale.CircularProgressIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorColor">@color/primary</item>
     </style>
 </resources>

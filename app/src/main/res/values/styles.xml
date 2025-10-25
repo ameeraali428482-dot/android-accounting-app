@@ -1,68 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Text Appearance Styles for Material 3 -->
-    <style name="TextAppearance.OnSale.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+    <!-- Text Appearance Styles for Material Components -->
+    <style name="TextAppearance.OnSale.HeadlineLarge" parent="TextAppearance.MaterialComponents.Headline1">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
 
-    <style name="TextAppearance.OnSale.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+    <style name="TextAppearance.OnSale.HeadlineMedium" parent="TextAppearance.MaterialComponents.Headline2">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
 
-    <style name="TextAppearance.OnSale.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+    <style name="TextAppearance.OnSale.HeadlineSmall" parent="TextAppearance.MaterialComponents.Headline3">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
 
-    <style name="TextAppearance.OnSale.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+    <style name="TextAppearance.OnSale.TitleLarge" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
 
-    <style name="TextAppearance.OnSale.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+    <style name="TextAppearance.OnSale.TitleMedium" parent="TextAppearance.MaterialComponents.Headline5">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
 
-    <style name="TextAppearance.OnSale.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+    <style name="TextAppearance.OnSale.TitleSmall" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
 
-    <style name="TextAppearance.OnSale.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+    <style name="TextAppearance.OnSale.BodyLarge" parent="TextAppearance.MaterialComponents.Body1">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
 
-    <style name="TextAppearance.OnSale.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+    <style name="TextAppearance.OnSale.BodyMedium" parent="TextAppearance.MaterialComponents.Body2">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
 
-    <style name="TextAppearance.OnSale.BodySmall" parent="TextAppearance.Material3.BodySmall">
+    <style name="TextAppearance.OnSale.BodySmall" parent="TextAppearance.MaterialComponents.Caption">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
 
-    <style name="TextAppearance.OnSale.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+    <style name="TextAppearance.OnSale.LabelLarge" parent="TextAppearance.MaterialComponents.Button">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
 
-    <style name="TextAppearance.OnSale.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+    <style name="TextAppearance.OnSale.LabelMedium" parent="TextAppearance.MaterialComponents.Overline">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
 
-    <style name="TextAppearance.OnSale.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+    <style name="TextAppearance.OnSale.LabelSmall" parent="TextAppearance.MaterialComponents.Caption">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
 
     <!-- Button Styles -->
-    <style name="Button.OnSale" parent="Widget.Material3.Button">
+    <style name="Button.OnSale" parent="Widget.MaterialComponents.Button">
         <item name="android:minHeight">48dp</item>
         <item name="android:paddingStart">24dp</item>
         <item name="android:paddingEnd">24dp</item>
     </style>
 
-    <style name="Button.OnSale.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+    <style name="Button.OnSale.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:minHeight">48dp</item>
         <item name="android:paddingStart">24dp</item>
         <item name="android:paddingEnd">24dp</item>
     </style>
 
-    <style name="Button.OnSale.Text" parent="Widget.Material3.Button.TextButton">
+    <style name="Button.OnSale.Text" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:minHeight">48dp</item>
         <item name="android:paddingStart">12dp</item>
         <item name="android:paddingEnd">12dp</item>
@@ -77,25 +77,25 @@
 
     <style name="CardView.OnSale.Outlined" parent="CardView.OnSale">
         <item name="cardBackgroundColor">@android:color/transparent</item>
-        <item name="strokeColor">?attr/colorOutline</item>
+        <item name="strokeColor">@color/outline</item>
         <item name="strokeWidth">1dp</item>
     </style>
 
     <!-- Progress Bar Styles -->
-    <style name="ProgressBar.OnSale" parent="Widget.Material3.CircularProgressIndicator">
-        <item name="indicatorColor">?attr/colorPrimary</item>
-        <item name="trackColor">?attr/colorSurfaceVariant</item>
+    <style name="ProgressBar.OnSale" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorColor">@color/primary</item>
+        <item name="trackColor">@color/surfaceVariant</item>
     </style>
 
     <!-- Chip Styles -->
-    <style name="Chip.OnSale" parent="Widget.Material3.Chip.Assist">
-        <item name="chipBackgroundColor">?attr/colorSecondaryContainer</item>
-        <item name="chipStrokeColor">?attr/colorOutline</item>
+    <style name="Chip.OnSale" parent="Widget.MaterialComponents.Chip.Entry">
+        <item name="chipBackgroundColor">@color/secondaryContainer</item>
+        <item name="chipStrokeColor">@color/outline</item>
         <item name="chipStrokeWidth">1dp</item>
     </style>
 
     <!-- Dialog Styles -->
-    <style name="Dialog.OnSale" parent="ThemeOverlay.Material3.Dialog">
+    <style name="Dialog.OnSale" parent="ThemeOverlay.MaterialComponents.Dialog">
         <item name="dialogCornerRadius">16dp</item>
     </style>
 
