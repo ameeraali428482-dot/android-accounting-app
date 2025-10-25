@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="VoiceInputEditText">
-        <attr name="hint" format="string" />
-        <attr name="voiceEnabled" format="boolean" />
-        <attr name="suggestionsEnabled" format="boolean" />
-        <attr name="suggestionType" format="enum">
-            <enum name="customer_name" value="0" />
-            <enum name="customer_phone" value="1" />
-            <enum name="customer_email" value="2" />
-            <enum name="product_name" value="3" />
-            <enum name="product_category" value="4" />
-            <enum name="product_barcode" value="5" />
-            <enum name="supplier_name" value="6" />
-            <enum name="supplier_phone" value="7" />
-            <enum name="account_name" value="8" />
-            <enum name="invoice_number" value="9" />
-            <enum name="description" value="10" />
-            <enum name="amount" value="11" />
-            <enum name="payment_method" value="12" />
-            <enum name="currency" value="13" />
-            <enum name="location" value="14" />
-            <enum name="general_text" value="15" />
-        </attr>
-    </declare-styleable>
+    <!-- Custom attributes for Material 3 -->
+    <attr name="colorBackground" format="color|reference" />
+    <attr name="colorOnBackground" format="color|reference" />
+    <attr name="colorSurface" format="color|reference" />
+    <attr name="colorOnSurface" format="color|reference" />
+    <attr name="colorSurfaceVariant" format="color|reference" />
+    <attr name="colorOnSurfaceVariant" format="color|reference" />
+    <attr name="colorOutline" format="color|reference" />
+    <attr name="colorOutlineVariant" format="color|reference" />
+    <attr name="colorPrimary" format="color|reference" />
+    <attr name="colorOnPrimary" format="color|reference" />
+    <attr name="colorPrimaryContainer" format="color|reference" />
+    <attr name="colorOnPrimaryContainer" format="color|reference" />
+    <attr name="colorSecondary" format="color|reference" />
+    <attr name="colorOnSecondary" format="color|reference" />
+    <attr name="colorSecondaryContainer" format="color|reference" />
+    <attr name="colorOnSecondaryContainer" format="color|reference" />
+    <attr name="colorTertiary" format="color|reference" />
+    <attr name="colorOnTertiary" format="color|reference" />
+    <attr name="colorTertiaryContainer" format="color|reference" />
+    <attr name="colorOnTertiaryContainer" format="color|reference" />
+    <attr name="colorError" format="color|reference" />
+    <attr name="colorOnError" format="color|reference" />
+    <attr name="colorErrorContainer" format="color|reference" />
+    <attr name="colorOnErrorContainer" format="color|reference" />
+    
+    <!-- Splash screen attributes -->
+    <attr name="windowSplashScreenBackground" format="color|reference" />
+    <attr name="windowSplashScreenAnimatedIcon" format="reference" />
+    <attr name="postSplashScreenTheme" format="reference" />
 </resources>

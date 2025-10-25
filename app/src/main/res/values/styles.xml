@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Text Appearance Styles -->
+    <!-- Text Appearance Styles for Material 3 -->
     <style name="TextAppearance.OnSale.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
         <item name="fontFamily">@font/cairo_regular</item>
     </style>
@@ -99,7 +99,7 @@
         <item name="dialogCornerRadius">16dp</item>
     </style>
 
-    <!-- App-specific styles -->
+    <!-- Status Indicator Styles -->
     <style name="StatusIndicator.Active">
         <item name="android:background">@drawable/bg_status_active</item>
         <item name="android:padding">4dp</item>
@@ -116,5 +116,20 @@
         <item name="android:background">@drawable/bg_status_pending</item>
         <item name="android:padding">4dp</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Simple StatusIndicator as fallback -->
+    <style name="StatusIndicator">
+        <item name="android:background">@drawable/bg_status_pill</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Splash Screen Theme -->
+    <style name="Theme.OnSale.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/primary</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.OnSale</item>
     </style>
 </resources>
